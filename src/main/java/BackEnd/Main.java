@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 @EnableAutoConfiguration
-public class Main {
+public class Main extends WebMvcConfigurerAdapter  {
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
     }
