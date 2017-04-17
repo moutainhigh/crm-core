@@ -1,6 +1,7 @@
 package com.cafe.crm.security.configs;
 
 
+
 import com.cafe.crm.security.handlers.CustomAuthenticationSuccessHandler;
 import com.cafe.crm.security.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +54,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                .antMatchers("/", "/manager/*").permitAll()
-                .antMatchers("/admin/*").hasAuthority("BOSS")
+                .antMatchers("/", "/manager/**").permitAll()
+                .antMatchers("/admin/**").hasAuthority("BOSS")
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -68,8 +69,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/")
                 .invalidateHttpSession(true)
                 .permitAll();
-
-
 
     }
 

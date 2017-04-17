@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 /**
  * Created by Sasha ins on 17.04.2017.
  */
+//i
 public class AuthenticationService implements UserDetailsService {
 
 
