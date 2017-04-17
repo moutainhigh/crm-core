@@ -1,0 +1,28 @@
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/main.css}" type="text/css"/>
+</head>
+
+<body>
+
+<div class="container login">
+    <form class="form-horizontal" action="" method="post">
+        <label class="myText">Please sign in</label>
+
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Enter login" name="username"/>
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" placeholder="Enter password" name="password"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Sign in</button>
+    </form>
+</div>
+
+</body>
+</html>
