@@ -1,11 +1,10 @@
-package BackEnd.security.handlers;
+package java.com.cafe.crm.security.handlers;
 
 
 
 
-import BackEnd.models.Role;
-import BackEnd.security.service.AuthenticationService;
-import org.springframework.context.annotation.Bean;
+import java.com.cafe.crm.models.Role;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.DefaultRedirectStrategy;

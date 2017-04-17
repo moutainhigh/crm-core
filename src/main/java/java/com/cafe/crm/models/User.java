@@ -1,4 +1,4 @@
-package BackEnd.models;
+package java.com.cafe.crm.models;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

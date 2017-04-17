@@ -1,4 +1,4 @@
-package BackEnd.controllers;
+package java.com.cafe.crm.controllers;
 
 /**
  * Created by User on 17.04.2017.

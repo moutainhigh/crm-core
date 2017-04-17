@@ -1,4 +1,4 @@
-package BackEnd.dao_impl;
+package java.com.cafe.crm.dao_impl;
 
 /**
  * Created by User on 17.04.2017.

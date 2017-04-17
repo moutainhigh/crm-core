@@ -1,4 +1,4 @@
-package BackEnd.service_abstract;
+package java.com.cafe.crm.service_abstract;
 
 /**
  * Created by User on 17.04.2017.
