@@ -14,7 +14,10 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private Integer id;
+    private long id;
+
+    @Column(name = "name",  nullable = false)
+    private String name;
 
     @Column(name = "login",  nullable = false, unique = true)
     private String login;
@@ -23,6 +26,8 @@ public class User implements UserDetails {
     @Column(name = "password", length = 30, nullable = false)
     private String password;
 
+    @Column(name="salary")
+    private long salary;
 
     @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
     @JoinTable(name = "permissions",
@@ -34,11 +39,27 @@ public class User implements UserDetails {
     private Boolean enabled = true;
 
 
+
+    public long getSalary() {
+        return salary;
+    }
+
+    public void setSalary(long salary) {
+        this.salary = salary;
+    }
+
     public User() {
     }
 
+    public String getName() {
+        return name;
+    }
 
-    public Integer getId() {
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public long getId() {
         return id;
     }
 

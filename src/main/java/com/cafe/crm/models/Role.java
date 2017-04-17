@@ -11,7 +11,7 @@ public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue
     @Column(name = "id")
-    private Integer id;
+    private long id;
 
     @Column(name = "name", length = 20, nullable = false)
     private String name;
@@ -38,7 +38,7 @@ public class Role implements GrantedAuthority {
         this.name = name;
     }
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 

@@ -1,8 +1,7 @@
 package com.cafe.crm.initMet;
 
 
-import com.cafe.crm.dao.RoleDao;
-import com.cafe.crm.dao.UserDao;
+
 import com.cafe.crm.models.Role;
 import com.cafe.crm.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +12,15 @@ import java.util.Set;
 
 @Component
 public class Test {
-
+/*
     @Autowired
     private RoleDao roleDao;
 
     @Autowired
-    private UserDao userDao;
+    private UserDao userDao;*/
 
     public void init() {
-        Role roleAdmin = new Role();
+    /*    Role roleAdmin = new Role();
         roleAdmin.setName("BOSS");
         roleDao.saveAndFlush(roleAdmin);
 
@@ -47,6 +46,6 @@ public class Test {
         userRoles.add(roleUser);
         user.setRoles(userRoles);
 
-        userDao.saveAndFlush(user);
+        userDao.saveAndFlush(user);*/
     }
 }

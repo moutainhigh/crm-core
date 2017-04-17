@@ -1,30 +1,33 @@
 package com.cafe.crm.models.Menu;
 
+import com.cafe.crm.models.Role;
+
+import javax.persistence.*;
 import java.util.Set;
 
 /**
  * Created by Sasha ins on 17.04.2017.
  */
+@Entity
+@Table(name="menu")
 public class Menu {
 
 
-    private Drinks drinks;
-    private Hookah hookah;
-    private Snacks snacks;
+    @Id
+    @GeneratedValue
+    private long id;
+
+
+    @OneToMany(fetch = FetchType.EAGER, targetEntity = Category.class)
+    @JoinTable(name = "productPermissions",
+            joinColumns = {@JoinColumn(name = "category_id")},
+            inverseJoinColumns = {@JoinColumn(name = "menu_id")})
+    private Set<Role> categories;
+
 
     public Menu() {
     }
 
 
-    public Set<Drinks> getDrinks() {
-        return drinks.getDrinks();
-    }
-
-    public Set<Snacks> getSnacks() {
-        return snacks.getSnacks();
-    }
-    public Set<Hookah> getHookah() {
-        return hookah.getHookah();
-    }
 
 }
