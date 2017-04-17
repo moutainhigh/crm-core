@@ -1,10 +1,10 @@
-package BackEnd.initMet;
+package com.cafe.crm.initMet;
 
 
-import BackEnd.dao.RoleDao;
-import BackEnd.dao.UserDao;
-import BackEnd.models.Role;
-import BackEnd.models.User;
+import com.cafe.crm.dao.RoleDao;
+import com.cafe.crm.dao.UserDao;
+import com.cafe.crm.models.Role;
+import com.cafe.crm.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,6 @@
-package BackEnd.dao;
+package com.cafe.crm.dao;
 
-import BackEnd.models.Role;
+import com.cafe.crm.models.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

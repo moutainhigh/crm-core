@@ -1,6 +1,6 @@
-package BackEnd.service_impl;
+package com.cafe.crm.service_impl;
 
-import BackEnd.models.User;
+import com.cafe.crm.models.User;
 import org.springframework.stereotype.Service;
 
 /**

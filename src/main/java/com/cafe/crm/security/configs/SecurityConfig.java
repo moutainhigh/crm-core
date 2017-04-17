@@ -1,8 +1,8 @@
-package BackEnd.security.configs;
+package com.cafe.crm.security.configs;
 
 
-import BackEnd.security.handlers.CustomAuthenticationSuccessHandler;
-import BackEnd.security.service.AuthenticationService;
+import com.cafe.crm.security.handlers.CustomAuthenticationSuccessHandler;
+import com.cafe.crm.security.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
