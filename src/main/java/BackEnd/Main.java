@@ -16,4 +16,16 @@ public class Main extends WebMvcConfigurerAdapter  {
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
     }
+    
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("index");
+
+    }
+
+    @Bean(initMethod = "init")
+    public Test initTestData() {
+        return new Test();
+    }
+
 }
