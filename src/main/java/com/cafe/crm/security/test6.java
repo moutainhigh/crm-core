@@ -1,4 +1,4 @@
-package BackEnd.security;
+package com.cafe.crm.security;
 
 /**
  * Created by Danil on 17.04.2017.

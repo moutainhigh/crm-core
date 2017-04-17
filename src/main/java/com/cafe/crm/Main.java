@@ -1,4 +1,4 @@
-package BackEnd;
+package com.cafe.crm;
 
 import org.springframework.boot.SpringApplication;
 
