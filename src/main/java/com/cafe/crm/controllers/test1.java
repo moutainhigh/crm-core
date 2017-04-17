@@ -5,4 +5,5 @@ package com.cafe.crm.controllers;
  */
 public class test1 {
     String test;
+    int age=4;
 }
