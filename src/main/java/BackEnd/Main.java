@@ -1,13 +1,10 @@
 package BackEnd;
 
-import BackEnd.initMet.Test;
 import org.springframework.boot.SpringApplication;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
 
 
 /**
@@ -15,21 +12,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 @SpringBootApplication
 @EnableAutoConfiguration
-public class Main extends WebMvcConfigurerAdapter {
+public class Main extends WebMvcConfigurerAdapter  {
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
-    }
-
-
-    @Bean(initMethod = "init")
-    public Test initTestData() {
-        return new Test();
-    }
-
-
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("login");
-
     }
 }
