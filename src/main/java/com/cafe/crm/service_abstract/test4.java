@@ -1,4 +1,4 @@
-package java.com.cafe.crm.service_abstract;
+package com.cafe.crm.service_abstract;
 
 /**
  * Created by User on 17.04.2017.

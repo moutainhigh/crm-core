@@ -1,7 +1,7 @@
-package java.com.cafe.crm.security.service;
+package com.cafe.crm.security.service;
 
-import java.com.cafe.crm.models.User;
-import java.com.cafe.crm.service_impl.UserService;
+import com.cafe.crm.models.User;
+import com.cafe.crm.service_impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

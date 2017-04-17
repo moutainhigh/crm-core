@@ -1,6 +1,6 @@
-package java.com.cafe.crm;
+package com.cafe.crm;
 
-import java.com.cafe.crm.initMet.Test;
+import com.cafe.crm.initMet.Test;
 import org.springframework.boot.SpringApplication;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

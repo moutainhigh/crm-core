@@ -1,6 +1,6 @@
-package java.com.cafe.crm.service_impl;
+package com.cafe.crm.service_impl;
 
-import java.com.cafe.crm.models.User;
+import com.cafe.crm.models.User;
 import org.springframework.stereotype.Service;
 
 /**

@@ -1,6 +1,6 @@
-package java.com.cafe.crm.dao;
+package com.cafe.crm.dao;
 
-import java.com.cafe.crm.models.User;
+import com.cafe.crm.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

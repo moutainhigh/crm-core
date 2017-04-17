@@ -1,4 +1,4 @@
-package java.com.cafe.crm.models;
+package com.cafe.crm.models;
 
 import org.springframework.security.core.GrantedAuthority;
 

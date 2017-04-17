@@ -1,9 +1,9 @@
-package java.com.cafe.crm.security.handlers;
+package com.cafe.crm.security.handlers;
 
 
 
 
-import java.com.cafe.crm.models.Role;
+import com.cafe.crm.models.Role;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

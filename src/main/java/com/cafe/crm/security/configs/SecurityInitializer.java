@@ -1,4 +1,4 @@
-package java.com.cafe.crm.security.configs;
+package com.cafe.crm.security.configs;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 
