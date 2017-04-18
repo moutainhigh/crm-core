@@ -2,6 +2,7 @@ package com.cafe.crm.models.Menu;
 
 
 import javax.persistence.*;
+import java.util.Set;
 
 
 /**
@@ -23,17 +24,20 @@ public class Product {
     @Column(name = "specification")
     private String specification;
 
+    @Column(name="cost")
+    private long cost;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    public Category category;
+    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST},mappedBy = "products")
+    private Set<Category> categories;
+
 
     public Product() {
     }
 
-    public Product(String name, String specification) {
+    public Product(String name, String specification, long cost) {
         this.name = name;
         this.specification = specification;
+        this.cost=cost;
     }
 
     public long getId() {
@@ -56,11 +60,23 @@ public class Product {
         this.specification = specification;
     }
 
-    public Category getCategory() {
-        return category;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public long getCost() {
+        return cost;
+    }
+
+    public void setCost(long cost) {
+        this.cost = cost;
+    }
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
     }
 }

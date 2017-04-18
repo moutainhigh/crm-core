@@ -21,17 +21,42 @@ public class Menu {
     @Column(name="name")
      private String name;
 
-    @OneToMany(fetch = FetchType.EAGER, targetEntity = Category.class)
-    @JoinTable(name = "productPermissions",
-            joinColumns = {@JoinColumn(name = "category_id")},
-            inverseJoinColumns = {@JoinColumn(name = "menu_id")})
-    private Set<Role> categories;
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Category.class)
+    @JoinTable(name = "allmenu",
+            joinColumns = {@JoinColumn(name = "menu_id",referencedColumnName = "id",nullable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "category_id",referencedColumnName = "id")})
+    private Set<Category> categories;
 
 
 
     public Menu() {
     }
 
+    public Set<Category> getCategories() {
+        return categories;
+    }
 
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
 
+    public Menu(String name) {
+        this.name = name;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

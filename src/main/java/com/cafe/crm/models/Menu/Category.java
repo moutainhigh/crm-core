@@ -1,8 +1,10 @@
 package com.cafe.crm.models.Menu;
 
 import com.cafe.crm.models.Role;
+import com.cafe.crm.models.User;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -19,22 +21,23 @@ public class Category {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(fetch = FetchType.EAGER, targetEntity = Product.class)
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Product.class)
     @JoinTable(name = "productPermissions",
-            joinColumns = {@JoinColumn(name = "category_id")},
-            inverseJoinColumns = {@JoinColumn(name = "product_id")})
-    private Set<Role> products;
+            joinColumns = {@JoinColumn(name = "category_id",referencedColumnName = "id",nullable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "product_id",referencedColumnName = "id")})
+    private Set<Product> products;
 
 
-    @ManyToOne
-    @JoinColumn(name = "menu_id")
-    public Menu menu;
+
+    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST},mappedBy = "categories")
+    private Set<Menu> menus;
 
     public Category(String name) {
         this.name = name;
     }
 
     public Category() {
+
     }
 
     public long getId() {
@@ -53,11 +56,19 @@ public class Category {
         this.name = name;
     }
 
-    public Set<Role> getProducts() {
+    public Set<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(Set<Role> products) {
+    public void setProducts(Set<Product> products) {
         this.products = products;
+    }
+
+    public Set<Menu> getMenus() {
+        return menus;
+    }
+
+    public void setMenus(Set<Menu> menus) {
+        this.menus = menus;
     }
 }

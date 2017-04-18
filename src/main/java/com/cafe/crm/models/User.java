@@ -39,6 +39,12 @@ public class User implements UserDetails {
     private Boolean enabled = true;
 
 
+    public User(String name, String login, String password, long salary) {
+        this.name = name;
+        this.login = login;
+        this.password = password;
+        this.salary = salary;
+    }
 
     public long getSalary() {
         return salary;
