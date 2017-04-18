@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </head>
+<body>
+
+<div class="row">
+
+    <div class="col-md-7">
+        <tr th:each="user : ${ListCalculate}">
+           <div class = "hz">
+             h11111111111111111111ui
+            </div>
+            <style>
+                .hz {
+                 margin: 2%;
+                 float:left;
+                 width: 20%;
+                 height: 100px;
+                 background: #fffc9e;
+                }
+            </style>
+        </tr>
+
+    </div>
+
+
+    <div class="col-md-5">
+        .col-md-1
+        <tr th:each="user : ${ListClient}">
+
+        hi1
+        </tr>
+
+    </div>
+</div>
+
+
+</body>
+</html>
