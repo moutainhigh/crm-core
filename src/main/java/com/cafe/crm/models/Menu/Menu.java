@@ -18,11 +18,15 @@ public class Menu {
     private long id;
 
 
+    @Column(name="name")
+     private String name;
+
     @OneToMany(fetch = FetchType.EAGER, targetEntity = Category.class)
     @JoinTable(name = "productPermissions",
             joinColumns = {@JoinColumn(name = "category_id")},
             inverseJoinColumns = {@JoinColumn(name = "menu_id")})
     private Set<Role> categories;
+
 
 
     public Menu() {
