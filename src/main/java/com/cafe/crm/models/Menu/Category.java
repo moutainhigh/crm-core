@@ -25,6 +25,10 @@ public class Category {
             inverseJoinColumns = {@JoinColumn(name = "product_id")})
     private Set<Role> products;
 
+    @ManyToOne
+    @JoinColumn(name = "menu_id")
+    public Menu menu;
+    
     public Category(String name) {
         this.name = name;
     }
