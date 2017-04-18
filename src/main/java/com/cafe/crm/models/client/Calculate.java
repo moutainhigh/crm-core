@@ -1,38 +1,44 @@
 package com.cafe.crm.models.client;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import java.util.Date;
 
 @Entity
-@Table(name = "check")
-public class Check implements Serializable {
+@Table(name ="calculate")
+public class Calculate {
     @Id
     @GeneratedValue
+    @Column(name = "id")
     private Long id;
 
-    private Long timeStart;
+    private Date timeStart;
 
-    private Long timeStop;
+    private Date timeStop;
 
     private String menu;
 
+    private Long timePrice;
+
     private Long allPrice;
-/*
+
     @OneToOne(fetch = FetchType.EAGER, targetEntity = Client.class)
-    @JoinTable(name = "Client-Check",
-            joinColumns = {@JoinColumn(name = "check_id")},
+    @JoinTable(name = "client_calculate",
+            joinColumns = {@JoinColumn(name = "calculate_id")},
             inverseJoinColumns = {@JoinColumn(name = "client_id")})
     private Client client;
-*/
+
+    public Calculate() {
+    }
+
     public Long getId() {
         return id;
     }
 
-    public Long getTimeStart() {
+    public Date getTimeStart() {
         return timeStart;
     }
 
-    public Long getTimeStop() {
+    public Date getTimeStop() {
         return timeStop;
     }
 
@@ -40,19 +46,23 @@ public class Check implements Serializable {
         return menu;
     }
 
+    public Long getTimePrice() {
+        return timePrice;
+    }
+
     public Long getAllPrice() {
         return allPrice;
     }
-/*
+
     public Client getClient() {
         return client;
     }
-*/
-    public void setTimeStart(Long timeStart) {
+
+    public void setTimeStart(Date timeStart) {
         this.timeStart = timeStart;
     }
 
-    public void setTimeStop(Long timeStop) {
+    public void setTimeStop(Date timeStop) {
         this.timeStop = timeStop;
     }
 
@@ -60,12 +70,15 @@ public class Check implements Serializable {
         this.menu = menu;
     }
 
+    public void setTimePrice(Long timePrice) {
+        this.timePrice = timePrice;
+    }
+
     public void setAllPrice(Long allPrice) {
         this.allPrice = allPrice;
     }
-/*
+
     public void setClient(Client client) {
         this.client = client;
     }
-    */
 }

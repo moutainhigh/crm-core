@@ -1,109 +1,103 @@
 package com.cafe.crm.models.client;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
-@Table(name = "clients")
-public class Client implements Serializable{
-
+@Table(name ="clients")
+public class Client {
     @Id
     @GeneratedValue
+    @Column(name = "id")
     private Long id;
 
     private String name;
 
-    public Client() {
-    }
-
-    public Client(String name) {
-        this.name = name;
-    }
-
-    /*
-    @Id
-    @GeneratedValue
-    private Long id;
+    private String surname;
 
     private String photo;
 
-    private String name;
+    private boolean existenceCard;
 
     private Long discount;
 
-    private Long balanceCard;
+    private Long balance;
 
-    private Long spentCard;
+    private Long spend;
+
+    @OneToOne(fetch = FetchType.EAGER, targetEntity = Calculate.class)
+    @JoinTable(name = "client_calculate",
+            joinColumns = {@JoinColumn(name = "client_id")},
+            inverseJoinColumns = {@JoinColumn(name = "calculate_id")})
+    private Calculate calculate;
 
     public Client() {
     }
 
-
-        @OneToOne(fetch = FetchType.EAGER, targetEntity = Client.class)
-        @JoinTable(name = "Client-Check",
-                joinColumns = {@JoinColumn(name = "client_id")},
-                inverseJoinColumns = {@JoinColumn(name = "check_id")})
-        private Check check;
-
-
     public Long getId() {
         return id;
-    }
-
-    public String getPhoto() {
-        return photo;
     }
 
     public String getName() {
         return name;
     }
 
-    public boolean isQrCard() {
-        return qrCard;
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public boolean isExistenceCard() {
+        return existenceCard;
     }
 
     public Long getDiscount() {
         return discount;
     }
 
-    public Long getBalanceCard() {
-        return balanceCard;
+    public Long getBalance() {
+        return balance;
     }
 
-    public Long getSpentCard() {
-        return spentCard;
+    public Long getSpend() {
+        return spend;
     }
 
-    public Check getCheck() {
-        return check;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
+    public Calculate getCalculate() {
+        return calculate;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setQrCard(boolean qrCard) {
-        this.qrCard = qrCard;
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public void setExistenceCard(boolean existenceCard) {
+        this.existenceCard = existenceCard;
     }
 
     public void setDiscount(Long discount) {
         this.discount = discount;
     }
 
-    public void setBalanceCard(Long balanceCard) {
-        this.balanceCard = balanceCard;
+    public void setBalance(Long balance) {
+        this.balance = balance;
     }
 
-    public void setSpentCard(Long spentCard) {
-        this.spentCard = spentCard;
+    public void setSpend(Long spend) {
+        this.spend = spend;
     }
 
-    public void setCheck(Check check) {
-        this.check = check;
+    public void setCalculate(Calculate calculate) {
+        this.calculate = calculate;
     }
-    */
 }

@@ -1,8 +1,8 @@
 package com.cafe.crm.initMet;
 
-import com.cafe.crm.dao.client.CheckRepository;
 import com.cafe.crm.dao.client.ClientRepository;
-import com.cafe.crm.models.client.Check;
+import com.cafe.crm.dao.client.CalculateRepository;
+import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,30 +15,30 @@ public class InitClient {
     @Autowired
     private ClientRepository clientRepository;
 
-  // @Autowired
-  // private CheckRepository checkRepository;
+    @Autowired
+    private CalculateRepository calculateRepository;
 
 
     public void init() {
-        clientRepository.save(new Client("name"));
 
-/*
         Client client = new Client();
-        client.setBalanceCard((long)500);
-        client.setDiscount((long)10);
         client.setName("Danil");
-        client.setPhoto("тут фото");
-        //client.setQrCard(true);
-        client.setSpentCard((long)5000);
+        client.setSurname("Джавер");
+        client.setPhoto(null);
+        client.setExistenceCard(false);
+        client.setDiscount(null);
+        client.setBalance(null);
+        client.setSpend(null);
         clientRepository.save(client);
 
-        Check check = new Check();
-        check.setAllPrice((long)5900);
-        check.setMenu("тут меню");
-        check.setTimeStart(new Date().getTime());
-        check.setTimeStop(new Date().getTime());
-        checkRepository.save(check);
-*/
+        Calculate calculate = new Calculate();
+        calculate.setTimeStart(new Date());
+        calculate.setTimeStop(new Date());
+        calculate.setClient(client);
+        calculate.setMenu(null);
+        calculate.setTimePrice((long)555);
+        calculate.setAllPrice((long)123123);
+        calculateRepository.save(calculate);
 
 
     }
