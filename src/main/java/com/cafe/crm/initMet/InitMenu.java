@@ -4,7 +4,7 @@ package com.cafe.crm.initMet;
 import com.cafe.crm.dao.*;
 import com.cafe.crm.dao.dao_menu.CategoryRepository;
 import com.cafe.crm.dao.dao_menu.MenuRepository;
-import com.cafe.crm.dao.dao_menu.ProductRepostitory;
+import com.cafe.crm.dao.dao_menu.ProductRepository;
 import com.cafe.crm.models.Menu.Category;
 import com.cafe.crm.models.Menu.Menu;
 import com.cafe.crm.models.Menu.Product;
@@ -29,7 +29,7 @@ public class InitMenu {
 
 
     @Autowired
-    private ProductRepostitory productRepostitory;
+    private ProductRepository productRepostitory;
 
     @Autowired
     private RoleRepository roleRepository;
