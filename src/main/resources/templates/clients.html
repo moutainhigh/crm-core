@@ -9,8 +9,6 @@
 <body>
 <header>
     <div class="container"  style="margin-top:50px">
-
-
         <div class="row">
 
             <div class="navbar navbar-inverse navbar-fixed-top">
@@ -33,10 +31,11 @@
     </div><!--/.container -->
 </header>
 
+<form action="/add-calculate" method="post">
+    <button type="submit" class="btn btn-primary">Открыть анонимный счет</button>
+</form>
 
-    <button type="button"
-            class="btn btn-lg btn-primary " data-toggle="modal" data-target="#myModal">Открыть счет
-    </button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Открыть счет</button>
     <!-- Modal -->
     <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
@@ -87,12 +86,22 @@
 
             <div class="col-md-2 cont">
 
-                <label class="col-md-5 control-label" for="pname">Имя</label>
-                <input id="pname" name="pname" type="text" class="form-control input-md"/>
-                <label class="col-md-5 control-label" for="pname">Фамилия</label>
-                <input id="pname" name="pname" type="text" class="form-control input-md"/>
-                <label class="col-md-5 control-label" for="pname">Time start</label>
-                <input id="pname" name="pname" type="text" class="form-control input-md"/>
+                <label class="col-md-5 control-label">Имя</label>
+                <input readonly="" type="text" class="form-control input-md" th:value="${calculate.getClient()} ? ${calculate.getClient().name} : 'АНОНИМУС'"/>
+                <label class="col-md-5 control-label">Фамилия</label>
+                <input readonly="" type="text" class="form-control input-md" th:value="${calculate.getClient()} ? ${calculate.getClient().surname} : 'АНОНИМУС'"/>
+                <label class="col-md-5 control-label">Заказ</label>
+                <input readonly="" type="text" class="form-control input-md" th:value="${calculate.menu}"/>
+                <label class="col-md-5 control-label">Time start</label>
+                <input readonly="" type="text" class="form-control input-md" th:value="${calculate.timeStart}"/>
+                <label class="col-md-5 control-label">Time finish</label>
+                <input readonly="" type="text" class="form-control input-md" th:value="${calculate.timeStop}"/>
+                <label class="col-md-5 control-label">Time price</label>
+                <input readonly="" type="text" class="form-control input-md" th:value="${calculate.timePrice}"/>
+                <label class="col-md-5 control-label">Discount</label>
+                <input readonly="" type="text" class="form-control input-md" th:value="${calculate.getClient()} ? ${calculate.getClient().discount} : 'АНОНИМУС'"/>
+                <label class="col-md-5 control-label">All price</label>
+                <input readonly="" type="text" class="form-control input-md" th:value="${calculate.allPrice}"/>
                 <br/>
 
 

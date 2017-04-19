@@ -57,7 +57,7 @@ public class InitClient {
         calculate.setTimeStart(new Date());
         calculate.setTimeStop(new Date());
         calculate.setClient(client);
-        calculate.setMenu("туточки меню выдвигается");
+        calculate.setMenu("туточки заказ");
         calculate.setTimePrice((long)555);
         calculate.setAllPrice((long)1200);
         calculateRepository.save(calculate);
@@ -65,8 +65,8 @@ public class InitClient {
         Calculate calculate1 = new Calculate();
         calculate1.setTimeStart(new Date());
         calculate1.setTimeStop(new Date());
-        calculate1.setClient(client);
-        calculate1.setMenu("туточки меню выдвигается");
+        calculate1.setClient(client1);
+        calculate1.setMenu("туточки заказ");
         calculate1.setTimePrice((long)300);
         calculate1.setAllPrice((long)1000);
         calculateRepository.save(calculate1);
