@@ -4,10 +4,12 @@ import com.cafe.crm.dao.UserRepository;
 import com.cafe.crm.models.User;
 import com.cafe.crm.service_abstract.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by User on 19.04.2017.
  */
+@Service
 public class UserServiceImpl implements UserService {
 
 
