@@ -22,7 +22,7 @@ public class InitClient {
     public void init() {
 
         Client client = new Client();
-        client.setName("Danil");
+        client.setName("Данил");
         client.setSurname("Джавер");
         client.setPhoto("тут фото");
         client.setExistenceCard(true);
@@ -32,7 +32,7 @@ public class InitClient {
         clientRepository.save(client);
 
         Client client1 = new Client();
-        client1.setName("Dima");
+        client1.setName("Дима");
         client1.setSurname("Джавер");
         client1.setPhoto("тут фото");
         client1.setExistenceCard(true);
@@ -42,7 +42,7 @@ public class InitClient {
         clientRepository.save(client1);
 
         Client client2 = new Client();
-        client2.setName("Sasha");
+        client2.setName("Саша");
         client2.setSurname("Джавер");
         client2.setPhoto("тут фото");
         client2.setExistenceCard(true);

@@ -5,8 +5,6 @@ import com.cafe.crm.dao.client.ClientRepository;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,14 +26,18 @@ public class ClientController {
 
     @RequestMapping(value = {"/get-all-clients-calculates"}, method = RequestMethod.GET)
     public ModelAndView getAllClients(ModelMap modelMap) {
-        modelMap.addAttribute("ListClient", clientRepository.findAll());
-        modelMap.addAttribute("ListCalculate", calculateRepository.findAll());
+        modelMap.addAttribute("listClient", clientRepository.findAll());
+        modelMap.addAttribute("listCalculate", calculateRepository.findAll());
         return new ModelAndView("clients");
     }
 
-    @RequestMapping(value = {"/add-calculate"}, method = RequestMethod.GET)
-    public void getAllClients(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        Client client = (Client)clientRepository.findOne(Long.parseLong(request.getParameter("UserId")));
+    @RequestMapping(value = {"/add-calculate"}, method = RequestMethod.POST)
+    public void addCalculate(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Client client = null;
+
+        if (request.getParameter("ClientId") != null) {
+            client = clientRepository.findOne(Long.parseLong(request.getParameter("ClientId")));
+        }
 
         Calculate calculate = new Calculate();
         calculate.setTimeStart(new Date());

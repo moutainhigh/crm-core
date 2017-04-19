@@ -1,6 +1,7 @@
 package com.cafe.crm.models.client;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name ="clients")
@@ -24,11 +25,11 @@ public class Client {
 
     private Long spend;
 
-    @OneToOne(fetch = FetchType.EAGER, targetEntity = Calculate.class)
+    @OneToMany(fetch = FetchType.EAGER, targetEntity = Calculate.class)
     @JoinTable(name = "client_calculate",
             joinColumns = {@JoinColumn(name = "client_id")},
             inverseJoinColumns = {@JoinColumn(name = "calculate_id")})
-    private Calculate calculate;
+    private Set<Calculate> calculate;
 
     public Client() {
     }
@@ -65,7 +66,7 @@ public class Client {
         return spend;
     }
 
-    public Calculate getCalculate() {
+    public Set<Calculate> getCalculate() {
         return calculate;
     }
 
@@ -97,7 +98,7 @@ public class Client {
         this.spend = spend;
     }
 
-    public void setCalculate(Calculate calculate) {
+    public void setCalculate(Set<Calculate> calculate) {
         this.calculate = calculate;
     }
 }
