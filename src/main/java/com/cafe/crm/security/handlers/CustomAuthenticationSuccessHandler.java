@@ -48,7 +48,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
         } else if (authorities.contains(new Role("MANAGER"))) {
 
-            return "/user/";
+            return "/user";
 
         } else {
 

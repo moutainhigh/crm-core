@@ -17,7 +17,7 @@ public class LoginController {
 @Autowired
  private MenuRepository repository;
 
-    @RequestMapping(value = {"/","/login"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
     public ModelAndView getLoginPage(ModelMap modelMap) {
         modelMap.addAttribute("List", repository.findAll());
         return new ModelAndView("login");
@@ -25,6 +25,12 @@ public class LoginController {
 
     @RequestMapping(value = {"/admin"}, method = RequestMethod.GET)
     public ModelAndView getAdminPage(ModelMap modelMap) {
+        modelMap.addAttribute("List", repository.findAll());
+        return new ModelAndView("index");
+    }
+
+    @RequestMapping(value = {"/admin"}, method = RequestMethod.POST)
+    public ModelAndView getAdminPagePost(ModelMap modelMap) {
         modelMap.addAttribute("List", repository.findAll());
         return new ModelAndView("index");
     }
