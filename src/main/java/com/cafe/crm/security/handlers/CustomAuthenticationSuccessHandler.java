@@ -44,11 +44,11 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
         if (authorities.contains(new Role("BOSS"))) {
-            return "/admin/get-all-users";
+            return "/admin";
 
         } else if (authorities.contains(new Role("MANAGER"))) {
 
-            return "/user/home-user";
+            return "/user/";
 
         } else {
 

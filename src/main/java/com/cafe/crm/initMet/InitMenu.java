@@ -76,7 +76,7 @@ public class InitMenu {
 
 
        Product pro1 = new Product("salat","taste",100);
-       Product pro2 = new Product("cofe","whithmilk",5);
+       Product pro2 = new Product("cofe","whithoutsugar",5);
        Product pro3 = new Product("fish","big",400);
 
         productRepostitory.saveAndFlush(pro1);

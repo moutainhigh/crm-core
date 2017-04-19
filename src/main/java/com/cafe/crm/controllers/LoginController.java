@@ -11,14 +11,20 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * Created by User on 18.04.2017.
  */
-@Controller("/")
-public class test_controller {
+@Controller
+public class LoginController {
 
 @Autowired
  private MenuRepository repository;
 
-    @RequestMapping(value = {"/"}, method = RequestMethod.GET)
-    public ModelAndView getAllUsers(ModelMap modelMap) {
+    @RequestMapping(value = {"/","/login"}, method = RequestMethod.GET)
+    public ModelAndView getLoginPage(ModelMap modelMap) {
+        modelMap.addAttribute("List", repository.findAll());
+        return new ModelAndView("login");
+    }
+
+    @RequestMapping(value = {"/admin"}, method = RequestMethod.GET)
+    public ModelAndView getAdminPage(ModelMap modelMap) {
         modelMap.addAttribute("List", repository.findAll());
         return new ModelAndView("index");
     }

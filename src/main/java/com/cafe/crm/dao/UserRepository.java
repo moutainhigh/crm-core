@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 /**
- * Created by User on 18.04.2017.
+ * Created by Sasha ins on 18.04.2017.
  */
 public interface UserRepository extends JpaRepository<User,Long> {
 
