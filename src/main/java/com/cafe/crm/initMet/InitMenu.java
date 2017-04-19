@@ -8,6 +8,8 @@ import com.cafe.crm.dao.dao_menu.ProductRepository;
 import com.cafe.crm.models.Menu.Category;
 import com.cafe.crm.models.Menu.Menu;
 import com.cafe.crm.models.Menu.Product;
+import com.cafe.crm.models.Role;
+import com.cafe.crm.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +18,10 @@ import java.util.Set;
 
 @Component
 public class InitMenu {
-    /*cccccccccccccccccccccccccccccc
-        @Autowired
-        private RoleDao roleDao;
 
-        @Autowired
-        private UserDao userDao;*/
+
+
+
     @Autowired
     private MenuRepository repository;
     @Autowired
@@ -40,47 +40,39 @@ public class InitMenu {
     private UserRepository userRepository;
 
     public void init() {
-    /*    Role roleAdmin = new Role();
+        Role roleAdmin = new Role();
         roleAdmin.setName("BOSS");
-        roleDao.saveAndFlush(roleAdmin);
+        roleRepository.saveAndFlush(roleAdmin);
 
         Role roleUser = new Role();
         roleUser.setName("MANAGER");
-        roleDao.saveAndFlush(roleUser);
+        roleRepository.saveAndFlush(roleUser);
 
         User admin = new User();
-        admin.setLogin("admin1");
-        admin.setPassword("admin1");
+        admin.setLogin("admin");
+        admin.setPassword("admin");
+        admin.setName("Jim");
 
         Set<Role> adminRoles = new HashSet<>();
         adminRoles.add(roleUser);
         adminRoles.add(roleAdmin);
         admin.setRoles(adminRoles);
 
-        userDao.saveAndFlush(admin);
+        userRepository.saveAndFlush(admin);
 
         User user = new User();
-        user.setLogin("manager1");
-        user.setPassword("manager1");
+        user.setLogin("manager");
+        user.setPassword("manager");
+        user.setName("Anna");
         Set<Role> userRoles = new HashSet<>();
         userRoles.add(roleUser);
         user.setRoles(userRoles);
 
-        userDao.saveAndFlush(user);*/
+        userRepository.saveAndFlush(user);
 
 
 
-
-       /* userRepository.saveAndFlush(new User("sasha","logn","123",12));
-        userRepository.saveAndFlush(new User("ree","logn","123",12));
-        userRepository.saveAndFlush(new User("4444","logn","123",12));
-
-        roleRepository.saveAndFlush(new Role("BOSS"));
-        roleRepository.saveAndFlush(new Role("MANAGER"));
-*/
-
-
-       Set<Product> MYproducts = new HashSet<>();
+       Set<Product> products = new HashSet<>();
 
 
        Product pro1 = new Product("salat","taste",100);
@@ -91,9 +83,9 @@ public class InitMenu {
         productRepostitory.saveAndFlush(pro2);
         productRepostitory.saveAndFlush(pro3);
 
-       MYproducts.add(pro1);
-       MYproducts.add(pro2);
-       MYproducts.add(pro3);
+       products.add(pro1);
+       products.add(pro2);
+       products.add(pro3);
 
 
         Category category2 = new Category("sushi");
@@ -101,9 +93,9 @@ public class InitMenu {
         Category category3 = new Category("salats");
 
 
-        category1.setProducts(MYproducts);
-        category2.setProducts(MYproducts);
-        category3.setProducts(MYproducts);
+        category1.setProducts(products);
+        category2.setProducts(products);
+        category3.setProducts(products);
 
         category.saveAndFlush(category2);
         category.saveAndFlush(category1);
