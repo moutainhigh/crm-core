@@ -69,48 +69,105 @@ public class InitMenu {
         user.setRoles(userRoles);
 
         userRepository.saveAndFlush(user);
+//--------------------------------------------------------------------------------------
 
 
+        Category category1 = new Category("Салаты");
 
-       Set<Product> products = new HashSet<>();
+        Category category2 = new Category("Напитки");
+        Category category3 = new Category("Десерты");
 
-
-       Product pro1 = new Product("salat","taste",100);
-       Product pro2 = new Product("cofe","whithoutsugar",5);
-       Product pro3 = new Product("fish","big",400);
-
-        productRepostitory.saveAndFlush(pro1);
-        productRepostitory.saveAndFlush(pro2);
-        productRepostitory.saveAndFlush(pro3);
-
-       products.add(pro1);
-       products.add(pro2);
-       products.add(pro3);
-
-
-        Category category2 = new Category("sushi");
-        Category category1 = new Category("drinks");
-        Category category3 = new Category("salats");
-
-
-        category1.setProducts(products);
-        category2.setProducts(products);
-        category3.setProducts(products);
-
-        category.saveAndFlush(category2);
         category.saveAndFlush(category1);
+        category.saveAndFlush(category2);
         category.saveAndFlush(category3);
 
-        Menu menu = new Menu("Dinner");
+
+        Set<Product> products1 = new HashSet<>();
+        Set<Product> products2 = new HashSet<>();
+        Set<Product> products3 = new HashSet<>();
 
 
-        Set<Category> mymenu = new HashSet<>();
+        Product pro1 = new Product("Цезарь","taste",100);
 
-        mymenu.add(category1);
-        mymenu.add(category2);
-        mymenu.add(category3);
+        Product pro11 = new Product("Лёгкий","taste",100);
+        Product pro111 = new Product("Летний","taste",100);
 
-        menu.setCategories(mymenu);
+        Product pro2 = new Product("Кофе","test",5);
+        Product pro22 = new Product("Кока-кола","test",5);
+        Product pro222 = new Product("Кофе","test",5);
+
+        Product pro3 = new Product("Фруктовый","big",400);
+        Product pro33 = new Product("Терамису","big",400);
+        Product pro333 = new Product("Шоколадный","big",400);
+
+        Set<Category> setCat1 = new HashSet<>();
+        Set<Category> setCat2 = new HashSet<>();
+        Set<Category> setCat3 = new HashSet<>();
+
+        setCat1.add(category1);
+        setCat2.add(category2);
+        setCat3.add(category3);
+
+        pro1.setCategory(setCat1);
+
+        pro11.setCategory(setCat1);
+        pro111.setCategory(setCat1);
+
+        pro2.setCategory(setCat2);
+        pro22.setCategory(setCat2);
+        pro222.setCategory(setCat2);
+
+        pro3.setCategory(setCat3);
+        pro33.setCategory(setCat3);
+        pro333.setCategory(setCat3);
+
+        productRepostitory.saveAndFlush(pro1);
+
+        productRepostitory.saveAndFlush(pro11);
+        productRepostitory.saveAndFlush(pro111);
+
+        productRepostitory.saveAndFlush(pro2);
+        productRepostitory.saveAndFlush(pro22);
+        productRepostitory.saveAndFlush(pro222);
+
+        productRepostitory.saveAndFlush(pro3);
+        productRepostitory.saveAndFlush(pro33);
+        productRepostitory.saveAndFlush(pro333);
+
+        products1.add(pro1);
+        products1.add(pro11);
+        products1.add(pro111);
+
+        products2.add(pro2);
+        products2.add(pro22);
+        products2.add(pro222);
+
+        products3.add(pro3);
+        products3.add(pro33);
+        products3.add(pro333);
+
+
+
+        category1.setProducts(products1);
+
+        category2.setProducts(products2);
+
+        category3.setProducts(products3);
+
+        category.saveAndFlush(category1);
+        category.saveAndFlush(category2);
+        category.saveAndFlush(category3);
+
+        Menu menu = new Menu("Обеденное");
+
+
+        Set<Category> myMenu = new HashSet<>();
+
+        myMenu.add(category1);
+        myMenu.add(category2);
+        myMenu.add(category3);
+
+        menu.setCategories(myMenu);
 
 
         repository.saveAndFlush(menu);

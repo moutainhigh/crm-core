@@ -21,10 +21,10 @@ public class Category {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Product.class)
-    @JoinTable(name = "productPermissions",
-            joinColumns = {@JoinColumn(name = "category_id",referencedColumnName = "id",nullable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "product_id",referencedColumnName = "id")})
+    @OneToMany(fetch = FetchType.EAGER, targetEntity = Product.class)
+    @JoinTable(name = "product_and_categories",
+            joinColumns = {@JoinColumn(name = "category_id")},
+            inverseJoinColumns = {@JoinColumn(name = "product_id")})
     private Set<Product> products;
 
 
