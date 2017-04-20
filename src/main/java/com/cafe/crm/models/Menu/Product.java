@@ -27,8 +27,11 @@ public class Product {
     @Column(name="cost")
     private long cost;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST},mappedBy = "products")
-    private Category category;
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Category.class)
+    @JoinTable(name = "product_and_categories",
+            joinColumns = {@JoinColumn(name = "product_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")})
+    private Set<Category>category;
 
 
     public Product() {
@@ -72,11 +75,11 @@ public class Product {
         this.cost = cost;
     }
 
-    public Category getCategory() {
+    public Set<Category> getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
+    public void setCategory(Set<Category> category) {
         this.category = category;
     }
 }
