@@ -31,9 +31,29 @@
     </div><!--/.container -->
 </header>
 
-<form action="/add-calculate" method="post">
-    <button type="submit" class="btn btn-primary">Открыть анонимный счет</button>
-</form>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal1">Открыть анонимный счет</button>
+<!-- Modal -->
+<div id="myModal1" class="modal fade">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <form class="form" action="/add-calculate" method="post">
+                    Имя
+                    <input type="text" name="anonName"/>
+                    Фамилия
+                    <input type="text" name="anonSurname"/>
+                    <button type="submit" class="btn btn-primary">Создать</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Открыть счет</button>
     <!-- Modal -->
@@ -87,9 +107,9 @@
             <div class="col-md-2 cont">
 
                 <label class="col-md-5 control-label">Имя</label>
-                <input readonly="" type="text" class="form-control input-md" th:value="${calculate.getClient()} ? ${calculate.getClient().name} : 'АНОНИМУС'"/>
+                <input readonly="" type="text" class="form-control input-md" th:value="${calculate.name}"/>
                 <label class="col-md-5 control-label">Фамилия</label>
-                <input readonly="" type="text" class="form-control input-md" th:value="${calculate.getClient()} ? ${calculate.getClient().surname} : 'АНОНИМУС'"/>
+                <input readonly="" type="text" class="form-control input-md" th:value="${calculate.surname}"/>
                 <label class="col-md-5 control-label">Заказ</label>
                 <input readonly="" type="text" class="form-control input-md" th:value="${calculate.menu}"/>
                 <label class="col-md-5 control-label">Time start</label>

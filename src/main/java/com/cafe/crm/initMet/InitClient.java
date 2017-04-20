@@ -54,6 +54,8 @@ public class InitClient {
 
 
         Calculate calculate = new Calculate();
+        calculate.setName(client.getName());
+        calculate.setSurname(client.getSurname());
         calculate.setTimeStart(new Date());
         calculate.setTimeStop(new Date());
         calculate.setClient(client);
@@ -63,6 +65,8 @@ public class InitClient {
         calculateRepository.save(calculate);
 
         Calculate calculate1 = new Calculate();
+        calculate1.setName(client1.getName());
+        calculate1.setSurname(client1.getSurname());
         calculate1.setTimeStart(new Date());
         calculate1.setTimeStop(new Date());
         calculate1.setClient(client1);

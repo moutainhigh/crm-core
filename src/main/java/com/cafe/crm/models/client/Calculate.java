@@ -11,6 +11,10 @@ public class Calculate {
     @Column(name = "id")
     private Long id;
 
+    private String name;
+
+    private String surname;
+
     private Date timeStart;
 
     private Date timeStop;
@@ -28,6 +32,14 @@ public class Calculate {
     private Client client;
 
     public Calculate() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSurname() {
+        return surname;
     }
 
     public Long getId() {
@@ -56,6 +68,14 @@ public class Calculate {
 
     public Client getClient() {
         return client;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public void setTimeStart(Date timeStart) {

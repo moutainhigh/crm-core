@@ -34,11 +34,16 @@ public class ClientController {
     @RequestMapping(value = {"/add-calculate"}, method = RequestMethod.POST)
     public void addCalculate(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap) throws Exception {
         Client client = null;
+        Calculate calculate = new Calculate();
 
         if (request.getParameter("ClientId") != null) {
             client = clientRepository.findOne(Long.parseLong(request.getParameter("ClientId")));
+            calculate.setName(client.getName());
+            calculate.setSurname(client.getSurname());
+        } else {
+            calculate.setName(request.getParameter("anonName")+"-Анон");
+            calculate.setSurname(request.getParameter("anonSurname")+"-Анон");
         }
-        Calculate calculate = new Calculate();
         calculate.setTimeStart(new Date());
         calculate.setTimeStop(new Date());
         calculate.setClient(client);
@@ -46,7 +51,6 @@ public class ClientController {
         calculate.setTimePrice((long)123);
         calculate.setAllPrice((long)1111);
         calculateRepository.save(calculate);
-
 
         response.sendRedirect("/get-all-clients-calculates");
     }
