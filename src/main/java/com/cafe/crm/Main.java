@@ -1,5 +1,6 @@
 package com.cafe.crm;
 
+
 import com.cafe.crm.initMet.InitClient;
 import com.cafe.crm.initMet.InitMenu;
 import org.springframework.boot.SpringApplication;
@@ -20,13 +21,16 @@ public class Main extends WebMvcConfigurerAdapter {
         SpringApplication.run(Main.class, args);
     }
 
-    @Bean(initMethod = "init")
-    public InitClient initClient() {
-        return new InitClient();
-    }
 
-    @Bean(initMethod = "init")
+
+/*    @Bean(initMethod = "init")
     public InitMenu initTestData() {
         return new InitMenu();
     }
+
+
+    @Bean(initMethod = "init")
+    public InitClient initC() {
+        return new InitClient();
+    }*/
 }
