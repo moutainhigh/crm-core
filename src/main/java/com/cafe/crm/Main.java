@@ -23,7 +23,7 @@ public class Main extends WebMvcConfigurerAdapter {
 
 
 
-/*    @Bean(initMethod = "init")
+    @Bean(initMethod = "init")
     public InitMenu initTestData() {
         return new InitMenu();
     }
@@ -32,5 +32,5 @@ public class Main extends WebMvcConfigurerAdapter {
     @Bean(initMethod = "init")
     public InitClient initC() {
         return new InitClient();
-    }*/
+    }
 }
