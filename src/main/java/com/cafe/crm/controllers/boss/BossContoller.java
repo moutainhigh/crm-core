@@ -1,7 +1,9 @@
 package com.cafe.crm.controllers.boss;
 
 import com.cafe.crm.dao.UserRepository;
+import com.cafe.crm.dao.dao_menu.CategoryRepository;
 import com.cafe.crm.dao.dao_menu.MenuRepository;
+import com.cafe.crm.dao.dao_menu.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,6 +24,13 @@ public class BossContoller {
     @Autowired
     private MenuRepository menuRepository;
 
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
     @RequestMapping(value = {"/boss/create-menu"}, method = RequestMethod.GET)
     public ModelAndView createMenu(ModelMap modelMap) {
 
@@ -39,6 +48,8 @@ public class BossContoller {
     @RequestMapping(value = {"/boss"}, method = RequestMethod.GET)
     public ModelAndView getAdminPage(ModelMap modelMap) {
         modelMap.addAttribute("menu",menuRepository.getOne(1l));
+        modelMap.addAttribute("categories",categoryRepository.findAll());
+        modelMap.addAttribute("products",productRepository.findAll());
         return new ModelAndView("bossview");
     }
 

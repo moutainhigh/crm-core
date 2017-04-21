@@ -21,8 +21,8 @@ public class Product {
     private String name;
 
 
-    @Column(name = "specification")
-    private String specification;
+    @Column(name = "description")
+    private String description;
 
     @Column(name="cost")
     private long cost;
@@ -37,9 +37,9 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String specification, long cost) {
+    public Product(String name, String description, long cost) {
         this.name = name;
-        this.specification = specification;
+        this.description = description;
         this.cost=cost;
     }
 
@@ -55,12 +55,12 @@ public class Product {
         this.name = name;
     }
 
-    public String getSpecification() {
-        return specification;
+    public String getDescription() {
+        return description;
     }
 
-    public void setSpecification(String specification) {
-        this.specification = specification;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setId(long id) {
