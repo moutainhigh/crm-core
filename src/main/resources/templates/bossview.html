@@ -33,7 +33,6 @@
                 </ul>
             </div><!--/.nav-collapse -->
         </div><!--/.navbar -->
-
         <div>
             <h3 align="center"><h1 th:align="center">Фильтр По Всем Полям</h1></h3>
 
@@ -42,10 +41,7 @@
         </div>
 
         <div class="tabbable"> <!-- Only required for left/right tabs -->
-
-
             <ul class="nav nav-tabs">
-
                 <li th:each="cat : ${categories}"><a th:href="'#' +${cat.id}" data-toggle="tab"><p
                         th:text="${cat.name}"></p></a></li>
             </ul>
@@ -93,41 +89,8 @@
                                         </button>
                                     </form>
                                 </td>
-                                <form role="form" method="post" action="/upd" style="margin: 10px auto; width: 50%">
-                                    <div align="center" class="modal fade" th:id="${prod.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                                            aria-hidden="true">&times;</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Edit user</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="form-group">
-                                                        <label>Login:</label>
-                                                        <input type="text" class="form-control1" id="login2" name="name" th:value="${prod.name}"
-                                                        ></input>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Password:</label>
-                                                        <input type="text" class="form-control" id="des" name="des" th:value="${prod.description}"
-                                                        ></input>
-                                                    </div>
-                                                    <label>Password:</label>
-                                                    <input type="text" class="form-control" id="cost" name="cost" th:value="${prod.cost}"
-                                                    ></input>
-                                                </div>
-                                                <button type="submit" class="btn btn-primary" name="upd" th:value="${prod.id}">Save changes</button>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
 
                             </tr>
-
                             </tbody>
                         </table>
                     </div>
@@ -138,7 +101,38 @@
 
 
     </div><!--/.container -->
-
+    <form role="form" method="post" action="/upd" style="margin: 10px auto; width: 50%">
+        <div align="center" class="modal fade" th:id="${prod.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Edit user</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Login:</label>
+                            <input type="text" class="form-control1" id="login2" name="name" th:value="${prod.name}"
+                            ></input>
+                        </div>
+                        <div class="form-group">
+                            <label>Password:</label>
+                            <input type="text" class="form-control" id="des" name="des" th:value="${prod.description}"
+                            ></input>
+                        </div>
+                        <label>Password:</label>
+                        <input type="text" class="form-control" id="cost" name="cost" th:value="${prod.cost}"
+                        ></input>
+                    </div>
+                    <button type="submit" class="btn btn-primary" name="upd" th:value="${prod.id}">Save changes</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </form>
 </header>
 <script>
     $(document).ready(function () {
