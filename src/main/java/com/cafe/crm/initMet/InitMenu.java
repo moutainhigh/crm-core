@@ -73,7 +73,6 @@ public class InitMenu {
 
 
         Category category1 = new Category("Салаты");
-
         Category category2 = new Category("Напитки");
         Category category3 = new Category("Десерты");
 
