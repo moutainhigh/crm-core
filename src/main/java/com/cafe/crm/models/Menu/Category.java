@@ -28,7 +28,6 @@ public class Category {
     private Set<Product> products;
 
 
-
     @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST},mappedBy = "categories")
     private Set<Menu> menus;
 

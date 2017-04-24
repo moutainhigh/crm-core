@@ -1,25 +1,78 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html>
 <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link rel="stylesheet" type="text/css" media="all" href="subMenu.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="main.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    <link rel="stylesheet" th:href="@{/css/main.css}" type="text/css"/>
+
 </head>
 
+<header>
+
+
+
+
+
+</header>
+
 <body>
-<a href="/login">${List} </a>
-<div class="tab-content">
-
-    <tr th:each="user : ${List}">
-
-        <td th:text="${user.id}"></td>
-        <td th:text="${user.name}"></td>
-        <td th:text="${user.getCategories().size()}"></td>
-    </tr>>
-
-</div>>
+<div class="container ">
+    <div class="panel-group" id="accordion1">
 
 
+
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
+                    Меню
+                </a></h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse">
+                <div class="panel-body">
+
+                    <!-- Here we insert another nested accordion -->
+
+                    <div class="panel-group" id="accordion2">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion2" href="#collapseInnerOne">
+                                    ночное
+                                </a></h4>
+                            </div>
+                            <div id="collapseInnerOne" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    Тут категории
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion2" href="#collapseInnerTwo">
+                                    другое меню
+                                </a></h4>
+                            </div>
+                            <div id="collapseInnerTwo" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    Тут категории
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 </body>
+
 </html>

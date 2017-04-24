@@ -69,17 +69,11 @@ public class InitMenu {
         user.setRoles(userRoles);
 
         userRepository.saveAndFlush(user);
-//--------------------------------------------------------------------------------------
 
 
-        Category category1 = new Category("Салаты");
 
-        Category category2 = new Category("Напитки");
-        Category category3 = new Category("Десерты");
+       Set<Product> products = new HashSet<>();
 
-        category.saveAndFlush(category1);
-        category.saveAndFlush(category2);
-        category.saveAndFlush(category3);
 
 
         Set<Product> products1 = new HashSet<>();
