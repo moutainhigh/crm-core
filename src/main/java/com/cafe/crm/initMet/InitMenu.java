@@ -72,8 +72,13 @@ public class InitMenu {
 
 
 
-       Set<Product> products = new HashSet<>();
+        Category category1 = new Category("Салаты");
+        Category category2 = new Category("Напитки");
+        Category category3 = new Category("Десерты");
 
+        category.saveAndFlush(category1);
+        category.saveAndFlush(category2);
+        category.saveAndFlush(category3);
 
 
         Set<Product> products1 = new HashSet<>();
