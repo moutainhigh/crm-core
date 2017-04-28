@@ -4,6 +4,7 @@ package com.cafe.crm.models.Menu;
 
 
 import javax.persistence.*;
+import java.util.DoubleSummaryStatistics;
 import java.util.Set;
 
 
@@ -17,7 +18,7 @@ public class Product {
 
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -27,7 +28,7 @@ public class Product {
     private String description;
 
     @Column(name="cost")
-    private long cost;
+    private Double cost;
 
     @ManyToMany(fetch = FetchType.EAGER, targetEntity = Category.class)
     @JoinTable(name = "product_and_categories",
@@ -39,13 +40,13 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String description, long cost) {
+    public Product(String name, String description, Double cost) {
         this.name = name;
         this.description = description;
         this.cost=cost;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -69,11 +70,15 @@ public class Product {
         this.id = id;
     }
 
-    public long getCost() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Double getCost() {
         return cost;
     }
 
-    public void setCost(long cost) {
+    public void setCost(Double cost) {
         this.cost = cost;
     }
 
@@ -83,5 +88,37 @@ public class Product {
 
     public void setCategory(Set<Category> category) {
         this.category = category;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Product product = (Product) o;
+
+        if (cost != product.cost) return false;
+        if (id != null ? !id.equals(product.id) : product.id != null) return false;
+        if (name != null ? !name.equals(product.name) : product.name != null) return false;
+        return description != null ? description.equals(product.description) : product.description == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (cost != null ? cost.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", cost=" + cost +
+                '}';
     }
 }

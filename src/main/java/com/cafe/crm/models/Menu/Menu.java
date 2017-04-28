@@ -15,7 +15,7 @@ public class Menu {
 
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
 
 
     @Column(name="name")
@@ -44,7 +44,7 @@ public class Menu {
         this.name = name;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -58,5 +58,31 @@ public class Menu {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Menu menu = (Menu) o;
+
+        if (id != menu.id) return false;
+        return name != null ? name.equals(menu.name) : menu.name == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

@@ -12,11 +12,8 @@
 
 <body>
 
-
 <header>
     <div class="container" style="margin-top:50px">
-
-
         <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -34,34 +31,42 @@
             </div><!--/.nav-collapse -->
         </div><!--/.navbar -->
         <div>
-            <h3 align="center"><h1 th:align="center" style="color: #5bc0de;">Фильтр По Всем Полям</h1></h3>
+            <h3 align="center"><h1 th:align="center" style="color: #5bc0de;">Поиск</h1></h3>
             <input id="filter" style="margin-bottom: 10px" type="text" class="form-control"
                    placeholder="Поиск по полям"></input>
         </div>
         <div class="tabbable"> <!-- Only required for left/right tabs -->
             <ul class="nav nav-tabs">
-                <li style="color: #5bc0de;" th:each="cat : ${categories}"><a th:href="'#' +${cat.id}" data-toggle="tab"><p
-                        th:text="${cat.name}"></p></a></li>
+                <li style="color: #5bc0de;" th:each="cat : ${categories}"><a th:href="'#' +${cat.id}" data-toggle="tab">
+                    <h4 style="color: #5bc0de;"
+                        th:text="${cat.name}"></h4></a></li>
             </ul>
+            <div display="inline-block" style="float:left">
+                <button type="button" class="btn  btn-primary" data-dismiss="modal" display="inline-block"
+                        th:href="'#addCat'" data-toggle="modal">
+                    Создать новую категорию
+                </button>
+            </div>
             <div class="tab-content">
                 <div class="tab-pane " th:id="${categor.id}" th:each="categor:${categories}">
-                    <div class="btn-group "  >
-                        <button class="btn">Редактирование категории</button>
-                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#">
+                            Подробнее
                             <span class="caret"></span>
-                        </button>
+                        </a>
                         <ul class="dropdown-menu">
                             <!-- dropdown menu links -->
-                            <li><a th:href="'#a'+${categor.id}" data-toggle="modal" >Редлактировать категорию</a></li>
-                            <li><a th:href="'#add'+${categor.id}" data-toggle="modal" >Добавить продукт</a></li>
-                            <li><a href="#" >Удалить категорию</a></li>
+                            <li><a th:href="'#a'+${categor.id}" data-toggle="modal">Редлактировать категорию</a></li>
+                            <li><a th:href="'#add'+${categor.id}" data-toggle="modal">Добавить продукт</a></li>
+                            <li><a th:href="'#delCat'+${categor.id}" data-toggle="modal">Удалить категорию</a></li>
                         </ul>
                     </div>
+
+                    <h1 th:align="center" style="color: #5bc0de;">Меню</h1>
                     <div class="row">
-                        <br/>
-                        <br/>
                     </div>
-                    <div class="table" style="border-radius:5px;" >
+                    <div class="table" style="border-radius:5px;">
                         <table class="table table-striped">
                             <tr>
                                 <th>#</th>
@@ -78,45 +83,57 @@
                                 <td><p th:text="${prod.description}"></p></td>
                                 <td><p th:text="${prod.cost}"></p></td>
 
-                                <td class="col-lg-2"  ><a class="btn btn-primary btn-info" th:href="'#p'+${prod.id}" data-toggle="modal" >Редактировать </a></td>
+                                <td class="col-lg-2"><a class="btn btn-primary btn-info" th:href="'#p'+${prod.id}"
+                                                        data-toggle="modal">Редактировать </a></td>
 
-                                <td >
+                                <td>
                                     <form method="post">
                                         <button class="btn btn-primary btn-danger" name="del" th:value="${prod.id}">
                                             Удалить
                                         </button>
                                     </form>
                                 </td>
-                                <form role="form" method="post" action="/boss/upd" style="margin: 10px auto; width: 50%; paddng-bottom:40px;">
-                                    <div align="center" class="modal fade" th:id="'p'+${prod.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <form role="form" method="post" action="/boss/menu/upd"
+                                      style="margin: 10px auto; width: 50%; paddng-bottom:40px;">
+                                    <div align="center" class="modal fade" th:id="'p'+${prod.id}" tabindex="-1"
+                                         role="dialog" aria-labelledby="myModalLabel">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                    <button type="button" class="close" data-dismiss="modal"
+                                                            aria-label="Close"><span
                                                             aria-hidden="true">&times;</span></button>
                                                     <h4 class="modal-title" id="myModalLabel">Редактирование </h4>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="form-group">
                                                         <label>Название</label>
-                                                        <input type="text" class="form-control" id="login2" name="name" th:value="${prod.name}"
+                                                        <input type="text" class="form-control" id="login2" name="name"
+                                                               th:value="${prod.name}"
                                                         ></input>
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Описание</label>
-                                                        <input type="text" class="form-control" id="des" name="des" th:value="${prod.description}"
+                                                        <input type="text" class="form-control" id="des" name="des"
+                                                               th:value="${prod.description}"
                                                         ></input>
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Цена</label>
-                                                        <input type="text" class="form-control" id="cost" name="cost" th:value="${prod.cost}"
+                                                        <input type="text" class="form-control" id="cost" name="cost"
+                                                               th:value="${prod.cost}"
                                                         ></input>
                                                     </div>
                                                 </div>
-                                                <button type="submit" class="btn btn-primary" name="upd" th:value="${prod.id}">Сохранить</button>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                                                <button type="submit" class="btn btn-primary" name="upd"
+                                                        th:value="${prod.id}">Сохранить
+                                                </button>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                        Закрыть
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -125,37 +142,46 @@
                             </tbody>
                         </table>
                     </div>
-                    <form role="form" method="post" action="/boss/updCat" style="margin: 10px auto; width: 50%">
-                        <div align="center" class="modal fade" th:id="'a'+${categor.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <form role="form" method="post" action="/boss/menu/updCat" style="margin: 10px auto; width: 50%">
+                        <div align="center" class="modal fade" th:id="'a'+${categor.id}" tabindex="-1" role="dialog"
+                             aria-labelledby="myModalLabel">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close"><span
                                                 aria-hidden="true">&times;</span></button>
                                         <h4 class="modal-title" id="myModalLabel2">Редактирование категории</h4>
                                     </div>
                                     <div class="modal-body">
                                         <div class="form-group">
                                             <label>Название</label>
-                                            <input type="text" class="form-control" id="loginCat" name="name" th:value="${categor.name}"
+                                            <input type="text" class="form-control" id="loginCat" name="name"
+                                                   th:value="${categor.name}"
                                             ></input>
                                         </div>
 
                                     </div>
-                                    <button type="submit" class="btn btn-primary" name="upd" th:value="${categor.id}">Сохранить</button>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                                    <button type="submit" class="btn btn-primary" name="upd" th:value="${categor.id}">
+                                        Сохранить
+                                    </button>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </form>
-                    <form role="form" method="post" action="/boss/addProd" style="margin: 10px auto; width: 50%">
-                        <div align="center" class="modal fade" th:id="'add'+${categor.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <form role="form" method="post" action="/boss/menu/addProd" style="margin: 10px auto; width: 50%">
+                        <div align="center" class="modal fade" th:id="'add'+${categor.id}" tabindex="-1" role="dialog"
+                             aria-labelledby="myModalLabel">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close"><span
                                                 aria-hidden="true">&times;</span></button>
                                         <h4 class="modal-title" id="myModalLabel4">Редактирование категории</h4>
                                     </div>
@@ -176,21 +202,77 @@
                                             ></input>
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-primary" name="add" th:value="${categor.id}">Сохранить</button>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                                    <button type="submit" class="btn btn-primary" name="add" th:value="${categor.id}">
+                                        Сохранить
+                                    </button>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </form>
 
+                    <form role="form" method="post" action="/boss/menu/deleteCat" style="margin: 10px auto; width: 50%">
+                        <div align="center" class="modal fade" th:id="'delCat'+${categor.id}" tabindex="-1"
+                             role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close"><span
+                                                aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="myModalDelete">Удаление категории</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label>Название</label>
+                                            <input type="text" class="form-control" id="deleteCat" name="name"
+                                                   th:value="${categor.name}"
+                                            ></input>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" name="del" th:value="${categor.id}">
+                                        Удалить
+                                    </button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
 
         </div>
 
+        <form role="form" method="post" action="/boss/menu/addCat" style="margin: 10px auto; width: 50%">
+            <div align="center" class="modal fade" th:id="'addCat'" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel5">Новая категория</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Название</label>
+                                <input type="text" class="form-control" id="loginProd2" name="name"
+                                ></input>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" name="add">Сохранить</button>
 
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div><!--/.container -->
 
 </header>

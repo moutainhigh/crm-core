@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/", "/manager/**").permitAll()
-                .antMatchers("/admin/**").hasAuthority("BOSS")
+                .antMatchers("/boss/**").hasAuthority("BOSS")
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -66,7 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .logout()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
+                .logoutSuccessUrl("/login")
                 .invalidateHttpSession(true)
                 .permitAll();
 

@@ -16,7 +16,7 @@ public class Category {
 
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -39,7 +39,7 @@ public class Category {
 
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -69,5 +69,32 @@ public class Category {
 
     public void setMenus(Set<Menu> menus) {
         this.menus = menus;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Category category = (Category) o;
+
+        if (id != category.id) return false;
+        return name != null ? name.equals(category.name) : category.name == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

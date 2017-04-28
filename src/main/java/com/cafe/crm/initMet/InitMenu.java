@@ -19,27 +19,23 @@ import java.util.Set;
 @Component
 public class InitMenu {
 
-
-
-
     @Autowired
     private MenuRepository repository;
+
     @Autowired
     private CategoryRepository category;
 
-
     @Autowired
-    private ProductRepository productRepostitory;
+    private ProductRepository productRepository;
 
     @Autowired
     private RoleRepository roleRepository;
 
-
     @Autowired
-
     private UserRepository userRepository;
 
     public void init() {
+
         Role roleAdmin = new Role();
         roleAdmin.setName("BOSS");
         roleRepository.saveAndFlush(roleAdmin);
@@ -86,18 +82,18 @@ public class InitMenu {
         Set<Product> products3 = new HashSet<>();
 
 
-        Product pro1 = new Product("Цезарь","taste",100);
+        Product pro1 = new Product("Цезарь","вкусный",100d);
 
-        Product pro11 = new Product("Лёгкий","taste",100);
-        Product pro111 = new Product("Летний","taste",100);
+        Product pro11 = new Product("Лёгкий","вкусный",100d);
+        Product pro111 = new Product("Летний","вкусный",100d);
 
-        Product pro2 = new Product("Кофе","test",5);
-        Product pro22 = new Product("Кока-кола","test",5);
-        Product pro222 = new Product("Кофе","test",5);
+        Product pro2 = new Product("Кофе","вкусный",5d);
+        Product pro22 = new Product("Кока-кола","вкусный",5d);
+        Product pro222 = new Product("Кофе","вкусный",5d);
 
-        Product pro3 = new Product("Фруктовый","big",400);
-        Product pro33 = new Product("Терамису","big",400);
-        Product pro333 = new Product("Шоколадный","big",400);
+        Product pro3 = new Product("Фруктовый","вкусный",400d);
+        Product pro33 = new Product("Терамису","вкусный",400d);
+        Product pro333 = new Product("Шоколадный","вкусный",400d);
 
         Set<Category> setCat1 = new HashSet<>();
         Set<Category> setCat2 = new HashSet<>();
@@ -120,18 +116,18 @@ public class InitMenu {
         pro33.setCategory(setCat3);
         pro333.setCategory(setCat3);
 
-        productRepostitory.saveAndFlush(pro1);
+        productRepository.saveAndFlush(pro1);
 
-        productRepostitory.saveAndFlush(pro11);
-        productRepostitory.saveAndFlush(pro111);
+        productRepository.saveAndFlush(pro11);
+        productRepository.saveAndFlush(pro111);
 
-        productRepostitory.saveAndFlush(pro2);
-        productRepostitory.saveAndFlush(pro22);
-        productRepostitory.saveAndFlush(pro222);
+        productRepository.saveAndFlush(pro2);
+        productRepository.saveAndFlush(pro22);
+        productRepository.saveAndFlush(pro222);
 
-        productRepostitory.saveAndFlush(pro3);
-        productRepostitory.saveAndFlush(pro33);
-        productRepostitory.saveAndFlush(pro333);
+        productRepository.saveAndFlush(pro3);
+        productRepository.saveAndFlush(pro33);
+        productRepository.saveAndFlush(pro333);
 
         products1.add(pro1);
         products1.add(pro11);
