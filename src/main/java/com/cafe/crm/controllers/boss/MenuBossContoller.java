@@ -47,7 +47,7 @@ public class MenuBossContoller {
         modelMap.addAttribute("menu", menuRepository.getOne(1L));
         modelMap.addAttribute("categories", categoryRepository.findAll());
         modelMap.addAttribute("products", productRepository.findAll());
-        return new ModelAndView("bossview");
+        return new ModelAndView("bossMenu");
     }
 
     @RequestMapping(value = {"/boss/menu"}, method = RequestMethod.POST)

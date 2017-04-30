@@ -49,7 +49,6 @@
             </div>
             <div class="tab-content">
                 <div class="tab-pane " th:id="${categor.id}" th:each="categor:${categories}">
-
                     <div class="btn-group">
                         <a class="btn dropdown-toggle btn-primary" data-toggle="dropdown" href="#">
                             Подробнее
@@ -62,12 +61,11 @@
                             <li><a th:href="'#delCat'+${categor.id}" data-toggle="modal">Удалить категорию</a></li>
                         </ul>
                     </div>
-
                     <h1 th:align="center" style="color: #5bc0de;">Меню</h1>
                     <div class="row">
                     </div>
-                    <div class="table" style="border-radius:5px;">
-                        <table class="table table-striped">
+                    <div class="table" style="border-radius:5px;" data-page="bossview.html">
+                        <table  class="table table-striped">
                             <tr>
                                 <th>#</th>
                                 <th>Наименование</th>
@@ -83,7 +81,7 @@
                                 <td><p th:text="${prod.description}"></p></td>
                                 <td><p th:text="${prod.cost}"></p></td>
 
-                                <td class="col-lg-2"><a class="btn btn-primary btn-info" th:href="'#p'+${prod.id}"
+                                <td class="col-lg-2"><a id="ins" class="btn btn-primary btn-info" th:href="'#p'+${prod.id}"
                                                         data-toggle="modal">Редактировать </a></td>
 
                                 <td>
@@ -125,7 +123,7 @@
                                                         ></input>
                                                     </div>
                                                 </div>
-                                                <button type="submit" class="btn btn-primary" name="upd"
+                                                <button id="super" type="submit" class="btn btn-primary" name="upd"
                                                         th:value="${prod.id}">Сохранить
                                                 </button>
 
@@ -303,7 +301,19 @@
         });
     });
 </script>
-
+<script>
+    $('.super').click(function() {
+        var pageName = $(this).data('page');
+        // ajax-запрос
+        $.ajax({
+            url: '/boss/menu/upd',
+            cache: false,
+            success: function(html){
+                $("#bossview").html(html);
+            }
+        });
+    });
+</script>
 </body>
 
 </html>
