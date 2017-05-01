@@ -16,23 +16,23 @@ public class Role implements GrantedAuthority {
     @Column(name = "name", length = 20, nullable = false)
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER, targetEntity = User.class)
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = User.class)
     @JoinTable(name = "permissions",
             joinColumns = {@JoinColumn(name = "role_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
-    private List<User> users;
+    private User user;
 
     public Role() {
     }
 
 
 
-    public List<User> getUsers() {
-        return users;
+    public User getUsers() {
+        return user;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setUsers(User user) {
+        this.user = user;
     }
 
     public Role(String name) {

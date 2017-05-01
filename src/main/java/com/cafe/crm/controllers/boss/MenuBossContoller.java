@@ -1,13 +1,12 @@
 package com.cafe.crm.controllers.boss;
 
-import com.cafe.crm.dao.UserRepository;
-import com.cafe.crm.dao.dao_menu.CategoryRepository;
-import com.cafe.crm.dao.dao_menu.MenuRepository;
-import com.cafe.crm.dao.dao_menu.ProductRepository;
 import com.cafe.crm.models.Menu.Category;
 import com.cafe.crm.models.Menu.Product;
+import com.cafe.crm.service_abstract.UserService;
+import com.cafe.crm.service_abstract.menu_service.CategoriesService;
+import com.cafe.crm.service_abstract.menu_service.MenuService;
+import com.cafe.crm.service_abstract.menu_service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,114 +25,107 @@ import java.util.Set;
 @Controller
 public class MenuBossContoller {
 
+	@Autowired
+	private MenuService menuService;
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private CategoriesService categoriesService;
 
-    @Autowired
-    private MenuRepository menuRepository;
-
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
+	@Autowired
+	private ProductService productService;
 
 
-    @RequestMapping(value = {"/boss/menu"}, method = RequestMethod.GET)
-    public ModelAndView getAdminPage(ModelMap modelMap) {
-        modelMap.addAttribute("menu", menuRepository.getOne(1L));
-        modelMap.addAttribute("categories", categoryRepository.findAll());
-        modelMap.addAttribute("products", productRepository.findAll());
-        return new ModelAndView("bossMenu");
-    }
+	@RequestMapping(value = {"/boss/menu"}, method = RequestMethod.GET)
+	public ModelAndView getAdminPage(ModelAndView modelAndView) {
+		ModelAndView mv = new ModelAndView("bossMenu");
+		mv.addObject("menu", menuService.getOne(1L));
+		mv.addObject("categories", categoriesService.findAll());
+		mv.addObject("products", productService.findAll());
+		return mv;
+	}
 
-    @RequestMapping(value = {"/boss/menu"}, method = RequestMethod.POST)
-    @ResponseBody
-    public ModelAndView getAdminPagePost(ModelMap modelMap, @RequestParam(value = "del", required = false) Long id) throws IOException {
-        if (id != null) {
+	@RequestMapping(value = {"/boss/menu"}, method = RequestMethod.POST)
+	@ResponseBody
+	public ModelAndView getAdminPagePost(ModelAndView modelAndView, @RequestParam(value = "del", required = false) Long id) throws IOException {
+		ModelAndView mv = new ModelAndView("bossMenu");
+		if (id != null) {
 
-            Product product = productRepository.findOne(id);
-            if (product != null)
-                productRepository.delete(id);
+			Product product = productService.findOne(id);
+			if (product != null)
+				productService.delete(id);
 
-        }
-        modelMap.addAttribute("menu", menuRepository.getOne(1L));
-        modelMap.addAttribute("categories", categoryRepository.findAll());
-        modelMap.addAttribute("products", productRepository.findAll());
+		}
+		modelAndView.addObject("menu", menuService.getOne(1L));
+		modelAndView.addObject("categories", categoriesService.findAll());
+		modelAndView.addObject("products", productService.findAll());
 
+		return mv;
+	}
 
-        return new ModelAndView("redirect:/boss/menu");
-    }
+	@RequestMapping(value = "/boss/menu/upd", method = RequestMethod.POST)
+	public ModelAndView updProduct(@RequestParam(name = "upd") Long id, @RequestParam(name = "name") String name, @RequestParam(name = "cost") Double cost, @RequestParam(name = "des") String des) {
 
-    @RequestMapping(value = "/boss/menu/upd", method = RequestMethod.POST)
-    public ModelAndView updProduct(@RequestParam(name = "upd") Long id, @RequestParam(name = "name") String name, @RequestParam(name = "cost") Double cost, @RequestParam(name = "des") String des) {
+		Product product = productService.findOne(id);
+		product.setName(name);
+		product.setCost(cost);
+		product.setDescription(des);
 
+		productService.saveAndFlush(product);
 
-        Product product = productRepository.getOne(id);
-        product.setName(name);
-        product.setCost(cost);
-        product.setDescription(des);
+		return new ModelAndView("redirect:/boss/menu");
 
-        productRepository.saveAndFlush(product);
+	}
 
-        return new ModelAndView("redirect:/boss/menu");
+	@RequestMapping(value = "/boss/menu/updCat", method = RequestMethod.POST)
+	public ModelAndView updCategory(@RequestParam(name = "upd") Long id, @RequestParam(name = "name") String name) {
 
-    }
+		Category category = categoriesService.getOne(id);
+		category.setName(name);
+		categoriesService.saveAndFlush(category);
 
-    @RequestMapping(value = "/boss/menu/updCat", method = RequestMethod.POST)
-    public ModelAndView updCategory(@RequestParam(name = "upd") Long id, @RequestParam(name = "name") String name) {
+		return new ModelAndView("redirect:/boss/menu/");
 
-        Category category = categoryRepository.getOne(id);
-        category.setName(name);
+	}
 
-        categoryRepository.saveAndFlush(category);
+	@RequestMapping(value = "/boss/menu/addProd", method = RequestMethod.POST)
+	public ModelAndView addProd(@RequestParam(name = "add") Long id, @RequestParam(name = "name") String name, @RequestParam(name = "cost") Double cost, @RequestParam(name = "des") String des) {
 
+		Category category = categoriesService.getOne(id);
+		Product product = new Product(name, des, cost);
+		Set<Category> setCat = new HashSet<>();
+		setCat.add(category);
+		product.setCategory(setCat);
 
-        return new ModelAndView("redirect:/boss/menu/");
+		productService.saveAndFlush(product);
+		categoriesService.saveAndFlush(category);
 
-    }
+		return new ModelAndView("redirect:/boss/menu");
 
-    @RequestMapping(value = "/boss/menu/addProd", method = RequestMethod.POST)
-    public ModelAndView addProd(@RequestParam(name = "add") Long id, @RequestParam(name = "name") String name, @RequestParam(name = "cost") Double cost, @RequestParam(name = "des") String des) {
+	}
 
-        Category category = categoryRepository.getOne(id);
-        Product product = new Product(name, des, cost);
-        Set<Category> setCat = new HashSet<>();
-        setCat.add(category);
-        product.setCategory(setCat);
+	@RequestMapping(value = "/boss/menu/addCat", method = RequestMethod.POST)
+	public ModelAndView addCategories(@RequestParam(name = "name") String name) {
 
-        productRepository.saveAndFlush(product);
-        categoryRepository.saveAndFlush(category);
+		Category category = new Category(name);
+		Set<Product> setProducts = new HashSet<>();
+		category.setProducts(setProducts);
 
+		categoriesService.saveAndFlush(category);
 
-        return new ModelAndView("redirect:/boss/menu");
+		return new ModelAndView("redirect:/boss/menu");
 
-    }
+	}
 
-    @RequestMapping(value = "/boss/menu/addCat", method = RequestMethod.POST)
-    public ModelAndView addCategories(@RequestParam(name = "name") String name) {
+	@RequestMapping(value = "/boss/menu/deleteCat", method = RequestMethod.POST)
+	public ModelAndView deleteCategories(@RequestParam(name = "del") Long id) {
 
-        Category category = new Category(name);
-        Set<Product> setProducts = new HashSet<>();
-        category.setProducts(setProducts);
-        categoryRepository.saveAndFlush(category);
+		if (id != null) {
 
-        return new ModelAndView("redirect:/boss/menu");
+			menuService.getOne(1L).getCategories().remove(categoriesService.getOne(id));
+			categoriesService.delete(id);
+		}
+		return new ModelAndView("redirect:/boss/menu");
 
-    }
-
-    @RequestMapping(value = "/boss/menu/deleteCat", method = RequestMethod.POST)
-    public ModelAndView deleteCategories(@RequestParam(name = "del") Long id) {
-
-        if(id!=null) {
-
-            menuRepository.getOne(1L).getCategories().remove(categoryRepository.getOne(id));
-            categoryRepository.delete(id);
-        }
-        return new ModelAndView("redirect:/boss/menu");
-
-    }
+	}
 
 }

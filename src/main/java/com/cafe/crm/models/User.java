@@ -11,145 +11,144 @@ import java.util.Set;
 @Table(name = "users")
 public class User implements UserDetails {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private Long id;
+	@Id
+	@GeneratedValue
+	@Column(name = "id")
+	private Long id;
 
-    @Column(name = "name",  nullable = false)
-    private String name;
+	@Column(name = "name", nullable = false)
+	private String name;
 
-    @Column(name = "login",  nullable = false, unique = true)
-    private String login;
+	@Column(name = "login", nullable = false, unique = true)
+	private String login;
+
+	@Column(name = "password", length = 30, nullable = false)
+	private String password;
+
+	@Column(name = "salary")
+	private long salary;
+
+	@OneToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
+	@JoinTable(name = "permissions",
+			joinColumns = {@JoinColumn(name = "user_id")},
+			inverseJoinColumns = {@JoinColumn(name = "role_id")})
+	private Set<Role> roles;
+
+	@Column(name = "enabled", nullable = false)
+	private Boolean enabled = true;
 
 
-    @Column(name = "password", length = 30, nullable = false)
-    private String password;
+	public User(String name, String login, String password, long salary) {
+		this.name = name;
+		this.login = login;
+		this.password = password;
+		this.salary = salary;
+	}
 
-    @Column(name="salary")
-    private long salary;
+	public long getSalary() {
+		return salary;
+	}
 
-    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
-    @JoinTable(name = "permissions",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    private Set<Role> roles;
+	public void setSalary(long salary) {
+		this.salary = salary;
+	}
 
-    @Column(name = "enabled", nullable = false)
-    private Boolean enabled = true;
+	public User() {
+	}
 
+	public String getName() {
+		return name;
+	}
 
-    public User(String name, String login, String password, long salary) {
-        this.name = name;
-        this.login = login;
-        this.password = password;
-        this.salary = salary;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public long getSalary() {
-        return salary;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setSalary(long salary) {
-        this.salary = salary;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public User() {
-    }
+	public String getLogin() {
+		return login;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setLogin(String login) {
+		this.login = login;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return roles;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	@Override
+	public String getPassword() {
+		return password;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Override
+	public String getUsername() {
+		return login;
+	}
 
-    public String getLogin() {
-        return login;
-    }
+	public boolean isAccountNonExpired() {
+		return true;
+	}
 
-    public void setLogin(String login) {
-        this.login = login;
-    }
+	public boolean isAccountNonLocked() {
+		return true;
+	}
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
-    }
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
+	public boolean isEnabled() {
+		return enabled;
+	}
 
-    @Override
-    public String getUsername() {
-        return login;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+	public Set<Role> getRoles() {
+		return roles;
+	}
 
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
 
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-    public boolean isEnabled() {
-        return enabled;
-    }
+		User user = (User) o;
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+		if (id != null ? !id.equals(user.id) : user.id != null) return false;
+		if (name != null ? !name.equals(user.name) : user.name != null) return false;
+		return login != null ? login.equals(user.login) : user.login == null;
+	}
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + (login != null ? login.hashCode() : 0);
+		return result;
+	}
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-        }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        User user = (User) o;
-
-        if (id != null ? !id.equals(user.id) : user.id != null) return false;
-        if (name != null ? !name.equals(user.name) : user.name != null) return false;
-        return login != null ? login.equals(user.login) : user.login == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (login != null ? login.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", login='" + login + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "User{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", login='" + login + '\'' +
+				'}';
+	}
 }
