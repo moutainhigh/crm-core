@@ -1,0 +1,22 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head th:replace="css :: cssMain"></head>
+
+<body>
+
+
+<div class="container">
+
+    <h1 class="custom" align="center">Таблица Всех Сотрудников</h1>
+    <h3 align="center">Фильтр По Всем Полям</h3>
+    <input id="filter" style="margin-bottom: 10px" type="text" class="form-control"
+           placeholder="Поиск по полям"></input>
+    <div th:replace="workerList :: workerList"></div>
+    <div th:replace="newWorker :: newWorker"></div>
+    <h1 class="custom" align="center">Таблица Всех Управляющих</h1>
+    <div th:replace="managerList :: managerList"></div>
+
+</div>
+</body>
+</html>

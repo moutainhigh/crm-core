@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"></meta>
+    <title>Title</title>
+</head>
+<body>
+
+<div class="wrapper" th:fragment="newWorker">
+    <form action="" method="POST" class="form-signin">
+        <button type="button" class="btn btn-lg btn-primary btn-block"
+                data-toggle="modal" data-target="#myModalManager">Добавить Нового Сотрудника</button>
+    </form>
+    <!-- Modal -->
+    <div id="myModalManager" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Форма Добавления Нового Сотрудника</h4>
+                </div>
+                <div class="modal-body">
+                            <!-- tabs -->
+                            <div class="tabbable">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#one" data-toggle="tab">Форма Сотрудника</a></li>
+                                    <li><a href="#two" data-toggle="tab">Форма Управляющего</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="one">
+
+                                        <form action="/accounting/addWorker" method="POST" class="form-signin">
+                                            <h2 class="form-signin-heading">Заполните Поля</h2>
+                                            <input type="text" class="form-control" name="firstName" placeholder="Имя" required="" autofocus="" />
+                                            <br></br>
+                                            <input type="text" class="form-control" name="lastName" placeholder="Фамилия" required=""/>
+                                            <br></br>
+
+                                            <input class="form-control" list="position" name="position" placeholder="Выберите Должность"/>
+                                            <datalist id="position">
+                                                <option value="Кальянщик"/>
+                                                <option value="Официант"/>
+                                                <option value="Хостесс"/>
+                                            </datalist>
+
+
+                                            <br></br>
+
+                                            <input type="text" class="form-control" name="shiftSalary" placeholder="Оклад За смену" required=""/>
+                                            <br></br>
+                                            <button class="btn btn-lg btn-primary btn-block" type="submit">Добавить Сотрудника В Базу Данных</button>
+                                        </form>
+
+                                    </div>
+                                    <div class="tab-pane" id="two">
+                                        <form action="accounting/addManager" method="POST" class="form-signin">
+                                            <h2 class="form-signin-heading">Заполните Поля</h2>
+                                            <input type="text" class="form-control" name="firstName" placeholder="Имя" required="" autofocus="" />
+                                            <br></br>
+
+                                            <input type="text" class="form-control" name="lastName" placeholder="Фамилия" required="" autofocus="" />
+                                            <br></br>
+
+                                            <input type="text" class="form-control" readonly="readonly" value="Управляющий" name="position" placeholder="Должность" required="" autofocus="" />
+                                            <br></br>
+
+                                            <input type="text" class="form-control" name="shiftSalary" placeholder="Размер Оклада За Смену" required="" autofocus="" />
+                                            <br></br>
+
+                                            <input type="text" class="form-control" name="login" placeholder="Логин" required="" autofocus="" />
+                                            <br></br>
+
+
+                                            <input type="text" class="form-control" name="password" placeholder="Пароль" required="" autofocus="" />
+                                            <br></br>
+
+                                            <button class="btn btn-lg btn-primary btn-block" type="submit">Добавить Управляющего В Базу Данных</button>
+                                        </form>
+                                    </div>
+                                </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+        </div>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+
+<body>
+<table class="table table-condensed table-responsive custom" th:fragment="managerList">
+    <tr>
+        <th><h3> # </h3></th>
+        <th><h3> Имя </h3></th>
+        <th><h3> Фамилия </h3></th>
+        <th><h3> Login </h3></th>
+        <th><h3> Password </h3></th>
+        <th><h3> Должность </h3></th>
+        <th><h3> Оклад За Смену </h3></th>
+        <th><h3> Смены </h3></th>
+        <th><h3> Зарплата </h3></th>
+    </tr>
+    <tr th:each="manager : ${managerList}">
+        <td class="custom" th:text="${manager.id}"></td>
+        <td class="custom" th:text="${manager.firstName}"></td>
+        <td class="custom" th:text="${manager.lastName}"></td>
+        <td class="custom" th:text="${manager.login}"></td>
+        <td class="custom" th:text="${manager.password}"></td>
+        <td class="custom" th:text="${manager.position}"></td>
+        <td class="custom" th:text="${manager.shiftSalary}"></td>
+        <td class="custom" th:text="${manager.countShift}"></td>
+        <td class="custom" th:text="${manager.salary}"></td>
+    </tr>
+</table>
+</body>
+</html>
