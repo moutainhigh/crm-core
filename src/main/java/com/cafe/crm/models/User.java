@@ -39,37 +39,15 @@ public class User implements UserDetails {
     private Boolean enabled = true;
 
 
-//    @OneToMany(fetch = FetchType.EAGER, targetEntity = Shift.class)
-//    @JoinTable(name = "permissions_shifts",
-//            joinColumns = {@JoinColumn(name = "user_id")},
-//            inverseJoinColumns = {@JoinColumn(name = "shift_id")})
-//    private Set<Shift> allShifts;
-
-//    @Column(name = "countShift")
-//    private int countShift;
 
     public User() {
     }
 
-//    public int getCountShift() {
-//        return countShift;
-//    }
-//
-//    public void setCountShift(int countShift) {
-//        this.countShift = countShift;
-//    }
 
     public User(String name) {
         this.name = name;
     }
 
-//    public Set<Shift> getAllShifts() {
-//        return allShifts;
-//    }
-//
-//    public void setAllShifts(Set<Shift> allShifts) {
-//        this.allShifts = allShifts;
-//    }
 
     public long getSalary() {
         return salary;
@@ -157,7 +135,6 @@ public class User implements UserDetails {
                 ", salary=" + salary +
                 ", roles=" + roles +
                 ", enabled=" + enabled +
-//                ", allShifts=" + allShifts +
                 '}';
     }
 }
