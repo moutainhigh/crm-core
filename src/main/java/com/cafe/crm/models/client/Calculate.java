@@ -1,104 +1,103 @@
 package com.cafe.crm.models.client;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.Set;
 
 @Entity
-@Table(name ="calculate")
+@Table(name ="calculations")
 public class Calculate {
     @Id
     @GeneratedValue
     @Column(name = "id")
     private Long id;
 
-    private String name;
-
-    private String surname;
-
-    private Date timeStart;
-
-    private Date timeStop;
+    private String description;
 
     private String menu;
 
-    private Long timePrice;
+    private Double allPrice;
 
-    private Long allPrice;
+    private boolean state = true;
 
-    @OneToOne(fetch = FetchType.EAGER, targetEntity = Client.class)
-    @JoinTable(name = "client_calculate",
+    @OneToMany(fetch = FetchType.EAGER, targetEntity = Client.class)
+    @JoinTable(name = "clients_calculations",
             joinColumns = {@JoinColumn(name = "calculate_id")},
             inverseJoinColumns = {@JoinColumn(name = "client_id")})
-    private Client client;
+    private Set<Client> client;
+
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Board.class)
+    @JoinTable(name = "boards_calculations",
+            joinColumns = {@JoinColumn(name = "calculate_id")},
+            inverseJoinColumns = {@JoinColumn(name = "board_id")})
+    private Board board;
+
+
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Card.class)
+    @JoinTable(name = "cards_calculations",
+            joinColumns = {@JoinColumn(name = "calculate_id")},
+            inverseJoinColumns = {@JoinColumn(name = "card_id")})
+    private Card card;
 
     public Calculate() {
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getSurname() {
-        return surname;
+    public Card getCard() {
+        return card;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Date getTimeStart() {
-        return timeStart;
-    }
-
-    public Date getTimeStop() {
-        return timeStop;
+    public String getDescription() {
+        return description;
     }
 
     public String getMenu() {
         return menu;
     }
 
-    public Long getTimePrice() {
-        return timePrice;
-    }
-
-    public Long getAllPrice() {
+    public Double getAllPrice() {
         return allPrice;
     }
 
-    public Client getClient() {
+    public boolean isState() {
+        return state;
+    }
+
+    public Set<Client> getClient() {
         return client;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Board getBoard() {
+        return board;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setCard(Card card) {
+        this.card = card;
     }
 
-    public void setTimeStart(Date timeStart) {
-        this.timeStart = timeStart;
-    }
-
-    public void setTimeStop(Date timeStop) {
-        this.timeStop = timeStop;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setMenu(String menu) {
         this.menu = menu;
     }
 
-    public void setTimePrice(Long timePrice) {
-        this.timePrice = timePrice;
-    }
-
-    public void setAllPrice(Long allPrice) {
+    public void setAllPrice(Double allPrice) {
         this.allPrice = allPrice;
     }
 
-    public void setClient(Client client) {
+    public void setState(boolean state) {
+        this.state = state;
+    }
+
+    public void setClient(Set<Client> client) {
         this.client = client;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
     }
 }

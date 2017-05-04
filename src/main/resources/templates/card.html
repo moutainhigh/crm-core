@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<div class="container" style="width: 250px; box-shadow: 0 0 3px 0; border-radius: 10px" th:each="card : ${card}">
+    <center>
+
+        <img style="border-radius: 5px" th:src="${card.photo}" width="150" height="150"/><br/>
+
+        <button class="btn" style="background: rgba(193,211,226,0.38); height:30px; width:150px;font-size: 15px">
+            Редактировать
+        </button>
+
+        <h3 style="margin-right: 20px;" th:text="${card.name}"></h3>
+
+        <h3 style="" th:text="${card.surname}"></h3>
+    </center>
+    <br/>
+
+    <div style="float:left; height: 40px; width: 110px"><h4>Скидка:</h4></div>
+    <div style="height: 40px;float:left; width: 110px"><h4 th:text="${card.discount} + '%'"></h4></div>
+    <div style="float:left; height: 40px; width: 110px"><h4>Баланс:</h4></div>
+    <div style="height: 40px;float:left; width: 110px"><h4 th:text="${card.balance} + 'р'"></h4></div>
+    <div style="float:left; height: 40px; width: 110px"><h4>Потрачено:</h4></div>
+    <div style="height: 40px;float:left; width: 110px"><h4 th:text="${card.spend} + 'р'"></h4></div>
+    <div style="float:left; height: 70px; width: 110px"><h4>Дата последнего визита:</h4></div>
+    <div style="height: 70px;float:left; width: 110px"><h4 th:text="${card.visitDate}"></h4></div>
+
+    <button class="btn"
+            style="background: rgba(182,200,215,0.58); height:30px; width:220px; margin-bottom: 10px; font-size: 18px">
+        Пополнить баланс
+    </button>
+    <button class="btn" data-toggle="modal"  href="#myModal" style="background: rgba(182,200,215,0.58); height:30px; width:220px;margin-bottom: 10px;font-size: 18px">
+        Прикрепить к расчету
+    </button>
+
+    <div th:id="myModal" class="modal fade">
+        <div class="modal-dialog "  style="width: 300px;" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" type="button" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Добавление карты к расчету</h4>
+                </div>
+                <div class="modal-body" style="width:300px;">
+                    <div th:each="calculate : ${listCalculate}">
+                        <form method="post" action="/add-card-to-calculate" >
+                            <input type="hidden" name="idCard"  th:value="${card.id}"/>
+                            <input type="hidden" name="idCalculate"  th:value="${calculate.id}"/>
+                        <button type="submit" class="btn btn-default" style=" font-size: 17px; float: left; height: 40px" th:text="${calculate.getBoard().name}"></button>
+                        </form>
+                        <div th:text="${calculate.description}" style="border: 1px solid #858585;
+                        border-radius:5px; margin-left: 78px; width:200px;height: 40px;margin-bottom: 15px;font-size: 15px"></div>
+
+
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>

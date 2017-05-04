@@ -1,81 +1,65 @@
 package com.cafe.crm.initMet;
 
-import com.cafe.crm.dao.client.ClientRepository;
-import com.cafe.crm.dao.client.CalculateRepository;
+import com.cafe.crm.dao_impl.client.BoardService;
+import com.cafe.crm.dao_impl.client.CalculateService;
+import com.cafe.crm.dao_impl.client.CardService;
+import com.cafe.crm.dao_impl.client.ClientService;
+import com.cafe.crm.models.client.Board;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.client.Card;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Component
 public class InitClient {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private BoardService boardService;
 
     @Autowired
-    private CalculateRepository calculateRepository;
-
+    private CardService cardService;
 
     public void init() {
 
-        Client client = new Client();
-        client.setName("Данил");
-        client.setSurname("Джавер");
-        client.setPhoto("тут фото");
-        client.setExistenceCard(true);
-        client.setDiscount((long)99);
-        client.setBalance((long)5000);
-        client.setSpend((long)18000);
-        clientRepository.save(client);
+        Board board = new Board();
+        board.setName("Стол1");
+        boardService.add(board);
 
-        Client client1 = new Client();
-        client1.setName("Дима");
-        client1.setSurname("Джавер");
-        client1.setPhoto("тут фото");
-        client1.setExistenceCard(true);
-        client1.setDiscount((long)99);
-        client1.setBalance((long)3000);
-        client1.setSpend((long)20000);
-        clientRepository.save(client1);
+        Board board1 = new Board();
+        board1.setName("Стол2");
+        boardService.add(board1);
 
-        Client client2 = new Client();
-        client2.setName("Саша");
-        client2.setSurname("Джавер");
-        client2.setPhoto("тут фото");
-        client2.setExistenceCard(true);
-        client2.setDiscount((long)99);
-        client2.setBalance((long)7000);
-        client2.setSpend((long)13000);
-        clientRepository.save(client2);
+        Board board2 = new Board();
+        board2.setName("Стол3");
+        boardService.add(board2);
 
+        Board board3 = new Board();
+        board3.setName("Стол4");
+        boardService.add(board3);
 
+        Card card = new Card();
+        card.setName("Данил");
+        card.setSurname("Джавер");
+        card.setBalance(0.0);
+        card.setDiscount((long)10);
+        card.setPhoto("https://pp.userapi.com/c636325/v636325810/41955/hBIdPv42Q38.jpg");
+        card.setSpend(0.0);
+        card.setVisitDate(LocalDate.now());
+        cardService.add(card);
 
-        Calculate calculate = new Calculate();
-        calculate.setName(client.getName());
-        calculate.setSurname(client.getSurname());
-        calculate.setTimeStart(new Date());
-        calculate.setTimeStop(new Date());
-        calculate.setClient(client);
-        calculate.setMenu("туточки заказ");
-        calculate.setTimePrice((long)555);
-        calculate.setAllPrice((long)1200);
-        calculateRepository.save(calculate);
-
-        Calculate calculate1 = new Calculate();
-        calculate1.setName(client1.getName());
-        calculate1.setSurname(client1.getSurname());
-        calculate1.setTimeStart(new Date());
-        calculate1.setTimeStop(new Date());
-        calculate1.setClient(client1);
-        calculate1.setMenu("туточки заказ");
-        calculate1.setTimePrice((long)300);
-        calculate1.setAllPrice((long)1000);
-        calculateRepository.save(calculate1);
-
-
+        Card card1 = new Card();
+        card1.setName("Кто-то");
+        card1.setSurname("Джавер");
+        card1.setBalance(0.0);
+        card1.setDiscount((long)15);
+        card1.setPhoto("http://usiter.com/uploads/20111118/zhivotnie+koshki+kartinka+s+malenkim+kotyonkom+35121656913.jpg");
+        card1.setSpend(0.0);
+        card1.setVisitDate(LocalDate.now());
+        cardService.add(card1);
 
     }
 }

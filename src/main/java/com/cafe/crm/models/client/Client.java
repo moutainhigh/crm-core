@@ -1,6 +1,8 @@
 package com.cafe.crm.models.client;
 
 import javax.persistence.*;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -11,94 +13,64 @@ public class Client {
     @Column(name = "id")
     private Long id;
 
-    private String name;
+    private Double price;
 
-    private String surname;
+    private String description;
 
-    private String photo;
+    private LocalTime timeStart;
 
-    private boolean existenceCard;
+    private Long number;
 
-    private Long discount;
-
-    private Long balance;
-
-    private Long spend;
-
-    @OneToMany(fetch = FetchType.EAGER, targetEntity = Calculate.class)
-    @JoinTable(name = "client_calculate",
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Calculate.class)
+    @JoinTable(name = "clients_calculate",
             joinColumns = {@JoinColumn(name = "client_id")},
             inverseJoinColumns = {@JoinColumn(name = "calculate_id")})
-    private Set<Calculate> calculate;
+    private Calculate calculate;
 
-    public Client() {
+     public Client() {
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public Long getNumber() {
+        return number;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getDescription() {
+        return description;
     }
 
-    public String getSurname() {
-        return surname;
+    public LocalTime getTimeStart() {
+        return timeStart;
     }
 
-    public String getPhoto() {
-        return photo;
-    }
-
-    public boolean isExistenceCard() {
-        return existenceCard;
-    }
-
-    public Long getDiscount() {
-        return discount;
-    }
-
-    public Long getBalance() {
-        return balance;
-    }
-
-    public Long getSpend() {
-        return spend;
-    }
-
-    public Set<Calculate> getCalculate() {
+    public Calculate getCalculate() {
         return calculate;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setNumber(Long number) {
+        this.number = number;
     }
 
-    public void setPhoto(String photo) {
-        this.photo = photo;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setExistenceCard(boolean existenceCard) {
-        this.existenceCard = existenceCard;
+    public void setTimeStart(LocalTime timeStart) {
+        this.timeStart = timeStart;
     }
 
-    public void setDiscount(Long discount) {
-        this.discount = discount;
-    }
-
-    public void setBalance(Long balance) {
-        this.balance = balance;
-    }
-
-    public void setSpend(Long spend) {
-        this.spend = spend;
-    }
-
-    public void setCalculate(Set<Calculate> calculate) {
+    public void setCalculate(Calculate calculate) {
         this.calculate = calculate;
     }
 }
