@@ -4,10 +4,14 @@ import com.cafe.crm.dao_impl.client.BoardService;
 import com.cafe.crm.dao_impl.client.CalculateService;
 import com.cafe.crm.dao_impl.client.calculateService.CalculateControllerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
+
 import javax.servlet.http.HttpServletRequest;
 
 
@@ -32,44 +36,43 @@ public class CalculateController {
 	}
 
 	@RequestMapping(value = {"/add-calculate"}, method = RequestMethod.POST)
-	public ModelAndView addCalculate(HttpServletRequest request) {//передаются по полю от 3 разных сущностей
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void addCalculate(HttpServletRequest request,
+							 @RequestParam(name = "boardId") Long id,
+							 @RequestParam(name = "number") Long number,
+							 @RequestParam(name = "description") String descr) {//передаются по полю от 3 разных сущностей
 
-		Long id = Long.parseLong(request.getParameter("boardId")); // id стола
-		Long number = Long.parseLong(request.getParameter("number")); //количество человек в клиенте
-		String descr = request.getParameter("description"); // описание расчета
-
-		calculateControllerService.addCalculate(id,number,descr);
-		return new ModelAndView("redirect:/manager");
+		calculateControllerService.addCalculate(id, number, descr);
+		//return new ModelAndView("redirect:/manager");
 	}
 
 	@RequestMapping(value = {"/refresh-board"}, method = RequestMethod.POST)
-	public ModelAndView refreshBoard(HttpServletRequest request) {
-		Long idB = Long.parseLong(request.getParameter("boardId"));
-		Long idC = Long.parseLong(request.getParameter("calculateId"));
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void refreshBoard(HttpServletRequest request,
+							 @RequestParam(name = "boardId") Long idB,
+							 @RequestParam(name = "calculateId") Long idC) {
 
-		calculateControllerService.refreshBoard(idC,idB);
-		return new ModelAndView("redirect:/manager");
+		calculateControllerService.refreshBoard(idC, idB);
+		//return new ModelAndView("redirect:/manager");
 	}
 
 	@RequestMapping(value = {"/add-client"}, method = RequestMethod.POST)
-	public ModelAndView addClient(HttpServletRequest request) {
+	public ModelAndView addClient(HttpServletRequest request,
+								  @RequestParam(name = "calculateId") Long id,
+								  @RequestParam(name = "number") Long number,
+								  @RequestParam(name = "description") String descr) {
 
-		Long id = Long.parseLong(request.getParameter("calculateId"));
-		Long number = Long.parseLong(request.getParameter("number")); // 2 поля клиента
-		String descr = request.getParameter("description");
-
-		calculateControllerService.addClient(id,number,descr);
+		calculateControllerService.addClient(id, number, descr);
 		return new ModelAndView("redirect:/manager");
 	}
 
 	@RequestMapping(value = {"/calculate-price"}, method = RequestMethod.POST)
-	public ModelAndView calculatePrice(HttpServletRequest request) {
-		//Long calculateId = Long.parseLong(request.getParameter("calculateId")); // для того, чтобы узнать привязана ли карта к расчету, если да то будем зачислять потраченную сумму на карту
-		Long discount = Long.parseLong(request.getParameter("discountInput")); //скидка которая написана в инпуте(не карты, а карта+скидка управляющего)
-		Long clientId = Long.parseLong(request.getParameter("clientId"));// id клиента у которого считаем
-		String numberToCalculate = request.getParameter("numberToCalculate");//количество человек для расчета клиента, пока не парсим, есть возможность строки "Всех"
-
-		calculateControllerService.calculatePrice(discount,clientId,numberToCalculate);
+	public ModelAndView calculatePrice(HttpServletRequest request,
+									   @RequestParam(name = "discountInput") Long discount, //скидка которая написана в инпуте(не карты, а карта+скидка управляющего)
+									   @RequestParam(name = "clientId") Long clientId,        // id клиента у которого считаем
+									   @RequestParam(name = "numberToCalculate") String numberToCalculate) { //количество человек для расчета клиента
+		//Long calculateId = Long.parseLong(request.getParameter("calculateId"));
+		calculateControllerService.calculatePrice(discount, clientId, numberToCalculate);
 		return new ModelAndView("redirect:/manager");
 	}
 

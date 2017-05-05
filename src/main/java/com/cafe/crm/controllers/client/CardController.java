@@ -9,39 +9,49 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
 import javax.servlet.http.HttpServletRequest;
 
 
 @Controller
 public class CardController {
-    @Autowired
-    private CardService cardService;
+	@Autowired
+	private CardService cardService;
 
-    @Autowired
-    private CalculateService calculateService;
+	@Autowired
+	private CalculateService calculateService;
 
-    @Autowired
-    private CardControllerService cardControllerService;
+	@Autowired
+	private CardControllerService cardControllerService;
 
-    @RequestMapping(value = {"/card"}, method = RequestMethod.GET)
-    public ModelAndView  getCard(HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("card");
+	@RequestMapping(value = {"/card"}, method = RequestMethod.GET)
+	public ModelAndView getCard(HttpServletRequest request) {
+		ModelAndView modelAndView = new ModelAndView("card");
 
-        Card card = cardService.getOne(Long.parseLong(request.getParameter("token")));
-        modelAndView.addObject("card", card);
-        modelAndView.addObject("listCalculate", calculateService.getAll());
+		Card card = cardService.getOne(Long.parseLong(request.getParameter("token")));
+		modelAndView.addObject("card", card);
+		modelAndView.addObject("listCalculate", calculateService.getAll());
 
-        return modelAndView;
-    }
+		return modelAndView;
+	}
 
-    @RequestMapping(value = {"/add-card-to-calculate"}, method = RequestMethod.POST)
-    public ModelAndView  addCardToCalculate(HttpServletRequest request) {
-        Long idCard = Long.parseLong(request.getParameter("idCard"));
-        Long idCalculate = Long.parseLong(request.getParameter("idCalculate"));
+	@RequestMapping(value = {"/add-card-to-calculate"}, method = RequestMethod.POST)
+	public ModelAndView addCardToCalculate(HttpServletRequest request) {
+		Long idCard = Long.parseLong(request.getParameter("idCard"));
+		Long idCalculate = Long.parseLong(request.getParameter("idCalculate"));
 
-        cardControllerService.addCardToCalculate(idCard,idCalculate);
+		cardControllerService.addCardToCalculate(idCard, idCalculate);
 
-        return new ModelAndView("redirect:/manager");
-    }
+		return new ModelAndView("redirect:/manager");
+	}
+
+	@RequestMapping(value = {"/add-money"}, method = RequestMethod.POST)
+	public ModelAndView addMoney(HttpServletRequest request) {
+		Long idCard = Long.parseLong(request.getParameter("idCard"));
+		Double money = Double.parseDouble(request.getParameter("money"));
+		cardControllerService.addMoney(idCard, money);
+		return new ModelAndView("redirect:/manager");
+	}
+
 
 }

@@ -28,4 +28,13 @@ public class CardControllerService {
 		calculateService.add(calculate);
 	}
 
+	public void addMoney(Long idCard, Double money) {
+
+		Card card = cardService.getOne(idCard);
+		card.setBalance(card.getBalance() + money);
+		cardService.add(card);
+
+	}
+
+
 }
