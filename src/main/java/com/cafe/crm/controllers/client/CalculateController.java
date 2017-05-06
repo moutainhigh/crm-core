@@ -36,14 +36,14 @@ public class CalculateController {
 	}
 
 	@RequestMapping(value = {"/add-calculate"}, method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void addCalculate(HttpServletRequest request,
+	//@ResponseStatus(HttpStatus.NO_CONTENT)
+	public ModelAndView addCalculate(HttpServletRequest request,
 							 @RequestParam(name = "boardId") Long id,
 							 @RequestParam(name = "number") Long number,
 							 @RequestParam(name = "description") String descr) {//передаются по полю от 3 разных сущностей
 
 		calculateControllerService.addCalculate(id, number, descr);
-		//return new ModelAndView("redirect:/manager");
+		return new ModelAndView("redirect:/manager");
 	}
 
 	@RequestMapping(value = {"/refresh-board"}, method = RequestMethod.POST)

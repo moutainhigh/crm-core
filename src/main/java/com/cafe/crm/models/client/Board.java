@@ -4,41 +4,63 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name ="boards")
+@Table(name = "boards")
 public class Board {
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private Long id;
+	@Id
+	@GeneratedValue
+	@Column(name = "id")
+	private Long id;
 
-    private String name;
+	private String name;
 
-    @OneToMany(fetch = FetchType.EAGER, targetEntity = Calculate.class)
-    @JoinTable(name = "boards_calculations",
-            joinColumns = {@JoinColumn(name = "board_id")},
-            inverseJoinColumns = {@JoinColumn(name = "calculate_id")})
-    private Set<Calculate> calculate;
+	@OneToMany(fetch = FetchType.EAGER, targetEntity = Calculate.class)
+	@JoinTable(name = "boards_calculations",
+			joinColumns = {@JoinColumn(name = "board_id")},
+			inverseJoinColumns = {@JoinColumn(name = "calculate_id")})
+	private Set<Calculate> calculate;
 
-    public Board() {
-    }
+	public Board() {
+	}
 
-    public Long getId() {
-        return id;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-    public String getName() {
-        return name;
-    }
+		Board board = (Board) o;
 
-    public Set<Calculate> getCalculate() {
-        return calculate;
-    }
+		if (id != null ? !id.equals(board.id) : board.id != null) return false;
+		return name != null ? name.equals(board.name) : board.name == null;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		return result;
+	}
 
-    public void setCalculate(Set<Calculate> calculate) {
-        this.calculate = calculate;
-    }
+	public Long getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Set<Calculate> getCalculate() {
+		return calculate;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setCalculate(Set<Calculate> calculate) {
+		this.calculate = calculate;
+	}
 }

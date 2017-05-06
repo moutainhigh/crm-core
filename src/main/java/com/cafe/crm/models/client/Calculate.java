@@ -4,100 +4,122 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name ="calculations")
+@Table(name = "calculations")
 public class Calculate {
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private Long id;
+	@Id
+	@GeneratedValue
+	@Column(name = "id")
+	private Long id;
 
-    private String description;
+	private String description;
 
-    private String menu;
+	private String menu;
 
-    private Double allPrice;
+	private Double allPrice;
 
-    private boolean state = true;
+	private boolean state = true;
 
-    @OneToMany(fetch = FetchType.EAGER, targetEntity = Client.class)
-    @JoinTable(name = "clients_calculations",
-            joinColumns = {@JoinColumn(name = "calculate_id")},
-            inverseJoinColumns = {@JoinColumn(name = "client_id")})
-    private Set<Client> client;
+	@OneToMany(fetch = FetchType.EAGER, targetEntity = Client.class)
+	@JoinTable(name = "clients_calculations",
+			joinColumns = {@JoinColumn(name = "calculate_id")},
+			inverseJoinColumns = {@JoinColumn(name = "client_id")})
+	private Set<Client> client;
 
-    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Board.class)
-    @JoinTable(name = "boards_calculations",
-            joinColumns = {@JoinColumn(name = "calculate_id")},
-            inverseJoinColumns = {@JoinColumn(name = "board_id")})
-    private Board board;
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Board.class)
+	@JoinTable(name = "boards_calculations",
+			joinColumns = {@JoinColumn(name = "calculate_id")},
+			inverseJoinColumns = {@JoinColumn(name = "board_id")})
+	private Board board;
 
 
-    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Card.class)
-    @JoinTable(name = "cards_calculations",
-            joinColumns = {@JoinColumn(name = "calculate_id")},
-            inverseJoinColumns = {@JoinColumn(name = "card_id")})
-    private Card card;
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Card.class)
+	@JoinTable(name = "cards_calculations",
+			joinColumns = {@JoinColumn(name = "calculate_id")},
+			inverseJoinColumns = {@JoinColumn(name = "card_id")})
+	private Card card;
 
-    public Calculate() {
-    }
+	public Calculate() {
+	}
 
-    public Card getCard() {
-        return card;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-    public Long getId() {
-        return id;
-    }
+		Calculate calculate = (Calculate) o;
 
-    public String getDescription() {
-        return description;
-    }
+		if (id != null ? !id.equals(calculate.id) : calculate.id != null) return false;
+		return description != null ? description.equals(calculate.description) : calculate.description == null;
+	}
 
-    public String getMenu() {
-        return menu;
-    }
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (description != null ? description.hashCode() : 0);
+		return result;
+	}
 
-    public Double getAllPrice() {
-        return allPrice;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public boolean isState() {
-        return state;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public Set<Client> getClient() {
-        return client;
-    }
+	public String getMenu() {
+		return menu;
+	}
 
-    public Board getBoard() {
-        return board;
-    }
+	public Double getAllPrice() {
+		return allPrice;
+	}
 
-    public void setCard(Card card) {
-        this.card = card;
-    }
+	public boolean isState() {
+		return state;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public Set<Client> getClient() {
+		return client;
+	}
 
-    public void setMenu(String menu) {
-        this.menu = menu;
-    }
+	public Board getBoard() {
+		return board;
+	}
 
-    public void setAllPrice(Double allPrice) {
-        this.allPrice = allPrice;
-    }
+	public Card getCard() {
+		return card;
+	}
 
-    public void setState(boolean state) {
-        this.state = state;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setClient(Set<Client> client) {
-        this.client = client;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setBoard(Board board) {
-        this.board = board;
-    }
+	public void setMenu(String menu) {
+		this.menu = menu;
+	}
+
+	public void setAllPrice(Double allPrice) {
+		this.allPrice = allPrice;
+	}
+
+	public void setState(boolean state) {
+		this.state = state;
+	}
+
+	public void setClient(Set<Client> client) {
+		this.client = client;
+	}
+
+	public void setBoard(Board board) {
+		this.board = board;
+	}
+
+	public void setCard(Card card) {
+		this.card = card;
+	}
 }

@@ -5,115 +5,135 @@ import java.time.LocalDate;
 import java.util.List;
 
 
-
 @Entity
-@Table(name ="cards")
+@Table(name = "cards")
 public class Card {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private Long id;
+	@Id
+	@GeneratedValue
+	@Column(name = "id")
+	private Long id;
 
-    private String token;
+	private String token;
 
-    private String name;
+	private String name;
 
-    private String surname;
+	private String surname;
 
-    private String photo;
+	private String photo;
 
-    private Long discount;
+	private Long discount;
 
-    private Double balance;
+	private Double balance;
 
-    private Double spend;
+	private Double spend;
 
-    private LocalDate visitDate;
+	private LocalDate visitDate;
 
-    @OneToMany(fetch = FetchType.EAGER, targetEntity = Calculate.class)
-    @JoinTable(name = "cards_calculations",
-            joinColumns = {@JoinColumn(name = "card_id")},
-            inverseJoinColumns = {@JoinColumn(name = "calculate_id")})
-    private List<Calculate> calculates;
+	@OneToMany(fetch = FetchType.EAGER, targetEntity = Calculate.class)
+	@JoinTable(name = "cards_calculations",
+			joinColumns = {@JoinColumn(name = "card_id")},
+			inverseJoinColumns = {@JoinColumn(name = "calculate_id")})
+	private List<Calculate> calculates;
 
+	public Card() {
+	}
 
-    public Card() {
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-    public List<Calculate> getCalculates() {
-        return calculates;
-    }
+		Card card = (Card) o;
 
-    public Long getId() {
-        return id;
-    }
+		if (id != null ? !id.equals(card.id) : card.id != null) return false;
+		return name != null ? name.equals(card.name) : card.name == null;
+	}
 
-    public LocalDate getVisitDate() {
-        return visitDate;
-    }
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		return result;
+	}
 
-    public String getToken() {
-        return token;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getToken() {
+		return token;
+	}
 
-    public String getSurname() {
-        return surname;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getPhoto() {
-        return photo;
-    }
+	public String getSurname() {
+		return surname;
+	}
 
-    public Long getDiscount() {
-        return discount;
-    }
+	public String getPhoto() {
+		return photo;
+	}
 
-    public Double getBalance() {
-        return balance;
-    }
+	public Long getDiscount() {
+		return discount;
+	}
 
-    public Double getSpend() {
-        return spend;
-    }
+	public Double getBalance() {
+		return balance;
+	}
 
-    public void setCalculates(List<Calculate> calculates) {
-        this.calculates = calculates;
-    }
+	public Double getSpend() {
+		return spend;
+	}
 
-    public void setVisitDate(LocalDate visitDate) {
-        this.visitDate = visitDate;
-    }
+	public LocalDate getVisitDate() {
+		return visitDate;
+	}
 
-    public void setToken(String token) {
-        this.token = token;
-    }
+	public List<Calculate> getCalculates() {
+		return calculates;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
+	public void setToken(String token) {
+		this.token = token;
+	}
 
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setDiscount(Long discount) {
-        this.discount = discount;
-    }
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
 
-    public void setBalance(Double balance) {
-        this.balance = balance;
-    }
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
 
-    public void setSpend(Double spend) {
-        this.spend = spend;
-    }
+	public void setDiscount(Long discount) {
+		this.discount = discount;
+	}
+
+	public void setBalance(Double balance) {
+		this.balance = balance;
+	}
+
+	public void setSpend(Double spend) {
+		this.spend = spend;
+	}
+
+	public void setVisitDate(LocalDate visitDate) {
+		this.visitDate = visitDate;
+	}
+
+	public void setCalculates(List<Calculate> calculates) {
+		this.calculates = calculates;
+	}
 }
