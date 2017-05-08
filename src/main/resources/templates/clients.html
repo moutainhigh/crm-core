@@ -10,7 +10,7 @@
 </head>
 <body>
 <header>
-    <div class="container"  style="margin-top:50px; ">
+    <div class="container" style="margin-top:50px; ">
         <div class="row">
 
             <div class="navbar navbar-inverse navbar-fixed-top">
@@ -36,58 +36,16 @@
 
 <button class="btn btn-default" style="float: left">Редактирование столов</button>
 
-<div  class="container"  style=" box-shadow: 0 3px 6px 0; border-radius: 10px; background: #ffffff; min-width: 1200px">
+<div class="container" style=" box-shadow: 0 3px 6px 0; border-radius: 10px; background: #ffffff; min-width: 1200px">
 
-    <!-- модальное окно с созданием счета начало-->
-    <center>
-        <button class="btn btn-info" data-toggle="modal" data-target="#myModal">Открыть счет</button>
-    </center>
+    <!-- модальное окно с созданием счета-->
+    <div th:replace="addCalculateFragment :: calculateModal"></div>
+    <!-- -->
 
-    <div id="myModal" class="modal fade">
-        <div class="modal-dialog " style="width: 300px;" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button class="close" type="button" data-dismiss="modal">×</button>
-                    <h4 class="modal-title">Добавление счета</h4>
-                </div>
-                <div class="modal-body" style="width:300px;">
-                    Описание
-                    <form id="formMod" action="/add-calculate" method="post">
-                        <input class="form-control" type="text" name="description"/>
-                        <h4 style="margin-right: 20px; float: left">Кол-во человек</h4>
-                        <h4>Стол</h4>
-
-                        <input style="width: 90px;margin-right: 60px; float: left" class="form-control" type="text"
-                               name="number" list="data"/>
-                    </form>
-                    <datalist id="data">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </datalist>
-
-                    <select class="form-control " form="formMod" style="width:90px;" name="boardId">
-                        <c th:each="board : ${listBoard}">
-                            <option th:value="${board.id}"><h4 th:text="${board.name}"></h4></option>
-                        </c>
-                    </select>
-
-
-                    <br/>
-                    <br/>
-                    <button form="formMod" class="btn btn-primary" type="submit">Создать</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- модальное окно с созданием счета конец-->
     <br/>
-    <div  th:each="calculate : ${listCalculate}">
+    <div th:each="calculate : ${listCalculate}">
 
-
-        <!--панель с данными начало-->
+        <!--шапка панели -->
         <div class="panel panel-primary">
             <div class="panel-heading" style="height: 50px">
                 <div class="panel-title">
@@ -113,10 +71,16 @@
                     </select>
 
 
-                    <div style="float: left; width: 800px; word-wrap: break-word; font-size: 20px; height: 40px; text-align: center "
-                         data-toggle="collapse" th:href="'#accord' + ${calculate.id}"
-                         th:text="${calculate.description}">
-                    </div>
+                    <form th:id="'form' + ${calculate.id}" action="/state-panel" method="post">
+                        <input type="hidden" th:value="${calculate.id}" name="calculateId"/>
+                    </form>
+
+                    <button th:onclick="'formsub(\'' +'form'+ ${calculate.id} + '\');'"
+                            style="float: left; width: 800px; word-wrap: break-word; font-size: 20px; height: 40px; text-align: center; background: rgba(255,0,0,0);border: none"
+                            data-toggle="collapse" th:href="'#accord' + ${calculate.id}"
+                            th:text="${calculate.description}" th:value="${calculate.id}">
+                    </button>
+
 
                     <button style="background: rgba(255,255,255,0); border: none;margin-left: 70px" type="submit"><img
                             width="30px" height="30px"
@@ -125,101 +89,75 @@
 
 
                 </div>
-                <!--панель с данными верх -->
+                <!-- -->
             </div>
 
-            <div th:id="'accord' + ${calculate.id}" class="panel-collapse collapse">
+            <!--выпадающий контент панели -->
+            <div th:id="'accord' + ${calculate.id}" class="panel-collapse collapse "
+                 th:classappend="${calculate.statePanel} ? 'in' : ''">
+
                 <div class="panel-body" style="background: #f0efee">
 
 
-                    <!--второе мать его мадальное окно для клиента .... вниз-->
-                    <button class="btn btn-default" data-toggle="modal"
-                            th:href="'#myModal1' + ${calculate.id}"
-                            style="float: left"><img width="10px" height="10px"
-                                                     src="http://www.imbf.org/interesnye-stati/images/simvol-087.png"/>
-                    </button>
-
-                    <div  th:id="'myModal1' + ${calculate.id}" class="modal fade">
-                        <div class="modal-dialog " style="width: 300px;" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button class="close" type="button" data-dismiss="modal">×</button>
-                                    <h4 class="modal-title">Добавление клиента</h4>
-                                </div>
-                                <div class="modal-body" style="width:300px;">
-                                    Описание клиента
-                                    <form th:id="'formMod1' + ${calculate.id}" action="/add-client"
-                                          method="post">
-
-                                        <input class="form-control" type="text" name="description"/>
-
-                                        <input type="hidden" name="calculateId"
-                                               th:value="${calculate.id}"/>
-
-                                        <h4 style="margin-right: 20px; float: left">Кол-во человек</h4>
-
-                                        <input style="width: 90px;margin-right: 60px; float: left"
-                                               class="form-control" type="text" name="number"
-                                               list="data1"/>
-                                    </form>
-                                    <datalist id="data1">
-                                        <option value="1"></option>
-                                        <option value="2"></option>
-                                        <option value="3"></option>
-                                        <option value="4"></option>
-                                        <option value="5"></option>
-                                    </datalist>
-
-                                    <br/>
-                                    <br/>
-                                    <button th:form="'formMod1' + ${calculate.id}"
-                                            class="btn btn-primary" type="submit">
-                                        Создать
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--второе мадальное окно для клиента ....вверх-->
+                    <!--модальное окно создания клиента-->
+                    <div th:replace="addClientFragment :: clientModal"></div>
+                    <!---->
 
                     <button class="btn btn-default" style="float: left; margin-right: 200px">Меню
                     </button>
 
 
+                    <div style="float: left;width: 400px;height: 42px;box-shadow: 0 0px 3px 0;border-radius: 5px" th:if="(${calculate.getCard()})">
+                        <h5 style="float: left;font-size: 20px">$</h5>
+                        <input  style="float: left;height: 20px;width: 20px;margin-top: 11px;margin-right: 30px"
+                               type="checkbox"/>
 
-                    <div th:if="(${calculate.getCard()})">
-                        <div style="float: left; height: 1px; width:240px;"><h4 style="font-size: 20px;" th:text="${calculate.getCard().name}+ '. Баланс: ' + ${calculate.getCard().balance}"></h4>
-                        </div>
-                        <input  th:id = "'in' + ${calculate.id}"  style="width:60px;font-size: 20px;float: left" class="form-control" type="text"
+                        <h4 style="float: left;font-size: 20px" th:text="${calculate.getCard().name}+'.'"></h4>
+                        <h4 style="float: left;font-size: 20px;margin-left: 40px;"
+                            th:text="'баланс: ' + ${calculate.getCard().balance}"></h4>
+
+                        <input th:id="'in' + ${calculate.id}"
+                               style="float:right;width:60px;font-size: 20px;margin-top: 4px"
+                               class="form-control" type="text"
                                th:value="${calculate.getCard().discount}"/>
-                        <h2>%</h2>
+
                     </div>
 
-                    <div th:if="(${calculate.getCard()} == null)">
-                        <div style="float: left; height: 1px; width:240px;"><h4 style="font-size: 20px;">Карта не
+                    <div style="float: left;width: 400px;box-shadow: 0 0px 3px 0;border-radius: 5px" th:if="(${calculate.getCard()} == null)">
+                        <div style="float: left; height: 1px; width:240px;margin-left: 70px;"><h4
+                                style="font-size: 20px;">Карта не
                             подключена</h4></div>
-                        <input  th:id = "'in' + ${calculate.id}" style="width:60px;font-size: 20px;float: left" class="form-control" type="text"
+                        <input th:id="'in' + ${calculate.id}" style="width:60px;font-size: 20px;float: right"
+                               class="form-control" type="text"
                                value="0"/>
-                        <h2>%</h2>
                     </div>
 
 
-                    <div  th:each="client : ${calculate.getClient()}">
+                    <p style=" float: left;font-size: 28px">%</p>
+                    <br/> <br/><br/>
+                    <h5 style="float: left; margin-left: 200px  ">Описание</h5>
+                    <h5 style="float: left;margin-left: 125px">Время создания</h5>
+                    <h5 style="float: left;margin-left: 30px">Осталось чел</h5>
+                    <h5 style="float: left;margin-left: 50px">$ Меню</h5>
+                    <h5 style="float: left;margin-left: 60px">$ Время</h5>
+                    <h5 style="float: left;margin-left: 60px">Общая сумма</h5>
+                    <br/>
+                    <div th:each="client : ${calculate.getClient()}">
 
                         <div style="background: #dbdbdd;margin-top: 15px; border-radius: 3px;height: 34px;">
 
 
-                            <form  th:id = "'mainForm' + ${client.id}" method="post" action="/calculate-price">
-                                <input  name = "discountInput" th:id = "'in1' + ${client.id}"  type="hidden" />
-                            <input  type="hidden" name = "clientId" th:value="${client.id}" />
-                            <button  th:onclick="'dd(\'' +'in1'+ ${client.id} + '\',\'' +'in'+ ${calculate.id} + '\');'"
-                                      type="submit" class="btn btn-default but1" style="float: left;margin-right:5px;"><img width="16px" height="16px"
-                                                                                                       src="http://icon-icons.com/icons2/936/PNG/512/dollar-symbol_icon-icons.com_73598.png"/>
-                            </button>
+                            <form th:id="'mainForm' + ${client.id}" method="post" action="/calculate-price">
+                                <input name="discountInput" th:id="'in1' + ${client.id}" type="hidden"/>
+                                <input type="hidden" name="clientId" th:value="${client.id}"/>
+                                <button th:onclick="'linkinput(\'' +'in1'+ ${client.id} + '\',\'' +'in'+ ${calculate.id} + '\');'"
+                                        type="submit" class="btn btn-default but1"
+                                        style="float: left;margin-right:5px;"><img width="16px" height="16px"
+                                                                                   src="http://icon-icons.com/icons2/936/PNG/512/dollar-symbol_icon-icons.com_73598.png"/>
+                                </button>
                             </form>
 
-                            <select name = "numberToCalculate" th:form="'mainForm' + ${client.id}"  class="form-control "
+                            <select name="numberToCalculate" th:form="'mainForm' + ${client.id}" class="form-control "
                                     style="width:85px;height: 34px; margin-right: 20px;font-size: 17px; float: left">
                                 <option value="Всех">Всех</option>
                                 <option value="1">1</option>
@@ -227,16 +165,28 @@
                                 <option value="3">3</option>
                                 <option value="4">4</option>
                                 <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
                             </select>
 
-                            <h4 style="float: left; width: 300px; height: 1px;"
+
+                            <h4 style="float: left; width: 280px; height: 1px;"
                                 th:text="${client.description}"></h4>
-                            <h4 style="float: left;margin-right: 100px"
-                                th:text="'Время создания: ' + ${client.timeStart}"></h4>
-                            <h4 style="float: left;margin-right:90px "
-                                th:text="'Кол-во человек: ' + ${client.number}"></h4>
+                            <h4 style="float: left;width: 135px; height: 1px;"
+                                th:text="${client.timeStart}"></h4>
+                            <h4 style="float: left;width: 110px; height: 1px;"
+                                th:text="${client.number}"></h4>
+                            <h4 style="float: left;width: 110px; height: 1px;"
+                                th:text="${client.priceMenu}"></h4>
+                            <h4 style="float: left;width: 110px; height: 1px;"
+                                th:text="${client.priceTime}"></h4>
+                            <h4 style="float: left; height: 1px;width: 80px"
+                                th:text="${client.allPrice}"></h4>
                             <h4 style="float: left; "
-                                th:text="'К оплате: ' + ${client.price}"></h4>
+                                th:text="' ≈ ' + ${client.round} "></h4>
                         </div>
 
                     </div>
@@ -244,27 +194,23 @@
             </div>
         </div>
     </div>
-
-    </div>
+</div>
 <script type="text/javascript">
-function dd(j,j1) {
-    var elem1 = document.getElementById(j1);
-    var elem = document.getElementById(j);
-    elem.value = elem1.value;
-};
+    function linkinput(j, j1) {
+        var elem1 = document.getElementById(j1);
+        var elem = document.getElementById(j);
+        elem.value = elem1.value;
+    }
+    ;
+    function formsub(form) {
+        var form1 = document.getElementById(form);
+        form1.submit();
+    }
+    ;
+
 
 </script>
 
-<!--<script>
-    $(".but1").on("click", function () {
-        $.ajax({
-            url: '/add-client',
-            success: function (data) {
-                $('.results').html(data);
-            }
-        });
-    });
 
-</script>-->
 </body>
 </html>

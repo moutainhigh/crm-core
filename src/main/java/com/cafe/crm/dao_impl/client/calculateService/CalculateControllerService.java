@@ -30,25 +30,22 @@ public class CalculateControllerService {
 		Board board = boardService.getOne(id);
 
 		Client client = new Client();
-		client.setTimeStart(LocalTime.now().withSecond(0));
-		client.setNumber(number);
-		client.setDescription("Нет описания");
-		client.setPrice(0.0);
+		if (number != null) {
+			client.setNumber(number);
+		}
 		clientService.add(client);
 
 		Calculate calculate = new Calculate();
-		calculate.setDescription(descr);
-		calculate.setCard(null);
+		if (!descr.equals("")) {
+			calculate.setDescription(descr);
+		}
 		calculate.setBoard(board);
 
 		Set<Client> list = new HashSet<>();
 		list.add(client);
 		calculate.setClient(list);
-		calculate.setAllPrice(0.0);
-
 		calculateService.add(calculate);
-
-		}
+	}
 
 	public void refreshBoard(Long idC, Long idB) {
 		Board board = boardService.getOne(idB);
@@ -60,10 +57,14 @@ public class CalculateControllerService {
 
 	public void addClient(Long id, Long number, String descr) {
 		Client client = new Client();
-		client.setTimeStart(LocalTime.now().withSecond(0));
-		client.setNumber(number);
-		client.setDescription(descr);
-		client.setPrice(0.0);
+
+		if (number != null) {
+			client.setNumber(number);
+		}
+
+		if (!descr.equals("")) {
+			client.setDescription(descr);
+		}
 		clientService.add(client);
 
 		Calculate calculate = calculateService.getOne(id);
@@ -76,47 +77,73 @@ public class CalculateControllerService {
 
 	}
 
-	public void calculatePrice(Long discount,Long clientId,String numberToCalculate) {
+	public void calculatePrice(Long discount, Long clientId, String numberToCalculate) {
 		Client client = clientService.getOne(clientId);
 
-		LocalTime timeStart = client.getTimeStart().withSecond(0);//получаем время создания клиента
+		LocalTime timeStart = client.getTimeStart();//получаем время создания клиента
 		LocalTime timeNow = LocalTime.now().withSecond(0); //время сейчас
-
 		LocalTime timePassed = timeNow.minusHours(timeStart.getHour()); //расчет количества пройденного времени с создания
 		timePassed = timePassed.minusMinutes(timeStart.getMinute());
-
 		Long hour = (long) timePassed.getHour();// делим пройденное время на часы и минуты
 		Long min = (long) timePassed.getMinute();
-
-		Double price;
+		Double priceTime;
 
 		if (hour == 0) {
-			price = (min * 10.0 / 6.0) * 3.0; // первая считает если прошло меньше часа
+			priceTime = (min * 10.0 / 6.0) * 3.0; // первая считает если прошло меньше часа
 		} else {
-			price = ((hour - 1.0) * 200.0) + (min * 10.0 / 6.0) * 2.0 + 300.0; // если прошло больше часа, считает по этой
+			priceTime = ((hour - 1.0) * 200.0) + (min * 10.0 / 6.0) * 2.0 + 300.0; // если прошло больше часа, считает по этой
 		}
 
 		if (numberToCalculate.equals("Всех")) { //если нужно посчтитать всех, то умножаем на кол-во человек, после обнуляем
-			price *= client.getNumber();
-			client.setNumber((long)0);
-		} else if (client.getNumber() > 0 && Long.parseLong(numberToCalculate) <= client.getNumber()){ //если запрашиваемое число больше чем есть, выводит 0 цену, людей не отнимает
-
+			priceTime *= client.getNumber();
+			client.setNumber((long) 0);
+		} else if (client.getNumber() > 0 && Long.parseLong(numberToCalculate) <= client.getNumber()) { //если запрашиваемое число больше чем есть, выводит 0 цену, людей не отнимает
 			Long count = Long.parseLong(numberToCalculate);
-			price *= count;
-			client.setNumber(client.getNumber() - count );
-
+			priceTime *= count;
+			client.setNumber(client.getNumber() - count);
 		} else {
-			price = 0.0;
+			priceTime = 0.0;
 		}
+
+		client.setPriceTime(Math.round(priceTime * 100) / 100.00);
+
+		client.setAllPrice(client.getPriceMenu() + client.getPriceTime());//высчитывается из меню + цена времени и округляем до 2 знаков
 
 		if (discount > 0 && discount <= 100){ //скидка не может быть больше 100%
-			price = price - (price*discount/100);
+					client.setAllPrice(client.getAllPrice() - (client.getAllPrice()*discount/100));
+					client.setAllPrice(Math.round(client.getAllPrice() * 100) / 100.00);
+				}
+
+		Double all = client.getAllPrice();
+		Long allLong = all.longValue();
+		Long two = all.longValue() % 100;
+
+		if (two > 50) {
+			if (two >= 75) {
+				client.setRound((allLong - two) + 100);
+			} else {
+				client.setRound((allLong - two) + 50);
+			}
+		} else if (two < 50) {
+			if (two >= 25) {
+				client.setRound((allLong - two) + 50);
+			} else {
+				client.setRound(allLong - two);
+			}
+		} else {
+			client.setRound(allLong);
 		}
 
-		client.setPrice(Math.round(price*100)/100.00);
-
 		clientService.add(client);
-
 	}
 
+	public void state(Long id) {
+		Calculate calculate = calculateService.getOne(id);
+		if (calculate.isStatePanel()) {
+			calculate.setStatePanel(false);
+		} else {
+			calculate.setStatePanel(true);
+		}
+		calculateService.add(calculate);
 	}
+}

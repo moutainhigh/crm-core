@@ -22,11 +22,11 @@ public class Card {
 
 	private String photo;
 
-	private Long discount;
+	private Long discount = (long)0;
 
-	private Double balance;
+	private Double balance = 0.0;
 
-	private Double spend;
+	private Double spend = 0.0;
 
 	private LocalDate visitDate;
 

@@ -44,10 +44,9 @@ public class InitClient {
         Card card = new Card();
         card.setName("Данил");
         card.setSurname("Джавер");
-        card.setBalance(0.0);
+        card.setBalance(5000.0);
         card.setDiscount((long)10);
         card.setPhoto("https://pp.userapi.com/c636325/v636325810/41955/hBIdPv42Q38.jpg");
-        card.setSpend(0.0);
         card.setVisitDate(LocalDate.now());
         cardService.add(card);
 
@@ -57,7 +56,6 @@ public class InitClient {
         card1.setBalance(0.0);
         card1.setDiscount((long)15);
         card1.setPhoto("http://usiter.com/uploads/20111118/zhivotnie+koshki+kartinka+s+malenkim+kotyonkom+35121656913.jpg");
-        card1.setSpend(0.0);
         card1.setVisitDate(LocalDate.now());
         cardService.add(card1);
 

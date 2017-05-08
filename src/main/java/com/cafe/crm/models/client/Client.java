@@ -13,13 +13,19 @@ public class Client {
 	@Column(name = "id")
 	private Long id;
 
-	private Double price;
+	private Double allPrice = 0.0;
 
-	private String description;
+	private Double priceMenu = 0.0;
 
-	private LocalTime timeStart;
+	private Double priceTime = 0.0;
 
-	private Long number;
+	private Long round = (long)0;
+
+	private String description = "Нет описания";
+
+	private LocalTime timeStart = LocalTime.now().withSecond(0);
+
+	private Long number = (long)0;
 
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Calculate.class)
 	@JoinTable(name = "clients_calculate",
@@ -52,8 +58,20 @@ public class Client {
 		return id;
 	}
 
-	public Double getPrice() {
-		return price;
+	public Double getAllPrice() {
+		return allPrice;
+	}
+
+	public Double getPriceMenu() {
+		return priceMenu;
+	}
+
+	public Double getPriceTime() {
+		return priceTime;
+	}
+
+	public Long getRound() {
+		return round;
 	}
 
 	public String getDescription() {
@@ -76,8 +94,20 @@ public class Client {
 		this.id = id;
 	}
 
-	public void setPrice(Double price) {
-		this.price = price;
+	public void setAllPrice(Double allPrice) {
+		this.allPrice = allPrice;
+	}
+
+	public void setPriceMenu(Double priceMenu) {
+		this.priceMenu = priceMenu;
+	}
+
+	public void setPriceTime(Double priceTime) {
+		this.priceTime = priceTime;
+	}
+
+	public void setRound(Long round) {
+		this.round = round;
 	}
 
 	public void setDescription(String description) {

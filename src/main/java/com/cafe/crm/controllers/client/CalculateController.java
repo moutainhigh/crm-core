@@ -3,6 +3,7 @@ package com.cafe.crm.controllers.client;
 import com.cafe.crm.dao_impl.client.BoardService;
 import com.cafe.crm.dao_impl.client.CalculateService;
 import com.cafe.crm.dao_impl.client.calculateService.CalculateControllerService;
+import com.cafe.crm.models.client.Calculate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-
 
 @Controller
 public class CalculateController {
@@ -36,7 +36,6 @@ public class CalculateController {
 	}
 
 	@RequestMapping(value = {"/add-calculate"}, method = RequestMethod.POST)
-	//@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ModelAndView addCalculate(@RequestParam(name = "boardId") Long id,
 									 @RequestParam(name = "number") Long number,
 									 @RequestParam(name = "description") String descr) {//передаются по полю от 3 разных сущностей
@@ -51,7 +50,6 @@ public class CalculateController {
 							 @RequestParam(name = "calculateId") Long idC) {
 
 		calculateControllerService.refreshBoard(idC, idB);
-		//return new ModelAndView("redirect:/manager");
 	}
 
 	@RequestMapping(value = {"/add-client"}, method = RequestMethod.POST)
@@ -65,11 +63,17 @@ public class CalculateController {
 
 	@RequestMapping(value = {"/calculate-price"}, method = RequestMethod.POST)
 	public ModelAndView calculatePrice(@RequestParam(name = "discountInput") Long discount, //скидка которая написана в инпуте(не карты, а карта+скидка управляющего)
-									   @RequestParam(name = "clientId") Long clientId,        // id клиента у которого считаем
-									   @RequestParam(name = "numberToCalculate") String numberToCalculate) { //количество человек для расчета клиента
+									   @RequestParam(name = "clientId") Long clientId,      // id клиента у которого считаем
+									   @RequestParam(name = "numberToCalculate") String numberToCalculate) {//количество человек для расчета клиента
 		//Long calculateId = Long.parseLong(request.getParameter("calculateId"));
 		calculateControllerService.calculatePrice(discount, clientId, numberToCalculate);
 		return new ModelAndView("redirect:/manager");
+	}
+
+	@RequestMapping(value = {"/state-panel"}, method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void state(@RequestParam(name = "calculateId") Long id) {
+		calculateControllerService.state(id);
 	}
 
 

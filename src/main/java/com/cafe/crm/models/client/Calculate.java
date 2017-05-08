@@ -11,13 +11,15 @@ public class Calculate {
 	@Column(name = "id")
 	private Long id;
 
-	private String description;
+	private String description = "Нет описания";
 
 	private String menu;
 
-	private Double allPrice;
+	private Double allPrice = 0.0;
 
 	private boolean state = true;
+
+	private boolean statePanel = false;
 
 	@OneToMany(fetch = FetchType.EAGER, targetEntity = Client.class)
 	@JoinTable(name = "clients_calculations",
@@ -79,6 +81,10 @@ public class Calculate {
 		return state;
 	}
 
+	public boolean isStatePanel() {
+		return statePanel;
+	}
+
 	public Set<Client> getClient() {
 		return client;
 	}
@@ -109,6 +115,10 @@ public class Calculate {
 
 	public void setState(boolean state) {
 		this.state = state;
+	}
+
+	public void setStatePanel(boolean statePanel) {
+		this.statePanel = statePanel;
 	}
 
 	public void setClient(Set<Client> client) {
