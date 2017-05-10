@@ -51,18 +51,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable().addFilterBefore(filter, CsrfFilter.class);
 
-
         http
                 .authorizeRequests()
-                .antMatchers("/", "/manager/**").permitAll()
-                .antMatchers("/boss/**").hasAuthority("BOSS")
+                .antMatchers( "/manager","/manager/**").hasAuthority("MANAGER")
+                .antMatchers("/boss/**","/boss").hasAuthority("BOSS")
                 .and()
                 .formLogin()
                 .loginPage("/login")
                 .successHandler(customAuthenticationSuccessHandler)
                 .usernameParameter("username")
                 .passwordParameter("password");
-
         http
                 .logout()
                 .logoutUrl("/logout")

@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Created by User on 24.04.2017.
@@ -15,7 +14,7 @@ public class UserController {
 
 
     @Autowired
-    UserRepository userRepository;
+	UserRepository userRepository;
 
 
     @RequestMapping(value = {"/login"}, method = RequestMethod.GET)

@@ -10,11 +10,12 @@ import org.springframework.data.repository.query.Param;
  */
 public interface UserRepository extends JpaRepository<User,Long> {
 
-
-
+    // для логина
     @Query("SELECT u FROM User u WHERE u.login =:name")
     User getUserByName(@Param("name")String name);
 
-
+    // для смены
+    @Query("SELECT u FROM User u WHERE u.name =:name")
+    User getUserByNameForShift(@Param("name")String name);
 
 }

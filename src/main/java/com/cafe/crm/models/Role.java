@@ -25,8 +25,6 @@ public class Role implements GrantedAuthority {
     public Role() {
     }
 
-
-
     public User getUsers() {
         return user;
     }
@@ -63,15 +61,15 @@ public class Role implements GrantedAuthority {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Role role = (Role) o;
-        return name.equals(role.name);
+
+        return name != null ? name.equals(role.name) : role.name == null;
     }
 
     @Override
     public int hashCode() {
-        int result = 1;
-        result = 31 * result + name.hashCode();
-        return result;
+        return name != null ? name.hashCode() : 0;
     }
 
     @Override

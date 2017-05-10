@@ -21,7 +21,4 @@ public class Main extends WebMvcConfigurerAdapter {
     public InitMenu initTestData() {
         return new InitMenu();
     }
-
-
-
 }

@@ -5,6 +5,7 @@ import com.cafe.crm.dao.*;
 import com.cafe.crm.dao.dao_menu.CategoryRepository;
 import com.cafe.crm.dao.dao_menu.MenuRepository;
 import com.cafe.crm.dao.dao_menu.ProductRepository;
+import com.cafe.crm.models.MainClass;
 import com.cafe.crm.models.Menu.Category;
 import com.cafe.crm.models.Menu.Menu;
 import com.cafe.crm.models.Menu.Product;
@@ -34,7 +35,16 @@ public class InitMenu {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private MainClassRepository mainClassRepository;
+
 	public void init() {
+
+		if(mainClassRepository.findAll().size() == 0) {
+			MainClass mainClass = new MainClass(0L, false);
+			mainClassRepository.saveAndFlush(mainClass);
+		}
+
 
 		Role roleBoss = new Role();
 		roleBoss.setName("BOSS");
@@ -65,6 +75,29 @@ public class InitMenu {
 		user.setRoles(userRoles);
 
 		userRepository.saveAndFlush(user);
+
+		User admin2 = new User();
+		admin2.setLogin("admin1");
+		admin2.setPassword("admin1");
+		admin2.setName("Kristen");
+
+		Set<Role> adminRoles2 = new HashSet<>();
+		adminRoles.add(roleBoss);
+		admin2.setRoles(adminRoles2);
+
+		userRepository.saveAndFlush(admin2);
+
+		User user2 = new User();
+		user2.setLogin("manager1");
+		user2.setPassword("manager1");
+		user2.setName("Bivis");
+
+		Set<Role> userRoles2 = new HashSet<>();
+		userRoles.add(roleUser);
+		user2.setRoles(userRoles2);
+
+		userRepository.saveAndFlush(user2);
+
 
 
 		Category category1 = new Category("Салаты");
