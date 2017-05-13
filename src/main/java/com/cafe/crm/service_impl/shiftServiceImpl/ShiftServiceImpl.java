@@ -1,9 +1,7 @@
-package com.cafe.crm.service_impl.ShiftServiceImpl;
+package com.cafe.crm.service_impl.shiftServiceImpl;
 
-import com.cafe.crm.dao.MainClassRepository;
 import com.cafe.crm.dao.ShiftRepository;
 import com.cafe.crm.dao.UserRepository;
-import com.cafe.crm.models.MainClass;
 import com.cafe.crm.models.User;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.service_abstract.shift_service.ShiftService;
@@ -12,12 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 
-/**
- * Created by User on 01.05.2017.
- */
+
 @Service
 public class ShiftServiceImpl implements ShiftService {
 
@@ -26,11 +22,6 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Autowired
 	private UserRepository userRepository;
-
-	@Autowired
-	private MainClassRepository mainClassRepository;
-
-
 
 
 	@Override
@@ -45,13 +36,9 @@ public class ShiftServiceImpl implements ShiftService {
 			User user = userRepository.getOne(Long.valueOf((long) box[i]));
 			users.add(user);
 		}
-
 		Shift shift = new Shift(LocalDate.now(), 0, users);
+		shift.setOpen(true);
 		shiftRepository.saveAndFlush(shift);
-		MainClass mainClass = mainClassRepository.getOne(1L);
-		mainClass.setOpen(true);
-		mainClass.setShiftId(shift.getId());
-		mainClassRepository.saveAndFlush(mainClass);
 		return shift;
 	}
 
@@ -61,7 +48,7 @@ public class ShiftServiceImpl implements ShiftService {
 	}
 
 	@Override
-	public List<User> findAll() {
+	public List<User> findAllUsers() {
 		return userRepository.findAll();
 	}
 
@@ -69,23 +56,40 @@ public class ShiftServiceImpl implements ShiftService {
 	public List<User> getWorkers() {    // Рабочие не добавленные в открытую  смену
 
 		List<User> users = userRepository.findAll();
-		users.removeAll(shiftRepository.findOne(mainClassRepository.getOne(1L).getShiftId()).getUsers());
+		users.removeAll(shiftRepository.getLast().getUsers());
 		return users;
 	}
 
 	@Override
 	public void deleteWorkerFromShift(String name) {
-		Shift shift = shiftRepository.findOne(mainClassRepository.getOne(1L).getShiftId());
+		Shift shift = shiftRepository.getLast();
 		User user = userRepository.getUserByNameForShift(name);
 		shift.getUsers().remove(user);
-	    shiftRepository.saveAndFlush(shift);
+		shiftRepository.saveAndFlush(shift);
 	}
 
 	@Override
 	public void addWorkerFromShift(String name) {
-		Shift shift = shiftRepository.findOne(mainClassRepository.getOne(1L).getShiftId());
+		Shift shift = shiftRepository.getLast();
 		User user = userRepository.getUserByNameForShift(name);
 		shift.getUsers().add(user);
+		shiftRepository.saveAndFlush(shift);
+	}
+
+	@Override
+	public Shift getLast() {
+		return shiftRepository.getLast();
+	}
+
+	@Override
+	public List<Shift> findAll() {
+		return shiftRepository.findAll();
+	}
+
+	@Override
+	public void closeShift() {
+		Shift shift = shiftRepository.getLast();
+		shift.setOpen(false);
 		shiftRepository.saveAndFlush(shift);
 	}
 }

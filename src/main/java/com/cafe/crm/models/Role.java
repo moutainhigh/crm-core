@@ -3,80 +3,69 @@ package com.cafe.crm.models;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "roles")
 public class Role implements GrantedAuthority {
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private Long id;
+	@Id
+	@GeneratedValue
+	@Column(name = "id")
+	private Long id;
 
-    @Column(name = "name", length = 20, nullable = false)
-    private String name;
+	@Column(name = "name", length = 20, nullable = false)
+	private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER, targetEntity = User.class)
-    @JoinTable(name = "permissions",
-            joinColumns = {@JoinColumn(name = "role_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id")})
-    private User user;
+	@ManyToMany(fetch = FetchType.EAGER, targetEntity = User.class)
+	private Set<User> user;
 
-    public Role() {
-    }
+	public Role() {
+	}
 
-    public User getUsers() {
-        return user;
-    }
+	public Role(String name) {
+		this.name = name;
+	}
 
-    public void setUsers(User user) {
-        this.user = user;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public Role(String name) {
-        this.name = name;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getAuthority() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-    public String getAuthority() {
-        return name;
-    }
+		Role role = (Role) o;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+		return name != null ? name.equals(role.name) : role.name == null;
+	}
 
-        Role role = (Role) o;
+	@Override
+	public int hashCode() {
+		return name != null ? name.hashCode() : 0;
+	}
 
-        return name != null ? name.equals(role.name) : role.name == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return name != null ? name.hashCode() : 0;
-    }
-
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Role{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				'}';
+	}
 }

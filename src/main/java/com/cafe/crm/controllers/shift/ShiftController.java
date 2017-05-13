@@ -1,8 +1,7 @@
 package com.cafe.crm.controllers.shift;
 
 
-import com.cafe.crm.dao.MainClassRepository;
-import com.cafe.crm.service_abstract.UserService;
+import com.cafe.crm.service_abstract.user_service.UserService;
 import com.cafe.crm.service_abstract.shift_service.ShiftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,9 +14,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 
-/**
- * Created by Sasha ins on 01.05.2017.
- */
 @Controller
 public class ShiftController {
 
@@ -26,9 +22,6 @@ public class ShiftController {
 
 	@Autowired
 	private ShiftService shiftService;
-
-	@Autowired
-	private MainClassRepository mainClassRepository;
 
 	@RequestMapping(value = "/manager/shift/", method = RequestMethod.GET)
 	public ModelAndView getAdminPage() {
@@ -42,54 +35,61 @@ public class ShiftController {
 
 	@RequestMapping(value = "/manager/shift/begin", method = RequestMethod.POST)
 	public ModelAndView beginShift(@RequestParam(name = "box", required = false) int[] box) {
-		ModelAndView mv;
-		if (!mainClassRepository.findOne(1L).getOpen()) {
+		if (shiftService.getLast() == null) {                     // если это первая смена в работе приложения
 			if (box == null) {
 				int[] nullArray = new int[0];
 				shiftService.newShift(nullArray);
 			} else {
 				shiftService.newShift(box);
 			}
-			mv = new ModelAndView("redirect:/manager/shift/edit");
-		} else {
-			mv = new ModelAndView("redirect:/manager/shift/");
+			return new ModelAndView("redirect:/manager/shift/edit");
 		}
-		return mv;
+		if (!shiftService.getLast().getOpen()) {                 // если смена не открыта
+			if (box == null) {
+				int[] nullArray = new int[0];
+				shiftService.newShift(nullArray);
+			} else {
+				shiftService.newShift(box);
+			}
+			return new ModelAndView("redirect:/manager/shift/edit");
+
+		} else {                                                  // если смена открыта
+			return new ModelAndView("redirect:/manager/shift/");
+		}
 	}
 
+	// Получаем список сотрудников открытой смены
 	@RequestMapping(value = "/manager/shift/edit", method = RequestMethod.GET)
 	public ModelAndView editPage() {
 		ModelAndView mv = new ModelAndView("editingShiftPage");
-		// Получаем список сотрудников открытой смены
-		mv.addObject("workersOfShift", shiftService.findOne(mainClassRepository.getOne(1L).getShiftId()).getUsers());
+		mv.addObject("workersOfShift", shiftService.getLast().getUsers());
 		mv.addObject("allWorkers", shiftService.getWorkers());
 		return mv;
 	}
 
+	// удаляем работника из списка работников смены
 	@RequestMapping(value = "/manager/shift/delWorker", method = RequestMethod.POST)
 	public ModelAndView deleteWorkerFromShift(@RequestParam(name = "delWorker") String name) {
-		// удаляем работника из списка работников смены
 		shiftService.deleteWorkerFromShift(name);
 		ModelAndView mv = new ModelAndView("editingShiftPage");
-		mv.addObject("workersOfShift", shiftService.findOne(mainClassRepository.getOne(1L).getShiftId()).getUsers());
+		mv.addObject("workersOfShift", shiftService.getLast().getUsers());
 		mv.addObject("allWorkers", shiftService.getWorkers());
 		return mv;
 	}
 
+	//добавляем работника на смену
 	@RequestMapping(value = "/manager/shift/addWorker", method = RequestMethod.POST)
 	public ModelAndView addWorkerFromShift(@RequestParam(name = "addWorker") String name) {
-		//добавляем работника на смену
 		shiftService.addWorkerFromShift(name);
 		ModelAndView mv = new ModelAndView("editingShiftPage");
-		mv.addObject("workersOfShift", shiftService.findOne(mainClassRepository.getOne(1L).getShiftId()).getUsers());
+		mv.addObject("workersOfShift", shiftService.getLast().getUsers());
 		mv.addObject("allWorkers", shiftService.getWorkers());
 		return mv;
 	}
 
-	@RequestMapping(value = "manager/shift/endOfShift")
+	@RequestMapping(value = "manager/shift/endOfShift", method = RequestMethod.POST)
 	public ModelAndView endOfShift() {
-		ModelAndView mv = new ModelAndView();
-		mainClassRepository.getOne(1L).setOpen(false);
-		return mv;
+		shiftService.closeShift();
+		return new ModelAndView("redirect:/login");
 	}
 }

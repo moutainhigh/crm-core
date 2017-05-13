@@ -3,7 +3,7 @@ package com.cafe.crm.security.service;
 
 
 import com.cafe.crm.models.User;
-import com.cafe.crm.service_abstract.UserService;
+import com.cafe.crm.service_abstract.user_service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,7 +16,7 @@ public class AuthenticationService implements UserDetailsService{
     UserService userService;
 
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        User user = userService.getUserByName(login);
+        User user = userService.getUserByLogin(login);
 
         if (user == null) {
             throw new UsernameNotFoundException("Username " + login + " not found");

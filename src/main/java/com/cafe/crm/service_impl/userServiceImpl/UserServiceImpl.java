@@ -1,19 +1,16 @@
-package com.cafe.crm.service_impl;
+package com.cafe.crm.service_impl.userServiceImpl;
 
 import com.cafe.crm.dao.UserRepository;
 import com.cafe.crm.models.User;
+import com.cafe.crm.service_abstract.user_service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
-/**
- * Created by User on 19.04.2017.
- */
 @Service
-public class UserServiceImpl implements com.cafe.crm.service_abstract.UserService {
-
+public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
@@ -24,8 +21,8 @@ public class UserServiceImpl implements com.cafe.crm.service_abstract.UserServic
     }
 
     @Override
-    public User getUserByName(String name) {
-        return userRepository.getUserByName(name);
+    public User getUserByLogin(String name) {
+        return userRepository.getUserByLogin(name);
     }
 
     @Override
@@ -36,6 +33,11 @@ public class UserServiceImpl implements com.cafe.crm.service_abstract.UserServic
     @Override
     public User getUserByNameForShift(String name) {
         return userRepository.getUserByNameForShift(name);
+    }
+
+    @Override
+    public void save(User user) {
+        userRepository.saveAndFlush(user);
     }
 
 

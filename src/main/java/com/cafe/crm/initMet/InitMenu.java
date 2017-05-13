@@ -1,11 +1,11 @@
 package com.cafe.crm.initMet;
 
 
-import com.cafe.crm.dao.*;
+import com.cafe.crm.dao.RoleRepository;
+import com.cafe.crm.dao.UserRepository;
 import com.cafe.crm.dao.dao_menu.CategoryRepository;
 import com.cafe.crm.dao.dao_menu.MenuRepository;
 import com.cafe.crm.dao.dao_menu.ProductRepository;
-import com.cafe.crm.models.MainClass;
 import com.cafe.crm.models.Menu.Category;
 import com.cafe.crm.models.Menu.Menu;
 import com.cafe.crm.models.Menu.Product;
@@ -35,16 +35,7 @@ public class InitMenu {
 	@Autowired
 	private UserRepository userRepository;
 
-	@Autowired
-	private MainClassRepository mainClassRepository;
-
 	public void init() {
-
-		if(mainClassRepository.findAll().size() == 0) {
-			MainClass mainClass = new MainClass(0L, false);
-			mainClassRepository.saveAndFlush(mainClass);
-		}
-
 
 		Role roleBoss = new Role();
 		roleBoss.setName("BOSS");
@@ -79,26 +70,35 @@ public class InitMenu {
 		User admin2 = new User();
 		admin2.setLogin("admin1");
 		admin2.setPassword("admin1");
-		admin2.setName("Kristen");
+		admin2.setName("roleUser");
 
 		Set<Role> adminRoles2 = new HashSet<>();
-		adminRoles.add(roleBoss);
+		adminRoles2.add(roleBoss);
 		admin2.setRoles(adminRoles2);
 
 		userRepository.saveAndFlush(admin2);
 
 		User user2 = new User();
-		user2.setLogin("manager1");
-		user2.setPassword("manager1");
+		user2.setLogin("manager2");
+		user2.setPassword("manager2");
 		user2.setName("Bivis");
 
 		Set<Role> userRoles2 = new HashSet<>();
-		userRoles.add(roleUser);
+		userRoles2.add(roleBoss);
 		user2.setRoles(userRoles2);
 
 		userRepository.saveAndFlush(user2);
 
+		User user3 = new User();
+		user3.setLogin("manager3");
+		user3.setPassword("manager3");
+		user3.setName("RIK");
 
+		Set<Role> userRoles3 = new HashSet<>();
+		userRoles3.add(roleBoss);
+		user3.setRoles(userRoles3);
+
+		userRepository.saveAndFlush(user3);
 
 		Category category1 = new Category("Салаты");
 		Category category2 = new Category("Напитки");
@@ -127,26 +127,18 @@ public class InitMenu {
 		Product pro33 = new Product("Терамису", "вкусный", 400d);
 		Product pro333 = new Product("Шоколадный", "вкусный", 400d);
 
-		Set<Category> setCat1 = new HashSet<>();
-		Set<Category> setCat2 = new HashSet<>();
-		Set<Category> setCat3 = new HashSet<>();
 
-		setCat1.add(category1);
-		setCat2.add(category2);
-		setCat3.add(category3);
+		pro1.setCategory(category1);
+		pro11.setCategory(category1);
+		pro111.setCategory(category1);
 
-		pro1.setCategory(setCat1);
+		pro2.setCategory(category2);
+		pro22.setCategory(category2);
+		pro222.setCategory(category2);
 
-		pro11.setCategory(setCat1);
-		pro111.setCategory(setCat1);
-
-		pro2.setCategory(setCat2);
-		pro22.setCategory(setCat2);
-		pro222.setCategory(setCat2);
-
-		pro3.setCategory(setCat3);
-		pro33.setCategory(setCat3);
-		pro333.setCategory(setCat3);
+		pro3.setCategory(category3);
+		pro33.setCategory(category3);
+		pro333.setCategory(category3);
 
 		productRepository.saveAndFlush(pro1);
 

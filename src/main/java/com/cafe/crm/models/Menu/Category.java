@@ -4,12 +4,12 @@ import com.cafe.crm.models.Role;
 import com.cafe.crm.models.User;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-/**
- * Created by Sasna ins on 17.04.2017.
- */
+
 @Entity
 @Table(name = "category")
 public class Category {
@@ -60,6 +60,7 @@ public class Category {
     }
 
     public void setProducts(Set<Product> products) {
+
         this.products = products;
     }
 

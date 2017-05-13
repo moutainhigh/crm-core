@@ -2,11 +2,10 @@ package com.cafe.crm.service_abstract.shift_service;
 
 import com.cafe.crm.models.User;
 import com.cafe.crm.models.shift.Shift;
+
 import java.util.List;
 
-/**
- * Created by User on 01.05.2017.
- */
+
 public interface ShiftService {
 
 	void saveAndFlush(Shift shift);
@@ -15,8 +14,7 @@ public interface ShiftService {
 
 	Shift findOne(Long L);
 
-	List<User> findAll();
-
+	List<User> findAllUsers();
 
 	// Рабочие не добавленные в открытую  смену
 	List<User> getWorkers();
@@ -24,5 +22,12 @@ public interface ShiftService {
 	void deleteWorkerFromShift(String name);
 
 	void addWorkerFromShift(String name);
+
+	Shift getLast();
+
+	List<Shift> findAll();
+
+	void closeShift();
+
 
 }

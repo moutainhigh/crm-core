@@ -29,17 +29,14 @@ public class User implements UserDetails {
 	@Column(name = "salary")
 	private long salary;
 
-	@OneToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
+	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
 	@JoinTable(name = "permissions",
 			joinColumns = {@JoinColumn(name = "user_id")},
 			inverseJoinColumns = {@JoinColumn(name = "role_id")})
 	private Set<Role> roles;
 
 
-	@ManyToMany(fetch = FetchType.EAGER, targetEntity = User.class)
-	@JoinTable(name = "usersOfShift",
-			joinColumns = {@JoinColumn(name = "user_id")},
-			inverseJoinColumns = {@JoinColumn(name = "shift_id")})
+	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Shift.class)
 	private Set<Shift> shifts;
 
 	@Column(name = "enabled", nullable = false)
