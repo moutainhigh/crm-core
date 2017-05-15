@@ -10,41 +10,15 @@
 </head>
 <body>
 
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand">Project Name</a>
-    </div>
-    <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Меню</a></li>
-            <li><a href="#">Статистика</a></li>
-            <li><a  data-toggle="modal" th:href="'#asd4'">Настройки учетной записи</a></li>
+<div th:replace="managernavbar :: managerNavbar">
 
-            <li>
-                <form method="post" action="/manager/shift/endOfShift" th:align="center">
-                    <button class="btn btn-primary btn-danger" name="addWorker"
-                    >
-                       Тестовое закрытие смены
-                    </button>
-                </form>
-            </li>
-        </ul>
-    </div><!--/.nav-collapse -->
 </div><!--/.navbar -->
 
 <div class="container-fluid" style="margin-top:50px">
     <div class="row">
-
         <div class="col-sm-9 col-sm-offset-3 col-md-8 col-md-offset-2 main">
             <h1 style="color: #5bc0de;" th:align="center" class="page-header">Настройки смены</h1>
-
             <div class="row placeholders">
-
             </div>
             <div class="tabbable"> <!-- Only required for left/right tabs -->
                 <ul class="nav nav-tabs">
@@ -61,7 +35,6 @@
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoKlip5vw19APwuF0IyiElEqliWmVEvvUfrox2ZE8Ms6tZdwPMbIckhw"/>
                         <h4 style="color: #5bc0de;">Удалить сотрудника</h4></a></li>
                 </ul>
-
                 <div class="tab-content">
                     <div class="tab-pane " th:id="1">
 
@@ -177,7 +150,7 @@
 </div>
 
 <form role="form" method="post" action="/manager/changePassword" style="margin: 10px auto; width: 50%">
-    <div align="center" class="modal fade" th:id="'asd4'" tabindex="-1" role="dialog"
+    <div align="center" class="modal fade" th:id="'newPass'" tabindex="-1" role="dialog"
          aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -189,8 +162,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Название</label>
-                        <input type="text" class="form-control" id="loginCat" name="password"
+                        <label>Введите новый пароль</label>
+                        <input type="password" class="form-control" id="loginCat" name="password" placeholder="Введите пароль"
+
+                        ></input>
+                        <label>Повторите ввод</label>
+                        <input type="password" class="form-control" id="loginCat2" name="secondPassword" placeholder="Введите пароль повторно"
 
                         ></input>
                     </div>

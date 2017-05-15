@@ -48,7 +48,7 @@ public class InitMenu {
 		User admin = new User();
 		admin.setLogin("admin");
 		admin.setPassword("admin");
-		admin.setName("Jim");
+		admin.setName("Сергей");
 
 		Set<Role> adminRoles = new HashSet<>();
 		adminRoles.add(roleBoss);
@@ -59,7 +59,7 @@ public class InitMenu {
 		User user = new User();
 		user.setLogin("manager");
 		user.setPassword("manager");
-		user.setName("Anna");
+		user.setName("Борис");
 
 		Set<Role> userRoles = new HashSet<>();
 		userRoles.add(roleUser);
@@ -70,7 +70,7 @@ public class InitMenu {
 		User admin2 = new User();
 		admin2.setLogin("admin1");
 		admin2.setPassword("admin1");
-		admin2.setName("roleUser");
+		admin2.setName("Света");
 
 		Set<Role> adminRoles2 = new HashSet<>();
 		adminRoles2.add(roleBoss);
@@ -81,7 +81,7 @@ public class InitMenu {
 		User user2 = new User();
 		user2.setLogin("manager2");
 		user2.setPassword("manager2");
-		user2.setName("Bivis");
+		user2.setName("Кирилл");
 
 		Set<Role> userRoles2 = new HashSet<>();
 		userRoles2.add(roleBoss);
@@ -92,7 +92,7 @@ public class InitMenu {
 		User user3 = new User();
 		user3.setLogin("manager3");
 		user3.setPassword("manager3");
-		user3.setName("RIK");
+		user3.setName("Марина");
 
 		Set<Role> userRoles3 = new HashSet<>();
 		userRoles3.add(roleBoss);

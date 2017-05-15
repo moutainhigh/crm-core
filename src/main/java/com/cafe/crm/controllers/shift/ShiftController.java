@@ -35,7 +35,7 @@ public class ShiftController {
 
 	@RequestMapping(value = "/manager/shift/begin", method = RequestMethod.POST)
 	public ModelAndView beginShift(@RequestParam(name = "box", required = false) int[] box) {
-		if (shiftService.getLast() == null) {                     // если это первая смена в работе приложения
+		if (shiftService.getLast() == null) {                     // if this first shift
 			if (box == null) {
 				int[] nullArray = new int[0];
 				shiftService.newShift(nullArray);
@@ -44,7 +44,7 @@ public class ShiftController {
 			}
 			return new ModelAndView("redirect:/manager/shift/edit");
 		}
-		if (!shiftService.getLast().getOpen()) {                 // если смена не открыта
+		if (!shiftService.getLast().getOpen()) {                 // if shift is closed
 			if (box == null) {
 				int[] nullArray = new int[0];
 				shiftService.newShift(nullArray);
@@ -53,12 +53,12 @@ public class ShiftController {
 			}
 			return new ModelAndView("redirect:/manager/shift/edit");
 
-		} else {                                                  // если смена открыта
+		} else {                                                  // if shift is open
 			return new ModelAndView("redirect:/manager/shift/");
 		}
 	}
 
-	// Получаем список сотрудников открытой смены
+	// get all workers of shift
 	@RequestMapping(value = "/manager/shift/edit", method = RequestMethod.GET)
 	public ModelAndView editPage() {
 		ModelAndView mv = new ModelAndView("editingShiftPage");
@@ -67,7 +67,7 @@ public class ShiftController {
 		return mv;
 	}
 
-	// удаляем работника из списка работников смены
+	// delete worker from shift
 	@RequestMapping(value = "/manager/shift/delWorker", method = RequestMethod.POST)
 	public ModelAndView deleteWorkerFromShift(@RequestParam(name = "delWorker") String name) {
 		shiftService.deleteWorkerFromShift(name);
@@ -77,7 +77,7 @@ public class ShiftController {
 		return mv;
 	}
 
-	//добавляем работника на смену
+	// add worker on shift
 	@RequestMapping(value = "/manager/shift/addWorker", method = RequestMethod.POST)
 	public ModelAndView addWorkerFromShift(@RequestParam(name = "addWorker") String name) {
 		shiftService.addWorkerFromShift(name);
@@ -87,7 +87,7 @@ public class ShiftController {
 		return mv;
 	}
 
-	@RequestMapping(value = "manager/shift/endOfShift", method = RequestMethod.POST)
+	@RequestMapping(value = "manager/shift/endOfShift", method = RequestMethod.GET)
 	public ModelAndView endOfShift() {
 		shiftService.closeShift();
 		return new ModelAndView("redirect:/login");

@@ -5,6 +5,7 @@ import com.cafe.crm.models.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -21,10 +22,9 @@ public class Shift {
 	private LocalDate dateShift;
 
 	@Column(name = "checkValue")
-	private Integer checkValue;// ПОСЛЕ ИНТЕГРАЦИИ СО СЧЕТАМИ ЗАМЕНИТЬ НА СЕТ СЧЕТОВ
+	private Integer checkValue;// after change on set<>
 
-
-	@Column(name = "isOpen") // открыта ли смена
+	@Column(name = "isOpen") // shift is open ?
 			Boolean isOpen;
 
 	@ManyToMany(fetch = FetchType.EAGER, targetEntity = User.class)
@@ -35,6 +35,16 @@ public class Shift {
 
 	public Set<User> getUsers() {
 		return users;
+	}
+
+	public String getUsersNames() {   // return only names of workers of shift
+
+		String names = "";
+		for (User user : users) {
+			names+=user.getName()+" ";
+
+		}
+		return names;
 	}
 
 
@@ -105,5 +115,15 @@ public class Shift {
 		result = 31 * result + (isOpen != null ? isOpen.hashCode() : 0);
 		result = 31 * result + (users != null ? users.hashCode() : 0);
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "Shift{" +
+				"id=" + id +
+				", dateShift=" + dateShift +
+				", isOpen=" + isOpen +
+				", users=" + users +
+				'}';
 	}
 }

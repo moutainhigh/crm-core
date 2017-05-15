@@ -29,6 +29,9 @@ public class Product {
     private Double cost;
 
     @ManyToOne(fetch = FetchType.EAGER, targetEntity = Category.class)
+    @JoinTable(name = "product_and_categories",
+            joinColumns = {@JoinColumn(name = "product_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")})
     private Category category;
 
 

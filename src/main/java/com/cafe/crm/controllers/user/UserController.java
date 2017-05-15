@@ -4,7 +4,6 @@ import com.cafe.crm.models.Role;
 import com.cafe.crm.models.User;
 import com.cafe.crm.service_abstract.user_service.RoleService;
 import com.cafe.crm.service_abstract.user_service.UserService;
-import org.hibernate.validator.constraints.ParameterScriptAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,38 +33,43 @@ public class UserController {
 		return new User();
 	}
 
+	@RequestMapping(value = {"/"}, method = RequestMethod.GET)
+	public String log() {return "redirect:/login";}
+
 	@RequestMapping(value = {"/login"}, method = RequestMethod.GET)
 	public void login() {
 	}
-
 
 	@RequestMapping(value = {"/logout"}, method = RequestMethod.GET)
 	public void logout() {
 	}
 
 	@RequestMapping(value = {"/login/createUser"}, method = RequestMethod.POST)
-	public String createUser(User user) {
-		roleService.getRoleByName("MANAGER");
-		Set<Role> adminRoles = new HashSet<>();
-		adminRoles.add(roleService.getRoleByName("MANAGER"));
-		user.setRoles(adminRoles);
-		userService.save(user);
+	public String createUser(User user, @RequestParam(value = "secondPassword") String password) {
+		if (user.getPassword().equals(password)) {
+			roleService.getRoleByName("MANAGER");
+			Set<Role> adminRoles = new HashSet<>();
+			adminRoles.add(roleService.getRoleByName("MANAGER"));
+			user.setRoles(adminRoles);
+			userService.save(user);
+		}
 
 		return "redirect:/login";
 	}
 
 	@RequestMapping(value = "/manager/changePassword", method = RequestMethod.POST)
-	public String showOverview(@RequestParam(name="password") String password) {
+	public String showOverview(@RequestParam(name = "password") String password, @RequestParam(name = "secondPassword") String secondPassword) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
 			UserDetails userDetails = (UserDetails) auth.getPrincipal();
 
-			User user = userService.getUserByLogin(userDetails.getUsername());
-			user.setPassword(password);
-			userService.save(user);
+			if (password.equals(secondPassword)) {
+				User user = userService.getUserByLogin(userDetails.getUsername());
+				user.setPassword(password);
+				userService.save(user);
+			}
 		}
-
 		return "redirect:/manager/shift/edit";
 	}
 

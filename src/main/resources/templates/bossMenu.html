@@ -14,21 +14,7 @@
 
 <header>
     <div class="container" style="margin-top:50px">
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand">Project Name</a>
-            </div>
-            <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Меню</a></li>
-                    <li><a href="#">Статистика</a></li>
-                </ul>
-            </div><!--/.nav-collapse -->
+        <div th:replace="bossnavbar :: bossNavbar">
         </div><!--/.navbar -->
         <div>
             <h3 align="center"><h1 th:align="center" style="color: #5bc0de;">Поиск</h1></h3>
@@ -80,7 +66,6 @@
                                 <td><p th:text="${prod.name}"></p></td>
                                 <td><p th:text="${prod.description}"></p></td>
                                 <td><p th:text="${prod.cost}"></p></td>
-
                                 <td class="col-lg-2"><a id="ins" class="btn btn-primary btn-info"
                                                         th:href="'#p'+${prod.id}"
                                                         data-toggle="modal">Редактировать </a></td>
@@ -153,7 +138,8 @@
                             </tbody>
                         </table>
                     </div>
-                    <form role="form" method="post" action="/boss/menu/updCategory" style="margin: 10px auto; width: 50%">
+                    <form role="form" method="post" action="/boss/menu/updCategory"
+                          style="margin: 10px auto; width: 50%">
                         <div align="center" class="modal fade" th:id="'a'+${categor.id}" tabindex="-1" role="dialog"
                              aria-labelledby="myModalLabel">
                             <div class="modal-dialog" role="document">
@@ -185,7 +171,8 @@
                             </div>
                         </div>
                     </form>
-                    <form role="form" method="post" action="/boss/menu/addProduct" style="margin: 10px auto; width: 50%">
+                    <form role="form" method="post" action="/boss/menu/addProduct"
+                          style="margin: 10px auto; width: 50%">
                         <div align="center" class="modal fade" th:id="'add'+${categor.id}" tabindex="-1" role="dialog"
                              aria-labelledby="myModalLabel">
                             <div class="modal-dialog" role="document">
@@ -197,7 +184,7 @@
                                         <h4 class="modal-title" id="myModalLabel4">Редактирование категории</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <div th:object="${addProduct}" class="form-group">
+                                        <div th:object="${product}" class="form-group">
                                             <label>Название</label>
                                             <input type="text" class="form-control" id="loginProd" name="name"
                                             ></input>

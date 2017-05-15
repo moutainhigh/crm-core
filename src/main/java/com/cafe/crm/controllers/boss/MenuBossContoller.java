@@ -19,6 +19,7 @@ import java.util.Set;
 
 
 @Controller
+@RequestMapping("/boss/menu")
 public class MenuBossContoller {
 
 	@Autowired
@@ -35,13 +36,8 @@ public class MenuBossContoller {
 		return new Product();
 	}
 
-	@ModelAttribute(value = "addProduct")
-	public Product addProduct() {
-		return new Product();
-	}
 
-
-	@RequestMapping(value = {"/boss/menu"}, method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getAdminPage() {
 		ModelAndView mv = new ModelAndView("bossMenu");
 		mv.addObject("menu", menuService.getOne(1L));
@@ -51,9 +47,10 @@ public class MenuBossContoller {
 		return mv;
 	}
 
-	@RequestMapping(value = {"/boss/menu/deleteProduct"}, method = RequestMethod.POST)
+	@RequestMapping(value = {"/deleteProduct"}, method = RequestMethod.POST)
 	public String deleteProduct(ModelAndView modelAndView,
 								@RequestParam(value = "del", required = false) Long id) throws IOException {
+
 		productService.delete(id);
 		modelAndView.addObject("menu", menuService.getOne(1L));
 		modelAndView.addObject("categories", categoriesService.findAll());
@@ -61,7 +58,7 @@ public class MenuBossContoller {
 		return "redirect:/boss/menu";
 	}
 
-	@RequestMapping(value = "/boss/menu/upd", method = RequestMethod.POST)
+	@RequestMapping(value = "/upd", method = RequestMethod.POST)
 	public ModelAndView updProduct(Product product, @RequestParam(name = "cat") Long id) {
 		product.setCategory(categoriesService.getOne(id));
 		productService.saveAndFlush(product);
@@ -69,7 +66,7 @@ public class MenuBossContoller {
 		return new ModelAndView("redirect:/boss/menu");
 	}
 
-	@RequestMapping(value = "/boss/menu/updCategory", method = RequestMethod.POST)
+	@RequestMapping(value = "/updCategory", method = RequestMethod.POST)
 	public ModelAndView updCategory(@RequestParam(name = "upd") Long id,
 									@RequestParam(name = "name") String name) {
 		Category category = categoriesService.getOne(id);
@@ -78,31 +75,31 @@ public class MenuBossContoller {
 		return new ModelAndView("redirect:/boss/menu/");
 	}
 
-	@RequestMapping(value = "/boss/menu/addProduct", method = RequestMethod.POST)
-	public ModelAndView addProduct(Product product, @RequestParam(name = "add") Long id) {
+	@RequestMapping(value = "/addProduct", method = RequestMethod.POST)
+	public String addProduct(Product product, @RequestParam(name = "add") Long id) {
 		Category category = categoriesService.getOne(id);
 		product.setCategory(category);
 		category.getProducts().add(product);
 		productService.saveAndFlush(product);
 		categoriesService.saveAndFlush(category);
-		return new ModelAndView("redirect:/boss/menu");
+		return "redirect:/boss/menu";
 	}
 
-	@RequestMapping(value = "/boss/menu/addCategory", method = RequestMethod.POST)
-	public ModelAndView addCategories(@RequestParam(name = "name") String name) {
+	@RequestMapping(value = "/addCategory", method = RequestMethod.POST)
+	public String addCategories(@RequestParam(name = "name") String name) {
 		Category category = new Category(name);
 		Set<Product> setProducts = new HashSet<>();
 		category.setProducts(setProducts);
 		categoriesService.saveAndFlush(category);
-		return new ModelAndView("redirect:/boss/menu");
+		return "redirect:/boss/menu";
 	}
 
-	@RequestMapping(value = "/boss/menu/deleteCat", method = RequestMethod.POST)
-	public ModelAndView deleteCategories(@RequestParam(name = "del") Long id) {
+	@RequestMapping(value = "/deleteCat", method = RequestMethod.POST)
+	public String deleteCategories(@RequestParam(name = "del") Long id) {
 		if (id != null) {
 			menuService.getOne(1L).getCategories().remove(categoriesService.getOne(id));
 			categoriesService.delete(id);
 		}
-		return new ModelAndView("redirect:/boss/menu");
+		return "redirect:/boss/menu";
 	}
 }
