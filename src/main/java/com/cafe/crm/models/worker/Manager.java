@@ -12,7 +12,6 @@ import javax.persistence.Table;
 @PrimaryKeyJoinColumn(name = "worker_id")
 public class Manager extends Worker {
 
-
     @Column(name = "login")
     private String login;
 
@@ -35,7 +34,12 @@ public class Manager extends Worker {
         this.login = login;
         this.password = password;
     }
-
+    public Manager(String firstName, String lastName, String login, String password, String position,
+                   Long shiftSalary) {
+        super(firstName, lastName, position, shiftSalary);
+        this.login = login;
+        this.password = password;
+    }
 
     public String getLogin() {
         return login;

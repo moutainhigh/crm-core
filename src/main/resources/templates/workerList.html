@@ -4,30 +4,32 @@
 </head>
 
 <body>
+
 <table class="table table-condensed table-responsive custom" th:fragment="workerList">
     <tr>
-        <th><h3> # </h3></th>
         <th><h3> Имя </h3></th>
         <th><h3> Фамилия </h3></th>
         <th><h3> Должность </h3></th>
         <th><h3> Оклад За смену </h3></th>
         <th><h3> Смены </h3></th>
         <th><h3> Зарплата </h3></th>
-        <th><h3> Действия </h3></th>
+        <th></th>
         <th></th>
     </tr>
     <tbody class="searchable">
     <tr th:each="worker : ${workerList}">
-        <td class="custom" th:text="${worker.id}"></td>
         <td class="custom" th:text="${worker.firstName}"></td>
         <td class="custom" th:text="${worker.lastName}"></td>
         <td class="custom" th:text="${worker.position}"></td>
         <td class="custom" th:text="${worker.shiftSalary}"></td>
         <td class="custom" th:text="${worker.countShift}"></td>
         <td class="custom" th:text="${worker.salary}"></td>
-        <td class="col-lg-2 custom" ><a class="custom" th:href="'#a'+${worker.id}" data-toggle="modal" >Редактировать</a></td>
-        <td class="col-lg-2 custom" ><a class="custom" th:href="'#b'+${worker.id}" data-toggle="modal" >Удалить</a></td>
-
+        <td class=" custom " >
+            <button type="button" class=" btn btn-success btn-lg"><a class="custom" th:href="'#a'+${worker.id}" data-toggle="modal" >Редактировать</a></button>
+        </td>
+        <td class=" custom" >
+            <button type="button" class=" btn btn-danger btn-lg"> <a class="custom" th:href="'#b'+${worker.id}" data-toggle="modal" >Удалить</a></button>
+           </td>
 
         <div class="modal fade" th:id="'a'+${worker.id}">
             <div class="modal-dialog">
@@ -37,10 +39,10 @@
                     </div>
                     <div class="modal-body">
 
-                        <form class="form-signin" action="/accounting/editWorker" method="post">
+                        <form class="form-signin" action="worker/editWorker" method="POST" >
 
-                            <h4>ID</h4>
-                            <input type="text" class="form-control" readonly="readonly" th:value="${worker.id}" name="id"/>
+                            <input type="hidden" class="form-control" th:value="${worker.id}" name="id"/>
+
 
                             <h4>Имя</h4>
                             <input type="text" class="form-control" th:value="${worker.firstName}" name="firstName"/>
@@ -59,6 +61,7 @@
                               <div th:each="manager : ${managerList}">
                                   <input type="text" class="form-control" th:value="${worker.position}" name="position"/>
                                   <br></br>
+
                                                             <h4>Login</h4>
                                                     <input type="text" class="form-control" th:value="${manager.login}" name="login"/>
                                   <br></br>
@@ -66,14 +69,32 @@
                                                         <input type="text" class="form-control" th:value="${manager.password}" name="password"/>
                           </div>
                               </p>
-                              <p th:case="Кальянщик"><input type="text" class="form-control" th:value="${worker.position}" name="position"/>
+                              <p th:case="Кальянщик">
+
+                                  <select class="form-control" name="position" th:value="${worker.position}">
+                                      <option value="Кальянщик">Кальянщик</option>
+                                      <option value="Официант">Официант</option>
+                                      <option value="Хостесс">Хостесс</option>
+                                  </select>
                               </p>
 
-                              <p th:case="Хостесс"><input type="text" class="form-control" th:value="${worker.position}" name="position"/>
+                              <p th:case="Хостесс">
+                                  <select class="form-control"  name="position" th:value="${worker.position}">
+                                      <option value="Хостесс">Хостесс</option>
+                                      <option value="Кальянщик">Кальянщик</option>
+                                      <option value="Официант">Официант</option>
+                                  </select>
+                              </p>
+                              <p th:case="Официант">
+                                  <select class="form-control"  name="position" th:value="${worker.position}">
+                                      <option value="Официант">Официант</option>
+                                      <option value="Хостесс">Хостесс</option>
+                                  <option value="Кальянщик">Кальянщик</option>
+                              </select>
                               </p>
                           </div>
                                 <br></br>
-                            
+
                             <h4>Оклад За Смену</h4>
                             <input type="text" class="form-control" th:value="${worker.shiftSalary}" name="shiftSalary"/>
                             <br></br>
@@ -102,9 +123,9 @@
                         <h2 class="form-signin-heading">Форма Удаления Сотрудника</h2>
                     </div>
                     <div class="modal-body">
-                <h3>Удалить сотрудника?</h3>
+                <h3 style="color: crimson">Удалить сотрудника?</h3>
                         <br></br>
-                        <form class="form-signin" action="/accounting/deleteWorker" method="post">
+                        <form class="form-signin" th:action="'worker/deleteWorker/'+${worker.id}"  method="GET">
 
                             <input type="hidden" class="form-control" readonly="readonly" th:value="${worker.id}" name="id"/>
 
@@ -116,8 +137,6 @@
                             <h4>Фамилия</h4>
                             <input type="text" class="form-control" th:value="${worker.lastName}" name="lastName"/>
                             <br></br>
-
-
                             <div th:switch="${worker.position}">
                                 <h4>Должность</h4>
 
@@ -137,13 +156,14 @@
 
                                 <p th:case="Хостесс"><input type="text" class="form-control" th:value="${worker.position}" name="position"/>
                                 </p>
+                                <p th:case="Официант"><input type="text" class="form-control" th:value="${worker.position}" name="position"/>
+                                </p>
                             </div>
                             <br></br>
 
                             <h4>Оклад За Смену</h4>
                             <input type="text" class="form-control" th:value="${worker.shiftSalary}" name="shiftSalary"/>
                             <br></br>
-
 
                             <button type="submit" class="btn btn-lg btn-primary btn-block">Да</button>
                             <br></br>
@@ -160,9 +180,6 @@
                 </div>
             </div>
         </div>
-
-
-
     </tr>
     </tbody>
 </table>

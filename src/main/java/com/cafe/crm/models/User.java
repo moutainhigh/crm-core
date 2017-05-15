@@ -22,14 +22,13 @@ public class User implements UserDetails {
     @Column(name = "login", nullable = false, unique = true)
     private String login;
 
-
     @Column(name = "password", length = 30, nullable = false)
     private String password;
 
     @Column(name = "salary")
     private long salary;
 
-    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
+    @OneToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
     @JoinTable(name = "permissions",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
@@ -38,16 +37,12 @@ public class User implements UserDetails {
     @Column(name = "enabled", nullable = false)
     private Boolean enabled = true;
 
-
-
     public User() {
     }
-
 
     public User(String name) {
         this.name = name;
     }
-
 
     public long getSalary() {
         return salary;
@@ -56,7 +51,6 @@ public class User implements UserDetails {
     public void setSalary(long salary) {
         this.salary = salary;
     }
-
 
     public String getName() {
         return name;

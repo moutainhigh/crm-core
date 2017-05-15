@@ -16,7 +16,7 @@ public class Role implements GrantedAuthority {
     @Column(name = "name", length = 20, nullable = false)
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER, targetEntity = User.class)
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = User.class)
     @JoinTable(name = "permissions",
             joinColumns = {@JoinColumn(name = "role_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
@@ -24,7 +24,6 @@ public class Role implements GrantedAuthority {
 
     public Role() {
     }
-
 
     public List<User> getUsers() {
         return users;
@@ -53,7 +52,6 @@ public class Role implements GrantedAuthority {
     public void setName(String name) {
         this.name = name;
     }
-
 
     @Override
     public String toString() {

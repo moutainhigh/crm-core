@@ -19,10 +19,8 @@ public class Shift {
     @Column(name = "dateShift")
     private LocalDate dateShift;
 
-
     @Column(name = "checkValue")
     private Integer checkValue;//количество счетов за смену
-
 
     public Shift() {
     }

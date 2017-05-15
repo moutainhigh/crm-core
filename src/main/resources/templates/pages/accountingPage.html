@@ -7,16 +7,38 @@
 
 
 <div class="container">
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="vtab1">
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul id="nav-tabs-wrapper" class="nav nav-tabs nav-tabs-horizontal">
+                        <li class="active"><a href="#htab1" data-toggle="tab"><h4 style="color: #337ab7">Таблица Всех Сотрудников</h4></a></li>
+                        <li><a href="#htab2" data-toggle="tab"><h4 style="color: #337ab7">Таблица Всех Управляющих</h4></a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="htab1">
+                            <h1 class="custom" align="center">Таблица Всех Сотрудников</h1>
+                            <h3 align="center">Фильтр По Всем Полям</h3>
+                            <input id="filter" style="margin-bottom: 10px" type="text" class="form-control"
+                                   placeholder="Поиск по полям"></input>
+                            <div th:replace="workerList :: workerList"></div>
+                            <div th:replace="newWorker :: newWorker"></div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="htab2">
+                            <h1 class="custom" align="center">Таблица Всех Управляющих</h1>
+                            <h3 align="center">Фильтр По Всем Полям</h3>
+                            <input id="filter2" style="margin-bottom: 10px" type="text" class="form-control"
+                                   placeholder="Поиск по полям"></input>
+                            <div th:replace="managerList :: managerList"></div>
+                            <div th:replace="newManager :: newManager"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <h1 class="custom" align="center">Таблица Всех Сотрудников</h1>
-    <h3 align="center">Фильтр По Всем Полям</h3>
-    <input id="filter" style="margin-bottom: 10px" type="text" class="form-control"
-           placeholder="Поиск по полям"></input>
-    <div th:replace="workerList :: workerList"></div>
-    <div th:replace="newWorker :: newWorker"></div>
-    <h1 class="custom" align="center">Таблица Всех Управляющих</h1>
-    <div th:replace="managerList :: managerList"></div>
+    </div></div>
 
-</div>
+
 </body>
 </html>

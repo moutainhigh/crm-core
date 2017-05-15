@@ -6,18 +6,19 @@
 <body>
 <table class="table table-condensed table-responsive custom" th:fragment="managerList">
     <tr>
-        <th><h3> # </h3></th>
         <th><h3> Имя </h3></th>
         <th><h3> Фамилия </h3></th>
         <th><h3> Login </h3></th>
         <th><h3> Password </h3></th>
         <th><h3> Должность </h3></th>
         <th><h3> Оклад За Смену </h3></th>
-        <th><h3> Смены </h3></th>
         <th><h3> Зарплата </h3></th>
+        <th></th>
+        <th></th>
+        <th></th>
     </tr>
+    <tbody class="searchable">
     <tr th:each="manager : ${managerList}">
-        <td class="custom" th:text="${manager.id}"></td>
         <td class="custom" th:text="${manager.firstName}"></td>
         <td class="custom" th:text="${manager.lastName}"></td>
         <td class="custom" th:text="${manager.login}"></td>
@@ -26,7 +27,118 @@
         <td class="custom" th:text="${manager.shiftSalary}"></td>
         <td class="custom" th:text="${manager.countShift}"></td>
         <td class="custom" th:text="${manager.salary}"></td>
+        <td class=" custom " >
+            <button type="button" class=" btn btn-success btn-lg"><a class="custom" th:href="'#aa'+${manager.id}" data-toggle="modal" >Редактировать</a></button>
+        </td>
+        <td class=" custom" >
+            <button type="button" class=" btn btn-danger btn-lg"> <a class="custom" th:href="'#bb'+${manager.id}" data-toggle="modal" >Удалить</a></button>
+        </td>
+        <div class="modal fade" th:id="'aa'+${manager.id}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="form-signin-heading">Форма Редактирования Сотрудника</h2>
+                    </div>
+                    <div class="modal-body">
+
+                        <form class="form-signin" action="worker/editWorker" method="POST">
+
+                            <input type="hidden" class="form-control" th:value="${manager.id}" name="id"/>
+
+                            <h4>Имя</h4>
+                            <input type="text" class="form-control" th:value="${manager.firstName}" name="firstName"/>
+                            <br></br>
+
+
+                            <h4>Фамилия</h4>
+                            <input type="text" class="form-control" th:value="${manager.lastName}" name="lastName"/>
+                            <br></br>
+
+                            <h4>Должность</h4>
+                                    <input type="text" readonly="readonly" class="form-control" th:value="${manager.position}" name="position"/>
+                                    <br></br>
+                                    <h4>Login</h4>
+                                    <input type="text" class="form-control" th:value="${manager.login}" name="login"/>
+                                    <br></br>
+                                    <h4>Password</h4>
+                                    <input type="text" class="form-control" th:value="${manager.password}" name="password"/>
+                            <br></br>
+
+                            <h4>Оклад За Смену</h4>
+                            <input type="text" class="form-control" th:value="${manager.shiftSalary}" name="shiftSalary"/>
+                            <br></br>
+
+
+                            <button type="submit" class="btn btn-lg btn-primary btn-block">Изменить Данные</button>
+                            <br></br>
+                        </form>
+
+                        <div  class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="modal fade" th:id="'bb'+${manager.id}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="form-signin-heading">Форма Удаления Сотрудника</h2>
+                    </div>
+                    <div class="modal-body">
+                        <h3 style="color: crimson">Удалить сотрудника?</h3>
+                        <br></br>
+                        <form class="form-signin" th:action="'worker/deleteWorker/'+${manager.id}"  method="GET">
+
+                            <input type="hidden" class="form-control" readonly="readonly" th:value="${manager.id}" name="id"/>
+
+                            <h4>Имя</h4>
+                            <input type="text" class="form-control" th:value="${manager.firstName}" name="firstName"/>
+                            <br></br>
+
+
+                            <h4>Фамилия</h4>
+                            <input type="text" class="form-control" th:value="${manager.lastName}" name="lastName"/>
+                            <br></br>
+
+                                <h4>Должность</h4>
+                                    <input type="text" readonly="readonly" class="form-control" th:value="${manager.position}" name="position"/>
+                                    <br></br>
+                                    <h4>Login</h4>
+                                    <input type="text" class="form-control" th:value="${manager.login}" name="login"/>
+                                    <br></br>
+                                    <h4>Password</h4>
+                                    <input type="text" class="form-control" th:value="${manager.password}" name="password"/>
+
+                            <br></br>
+
+                            <h4>Оклад За Смену</h4>
+                            <input type="text" class="form-control" th:value="${manager.shiftSalary}" name="shiftSalary"/>
+                            <br></br>
+
+                            <button type="submit" class="btn btn-lg btn-primary btn-block">Да</button>
+                            <br></br>
+                            <button type="button" class="btn btn-lg btn-primary btn-block" data-dismiss="modal">Нет</button>
+                            <br></br>
+                        </form>
+
+                        <div  class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </tr>
+    </tbody>
 </table>
 </body>
 </html>
