@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+
 @SpringBootApplication
 @EnableAutoConfiguration
 public class Main extends WebMvcConfigurerAdapter {

@@ -3,7 +3,9 @@ package com.cafe.crm.service_abstract.shift_service;
 import com.cafe.crm.models.User;
 import com.cafe.crm.models.shift.Shift;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 
 public interface ShiftService {
@@ -28,6 +30,8 @@ public interface ShiftService {
 	List<Shift> findAll();
 
 	void closeShift();
+
+	Set<Shift> findByDates(LocalDate start, LocalDate end);
 
 
 }

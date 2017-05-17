@@ -92,4 +92,9 @@ public class ShiftServiceImpl implements ShiftService {
 		shift.setOpen(false);
 		shiftRepository.saveAndFlush(shift);
 	}
+
+	@Override
+	public Set<Shift> findByDates(LocalDate start, LocalDate end) {
+		return shiftRepository.findByDates(start, end);
+	}
 }

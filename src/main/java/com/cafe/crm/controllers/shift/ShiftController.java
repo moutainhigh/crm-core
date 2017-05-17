@@ -1,8 +1,8 @@
 package com.cafe.crm.controllers.shift;
 
 
-import com.cafe.crm.service_abstract.user_service.UserService;
 import com.cafe.crm.service_abstract.shift_service.ShiftService;
+import com.cafe.crm.service_abstract.user_service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,16 +25,22 @@ public class ShiftController {
 
 	@RequestMapping(value = "/manager/shift/", method = RequestMethod.GET)
 	public ModelAndView getAdminPage() {
+
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("d.MM.YYYY");
 		LocalDate date = LocalDate.now();
-		ModelAndView mv = new ModelAndView("shiftPage");
-		mv.addObject("list", userService.findAll());
-		mv.addObject("date", dateTimeFormatter.format(date));
+		ModelAndView mv;
+		if (shiftService.getLast() == null||!shiftService.getLast().getOpen()) {
+			mv = new ModelAndView("shiftPage");
+			mv.addObject("list", userService.findAll());
+			mv.addObject("date", dateTimeFormatter.format(date));
+		} else {
+			mv = new ModelAndView("editingShiftPage");
+		}
 		return mv;
 	}
 
 	@RequestMapping(value = "/manager/shift/begin", method = RequestMethod.POST)
-	public ModelAndView beginShift(@RequestParam(name = "box", required = false) int[] box) {
+	public String beginShift(@RequestParam(name = "box", required = false) int[] box) {
 		if (shiftService.getLast() == null) {                     // if this first shift
 			if (box == null) {
 				int[] nullArray = new int[0];
@@ -42,7 +48,7 @@ public class ShiftController {
 			} else {
 				shiftService.newShift(box);
 			}
-			return new ModelAndView("redirect:/manager/shift/edit");
+			return "redirect:/manager/shift/edit";
 		}
 		if (!shiftService.getLast().getOpen()) {                 // if shift is closed
 			if (box == null) {
@@ -51,10 +57,10 @@ public class ShiftController {
 			} else {
 				shiftService.newShift(box);
 			}
-			return new ModelAndView("redirect:/manager/shift/edit");
+			return "redirect:/manager/shift/edit";
 
 		} else {                                                  // if shift is open
-			return new ModelAndView("redirect:/manager/shift/");
+			return "redirect:/manager/shift/edit";
 		}
 	}
 

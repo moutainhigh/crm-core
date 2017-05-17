@@ -34,10 +34,13 @@ public class UserController {
 	}
 
 	@RequestMapping(value = {"/"}, method = RequestMethod.GET)
-	public String log() {return "redirect:/login";}
+	public String log() {
+		return "redirect:/login";
+	}
 
 	@RequestMapping(value = {"/login"}, method = RequestMethod.GET)
 	public void login() {
+
 	}
 
 	@RequestMapping(value = {"/logout"}, method = RequestMethod.GET)
