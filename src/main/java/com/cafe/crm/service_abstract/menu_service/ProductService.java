@@ -4,9 +4,7 @@ import com.cafe.crm.models.Menu.Product;
 
 import java.util.List;
 
-/**
- * Created by User on 01.05.2017.
- */
+
 public interface ProductService {
 
 

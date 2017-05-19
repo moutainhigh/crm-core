@@ -8,9 +8,7 @@ import java.util.DoubleSummaryStatistics;
 import java.util.Set;
 
 
-/**
- * Created by Sasha ins on 17.04.2017.
- */
+
 @Entity
 @Table(name = "product")
 public class Product {
@@ -30,11 +28,11 @@ public class Product {
     @Column(name="cost")
     private Double cost;
 
-    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Category.class)
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Category.class)
     @JoinTable(name = "product_and_categories",
             joinColumns = {@JoinColumn(name = "product_id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id")})
-    private Set<Category>category;
+    private Category category;
 
 
     public Product() {
@@ -82,11 +80,11 @@ public class Product {
         this.cost = cost;
     }
 
-    public Set<Category> getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(Set<Category> category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 

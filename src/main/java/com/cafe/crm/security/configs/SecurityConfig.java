@@ -51,7 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable().addFilterBefore(filter, CsrfFilter.class);
 
-
         http
                 .authorizeRequests()
                 .antMatchers( "/manager","/manager/**").hasAuthority("MANAGER")
@@ -62,7 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .successHandler(customAuthenticationSuccessHandler)
                 .usernameParameter("username")
                 .passwordParameter("password");
-
         http
                 .logout()
                 .logoutUrl("/logout")

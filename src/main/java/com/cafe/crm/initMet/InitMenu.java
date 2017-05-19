@@ -1,7 +1,8 @@
 package com.cafe.crm.initMet;
 
 
-import com.cafe.crm.dao.*;
+import com.cafe.crm.dao.RoleRepository;
+import com.cafe.crm.dao.UserRepository;
 import com.cafe.crm.dao.dao_menu.CategoryRepository;
 import com.cafe.crm.dao.dao_menu.MenuRepository;
 import com.cafe.crm.dao.dao_menu.ProductRepository;
@@ -47,7 +48,7 @@ public class InitMenu {
 		User admin = new User();
 		admin.setLogin("admin");
 		admin.setPassword("admin");
-		admin.setName("Jim");
+		admin.setName("Сергей");
 
 		Set<Role> adminRoles = new HashSet<>();
 		adminRoles.add(roleBoss);
@@ -58,7 +59,7 @@ public class InitMenu {
 		User user = new User();
 		user.setLogin("manager");
 		user.setPassword("manager");
-		user.setName("Anna");
+		user.setName("Борис");
 
 		Set<Role> userRoles = new HashSet<>();
 		userRoles.add(roleUser);
@@ -66,6 +67,38 @@ public class InitMenu {
 
 		userRepository.saveAndFlush(user);
 
+		User admin2 = new User();
+		admin2.setLogin("admin1");
+		admin2.setPassword("admin1");
+		admin2.setName("Света");
+
+		Set<Role> adminRoles2 = new HashSet<>();
+		adminRoles2.add(roleBoss);
+		admin2.setRoles(adminRoles2);
+
+		userRepository.saveAndFlush(admin2);
+
+		User user2 = new User();
+		user2.setLogin("manager2");
+		user2.setPassword("manager2");
+		user2.setName("Кирилл");
+
+		Set<Role> userRoles2 = new HashSet<>();
+		userRoles2.add(roleBoss);
+		user2.setRoles(userRoles2);
+
+		userRepository.saveAndFlush(user2);
+
+		User user3 = new User();
+		user3.setLogin("manager3");
+		user3.setPassword("manager3");
+		user3.setName("Марина");
+
+		Set<Role> userRoles3 = new HashSet<>();
+		userRoles3.add(roleBoss);
+		user3.setRoles(userRoles3);
+
+		userRepository.saveAndFlush(user3);
 
 		Category category1 = new Category("Салаты");
 		Category category2 = new Category("Напитки");
@@ -94,26 +127,18 @@ public class InitMenu {
 		Product pro33 = new Product("Терамису", "вкусный", 400d);
 		Product pro333 = new Product("Шоколадный", "вкусный", 400d);
 
-		Set<Category> setCat1 = new HashSet<>();
-		Set<Category> setCat2 = new HashSet<>();
-		Set<Category> setCat3 = new HashSet<>();
 
-		setCat1.add(category1);
-		setCat2.add(category2);
-		setCat3.add(category3);
+		pro1.setCategory(category1);
+		pro11.setCategory(category1);
+		pro111.setCategory(category1);
 
-		pro1.setCategory(setCat1);
+		pro2.setCategory(category2);
+		pro22.setCategory(category2);
+		pro222.setCategory(category2);
 
-		pro11.setCategory(setCat1);
-		pro111.setCategory(setCat1);
-
-		pro2.setCategory(setCat2);
-		pro22.setCategory(setCat2);
-		pro222.setCategory(setCat2);
-
-		pro3.setCategory(setCat3);
-		pro33.setCategory(setCat3);
-		pro333.setCategory(setCat3);
+		pro3.setCategory(category3);
+		pro33.setCategory(category3);
+		pro333.setCategory(category3);
 
 		productRepository.saveAndFlush(pro1);
 

@@ -1,5 +1,6 @@
 package com.cafe.crm.models;
 
+import com.cafe.crm.models.shift.Shift;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -28,11 +29,15 @@ public class User implements UserDetails {
 	@Column(name = "salary")
 	private long salary;
 
-	@OneToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
+	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
 	@JoinTable(name = "permissions",
 			joinColumns = {@JoinColumn(name = "user_id")},
 			inverseJoinColumns = {@JoinColumn(name = "role_id")})
 	private Set<Role> roles;
+
+
+	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Shift.class)
+	private Set<Shift> shifts;
 
 	@Column(name = "enabled", nullable = false)
 	private Boolean enabled = true;
@@ -43,6 +48,14 @@ public class User implements UserDetails {
 		this.login = login;
 		this.password = password;
 		this.salary = salary;
+	}
+
+	public Set<Shift> getShifts() {
+		return shifts;
+	}
+
+	public void setShifts(Set<Shift> shifts) {
+		this.shifts = shifts;
 	}
 
 	public long getSalary() {

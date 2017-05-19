@@ -5,9 +5,7 @@ import com.cafe.crm.models.Role;
 import javax.persistence.*;
 import java.util.Set;
 
-/**
- * Created by Sasha ins on 17.04.2017.
- */
+
 @Entity
 @Table(name="menu")
 public class Menu {
