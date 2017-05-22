@@ -1,4 +1,4 @@
-package com.cafe.crm.dao_impl.client.calculateService;
+package com.cafe.crm.dao_impl.client.cardService;
 
 import com.cafe.crm.dao_impl.client.CalculateService;
 import com.cafe.crm.dao_impl.client.CardService;
@@ -18,8 +18,8 @@ public class CardControllerService {
 	@Autowired
 	private CalculateService calculateService;
 
-	public void   addCardToCalculate(Long idCard,Long idCalculate) {
-		Card card = cardService.getOne(idCard); //обновляем дату последнего посещения
+	public void addCardToCalculate(Long idCard,Long idCalculate) {
+		Card card = cardService.getOne(idCard);
 		card.setVisitDate(LocalDate.now());
 		cardService.add(card);
 
@@ -29,7 +29,6 @@ public class CardControllerService {
 	}
 
 	public void addMoney(Long idCard, Double money) {
-
 		Card card = cardService.getOne(idCard);
 		card.setBalance(card.getBalance() + money);
 		cardService.add(card);

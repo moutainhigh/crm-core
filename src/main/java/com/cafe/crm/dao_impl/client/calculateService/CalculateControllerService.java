@@ -6,11 +6,11 @@ import com.cafe.crm.dao_impl.client.CardService;
 import com.cafe.crm.dao_impl.client.ClientService;
 import com.cafe.crm.models.client.Board;
 import com.cafe.crm.models.client.Calculate;
+import com.cafe.crm.models.client.Card;
 import com.cafe.crm.models.client.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,13 +25,19 @@ public class CalculateControllerService {
 	@Autowired
 	private BoardService boardService;
 
+	@Autowired
+	private CardService cardService;
 
-	public void addCalculate(Long id, Long number, String descr) {//передаются по полю от 3 разных сущностей
+	@Autowired
+	private CalculatePriceService calculatePriceService;
+
+	public void addCalculate(Long id, Long number, String descr) {
 		Board board = boardService.getOne(id);
 
 		Client client = new Client();
 		if (number != null) {
-			client.setNumber(number);
+			client.setTotalNumber(number);
+			client.setCalculateNumber(number);
 		}
 		clientService.add(client);
 
@@ -59,7 +65,8 @@ public class CalculateControllerService {
 		Client client = new Client();
 
 		if (number != null) {
-			client.setNumber(number);
+			client.setTotalNumber(number);
+			client.setCalculateNumber(number);
 		}
 
 		if (!descr.equals("")) {
@@ -77,42 +84,32 @@ public class CalculateControllerService {
 
 	}
 
-	public void calculatePrice(Long discount, Long clientId, String numberToCalculate) {
+	public void calculatePrice(Long clientId, Long calculateNumber, Long discount, Boolean flag) {
 		Client client = clientService.getOne(clientId);
 
-		LocalTime timeStart = client.getTimeStart();//получаем время создания клиента
-		LocalTime timeNow = LocalTime.now().withSecond(0); //время сейчас
-		LocalTime timePassed = timeNow.minusHours(timeStart.getHour()); //расчет количества пройденного времени с создания
-		timePassed = timePassed.minusMinutes(timeStart.getMinute());
-		Long hour = (long) timePassed.getHour();// делим пройденное время на часы и минуты
-		Long min = (long) timePassed.getMinute();
-		Double priceTime;
 
-		if (hour == 0) {
-			priceTime = (min * 10.0 / 6.0) * 3.0; // первая считает если прошло меньше часа
-		} else {
-			priceTime = ((hour - 1.0) * 200.0) + (min * 10.0 / 6.0) * 2.0 + 300.0; // если прошло больше часа, считает по этой
+		client.setPayWithCard(null);
+		client.setCalculateNumber(calculateNumber);
+		Double priceTime = calculatePriceService.calculatePrice(client);
+		client.setPriceTime(priceTime);
+		if (discount != null) {
+			client.setDiscount(discount);
+		}
+		client.setAllPrice(calculatePriceService.addDiscountToAllPrice(client));
+
+		Calculate calculate = client.getCalculate();
+		if (flag) {
+			if (client.getAllPrice() <= calculate.getCard().getBalance()) {
+				client.setPayWithCard(client.getAllPrice());
+				client.setAllPrice(0.0);
+			} else {
+				client.setPayWithCard(calculate.getCard().getBalance());
+				client.setAllPrice(client.getAllPrice() - calculate.getCard().getBalance());
+			}
 		}
 
-		if (numberToCalculate.equals("Всех")) { //если нужно посчтитать всех, то умножаем на кол-во человек, после обнуляем
-			priceTime *= client.getNumber();
-			client.setNumber((long) 0);
-		} else if (client.getNumber() > 0 && Long.parseLong(numberToCalculate) <= client.getNumber()) { //если запрашиваемое число больше чем есть, выводит 0 цену, людей не отнимает
-			Long count = Long.parseLong(numberToCalculate);
-			priceTime *= count;
-			client.setNumber(client.getNumber() - count);
-		} else {
-			priceTime = 0.0;
-		}
-
-		client.setPriceTime(Math.round(priceTime * 100) / 100.00);
-
-		client.setAllPrice(client.getPriceMenu() + client.getPriceTime());//высчитывается из меню + цена времени и округляем до 2 знаков
-
-		if (discount > 0 && discount <= 100){ //скидка не может быть больше 100%
-					client.setAllPrice(client.getAllPrice() - (client.getAllPrice()*discount/100));
-					client.setAllPrice(Math.round(client.getAllPrice() * 100) / 100.00);
-				}
+		clientService.add(client);
+/*
 
 		Double all = client.getAllPrice();
 		Long allLong = all.longValue();
@@ -134,16 +131,28 @@ public class CalculateControllerService {
 			client.setRound(allLong);
 		}
 
-		clientService.add(client);
+		clientService.add(client);*/
 	}
 
-	public void state(Long id) {
-		Calculate calculate = calculateService.getOne(id);
-		if (calculate.isStatePanel()) {
-			calculate.setStatePanel(false);
-		} else {
-			calculate.setStatePanel(true);
+	public void closeClient(Long id) {
+		Client client = clientService.getOne(id);
+		Calculate calculate = client.getCalculate();
+		if (client.getTotalNumber() > 0) {
+			client.setTotalNumber(client.getTotalNumber() - client.getCalculateNumber());
+			clientService.add(client);
+			calculate.setSpend(calculate.getSpend() + client.getAllPrice());
+			calculateService.add(calculate);
 		}
-		calculateService.add(calculate);
+		if (client.getTotalNumber() == 0) {
+			Set<Client> set = calculate.getClient();
+			set.remove(client);
+			calculate.setClient(set);
+			calculateService.add(calculate);
+		}
+		if (!calculate.getClient().iterator().hasNext()) {
+			calculate.setState(false);
+			calculateService.add(calculate);
+		}
+
 	}
 }

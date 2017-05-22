@@ -4,13 +4,13 @@
 </head>
 <body>
 <div th:fragment="clientModal">
-    <button  class="btn btn-default" data-toggle="modal"
-            th:href="'#myModal1' + ${calculate.id}"
+    <button class="btn btn-primary" data-toggle="modal"
+            th:href="'#clientModal' + ${calculate.id}"
             style="float: left"><img width="10px" height="10px"
                                      src="http://www.imbf.org/interesnye-stati/images/simvol-087.png"/>
     </button>
 
-    <div th:id="'myModal1' + ${calculate.id}" class="modal fade">
+    <div th:id="'clientModal' + ${calculate.id}" class="modal fade">
         <div class="modal-dialog " style="width: 300px;" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -18,7 +18,7 @@
                     <h4 class="modal-title">Добавление клиента</h4>
                 </div>
                 <div class="modal-body" style="width:300px;">
-                    Описание клиента
+                    <h4> Описание клиента </h4>
                     <form th:id="'formMod1' + ${calculate.id}" action="/add-client"
                           method="post">
 
@@ -39,11 +39,6 @@
                         <option value="3">3</option>
                         <option value="4">4</option>
                         <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
                     </datalist>
 
                     <br/>

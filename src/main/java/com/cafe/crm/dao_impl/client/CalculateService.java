@@ -27,4 +27,8 @@ public class CalculateService {
     public Calculate getOne(Long id) {
         return calculateRepository.getOne(id);
     }
+
+    public List<Calculate> getAllOpen() {
+        return calculateRepository.getAllOpen();
+    }
 }

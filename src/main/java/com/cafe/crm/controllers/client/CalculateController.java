@@ -3,17 +3,11 @@ package com.cafe.crm.controllers.client;
 import com.cafe.crm.dao_impl.client.BoardService;
 import com.cafe.crm.dao_impl.client.CalculateService;
 import com.cafe.crm.dao_impl.client.calculateService.CalculateControllerService;
-import com.cafe.crm.models.client.Calculate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class CalculateController {
@@ -31,51 +25,49 @@ public class CalculateController {
 	public ModelAndView manager() {
 		ModelAndView modelAndView = new ModelAndView("clients");
 		modelAndView.addObject("listBoard", boardService.getAll());
-		modelAndView.addObject("listCalculate", calculateService.getAll());
+		modelAndView.addObject("listCalculate", calculateService.getAllOpen());
 		return modelAndView;
 	}
 
 	@RequestMapping(value = {"/add-calculate"}, method = RequestMethod.POST)
-	public ModelAndView addCalculate(@RequestParam(name = "boardId") Long id,
-									 @RequestParam(name = "number") Long number,
-									 @RequestParam(name = "description") String descr) {//передаются по полю от 3 разных сущностей
-
+	public String addCalculate(@RequestParam(name = "boardId") Long id,
+							   @RequestParam(name = "number") Long number,
+							   @RequestParam(name = "description") String descr) {
 		calculateControllerService.addCalculate(id, number, descr);
-		return new ModelAndView("redirect:/manager");
+		return "redirect:/manager";
 	}
 
 	@RequestMapping(value = {"/refresh-board"}, method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void refreshBoard(@RequestParam(name = "boardId") Long idB,
 							 @RequestParam(name = "calculateId") Long idC) {
-
 		calculateControllerService.refreshBoard(idC, idB);
 	}
 
 	@RequestMapping(value = {"/add-client"}, method = RequestMethod.POST)
-	public ModelAndView addClient(@RequestParam(name = "calculateId") Long id,
-								  @RequestParam(name = "number") Long number,
-								  @RequestParam(name = "description") String descr) {
-
+	public String addClient(@RequestParam(name = "calculateId") Long id,
+							@RequestParam(name = "number") Long number,
+							@RequestParam(name = "description") String descr) {
 		calculateControllerService.addClient(id, number, descr);
-		return new ModelAndView("redirect:/manager");
+		return "redirect:/manager";
 	}
 
 	@RequestMapping(value = {"/calculate-price"}, method = RequestMethod.POST)
-	public ModelAndView calculatePrice(@RequestParam(name = "discountInput") Long discount, //скидка которая написана в инпуте(не карты, а карта+скидка управляющего)
-									   @RequestParam(name = "clientId") Long clientId,      // id клиента у которого считаем
-									   @RequestParam(name = "numberToCalculate") String numberToCalculate) {//количество человек для расчета клиента
-		//Long calculateId = Long.parseLong(request.getParameter("calculateId"));
-		calculateControllerService.calculatePrice(discount, clientId, numberToCalculate);
-		return new ModelAndView("redirect:/manager");
+	public String calculatePrice(@RequestParam(name = "flag") Boolean flag,
+								 @RequestParam(name = "clientId") Long id,
+								 @RequestParam(name = "calculateNumber") Long number,
+								 @RequestParam(name = "discount") Long discount) {
+		System.out.println(flag);
+		calculateControllerService.calculatePrice(id, number, discount, flag);
+		return "redirect:/manager";
 	}
 
-	@RequestMapping(value = {"/state-panel"}, method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void state(@RequestParam(name = "calculateId") Long id) {
-		calculateControllerService.state(id);
-	}
 
+	@RequestMapping(value = {"/close-client"}, method = RequestMethod.POST)
+	public String closeClient(@RequestParam(name = "clientId") Long id) {
+		calculateControllerService.closeClient(id);
+		return "redirect:/manager";
+	}
 
 }
 

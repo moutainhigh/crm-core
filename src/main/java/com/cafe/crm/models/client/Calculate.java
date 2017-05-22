@@ -1,6 +1,7 @@
 package com.cafe.crm.models.client;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -13,13 +14,9 @@ public class Calculate {
 
 	private String description = "Нет описания";
 
-	private String menu;
-
-	private Double allPrice = 0.0;
-
 	private boolean state = true;
 
-	private boolean statePanel = false;
+	private Double spend = 0.0;
 
 	@OneToMany(fetch = FetchType.EAGER, targetEntity = Client.class)
 	@JoinTable(name = "clients_calculations",
@@ -28,16 +25,9 @@ public class Calculate {
 	private Set<Client> client;
 
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Board.class)
-	@JoinTable(name = "boards_calculations",
-			joinColumns = {@JoinColumn(name = "calculate_id")},
-			inverseJoinColumns = {@JoinColumn(name = "board_id")})
 	private Board board;
 
-
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Card.class)
-	@JoinTable(name = "cards_calculations",
-			joinColumns = {@JoinColumn(name = "calculate_id")},
-			inverseJoinColumns = {@JoinColumn(name = "card_id")})
 	private Card card;
 
 	public Calculate() {
@@ -61,40 +51,8 @@ public class Calculate {
 		return result;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public String getMenu() {
-		return menu;
-	}
-
-	public Double getAllPrice() {
-		return allPrice;
-	}
-
-	public boolean isState() {
-		return state;
-	}
-
-	public boolean isStatePanel() {
-		return statePanel;
-	}
-
-	public Set<Client> getClient() {
-		return client;
-	}
-
-	public Board getBoard() {
-		return board;
-	}
-
-	public Card getCard() {
-		return card;
+	public void setSpend(Double spend) {
+		this.spend = spend;
 	}
 
 	public void setId(Long id) {
@@ -105,20 +63,8 @@ public class Calculate {
 		this.description = description;
 	}
 
-	public void setMenu(String menu) {
-		this.menu = menu;
-	}
-
-	public void setAllPrice(Double allPrice) {
-		this.allPrice = allPrice;
-	}
-
 	public void setState(boolean state) {
 		this.state = state;
-	}
-
-	public void setStatePanel(boolean statePanel) {
-		this.statePanel = statePanel;
 	}
 
 	public void setClient(Set<Client> client) {
@@ -131,5 +77,34 @@ public class Calculate {
 
 	public void setCard(Card card) {
 		this.card = card;
+	}
+
+	public Double getSpend() {
+		return spend;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public boolean isState() {
+		return state;
+	}
+
+	public Set<Client> getClient() {
+		return client;
+	}
+
+	public Board getBoard() {
+		return board;
+	}
+
+	public Card getCard() {
+
+		return card;
 	}
 }

@@ -1,16 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" th:href="@{/st.css}" type="text/css"/>
+    <script th:src="@{/cookie.js}"></script>
+
+    <style>
+        body{
+            width: 100%;
+            height:100%;
+            background: #3a6186 ;
+            background: -webkit-linear-gradient(to right, #89253e , #3a6186 );
+            background: linear-gradient(to right, #89253e , #3a6186 );
+        }
+    </style>
 
 </head>
 <body>
+
 <header>
-    <div class="container" style="margin-top:50px; ">
+
+
+    <div class="container" style="margin-top:50px;">
         <div class="row">
 
             <div class="navbar navbar-inverse navbar-fixed-top">
@@ -33,161 +45,148 @@
     </div>
 </header>
 
-
 <button class="btn btn-default" style="float: left">Редактирование столов</button>
 
-<div class="container" style=" box-shadow: 0 3px 6px 0; border-radius: 10px; background: #ffffff; min-width: 1200px">
+<div class="container"
+     style=" box-shadow: 0 3px 6px 0; border-radius: 10px; background: #ffffff; min-width: 900px;width:900px; ">
 
-    <!-- модальное окно с созданием счета-->
+    <!--modal window with create calculate-->
     <div th:replace="addCalculateFragment :: calculateModal"></div>
     <!-- -->
 
     <br/>
     <div th:each="calculate : ${listCalculate}">
 
-        <!--шапка панели -->
+        <!--head panel -->
         <div class="panel panel-primary">
             <div class="panel-heading" style="height: 50px">
                 <div class="panel-title">
-
                     <form style="float: left" method="post" action="/refresh-board" th:id="'formRef'+${calculate.id}">
                         <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
-                        <button style="background: rgba(255,255,255,0); border: none" type="submit"><img width="30px"
-                                                                                                         height="30px"
-                                                                                                         src="http://icon-icons.com/icons2/37/PNG/512/sinchronize_theapplication_thearrow_2888.png"/>
-                        </button>
 
+                        <select onchange="submit();" style="width:130px; float: left; height: 34px;font-size:18px "
+                                class="form-control" th:form="'formRef'+${calculate.id}" name="boardId">
+
+                            <p th:each="b : ${listBoard}">
+
+                            <p th:if="(${calculate.getBoard().name} != ${b.name})">
+                                <option th:value="${b.id}" th:text="${b.name}"></option>
+                            </p>
+
+                            <p th:if="(${calculate.getBoard().name} == ${b.name})">
+                                <option th:value="${b.id}" th:text="${b.name}" selected=""></option>
+                            </p>
+                            </p>
+                        </select>
                     </form>
 
-                    <select style="width:130px; float: left; height: 34px; margin-left: 20px; font-size:18px "
-                            class="form-control" th:form="'formRef'+${calculate.id}" name="boardId">
-                        <option th:value="${calculate.getBoard().id}"
-                                th:text="${calculate.getBoard().name}"></option>
-                        <p th:each="b : ${listBoard}">
-                        <p th:if="(${calculate.getBoard().name} != ${b.name})">
-                            <option th:value="${b.id}" th:text="${b.name}"></option>
-                        </p>
-                        </p>
-                    </select>
-
-
-                    <form th:id="'form' + ${calculate.id}" action="/state-panel" method="post">
-                        <input type="hidden" th:value="${calculate.id}" name="calculateId"/>
-                    </form>
-
-                    <button th:onclick="'formsub(\'' +'form'+ ${calculate.id} + '\');'"
-                            style="float: left; width: 800px; word-wrap: break-word; font-size: 20px; height: 40px; text-align: center; background: rgba(255,0,0,0);border: none"
+                    <button th:onclick="'cookiePanel(\'' +'accord'+ ${calculate.id} + '\');'"
+                            style="float: left; width: 590px; word-wrap: break-word; font-size: 20px; height: 40px; text-align: center; background: rgba(255,0,0,0);border: none"
                             data-toggle="collapse" th:href="'#accord' + ${calculate.id}"
                             th:text="${calculate.description}" th:value="${calculate.id}">
                     </button>
-
-
-                    <button style="background: rgba(255,255,255,0); border: none;margin-left: 70px" type="submit"><img
-                            width="30px" height="30px"
-                            src="http://www.clker.com/cliparts/t/f/J/i/7/C/amazon-style-close-button-hi.png"/>
-                    </button>
-
-
+                    <h4 style="float: left" th:text="${calculate.spend} + 'р'"></h4>
                 </div>
-                <!-- -->
             </div>
+            <!-- -->
 
-            <!--выпадающий контент панели -->
-            <div th:id="'accord' + ${calculate.id}" class="panel-collapse collapse "
-                 th:classappend="${calculate.statePanel} ? 'in' : ''">
+            <!--body panel -->
+            <div th:id="'accord' + ${calculate.id}" class="collapse">
+                <script th:inline="javascript">
+                    var id = 'accord' + [[${calculate.id}]];
+                    if ($.cookie(id) == true.toString()) {
+                        $('#' + id).collapse();
+                    }
+                </script>
 
                 <div class="panel-body" style="background: #f0efee">
 
-
-                    <!--модальное окно создания клиента-->
+                    <!--modal window with create client-->
                     <div th:replace="addClientFragment :: clientModal"></div>
-                    <!---->
+                    <!-- -->
 
-                    <button class="btn btn-default" style="float: left; margin-right: 200px">Меню
+                    <!--menu-->
+                    <div class="dropdown" style="float: left;margin-left: 15px;margin-right: 5px;">
+                        <button data-toggle="dropdown" class="dropdown-toggle btn btn-default">
+                            Меню
+                            <b class="caret"></b>
+                        </button>
+                        <div class="dropdown-menu" style=" width:130px;min-width: 130px">
+                            <div style="font-size: 20px">Салат</div>
+                            <div style="font-size: 20px">Суп</div>
+                            <div style="font-size: 20px">Отбивная</div>
+                            <button class="btn btn-primary">Добавить заказ</button>
+                        </div>
+
+                    </div>
+                    <!-- -->
+
+                    <center>
+                        <div style="float: left;height: 42px;" th:if="(${calculate.getCard()})">
+
+                            <h4 style="float: left;font-size: 20px; margin-left: 150px"
+                                th:text="${calculate.getCard().name}"></h4>
+
+                            <img style="float:left;margin-left: 20px"
+                                 src="http://icon-icons.com/icons2/37/PNG/512/bagofmoney_dollar_4399.png" width="30px"
+                                 height="30px"/>
+
+                            <h4 style="float: left;font-size: 20px;"
+                                th:text="${calculate.getCard().balance} + 'р ' + '('+${calculate.getCard().discount} +'%)'"></h4>
+
+                        </div>
+
+                        <div style="float: left;width: 200px;margin-left: 200px"
+                             th:if="(${calculate.getCard()} == null)">
+                            <h4 style="font-size: 20px;float: left">Карта не подключена</h4>
+
+                        </div>
+
+                    </center>
+
+
+                    <button class="btn btn-primary" style="float: right; ">Общий расчет
                     </button>
+                    <hr style="margin-top:50px;margin-bottom: 20px; height: 1px;background: rgba(0,0,0,0.24);"/>
 
-
-                    <div style="float: left;width: 400px;height: 42px;box-shadow: 0 0px 3px 0;border-radius: 5px" th:if="(${calculate.getCard()})">
-                        <h5 style="float: left;font-size: 20px">$</h5>
-                        <input  style="float: left;height: 20px;width: 20px;margin-top: 11px;margin-right: 30px"
-                               type="checkbox"/>
-
-                        <h4 style="float: left;font-size: 20px" th:text="${calculate.getCard().name}+'.'"></h4>
-                        <h4 style="float: left;font-size: 20px;margin-left: 40px;"
-                            th:text="'баланс: ' + ${calculate.getCard().balance}"></h4>
-
-                        <input th:id="'in' + ${calculate.id}"
-                               style="float:right;width:60px;font-size: 20px;margin-top: 4px"
-                               class="form-control" type="text"
-                               th:value="${calculate.getCard().discount}"/>
-
-                    </div>
-
-                    <div style="float: left;width: 400px;box-shadow: 0 0px 3px 0;border-radius: 5px" th:if="(${calculate.getCard()} == null)">
-                        <div style="float: left; height: 1px; width:240px;margin-left: 70px;"><h4
-                                style="font-size: 20px;">Карта не
-                            подключена</h4></div>
-                        <input th:id="'in' + ${calculate.id}" style="width:60px;font-size: 20px;float: right"
-                               class="form-control" type="text"
-                               value="0"/>
-                    </div>
-
-
-                    <p style=" float: left;font-size: 28px">%</p>
-                    <br/> <br/><br/>
-                    <h5 style="float: left; margin-left: 200px  ">Описание</h5>
+                    <h5 style="float: left; margin-left: 270px  ">Описание</h5>
                     <h5 style="float: left;margin-left: 125px">Время создания</h5>
-                    <h5 style="float: left;margin-left: 30px">Осталось чел</h5>
-                    <h5 style="float: left;margin-left: 50px">$ Меню</h5>
-                    <h5 style="float: left;margin-left: 60px">$ Время</h5>
-                    <h5 style="float: left;margin-left: 60px">Общая сумма</h5>
+                    <h5 style="float: left;margin-left: 20px">Осталось человек</h5>
                     <br/>
+
+
                     <div th:each="client : ${calculate.getClient()}">
 
-                        <div style="background: #dbdbdd;margin-top: 15px; border-radius: 3px;height: 34px;">
+
+                        <center>
+                            <div style="background: #dbdbdd;margin-top: 15px; border-radius: 3px;height: 34px;width: 600px">
+
+                                <!--modal window check(calculate)-->
+                                <div th:replace="getCheckFragment :: checkModal"></div>
+                                <!-- -->
 
 
-                            <form th:id="'mainForm' + ${client.id}" method="post" action="/calculate-price">
-                                <input name="discountInput" th:id="'in1' + ${client.id}" type="hidden"/>
-                                <input type="hidden" name="clientId" th:value="${client.id}"/>
-                                <button th:onclick="'linkinput(\'' +'in1'+ ${client.id} + '\',\'' +'in'+ ${calculate.id} + '\');'"
-                                        type="submit" class="btn btn-default but1"
-                                        style="float: left;margin-right:5px;"><img width="16px" height="16px"
-                                                                                   src="http://icon-icons.com/icons2/936/PNG/512/dollar-symbol_icon-icons.com_73598.png"/>
-                                </button>
-                            </form>
+                                <h4 style="float: left; width: 280px; height: 1px;"
+                                    th:text="${client.description}"></h4>
+                                <h4 style="float: left;width: 150px; height: 1px;"
+                                    th:text="${client.timeStart}"></h4>
+                                <h4 style="float: left;width: 110px; height: 1px;"
+                                    th:text="${client.totalNumber}"></h4>
 
-                            <select name="numberToCalculate" th:form="'mainForm' + ${client.id}" class="form-control "
-                                    style="width:85px;height: 34px; margin-right: 20px;font-size: 17px; float: left">
-                                <option value="Всех">Всех</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="8">8</option>
-                                <option value="9">9</option>
-                                <option value="10">10</option>
-                            </select>
+                            </div>
 
+                        </center>
+                        <script th:inline="javascript">
+                            var options = {
+                                "backdrop": false,
+                                "show": "true"
+                            }
+                            var id = 'checkModal' + [[${client.id}]];
+                            if ($.cookie(id) == true.toString()) {
+                                $('#' + id).modal(options);
+                            }
 
-                            <h4 style="float: left; width: 280px; height: 1px;"
-                                th:text="${client.description}"></h4>
-                            <h4 style="float: left;width: 135px; height: 1px;"
-                                th:text="${client.timeStart}"></h4>
-                            <h4 style="float: left;width: 110px; height: 1px;"
-                                th:text="${client.number}"></h4>
-                            <h4 style="float: left;width: 110px; height: 1px;"
-                                th:text="${client.priceMenu}"></h4>
-                            <h4 style="float: left;width: 110px; height: 1px;"
-                                th:text="${client.priceTime}"></h4>
-                            <h4 style="float: left; height: 1px;width: 80px"
-                                th:text="${client.allPrice}"></h4>
-                            <h4 style="float: left; "
-                                th:text="' ≈ ' + ${client.round} "></h4>
-                        </div>
+                        </script>
 
                     </div>
                 </div>
@@ -195,22 +194,31 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    function linkinput(j, j1) {
-        var elem1 = document.getElementById(j1);
-        var elem = document.getElementById(j);
-        elem.value = elem1.value;
-    }
-    ;
-    function formsub(form) {
-        var form1 = document.getElementById(form);
-        form1.submit();
-    }
-    ;
 
+<script>
+    console.log(document.cookie);
 
+    function cookiePanel(id) {
+        if ($.cookie(id) == true.toString()) {
+            $.cookie(id, "false");
+        } else if ($.cookie(id) == false.toString() || $.cookie(id) == null) {
+            $.cookie(id, "true");
+        }
+    }
+
+    function cookieTrue(id) {
+        $.cookie(id, "true");
+    }
+
+    function cookieFalse(id) {
+        $.cookie(id, "false");
+    }
+
+    function payWithCard(id) {
+        var inp = document.getElementById(id);
+       inp.value = true;
+    }
 </script>
-
 
 </body>
 </html>
