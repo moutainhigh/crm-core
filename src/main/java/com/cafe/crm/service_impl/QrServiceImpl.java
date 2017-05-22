@@ -1,12 +1,5 @@
 package com.cafe.crm.service_impl;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.cafe.crm.models.QrTest;
 import com.cafe.crm.service_abstract.QrService;
 import com.google.zxing.BinaryBitmap;
@@ -22,16 +15,12 @@ import net.glxn.qrgen.javase.QRCode;
 import javax.imageio.ImageIO;
 import java.io.*;
 import java.nio.charset.Charset;
+import java.util.UUID;
 
 
 public class QrServiceImpl implements QrService {
 
-	private BasicAWSCredentials awsCreds = new BasicAWSCredentials
-			("AKIAJPQMJ3CS5JROOTVA", "kY9sjvr2Ju5eKv2w5ZM/MK42z9r40eecpBukGttJ");
-	private AmazonS3 s3client = AmazonS3ClientBuilder.standard()
-			.withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-			.withRegion(Regions.DEFAULT_REGION)
-			.build();
+	private AmazonServiceImpl amazonService = new AmazonServiceImpl();
 
 	@Override
 	public void generateQrLink(String link) {
@@ -49,8 +38,10 @@ public class QrServiceImpl implements QrService {
 			out.close();
 			String bucketName = "cafe-crm/qrCode";
 			String keyName = "cafe-crm-content-stringQr";
-			s3client.putObject(new PutObjectRequest(bucketName, keyName, file)
-					.withCannedAcl(CannedAccessControlList.PublicRead));
+			amazonService.putObject(amazonService.getConnection(), file, bucketName, keyName);//get object from amazon
+			File file2 = new File("src/main/resources/static/images/copy/v1-StringCopy.png");
+			amazonService.saveObjectToFile(amazonService.getConnection(),
+					file2, bucketName, keyName);//save to local file into /copy
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -73,8 +64,7 @@ public class QrServiceImpl implements QrService {
 			out.close();
 			String bucketName = "cafe-crm/qrCode";
 			String keyName = "cafe-crm-content-instanceQr";
-			s3client.putObject(new PutObjectRequest(bucketName, keyName, file)
-					.withCannedAcl(CannedAccessControlList.PublicRead));
+			amazonService.putObject(amazonService.getConnection(), file, bucketName, keyName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -85,10 +75,12 @@ public class QrServiceImpl implements QrService {
 			throws FileNotFoundException, IOException, NotFoundException {
 		BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(
 				new BufferedImageLuminanceSource(
-						ImageIO.read(new FileInputStream(link)))));
+						ImageIO.read(new FileInputStream(
+								link)))));
 		Result qrCodeResult = new MultiFormatReader().decode(binaryBitmap);
 		return qrCodeResult.getText();
 	}
+
 }
 
 

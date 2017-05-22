@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public interface QrService {
+
 	void generateQrLink(String link);
 
 	void generateQrInstance(QrTest qrTest);
