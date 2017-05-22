@@ -23,7 +23,7 @@ public class WorkerServiceImpl implements WorkerService {
 	private WorkerRepository workerRepository;
 
 
-	// Запрос по дате (Тестовый вариант)
+	// query by date (test)
 	@Override
 	public void shiftByDate(LocalDate start, LocalDate end) {
 		List<Manager> managerList = managerRepository.findAll();

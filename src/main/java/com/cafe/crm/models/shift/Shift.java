@@ -19,8 +19,8 @@ public class Shift {
     @Column(name = "dateShift")
     private LocalDate dateShift;
 
-    @Column(name = "checkValue")
-    private Integer checkValue;//количество счетов за смену
+    @Column(name = "checkCount")
+    private Integer checkCount;
 
     public Shift() {
     }
@@ -41,12 +41,12 @@ public class Shift {
         this.dateShift = dateShift;
     }
 
-    public Integer getCheckValue() {
-        return checkValue;
+    public Integer getCheckCount() {
+        return checkCount;
     }
 
-    public void setCheckValue(Integer checkValue) {
-        this.checkValue = checkValue;
+    public void setCheckCount(Integer checkCount) {
+        this.checkCount = checkCount;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class Shift {
         return "Shift{" +
                 "id=" + id +
                 ", dateShift=" + dateShift +
-                ", checkValue=" + checkValue +
+                ", checkValue=" + checkCount +
                 '}';
     }
 }

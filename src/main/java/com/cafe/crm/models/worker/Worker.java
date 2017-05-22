@@ -27,16 +27,16 @@ public class Worker implements Serializable {
 	private String position;
 
 	@Column(name = "shiftSalary", nullable = true)
-	private Long shiftSalary; //размер оклада
+	private Long shiftSalary;
 
 	@OneToMany(fetch = FetchType.EAGER, targetEntity = Shift.class)
 	@JoinTable(name = "permissions_allShifts",
 			joinColumns = {@JoinColumn(name = "worker_id")},
 			inverseJoinColumns = {@JoinColumn(name = "shift_id")})
-	private Set<Shift> allShifts;//все смены сотрудника
+	private Set<Shift> allShifts;
 
 	@Column(name = "countShift", nullable = true)
-	private Long countShift;//количество смен
+	private Long countShift;
 
 	@Column(name = "salary", nullable = true)
 	private Long salary;
