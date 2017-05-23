@@ -1,8 +1,8 @@
 package com.cafe.crm.controllers.client;
 
+import com.cafe.crm.dao.client.cardService.CardControllerService;
 import com.cafe.crm.dao_impl.client.CalculateService;
 import com.cafe.crm.dao_impl.client.CardService;
-import com.cafe.crm.dao_impl.client.cardService.CardControllerService_impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -22,7 +22,7 @@ public class CardController {
 	private CalculateService calculateService;
 
 	@Autowired
-	private CardControllerService_impl cardControllerService;
+	private CardControllerService cardControllerService;
 
 	@RequestMapping(value = {"/card"}, method = RequestMethod.GET)
 	public ModelAndView getCard(@RequestParam(name = "token") Long id) {
