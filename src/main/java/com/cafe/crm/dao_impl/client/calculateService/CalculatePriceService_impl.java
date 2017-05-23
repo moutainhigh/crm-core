@@ -1,5 +1,6 @@
 package com.cafe.crm.dao_impl.client.calculateService;
 
+import com.cafe.crm.dao.client.calculateService.CalculatePriceService;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Card;
 import com.cafe.crm.models.client.Client;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalTime;
 
 @Service
-public class CalculatePriceService {
+public class CalculatePriceService_impl implements CalculatePriceService {
 
 	public Double calculatePrice(Client client) {
 		LocalTime timeStart = client.getTimeStart();

@@ -1,8 +1,8 @@
 package com.cafe.crm.controllers.client;
 
+import com.cafe.crm.dao.client.calculateService.CalculateControllerService;
 import com.cafe.crm.dao_impl.client.BoardService;
 import com.cafe.crm.dao_impl.client.CalculateService;
-import com.cafe.crm.dao_impl.client.calculateService.CalculateControllerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -57,7 +57,6 @@ public class CalculateController {
 								 @RequestParam(name = "clientId") Long id,
 								 @RequestParam(name = "calculateNumber") Long number,
 								 @RequestParam(name = "discount") Long discount) {
-		System.out.println(flag);
 		calculateControllerService.calculatePrice(id, number, discount, flag);
 		return "redirect:/manager";
 	}

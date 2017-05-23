@@ -1,5 +1,6 @@
 package com.cafe.crm.dao_impl.client.calculateService;
 
+import com.cafe.crm.dao.client.calculateService.CalculateControllerService;
 import com.cafe.crm.dao_impl.client.BoardService;
 import com.cafe.crm.dao_impl.client.CalculateService;
 import com.cafe.crm.dao_impl.client.CardService;
@@ -15,7 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-public class CalculateControllerService {
+public class CalculateControllerService_impl implements CalculateControllerService{
 	@Autowired
 	private ClientService clientService;
 
@@ -29,7 +30,7 @@ public class CalculateControllerService {
 	private CardService cardService;
 
 	@Autowired
-	private CalculatePriceService calculatePriceService;
+	private CalculatePriceService_impl calculatePriceService;
 
 	public void addCalculate(Long id, Long number, String descr) {
 		Board board = boardService.getOne(id);
@@ -86,8 +87,6 @@ public class CalculateControllerService {
 
 	public void calculatePrice(Long clientId, Long calculateNumber, Long discount, Boolean flag) {
 		Client client = clientService.getOne(clientId);
-
-
 		client.setPayWithCard(null);
 		client.setCalculateNumber(calculateNumber);
 		Double priceTime = calculatePriceService.calculatePrice(client);
@@ -109,8 +108,7 @@ public class CalculateControllerService {
 		}
 
 		clientService.add(client);
-/*
-
+		/* Rounding the price (not yet used)
 		Double all = client.getAllPrice();
 		Long allLong = all.longValue();
 		Long two = all.longValue() % 100;
@@ -130,18 +128,24 @@ public class CalculateControllerService {
 		} else {
 			client.setRound(allLong);
 		}
-
-		clientService.add(client);*/
+		clientService.add(client);
+		*/
 	}
 
 	public void closeClient(Long id) {
 		Client client = clientService.getOne(id);
 		Calculate calculate = client.getCalculate();
+		Card card = calculate.getCard();
+
 		if (client.getTotalNumber() > 0) {
 			client.setTotalNumber(client.getTotalNumber() - client.getCalculateNumber());
 			clientService.add(client);
 			calculate.setSpend(calculate.getSpend() + client.getAllPrice());
 			calculateService.add(calculate);
+		}
+		if(client.getPayWithCard() != null) {
+			card.setBalance(card.getBalance() - client.getPayWithCard());
+			cardService.add(card);
 		}
 		if (client.getTotalNumber() == 0) {
 			Set<Client> set = calculate.getClient();
@@ -153,6 +157,7 @@ public class CalculateControllerService {
 			calculate.setState(false);
 			calculateService.add(calculate);
 		}
+
 
 	}
 }

@@ -2,8 +2,6 @@ package com.cafe.crm.models.client;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
-
 
 @Entity
 @Table(name = "cards")

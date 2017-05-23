@@ -1,5 +1,6 @@
 package com.cafe.crm.dao_impl.client.cardService;
 
+import com.cafe.crm.dao.client.cardService.CardControllerService;
 import com.cafe.crm.dao_impl.client.CalculateService;
 import com.cafe.crm.dao_impl.client.CardService;
 import com.cafe.crm.models.client.Calculate;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
 @Service
-public class CardControllerService {
+public class CardControllerService_impl implements CardControllerService{
 
 	@Autowired
 	private CardService cardService;
