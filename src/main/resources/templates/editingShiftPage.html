@@ -9,11 +9,8 @@
     <link rel="stylesheet" th:href="@{/st.css}" type="text/css"/>
 </head>
 <body>
-
 <div th:replace="managernavbar :: managerNavbar">
-
 </div><!--/.navbar -->
-
 <div class="container-fluid" style="margin-top:50px">
     <div class="row">
         <div class="col-sm-9 col-sm-offset-3 col-md-8 col-md-offset-2 main">
@@ -37,7 +34,6 @@
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane " th:id="1">
-
                         <h1 th:align="center" style="color: #5bc0de;">Счета</h1>
                         <div class="row">
                         </div>
@@ -51,12 +47,11 @@
                                 <tbody class="searchable" th:each="user,iter:${workersOfShift}">
                                 <tr>
                                     <td><p th:text="${iter.count}"></p></td>
-                                    <td><p th:text="${user.name}"></p></td>
+                                    <td><p th:text="${user.firstName}"></p></td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
                     <div class="tab-pane " th:id="2">
 
@@ -73,12 +68,11 @@
                                 <tbody class="searchable" th:each="user,iter:${workersOfShift}">
                                 <tr>
                                     <td><p th:text="${iter.count}"></p></td>
-                                    <td><p th:text="${user.name}"></p></td>
+                                    <td><p th:text="${user.firstName}"></p></td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
                     <div class="tab-pane " th:id="3">
 
@@ -96,11 +90,11 @@
                                 <tbody class="searchable" th:each="addUser,iter:${allWorkers}">
                                 <tr>
                                     <td><p th:align="center" th:text="${iter.count}"></p></td>
-                                    <td><p th:align="center" th:text="${addUser.name}"></p></td>
+                                    <td><p th:align="center" th:text="${addUser.firstName}"></p></td>
                                     <td>
                                         <form method="post" action="/manager/shift/addWorker" th:align="center">
                                             <button class="btn btn-primary btn-danger" name="addWorker"
-                                                    th:value="${addUser.name}">
+                                                    th:value="${addUser.firstName}">
                                                 Добавить
                                             </button>
                                         </form>
@@ -126,12 +120,12 @@
                                 <tbody class="searchable" th:each="delUser,iter:${workersOfShift}">
                                 <tr>
                                     <td><p th:align="center" th:text="${iter.count}"></p></td>
-                                    <td><p th:align="center" th:text="${delUser.name}"></p></td>
+                                    <td><p th:align="center" th:text="${delUser.firstName}"></p></td>
                                     <td>
                                         <form method="post" action="/manager/shift/delWorker" th:align="center">
                                             <button th:align="center" class="btn btn-primary btn-danger"
                                                     name="delWorker"
-                                                    th:value="${delUser.name}">
+                                                    th:value="${delUser.firstName}">
                                                 Удалить
                                             </button>
                                         </form>

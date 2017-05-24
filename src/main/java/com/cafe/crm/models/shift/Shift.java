@@ -2,6 +2,7 @@ package com.cafe.crm.models.shift;
 
 
 import com.cafe.crm.models.User;
+import com.cafe.crm.models.worker.Worker;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -27,34 +28,34 @@ public class Shift {
 	@Column(name = "isOpen") // shift is open ?
 			Boolean isOpen;
 
-	@ManyToMany(fetch = FetchType.EAGER, targetEntity = User.class)
-	@JoinTable(name = "usersOfShift",
+	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Worker.class)
+	@JoinTable(name = "permissions_allShifts",
 			joinColumns = {@JoinColumn(name = "shift_id")},
-			inverseJoinColumns = {@JoinColumn(name = "user_id")})
-	private Set<User> users;
+			inverseJoinColumns = {@JoinColumn(name = "worker_id")})
+	private Set<Worker> users;
 
-	public Set<User> getUsers() {
+	public Set<Worker> getUsers() {
 		return users;
 	}
 
 	public String getUsersNames() {   // return only names of workers of shift
 
 		String names = "";
-		for (User user : users) {
-			names+=user.getName()+" ";
+		for (Worker worker: users) {
+			names+=worker.getFirstName()+" ";
 
 		}
 		return names;
 	}
 
 
-	public Shift(LocalDate dateShift, Integer checkValue, Set<User> users) {
+	public Shift(LocalDate dateShift, Integer checkValue, Set<Worker> users) {
 		this.dateShift = dateShift;
 		this.checkValue = checkValue;
 		this.users = users;
 	}
 
-	public void setUsers(Set<User> users) {
+	public void setUsers(Set<Worker> users) {
 		this.users = users;
 	}
 

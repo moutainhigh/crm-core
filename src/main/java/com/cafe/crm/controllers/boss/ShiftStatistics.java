@@ -17,7 +17,6 @@ import java.util.Set;
 @RequestMapping("/boss/statistics")
 public class ShiftStatistics {
 
-
 	@Autowired
 	private ShiftService shiftService;
 
@@ -47,7 +46,7 @@ public class ShiftStatistics {
 	@RequestMapping(value = "/search/lastMonth", method = RequestMethod.GET)
 	public ModelAndView searchMonth() {
 		LocalDate start = LocalDate.now();
-		LocalDate end = start.minusDays(30);
+		LocalDate end = start.minusMonths(1);
 		ModelAndView mv = new ModelAndView("shiftStatistics");
 		Set<Shift> dates = shiftService.findByDates(end,start);
 		mv.addObject("shifts", dates);
@@ -65,7 +64,7 @@ public class ShiftStatistics {
 	@RequestMapping(value = "/search/lastThreeMonth", method = RequestMethod.GET)
 	public ModelAndView searchThreeMonth() {
 		LocalDate start = LocalDate.now();
-		LocalDate end = start.minusDays(60);
+		LocalDate end = start.minusMonths(2);
 		ModelAndView mv = new ModelAndView("shiftStatistics");
 		Set<Shift> dates = shiftService.findByDates(end,start);
 		mv.addObject("shifts", dates);
@@ -75,7 +74,7 @@ public class ShiftStatistics {
 	@RequestMapping(value = "/search/lastHalfYear", method = RequestMethod.GET)
 	public ModelAndView searchHalfYear() {
 		LocalDate start = LocalDate.now();
-		LocalDate end = start.minusDays(180);
+		LocalDate end = start.minusMonths(6);
 		ModelAndView mv = new ModelAndView("shiftStatistics");
 		Set<Shift> dates = shiftService.findByDates(end,start);
 		mv.addObject("shifts", dates);

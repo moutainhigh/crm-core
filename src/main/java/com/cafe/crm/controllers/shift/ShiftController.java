@@ -1,8 +1,8 @@
 package com.cafe.crm.controllers.shift;
 
 
+import com.cafe.crm.dao.WorkerRepository;
 import com.cafe.crm.service_abstract.shift_service.ShiftService;
-import com.cafe.crm.service_abstract.user_service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,11 +17,12 @@ import java.time.format.DateTimeFormatter;
 @Controller
 public class ShiftController {
 
-	@Autowired
-	private UserService userService;
 
 	@Autowired
 	private ShiftService shiftService;
+
+	@Autowired
+	private WorkerRepository workerService;
 
 	@RequestMapping(value = "/manager/shift/", method = RequestMethod.GET)
 	public ModelAndView getAdminPage() {
@@ -29,9 +30,9 @@ public class ShiftController {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("d.MM.YYYY");
 		LocalDate date = LocalDate.now();
 		ModelAndView mv;
-		if (shiftService.getLast() == null||!shiftService.getLast().getOpen()) {
+		if (shiftService.getLast() == null || !shiftService.getLast().getOpen()) {
 			mv = new ModelAndView("shiftPage");
-			mv.addObject("list", userService.findAll());
+			mv.addObject("list", workerService.findAll());
 			mv.addObject("date", dateTimeFormatter.format(date));
 		} else {
 			mv = new ModelAndView("editingShiftPage");
@@ -94,8 +95,8 @@ public class ShiftController {
 	}
 
 	@RequestMapping(value = "manager/shift/endOfShift", method = RequestMethod.GET)
-	public ModelAndView endOfShift() {
+	public String endOfShift() {
 		shiftService.closeShift();
-		return new ModelAndView("redirect:/login");
+		return "redirect:/login";
 	}
 }

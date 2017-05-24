@@ -29,10 +29,7 @@ public class Worker implements Serializable {
 	@Column(name = "shiftSalary", nullable = true)
 	private Long shiftSalary;
 
-	@OneToMany(fetch = FetchType.EAGER, targetEntity = Shift.class)
-	@JoinTable(name = "permissions_allShifts",
-			joinColumns = {@JoinColumn(name = "worker_id")},
-			inverseJoinColumns = {@JoinColumn(name = "shift_id")})
+	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Shift.class)
 	private Set<Shift> allShifts;
 
 	@Column(name = "countShift", nullable = true)

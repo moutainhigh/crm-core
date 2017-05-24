@@ -59,20 +59,20 @@ public class MenuBossContoller {
 	}
 
 	@RequestMapping(value = "/upd", method = RequestMethod.POST)
-	public ModelAndView updProduct(Product product, @RequestParam(name = "cat") Long id) {
+	public String updProduct(Product product, @RequestParam(name = "cat") Long id) {
 		product.setCategory(categoriesService.getOne(id));
 		productService.saveAndFlush(product);
 
-		return new ModelAndView("redirect:/boss/menu");
+		return "redirect:/boss/menu";
 	}
 
 	@RequestMapping(value = "/updCategory", method = RequestMethod.POST)
-	public ModelAndView updCategory(@RequestParam(name = "upd") Long id,
+	public String updCategory(@RequestParam(name = "upd") Long id,
 									@RequestParam(name = "name") String name) {
 		Category category = categoriesService.getOne(id);
 		category.setName(name);
 		categoriesService.saveAndFlush(category);
-		return new ModelAndView("redirect:/boss/menu/");
+		return "redirect:/boss/menu/";
 	}
 
 	@RequestMapping(value = "/addProduct", method = RequestMethod.POST)

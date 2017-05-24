@@ -1,7 +1,7 @@
 package com.cafe.crm.service_abstract.shift_service;
 
-import com.cafe.crm.models.User;
 import com.cafe.crm.models.shift.Shift;
+import com.cafe.crm.models.worker.Worker;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,10 +16,10 @@ public interface ShiftService {
 
 	Shift findOne(Long L);
 
-	List<User> findAllUsers();
+	List<Worker> findAllUsers();
 
 	// Рабочие не добавленные в открытую  смену
-	List<User> getWorkers();
+	List<Worker> getWorkers();
 
 	void deleteWorkerFromShift(String name);
 

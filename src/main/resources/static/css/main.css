@@ -39,3 +39,11 @@ a:hover{
 .panel-body{
     display: none;
 }
+.nav>li>a {
+    position: relative;
+    display: block;
+    padding-top: 10px;
+    padding-right: 49px;
+    padding-bottom: 10px;
+    padding-left: 49px;
+}

@@ -36,8 +36,8 @@ public class User implements UserDetails {
 	private Set<Role> roles;
 
 
-	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Shift.class)
-	private Set<Shift> shifts;
+	/*@ManyToMany(fetch = FetchType.EAGER, targetEntity = Shift.class)
+	private Set<Shift> shifts;*/
 
 	@Column(name = "enabled", nullable = false)
 	private Boolean enabled = true;
@@ -50,13 +50,7 @@ public class User implements UserDetails {
 		this.salary = salary;
 	}
 
-	public Set<Shift> getShifts() {
-		return shifts;
-	}
 
-	public void setShifts(Set<Shift> shifts) {
-		this.shifts = shifts;
-	}
 
 	public long getSalary() {
 		return salary;

@@ -84,7 +84,7 @@
                         <tbody class="searchable" th:each="user:${list}">
                         <tr>
                             <td><p th:text="${user.id}"></p></td>
-                            <td><p th:text="${user.name}"></p></td>
+                            <td><p th:text="${user.firstName}"></p></td>
                             <td><input type="checkbox" style="width:20px;height:20px;" name="box" th:value="${user.id}"/></td>
                         </tr>
                         </tbody>

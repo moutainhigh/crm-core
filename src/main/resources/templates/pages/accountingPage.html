@@ -1,12 +1,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 
-<head th:replace="css :: cssMain"></head>
+<head th:replace="css :: cssMain">
+
+</head>
 
 <body>
 
 
-<div class="container">
+<div class="container" style="margin-top:50px">
+    <div th:replace="bossnavbar :: bossNavbar">
+    </div><!--/.navbar -->
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane fade in active" id="vtab1">
             <div class="row">
