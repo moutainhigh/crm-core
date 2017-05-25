@@ -5,18 +5,13 @@
 
 <div th:fragment="checkModal">
 
-    <button th:form="'formCalculate' + ${client.id}" class="btn btn-default" type="submit"
-            th:onclick="'cookieTrue(\'' +'checkModal'+ ${client.id} + '\');'"
-            style="float: left;margin-right:5px;">
-        <img width="16px" height="16px"
-             src="http://icon-icons.com/icons2/936/PNG/512/dollar-symbol_icon-icons.com_73598.png"/>
-    </button>
 
-    <div th:id="'checkModal' + ${client.id}" class="modal">
+
+    <div th:id="'checkModal' + ${calculate.id}" class="modal">
         <div class="modal-dialog " style="width: 300px;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title" th:text="${calculate.description} +' (' + ${client.description}+')'"></h3>
+                    <h3 class="modal-title" th:text="${calculate.descriptionCheck}"></h3>
                 </div>
                 <div class="modal-body" th:style="${calculate.getCard()}? 'width:300px;' : 'width:300px;'">
 
@@ -24,43 +19,41 @@
                         Кол-во человек:
                     </div>
 
-                    <form th:id="'formCalculate' + ${client.id}" action="/calculate-price" method="post">
-                        <input th:id="'inputFlag' + ${client.id}" type="hidden" name="flag" value="false"/>
-                        <input type="hidden" name="clientId" th:value="${client.id}"/>
+                    <form th:id="'formCalculate' + ${calculate.id}" action="/calculate-price" method="post">
+
+                        <input th:id="'inputFlag' + ${calculate.id}" type="hidden" name="flag" value="false"/>
+
+                        <input th:id="'inputClientId' + ${calculate.id}" type="hidden" name="clientId"/>
+
+                        <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
+
                         <select name="calculateNumber" class="form-control" onchange="submit();"
                                 style="width:70px;height: 34px;font-size: 17px; float: left;">
+                            <div th:each="i : ${#numbers.sequence(0, calculate.totalNumber)}">
 
-                            <div th:each="i : ${#numbers.sequence(0, client.totalNumber)}">
-
-                                <div th:if="(${i} != ${client.calculateNumber})">
+                                <div th:if="(${i} != ${calculate.calculateNumber})">
                                     <option th:value="${i}"><h6 th:text="${i}"></h6></option>
                                 </div>
 
-                                <div th:if="(${i} == ${client.calculateNumber})">
+                                <div th:if="(${i} == ${calculate.calculateNumber})">
                                     <option th:value="${i}" selected=""><h6 th:text="${i}"></h6></option>
                                 </div>
 
                             </div>
-
                         </select>
 
                     </form>
 
-                    <br/><br/>
-                    <div style="width: 170px;float: left;font-size: 18px;margin-top: 5px;text-align: left">
-                        Время создания:
-                    </div>
-                    <div style="width: 100px;float: left;font-size: 25px;" th:text="${client.timeStart}"></div>
                     <br/>
                     <div style="width: 170px;float: left;font-size: 18px;margin-top: 5px;text-align: left">
                         Времени прошло:
                     </div>
-                    <div style="width: 100px;float: left;font-size: 25px;" th:text="${client.passedTime}"></div>
+                    <div style="width: 100px;float: left;font-size: 25px;" th:text="${calculate.passedTime}"></div>
                     <br/><br/><br/>
-                    <div style="width: 170px;float: left;font-size: 18px;margin-top: 3px;text-align: left">
+                    <div style="width: 170px;float: left;font-size: 18px;text-align: left">
                         Цена за время:
                     </div>
-                    <div style="width: 100px;float: left;font-size: 23px;" th:text="${client.priceTime}+'р'"></div>
+                    <div style="width: 100px;float: left;font-size: 25px;" th:text="${calculate.priceTime}+'р'"></div>
                     <br/>
                     <hr/>
 
@@ -95,55 +88,55 @@
                     <div style="width: 160px;float: left;font-size: 18px;margin-top: 5px;text-align: left">
                         <p th:text="${calculate.getCard()} ? 'Скидка(+'+${calculate.getCard().discount} +'%):' : 'Скидка:'"></p>
                     </div>
-                    <button th:form="'formCalculate' + ${client.id}"
+                    <button th:form="'formCalculate' + ${calculate.id}"
                             style="float:left;background: rgba(255,0,0,0);border: none;height: 33px">
                         <img width="20px" height="20px"
                              src="http://icon-icons.com/icons2/510/PNG/512/checkmark_icon-icons.com_50429.png"/>
                     </button>
 
-                    <input th:form="'formCalculate' + ${client.id}" style="width:70px;font-size: 20px;float: left;"
+                    <input th:form="'formCalculate' + ${calculate.id}" style="width:70px;font-size: 20px;float: left;"
                            class="form-control" type="text" name="discount"
-                           th:value="${client.discount}"/>
+                           th:value="${calculate.discount}"/>
 
                     <br/><br/>
 
                     <div style="width: 170px;float: left;font-size: 18px;margin-top: 5px;text-align: left;">
-                        Общая сумма к оплате наличными:
+                        Сумма к оплате наличными:
                     </div>
 
-                    <div style="width: 100px;float: left;font-size: 25px;" th:text="${client.allPrice} + 'р'"></div>
+                    <div style="width: 100px;float: left;font-size: 25px;" th:text="${calculate.allPrice} + 'р'"></div>
                     <hr style="margin-top: 65px;margin-bottom: 0px"/>
                     <div style="height:100px;" th:if="${calculate.getCard()}">
 
-                        <div style="float: left" th:if="(${calculate.getCard().balance} lt ${client.allPrice})">
+                        <div style="float: left" th:if="(${calculate.getCard().balance} lt ${calculate.allPrice})">
                             <h5 style="color: red; font-size: 16px"
                                 th:text="'Недостаточный баланс ('+${calculate.getCard().balance}+'р) для погашения суммы'"></h5>
                         </div>
                         <h4 style="float: left">Использовать карту:</h4>
                         <button style="float:left;background: rgba(255,255,255,0);border: none;margin-left: 50px"
-                                th:onclick="'payWithCard(\'' +'inputFlag'+ ${client.id} + '\');'"
-                                th:form="'formCalculate' + ${client.id}">
+                                th:onclick="'payWithCard(\'' +'inputFlag'+ ${calculate.id} + '\');'"
+                                th:form="'formCalculate' + ${calculate.id}">
                             <img width="35px" height="35px"
                                  src="http://icon-icons.com/icons2/38/PNG/512/carduse_card_payment_5122.png"/>
                         </button>
                         <div style="float: left;font-size: 18px;width: 170px;text-align: left">К оплате с карты:</div>
-                        <div style="float: left;font-size: 25px;width: 100px" th:text="${client.payWithCard}"></div>
+                        <div style="float: left;font-size: 25px;width: 100px" th:text="${calculate.payWithCard}"></div>
                     </div>
 
                     <br/>
 
                     <div style="height: 40px">
-                        <form th:id="'closeClientFrorm' + ${client.id}" method="post" action="/close-client">
-                            <input type="hidden" th:value="${client.id}" name="clientId"/>
+                        <form th:id="'closeClientFrorm' + ${calculate.id}" method="post" action="/close-client">
+                            <input type="hidden" th:value="${calculate.id}" name="calculateId"/>
                             <input type="hidden" value="false" name="flag"/>
-                            <button th:onclick="'cookieFalse(\'' +'checkModal'+ ${client.id} + '\');'"
+                            <button th:onclick="'cookieFalse(\'' +'checkModal'+ ${calculate.id} + '\');'"
                                     class="btn btn-danger" type="submit" style="float:left;margin-right: 20px">
                                 Раcсчитано
                             </button>
                         </form>
 
 
-                        <button data-dismiss="modal" th:onclick="'cookieFalse(\'' +'checkModal'+ ${client.id} + '\');'"
+                        <button data-dismiss="modal" th:onclick="'cookieFalse(\'' +'checkModal'+ ${calculate.id} + '\');'"
                                 class="btn btn-danger" style="float:left;margin-left:60px">
                             Закрыть
                         </button>

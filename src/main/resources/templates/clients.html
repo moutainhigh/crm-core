@@ -51,7 +51,7 @@
      style=" box-shadow: 0 3px 6px 0; border-radius: 10px; background: #ffffff; min-width: 900px;width:900px; ">
 
     <!--modal window with create calculate-->
-    <div th:replace="addCalculateFragment :: calculateModal"></div>
+    <div th:replace="clientFragments/addCalculateFragment :: calculateModal"></div>
     <!-- -->
 
     <br/>
@@ -102,7 +102,7 @@
                 <div class="panel-body" style="background: #f0efee">
 
                     <!--modal window with create client-->
-                    <div th:replace="addClientFragment :: clientModal"></div>
+                    <div th:replace="clientFragments/addClientFragment :: clientModal"></div>
                     <!-- -->
 
                     <!--menu-->
@@ -154,16 +154,32 @@
                     <h5 style="float: left;margin-left: 20px">Осталось человек</h5>
                     <br/>
 
+                    <!--modal window check(calculate)-->
+                    <div th:replace="clientFragments/getCheckFragment :: checkModal"></div>
+                    <!-- -->
 
+                    <script th:inline="javascript">
+                        var options = {
+                            "backdrop": false,
+                            "show": "true"
+                        }
+                        var id = 'checkModal' + [[${calculate.id}]];
+                        if ($.cookie(id) == true.toString()) {
+                            $('#' + id).modal(options);
+                        }
+
+                    </script>
                     <div th:each="client : ${calculate.getClient()}">
-
 
                         <center>
                             <div style="background: #dbdbdd;margin-top: 15px; border-radius: 3px;height: 34px;width: 600px">
 
-                                <!--modal window check(calculate)-->
-                                <div th:replace="getCheckFragment :: checkModal"></div>
-                                <!-- -->
+                        <button class="btn btn-default" type="submit"
+                                th:onclick="'clientId(\'' + ${calculate.id} + '\' , \'' + ${client.id} + '\'); cookieTrue(\'' +'checkModal'+ ${calculate.id} + '\'); '"
+                               style="float: left;margin-right:5px;">
+                            <img width="16px" height="16px"
+                                 src="http://icon-icons.com/icons2/936/PNG/512/dollar-symbol_icon-icons.com_73598.png"/>
+                        </button>
 
 
                                 <h4 style="float: left; width: 280px; height: 1px;"
@@ -176,17 +192,7 @@
                             </div>
 
                         </center>
-                        <script th:inline="javascript">
-                            var options = {
-                                "backdrop": false,
-                                "show": "true"
-                            }
-                            var id = 'checkModal' + [[${client.id}]];
-                            if ($.cookie(id) == true.toString()) {
-                                $('#' + id).modal(options);
-                            }
 
-                        </script>
 
                     </div>
                 </div>
@@ -217,6 +223,13 @@
     function payWithCard(id) {
         var inp = document.getElementById(id);
        inp.value = true;
+    }
+
+    function clientId(calculateId, clientId) {
+
+        var inp = document.getElementById('inputClientId' + calculateId);
+        inp.value = clientId;
+        document.getElementById("formCalculate" + calculateId).submit();
     }
 </script>
 
