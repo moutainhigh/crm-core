@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 @Controller
-public class CardController {
+public class CardProfileController {
 	@Autowired
 	private CardService cardService;
 
