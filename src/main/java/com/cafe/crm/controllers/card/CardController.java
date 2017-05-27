@@ -1,6 +1,6 @@
-package com.cafe.crm.controllers.client;
+package com.cafe.crm.controllers.card;
 
-import com.cafe.crm.service_abstract.client.cardService.CardControllerService;
+import com.cafe.crm.service_abstract.card.CardControllerService;
 import com.cafe.crm.service_impl.client.CalculateService;
 import com.cafe.crm.service_impl.client.CardService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class CalculateService {
     @Autowired
-    CalculateRepository calculateRepository;
+    private CalculateRepository calculateRepository;
 
     public void add(Calculate calculate) {
         calculateRepository.saveAndFlush(calculate);

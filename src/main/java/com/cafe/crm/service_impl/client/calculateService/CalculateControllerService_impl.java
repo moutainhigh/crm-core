@@ -1,13 +1,13 @@
 package com.cafe.crm.service_impl.client.calculateService;
 
-import com.cafe.crm.service_abstract.client.calculateService.CalculateControllerService;
+import com.cafe.crm.service_abstract.client.CalculateControllerService;
 import com.cafe.crm.service_impl.client.BoardService;
 import com.cafe.crm.service_impl.client.CalculateService;
 import com.cafe.crm.service_impl.client.CardService;
 import com.cafe.crm.service_impl.client.ClientService;
 import com.cafe.crm.models.client.Board;
 import com.cafe.crm.models.client.Calculate;
-import com.cafe.crm.models.client.Card;
+import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.client.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -101,7 +101,6 @@ public class CalculateControllerService_impl implements CalculateControllerServi
 			}
 		}
 		calculate.setDescriptionCheck(calculate.getDescription() + "(" + client.getDescription() + ")");
-		calculate.setPayWithCard(null);
 		Double priceTime = calculatePriceService.calculatePriceTime(client, calculate);
 		calculate.setPriceTime(priceTime);
 		calculate.setAllPrice(calculatePriceService.addDiscountToAllPrice(client, calculate));

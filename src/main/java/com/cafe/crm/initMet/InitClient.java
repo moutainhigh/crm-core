@@ -3,7 +3,7 @@ package com.cafe.crm.initMet;
 import com.cafe.crm.service_impl.client.BoardService;
 import com.cafe.crm.service_impl.client.CardService;
 import com.cafe.crm.models.client.Board;
-import com.cafe.crm.models.client.Card;
+import com.cafe.crm.models.card.Card;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.time.LocalDate;

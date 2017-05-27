@@ -8,7 +8,6 @@ import java.time.LocalTime;
 public class Client {
 	@Id
 	@GeneratedValue
-	@Column(name = "id")
 	private Long id;
 
 	private String description = "Нет описания";
@@ -24,6 +23,46 @@ public class Client {
 	private Calculate calculate;
 
 	public Client() {
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public LocalTime getTimeStart() {
+		return timeStart;
+	}
+
+	public void setTimeStart(LocalTime timeStart) {
+		this.timeStart = timeStart;
+	}
+
+	public Long getTotalNumber() {
+		return totalNumber;
+	}
+
+	public void setTotalNumber(Long totalNumber) {
+		this.totalNumber = totalNumber;
+	}
+
+	public Calculate getCalculate() {
+		return calculate;
+	}
+
+	public void setCalculate(Calculate calculate) {
+		this.calculate = calculate;
 	}
 
 	@Override
@@ -42,45 +81,5 @@ public class Client {
 		int result = id != null ? id.hashCode() : 0;
 		result = 31 * result + (description != null ? description.hashCode() : 0);
 		return result;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public LocalTime getTimeStart() {
-		return timeStart;
-	}
-
-	public Long getTotalNumber() {
-		return totalNumber;
-	}
-
-	public Calculate getCalculate() {
-		return calculate;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setTimeStart(LocalTime timeStart) {
-		this.timeStart = timeStart;
-	}
-
-	public void setTotalNumber(Long totalNumber) {
-		this.totalNumber = totalNumber;
-	}
-
-	public void setCalculate(Calculate calculate) {
-		this.calculate = calculate;
 	}
 }

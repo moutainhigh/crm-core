@@ -9,23 +9,23 @@ import java.util.List;
 
 @Service
 public class BoardService {
-    @Autowired
-    BoardRepository boardRepository;
+	@Autowired
+	private BoardRepository boardRepository;
 
-    public void add(Board board) {
-        boardRepository.saveAndFlush(board);
-    }
+	public void add(Board board) {
+		boardRepository.saveAndFlush(board);
+	}
 
-    public void delete(Board board) {
-        boardRepository.delete(board);
-    }
+	public void delete(Board board) {
+		boardRepository.delete(board);
+	}
 
-    public List<Board> getAll() {
-        return boardRepository.findAll();
-    }
+	public List<Board> getAll() {
+		return boardRepository.findAll();
+	}
 
-    public Board getOne(Long id) {
-        return boardRepository.getOne(id);
-    }
+	public Board getOne(Long id) {
+		return boardRepository.getOne(id);
+	}
 
 }

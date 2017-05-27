@@ -1,4 +1,4 @@
-package com.cafe.crm.service_abstract.client.calculateService;
+package com.cafe.crm.service_abstract.client;
 
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;

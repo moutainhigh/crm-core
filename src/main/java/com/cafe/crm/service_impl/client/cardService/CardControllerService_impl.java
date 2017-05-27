@@ -1,10 +1,10 @@
 package com.cafe.crm.service_impl.client.cardService;
 
-import com.cafe.crm.service_abstract.client.cardService.CardControllerService;
+import com.cafe.crm.service_abstract.card.CardControllerService;
 import com.cafe.crm.service_impl.client.CalculateService;
 import com.cafe.crm.service_impl.client.CardService;
 import com.cafe.crm.models.client.Calculate;
-import com.cafe.crm.models.client.Card;
+import com.cafe.crm.models.card.Card;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
 package com.cafe.crm.service_impl.client;
 
-import com.cafe.crm.dao.client.CardRepository;
-import com.cafe.crm.models.client.Card;
+import com.cafe.crm.dao.card.CardRepository;
+import com.cafe.crm.models.card.Card;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class CardService {
 	@Autowired
-	CardRepository cardRepository;
+	private CardRepository cardRepository;
 
 	public void add(Card card) {
 		cardRepository.saveAndFlush(card);

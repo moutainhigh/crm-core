@@ -1,6 +1,6 @@
 package com.cafe.crm.controllers.client;
 
-import com.cafe.crm.service_abstract.client.calculateService.CalculateControllerService;
+import com.cafe.crm.service_abstract.client.CalculateControllerService;
 import com.cafe.crm.service_impl.client.BoardService;
 import com.cafe.crm.service_impl.client.CalculateService;
 import org.springframework.beans.factory.annotation.Autowired;

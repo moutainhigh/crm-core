@@ -1,8 +1,8 @@
 package com.cafe.crm.service_impl.client.calculateService;
 
-import com.cafe.crm.service_abstract.client.calculateService.CalculatePriceService;
+import com.cafe.crm.service_abstract.client.CalculatePriceService;
 import com.cafe.crm.models.client.Calculate;
-import com.cafe.crm.models.client.Card;
+import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.client.Client;
 import org.springframework.stereotype.Service;
 

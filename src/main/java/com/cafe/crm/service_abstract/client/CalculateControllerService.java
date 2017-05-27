@@ -1,4 +1,4 @@
-package com.cafe.crm.service_abstract.client.calculateService;
+package com.cafe.crm.service_abstract.client;
 
 
 public interface CalculateControllerService {

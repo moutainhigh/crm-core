@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class ClientService {
     @Autowired
-    ClientRepository clientRepository;
+    private ClientRepository clientRepository;
 
     public void add(Client client) {
         clientRepository.saveAndFlush(client);
