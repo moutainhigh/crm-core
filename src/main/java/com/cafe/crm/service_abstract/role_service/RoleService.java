@@ -1,6 +1,6 @@
-package com.cafe.crm.service_abstract.user_service;
+package com.cafe.crm.service_abstract.role_service;
 
-import com.cafe.crm.models.Role;
+import com.cafe.crm.models.worker.Role;
 
 
 public interface RoleService {

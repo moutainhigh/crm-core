@@ -1,4 +1,4 @@
-package com.cafe.crm.service.counting;
+package com.cafe.crm.service_abstract.worker_service;
 
 
 import com.cafe.crm.models.worker.Manager;
@@ -20,4 +20,15 @@ public interface WorkerService {
 	Manager saveManager(Manager manager);
 
 	void delete(Long id);
+
+	Worker getUserById(long id);
+
+	Worker getUserByLogin(String name);
+
+	List<Worker> findAll();
+
+	Worker getUserByNameForShift(String name);
+
+	void save(Worker worker);
+
 }

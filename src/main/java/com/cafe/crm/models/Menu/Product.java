@@ -4,18 +4,14 @@ package com.cafe.crm.models.Menu;
 
 
 import javax.persistence.*;
-import java.util.DoubleSummaryStatistics;
-import java.util.Set;
-
 
 
 @Entity
 @Table(name = "product")
 public class Product {
 
-
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "name", nullable = false)
@@ -29,11 +25,7 @@ public class Product {
     private Double cost;
 
     @ManyToOne(fetch = FetchType.EAGER, targetEntity = Category.class)
-    @JoinTable(name = "product_and_categories",
-            joinColumns = {@JoinColumn(name = "product_id")},
-            inverseJoinColumns = {@JoinColumn(name = "category_id")})
     private Category category;
-
 
     public Product() {
     }

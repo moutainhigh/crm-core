@@ -1,13 +1,7 @@
 package com.cafe.crm.models.Menu;
 
-import com.cafe.crm.models.Role;
-import com.cafe.crm.models.User;
-
 import javax.persistence.*;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Entity
@@ -15,18 +9,17 @@ import java.util.stream.Collectors;
 public class Category {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(fetch = FetchType.EAGER, targetEntity = Product.class)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "product_and_categories",
             joinColumns = {@JoinColumn(name = "category_id")},
             inverseJoinColumns = {@JoinColumn(name = "product_id")})
     private Set<Product> products;
-
 
     @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST},mappedBy = "categories")
     private Set<Menu> menus;

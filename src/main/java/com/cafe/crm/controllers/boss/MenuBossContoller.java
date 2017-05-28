@@ -78,10 +78,16 @@ public class MenuBossContoller {
 	@RequestMapping(value = "/addProduct", method = RequestMethod.POST)
 	public String addProduct(Product product, @RequestParam(name = "add") Long id) {
 		Category category = categoriesService.getOne(id);
+
 		product.setCategory(category);
-		category.getProducts().add(product);
+
+
 		productService.saveAndFlush(product);
+
+		category.getProducts().add(product);
 		categoriesService.saveAndFlush(category);
+
+
 		return "redirect:/boss/menu";
 	}
 

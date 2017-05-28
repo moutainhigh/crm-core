@@ -20,16 +20,16 @@
             <div class="tabbable"> <!-- Only required for left/right tabs -->
                 <ul class="nav nav-tabs">
                     <li style="color: #5bc0de;"><a th:href="'#1' " data-toggle="tab">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoKlip5vw19APwuF0IyiElEqliWmVEvvUfrox2ZE8Ms6tZdwPMbIckhw"/>
+
                         <h4 style="color: #5bc0de;">Счета за смену</h4></a></li>
                     <li style="color: #5bc0de;"><a th:href="'#2' " data-toggle="tab">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoKlip5vw19APwuF0IyiElEqliWmVEvvUfrox2ZE8Ms6tZdwPMbIckhw"/>
+
                         <h4 style="color: #5bc0de;">Клиенты за смену</h4></a></li>
                     <li style="color: #5bc0de;"><a th:href="'#3' " data-toggle="tab">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoKlip5vw19APwuF0IyiElEqliWmVEvvUfrox2ZE8Ms6tZdwPMbIckhw"/>
+
                         <h4 style="color: #5bc0de;">Добавить сотрудника</h4></a></li>
                     <li style="color: #5bc0de;"><a th:href="'#4' " data-toggle="tab">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoKlip5vw19APwuF0IyiElEqliWmVEvvUfrox2ZE8Ms6tZdwPMbIckhw"/>
+
                         <h4 style="color: #5bc0de;">Удалить сотрудника</h4></a></li>
                 </ul>
                 <div class="tab-content">
@@ -157,16 +157,18 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Введите новый пароль</label>
-                        <input type="password" class="form-control" id="loginCat" name="password" placeholder="Введите пароль"
+                        <input type="password" required="" class="form-control" id="loginCat" name="password"
+                               placeholder="Введите пароль"
 
                         ></input>
                         <label>Повторите ввод</label>
-                        <input type="password" class="form-control" id="loginCat2" name="secondPassword" placeholder="Введите пароль повторно"
+                        <input type="password" required="" class="form-control" id="loginCat2" name="secondPassword"
+                               placeholder="Введите пароль повторно"
 
                         ></input>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary"   >
+                <button type="submit" class="btn btn-primary">
                     Сохранить
                 </button>
 

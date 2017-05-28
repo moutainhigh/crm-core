@@ -1,7 +1,5 @@
 package com.cafe.crm.models.Menu;
 
-import com.cafe.crm.models.Role;
-
 import javax.persistence.*;
 import java.util.Set;
 
@@ -24,8 +22,6 @@ public class Menu {
             joinColumns = {@JoinColumn(name = "menu_id",referencedColumnName = "id",nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "category_id",referencedColumnName = "id")})
     private Set<Category> categories;
-
-
 
     public Menu() {
     }

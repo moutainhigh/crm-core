@@ -1,8 +1,9 @@
-package com.cafe.crm.service_impl.userServiceImpl;
+package com.cafe.crm.service_impl.roleServiceImpl;
 
 import com.cafe.crm.dao.RoleRepository;
-import com.cafe.crm.models.Role;
-import com.cafe.crm.service_abstract.user_service.RoleService;
+
+import com.cafe.crm.models.worker.Role;
+import com.cafe.crm.service_abstract.role_service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

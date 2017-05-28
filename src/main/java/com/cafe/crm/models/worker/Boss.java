@@ -7,11 +7,10 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.Set;
 
-
 @Entity
-@Table(name = "manager")
+@Table(name = "boss")
 @PrimaryKeyJoinColumn(name = "worker_id")
-public class Manager extends Worker implements UserDetails {
+public class Boss extends Worker implements UserDetails  {
 
 	@Column(name = "login")
 	private String login;
@@ -20,13 +19,20 @@ public class Manager extends Worker implements UserDetails {
 	private String password;
 
 	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
-	@JoinTable(name = "manager_roles",
+	@JoinTable(name = "boss_roles",
 			joinColumns = {@JoinColumn(name = "worker_id")},
 			inverseJoinColumns = {@JoinColumn(name = "role_id")})
 	private Set<Role> roles;
 
+
 	@Column(name = "enabled", nullable = false)
 	private Boolean enabled = true;
+
+	public Boss(String login, String password) {
+	}
+
+	public Boss() {
+	}
 
 	public Set<Role> getRoles() {
 		return roles;
@@ -34,29 +40,6 @@ public class Manager extends Worker implements UserDetails {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
-	}
-
-	public Manager() {
-	}
-
-	public Manager(String firstName, String lastName, String position, Long shiftSalary, String login, String password) {
-		super(firstName, lastName, position, shiftSalary);
-		this.login = login;
-		this.password = password;
-	}
-
-	public Manager(Long id, String firstName, String lastName, String login, String password, String position,
-				   Long shiftSalary) {
-		super(id, firstName, lastName, position, shiftSalary);
-		this.login = login;
-		this.password = password;
-	}
-
-	public Manager(String firstName, String lastName, String login, String password, String position,
-				   Long shiftSalary) {
-		super(firstName, lastName, position, shiftSalary);
-		this.login = login;
-		this.password = password;
 	}
 
 	public String getLogin() {
@@ -97,23 +80,14 @@ public class Manager extends Worker implements UserDetails {
 	}
 
 	@Override
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		Manager manager = (Manager) o;
+		Boss boss = (Boss) o;
 
-		if (login != null ? !login.equals(manager.login) : manager.login != null) return false;
-		return password != null ? password.equals(manager.password) : manager.password == null;
+		if (login != null ? !login.equals(boss.login) : boss.login != null) return false;
+		return password != null ? password.equals(boss.password) : boss.password == null;
 	}
 
 	@Override
@@ -122,4 +96,15 @@ public class Manager extends Worker implements UserDetails {
 		result = 31 * result + (password != null ? password.hashCode() : 0);
 		return result;
 	}
+
+	@Override
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 }

@@ -3,7 +3,7 @@ package com.cafe.crm.security.handlers;
 
 
 
-import com.cafe.crm.models.Role;
+import com.cafe.crm.models.worker.Role;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.DefaultRedirectStrategy;

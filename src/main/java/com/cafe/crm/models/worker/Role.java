@@ -1,4 +1,4 @@
-package com.cafe.crm.models;
+package com.cafe.crm.models.worker;
 
 import org.springframework.security.core.GrantedAuthority;
 
@@ -16,8 +16,11 @@ public class Role implements GrantedAuthority {
 	@Column(name = "name", length = 20, nullable = false)
 	private String name;
 
-	@ManyToMany(fetch = FetchType.EAGER, targetEntity = User.class)
-	private Set<User> user;
+	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Boss.class)
+	private Set<Boss> boss;
+
+	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Manager.class)
+	private Set<Manager> manager;
 
 	public Role() {
 	}

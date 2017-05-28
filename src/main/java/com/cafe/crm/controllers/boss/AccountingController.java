@@ -2,7 +2,7 @@ package com.cafe.crm.controllers.boss;
 
 import com.cafe.crm.models.worker.Manager;
 import com.cafe.crm.models.worker.Worker;
-import com.cafe.crm.service_impl.counting.WorkerServiceImpl;
+import com.cafe.crm.service_impl.workerServiceImpl.WorkerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -57,7 +57,7 @@ public class AccountingController {
 	}
 
 	@RequestMapping(value = {"worker/editWorker"}, method = RequestMethod.POST)
-	public void editWorker(HttpServletResponse response,Worker worker, Manager manager) throws IOException {
+	public void editWorker(HttpServletResponse response, Worker worker, Manager manager) throws IOException {
 		if (worker.getPosition().equals("Управляющий")) {
 			workerService.saveManager(manager);
 		} else {
