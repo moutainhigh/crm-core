@@ -15,6 +15,7 @@ import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;
 import com.cafe.crm.models.worker.Role;
+import com.cafe.crm.models.worker.Worker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -64,15 +65,25 @@ public class InitMenu {
 		admin.setFirstName("Martin");
 		admin.setLastName("Jons");
 		admin.setSalary(200L);
-		admin.setPosition("БОСС");
+		admin.setPosition("Владелец");
 		admin.setCountShift(2L);
 		admin.setShiftSalary(1L);
 		admin.setAllShifts(test);
+
 
 		Set<Role> adminRoles = new HashSet<>();
 		adminRoles.add(roleBoss);
 		admin.setRoles(adminRoles);
 
+		Worker worker=new Worker();
+		worker.setFirstName("Max");
+		worker.setLastName("Smith");
+		worker.setPosition("Кальянщик");
+		worker.setShiftSalary(10L);
+		worker.setCountShift(2L);
+		worker.setSalary(20L);
+
+		workerRepository.saveAndFlush(worker);
 		workerRepository.saveAndFlush(admin);
 		bossRepository.saveAndFlush(admin);
 
@@ -82,7 +93,7 @@ public class InitMenu {
 		manager.setFirstName("Anna");
 		manager.setLastName("Jons");
 		manager.setSalary(100L);
-		manager.setPosition("Менеджер");
+		manager.setPosition("Управляющий");
 		manager.setCountShift(2L);
 		manager.setShiftSalary(1L);
 		manager.setAllShifts(test2);

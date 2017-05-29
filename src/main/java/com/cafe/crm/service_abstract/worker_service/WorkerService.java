@@ -1,6 +1,7 @@
 package com.cafe.crm.service_abstract.worker_service;
 
 
+import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;
 import com.cafe.crm.models.worker.Worker;
 
@@ -15,9 +16,13 @@ public interface WorkerService {
 
 	List<Manager> listAllManager();
 
-	Worker saveWorker(Worker worker);
+	List<Boss> listAllBoss();
 
-	Manager saveManager(Manager manager);
+	void saveWorker(Worker worker);
+
+	void saveManager(Manager manager);
+
+	void saveBoss(Boss boss);
 
 	void delete(Long id);
 

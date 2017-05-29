@@ -1,7 +1,6 @@
 package com.cafe.crm.service_impl.shiftServiceImpl;
 
 import com.cafe.crm.dao.ShiftRepository;
-import com.cafe.crm.dao.UserRepository;
 import com.cafe.crm.dao.WorkerRepository;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.worker.Worker;

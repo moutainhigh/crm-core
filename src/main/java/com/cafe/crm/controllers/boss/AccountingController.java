@@ -1,5 +1,6 @@
 package com.cafe.crm.controllers.boss;
 
+import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;
 import com.cafe.crm.models.worker.Worker;
 import com.cafe.crm.service_impl.workerServiceImpl.WorkerServiceImpl;
@@ -29,6 +30,11 @@ public class AccountingController {
 		return new Manager();
 	}
 
+	@ModelAttribute(value = "boss")
+	public Boss newEntityBoss() {
+		return new Boss();
+	}
+
 	@Autowired
 	private WorkerServiceImpl workerService;
 
@@ -36,30 +42,41 @@ public class AccountingController {
 	public ModelAndView getAllWorker(ModelAndView model) {
 		List<Worker> workerList = workerService.listAllWorker();
 		List<Manager> managerList = workerService.listAllManager();
+		List<Boss> bossList = workerService.listAllBoss();
+		bossList.sort(Comparator.comparing(o -> (o.getLastName())));
 		workerList.sort(Comparator.comparing(o -> (o.getLastName())));
 		managerList.sort(Comparator.comparing(o -> (o.getLastName())));
 		model.addObject("managerList", managerList);
 		model.addObject("workerList", workerList);
+		model.addObject("bossList", bossList);
 		model.setViewName("pages/accountingPage");
 		return model;
 	}
 
 	@RequestMapping(value = {"worker/addWorker"}, method = RequestMethod.POST)
-	public void addWorker(HttpServletResponse response,Worker worker) throws IOException {
+	public void addWorker(HttpServletResponse response, Worker worker) throws IOException {
 		workerService.saveWorker(worker);
 		response.sendRedirect("/worker");
 	}
 
 	@RequestMapping(value = {"worker/addManager"}, method = RequestMethod.POST)
-	public void addManager(HttpServletResponse response,Manager manager) throws IOException {
+	public void addManager(HttpServletResponse response, Manager manager) throws IOException {
 		workerService.saveManager(manager);
 		response.sendRedirect("/worker");
 	}
 
+	@RequestMapping(value = {"worker/addBoss"}, method = RequestMethod.POST)
+	public void addBoss(HttpServletResponse response, Boss boss) throws IOException {
+		workerService.saveBoss(boss);
+		response.sendRedirect("/worker");
+	}
+
 	@RequestMapping(value = {"worker/editWorker"}, method = RequestMethod.POST)
-	public void editWorker(HttpServletResponse response, Worker worker, Manager manager) throws IOException {
+	public void editWorker(HttpServletResponse response, Worker worker, Manager manager, Boss boss) throws IOException {
 		if (worker.getPosition().equals("Управляющий")) {
 			workerService.saveManager(manager);
+		} else if (worker.getPosition().equals("Владелец")) {
+			workerService.saveBoss(boss);
 		} else {
 			workerService.saveWorker(worker);
 		}

@@ -1,8 +1,10 @@
 package com.cafe.crm.service_impl.workerServiceImpl;
 
+import com.cafe.crm.dao.BossRepository;
 import com.cafe.crm.dao.ManagerRepository;
 import com.cafe.crm.dao.WorkerRepository;
 import com.cafe.crm.models.shift.Shift;
+import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;
 import com.cafe.crm.models.worker.Worker;
 
@@ -22,6 +24,9 @@ public class WorkerServiceImpl implements WorkerService {
 
 	@Autowired
 	private WorkerRepository workerRepository;
+
+	@Autowired
+	private BossRepository bossRepository;
 
 
 	// query by date (test)
@@ -44,13 +49,23 @@ public class WorkerServiceImpl implements WorkerService {
 	}
 
 	@Override
-	public Worker saveWorker(Worker worker) {
-		return workerRepository.saveAndFlush(worker);
+	public List<Boss> listAllBoss() {
+		return bossRepository.findAll();
 	}
 
 	@Override
-	public Manager saveManager(Manager manager) {
-		return managerRepository.saveAndFlush(manager);
+	public void saveWorker(Worker worker) {
+		workerRepository.saveAndFlush(worker);
+	}
+
+	@Override
+	public void saveManager(Manager manager) {
+		managerRepository.saveAndFlush(manager);
+	}
+
+	@Override
+	public void saveBoss(Boss boss) {
+		bossRepository.saveAndFlush(boss);
 	}
 
 	@Override

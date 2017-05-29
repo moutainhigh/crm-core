@@ -1,7 +1,6 @@
 package com.cafe.crm.models.shift;
 
 
-import com.cafe.crm.models.User;
 import com.cafe.crm.models.worker.Worker;
 
 import javax.persistence.*;
@@ -41,8 +40,8 @@ public class Shift {
 	public String getUsersNames() {   // return only names of workers of shift
 
 		String names = "";
-		for (Worker worker: users) {
-			names+=worker.getFirstName()+" ";
+		for (Worker worker : users) {
+			names += worker.getFirstName() + " ";
 
 		}
 		return names;

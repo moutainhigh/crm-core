@@ -16,13 +16,14 @@
             <div class="row">
                 <div class="col-sm-12">
                     <ul id="nav-tabs-wrapper" class="nav nav-tabs nav-tabs-horizontal">
-                        <li class="active"><a href="#htab1" data-toggle="tab"><h4 style="color: #337ab7">Таблица Всех Сотрудников</h4></a></li>
-                        <li><a href="#htab2" data-toggle="tab"><h4 style="color: #337ab7">Таблица Всех Управляющих</h4></a></li>
+                        <li class="active"><a href="#htab1" data-toggle="tab"><h4 style="color: #5bc0de">Таблица Всех Сотрудников</h4></a></li>
+                        <li><a href="#htab2" data-toggle="tab"><h4 style="color: #5bc0de">Таблица Всех Управляющих</h4></a></li>
+                        <li><a href="#htab3" data-toggle="tab"><h4 style="color: #5bc0de">Таблица Всех Владельцев</h4></a></li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="htab1">
                             <h1 class="custom" align="center">Таблица Всех Сотрудников</h1>
-                            <h3 align="center">Фильтр По Всем Полям</h3>
+                            <h3 align="center" style="color: #5bc0de">Фильтр По Всем Полям</h3>
                             <input id="filter" style="margin-bottom: 10px" type="text" class="form-control"
                                    placeholder="Поиск по полям"></input>
                             <div th:replace="workerList :: workerList"></div>
@@ -30,18 +31,29 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="htab2">
                             <h1 class="custom" align="center">Таблица Всех Управляющих</h1>
-                            <h3 align="center">Фильтр По Всем Полям</h3>
+                            <h3 align="center" style="color: #5bc0de">Фильтр По Всем Полям</h3>
                             <input id="filter2" style="margin-bottom: 10px" type="text" class="form-control"
                                    placeholder="Поиск по полям"></input>
                             <div th:replace="managerList :: managerList"></div>
                             <div th:replace="newManager :: newManager"></div>
                         </div>
+
+                        <div role="tabpanel" class="tab-pane fade" id="htab3">
+                            <h1 class="custom" align="center">Таблица Всех Владельцев</h1>
+                            <h3 align="center" style="color: #5bc0de">Фильтр По Всем Полям</h3>
+                            <input id="filter3" style="margin-bottom: 10px" type="text" class="form-control"
+                                   placeholder="Поиск по полям"></input>
+                            <div th:replace="bossList :: bossList"></div>
+                            <div th:replace="newBoss :: newBoss"></div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
 
-    </div></div>
+    </div>
+</div>
 
 <form role="form" method="post" action="/boss/changePassword" style="margin: 10px auto; width: 50%">
     <div align="center" class="modal fade" th:id="'newBossPass'" tabindex="-1" role="dialog"

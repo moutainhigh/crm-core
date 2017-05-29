@@ -4,35 +4,38 @@
 </head>
 
 <body>
-<table class="table table-condensed table-responsive custom" th:fragment="managerList">
+<div class="table" style="border-radius:5px;" th:fragment="managerList">
+<table class="table table-striped">
     <tr>
-        <th><h3> Имя </h3></th>
-        <th><h3> Фамилия </h3></th>
-        <th><h3> Login </h3></th>
-        <th><h3> Password </h3></th>
-        <th><h3> Должность </h3></th>
-        <th><h3> Оклад За Смену </h3></th>
-        <th><h3> Зарплата </h3></th>
-        <th></th>
-        <th></th>
-        <th></th>
+        <th> Имя </th>
+        <th> Фамилия </th>
+        <th> Логин </th>
+        <th> Пароль </th>
+        <th> Должность </th>
+        <th> Оклад За Смену </th>
+        <th> Количество Смен </th>
+        <th> Зарплата </th>
+        <th> Редактирование </th>
+        <th> Удалить </th>
     </tr>
-    <tbody class="searchable">
-    <tr th:each="manager : ${managerList}">
-        <td class="custom" th:text="${manager.firstName}"></td>
-        <td class="custom" th:text="${manager.lastName}"></td>
-        <td class="custom" th:text="${manager.login}"></td>
-        <td class="custom" th:text="${manager.password}"></td>
-        <td class="custom" th:text="${manager.position}"></td>
-        <td class="custom" th:text="${manager.shiftSalary}"></td>
-        <td class="custom" th:text="${manager.countShift}"></td>
-        <td class="custom" th:text="${manager.salary}"></td>
-        <td class=" custom " >
-            <button type="button" class=" btn btn-success btn-lg"><a class="custom" th:href="'#aa'+${manager.id}" data-toggle="modal" >Редактировать</a></button>
+    <tbody class="searchable" th:each="manager : ${managerList}">
+    <tr>
+        <td  th:text="${manager.firstName}"></td>
+        <td  th:text="${manager.lastName}"></td>
+        <td  th:text="${manager.login}"></td>
+        <td  th:text="${manager.password}"></td>
+        <td  th:text="${manager.position}"></td>
+        <td  th:text="${manager.shiftSalary}"></td>
+        <td  th:text="${manager.countShift}"></td>
+        <td  th:text="${manager.salary}"></td>
+        <td  class="col-lg-2" >
+            <a class="btn btn-primary btn-info" th:href="'#aa'+${manager.id}" data-toggle="modal" >Редактировать</a>
         </td>
-        <td class=" custom" >
-            <button type="button" class=" btn btn-danger btn-lg"> <a class="custom" th:href="'#bb'+${manager.id}" data-toggle="modal" >Удалить</a></button>
+
+        <td class="col-lg-2" >
+            <a class="btn btn-primary btn-danger" th:href="'#bb'+${manager.id}" data-toggle="modal" >Удалить</a>
         </td>
+
         <div class="modal fade" th:id="'aa'+${manager.id}">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -140,5 +143,6 @@
     </tr>
     </tbody>
 </table>
+</div>
 </body>
 </html>
