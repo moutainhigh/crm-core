@@ -22,7 +22,7 @@
                     <form th:id="'formMod1' + ${calculate.id}" action="/add-client"
                           method="post">
 
-                        <input class="form-control" type="text" name="description"/>
+                        <input class="form-control" type="text" name="description" required=""/>
 
                         <input type="hidden" name="calculateId"
                                th:value="${calculate.id}"/>
@@ -31,7 +31,7 @@
 
                         <input style="width: 90px;margin-right: 60px; float: left"
                                class="form-control" type="text" name="number"
-                               list="data1"/>
+                               list="data1" required=""/>
                     </form>
                     <datalist id="data1">
                         <option value="1">1</option>

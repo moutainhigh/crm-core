@@ -6,14 +6,13 @@
 <div th:fragment="checkModal">
 
 
-
     <div th:id="'checkModal' + ${calculate.id}" class="modal">
         <div class="modal-dialog " style="width: 300px;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title" th:text="${calculate.descriptionCheck}"></h3>
                 </div>
-                <div class="modal-body" th:style="${calculate.getCard()}? 'width:300px;' : 'width:300px;'">
+                <div class="modal-body" th:style="${calculate.getCard()}? 'width:320px;' : 'width:300px;'">
 
                     <div style="width: 190px;float: left;font-size: 18px;text-align: left">
                         Кол-во человек:
@@ -27,21 +26,27 @@
 
                         <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
 
-                        <select name="calculateNumber" class="form-control" onchange="submit();"
-                                style="width:70px;height: 34px;font-size: 17px; float: left;">
-                            <div th:each="i : ${#numbers.sequence(0, calculate.totalNumber)}">
+                        <div th:if="${calculate.clientId} != '-1'">
+                            <select name="calculateNumber" class="form-control" onchange="submit();"
+                                    style="width:70px;height: 34px;font-size: 17px; float: left;">
 
-                                <div th:if="(${i} != ${calculate.calculateNumber})">
-                                    <option th:value="${i}"><h6 th:text="${i}"></h6></option>
+                                <div th:each="i : ${#numbers.sequence(0, calculate.totalNumber)}">
+
+                                    <div th:if="(${i} != ${calculate.calculateNumber})">
+                                        <option th:value="${i}"><h6 th:text="${i}"></h6></option>
+                                    </div>
+
+                                    <div th:if="(${i} == ${calculate.calculateNumber})">
+                                        <option th:value="${i}" selected=""><h6 th:text="${i}"></h6></option>
+                                    </div>
+
                                 </div>
-
-                                <div th:if="(${i} == ${calculate.calculateNumber})">
-                                    <option th:value="${i}" selected=""><h6 th:text="${i}"></h6></option>
-                                </div>
-
-                            </div>
-                        </select>
-
+                            </select>
+                        </div>
+                        <div style="float: left" th:if="${calculate.clientId} == '-1'">
+                            <input type="hidden" name="calculateNumber" th:value="${calculate.calculateNumber}"/>
+                            <div style="font-size: 25px" th:text="${calculate.calculateNumber}"></div>
+                        </div>
                     </form>
 
                     <br/>
@@ -96,7 +101,7 @@
 
                     <input th:form="'formCalculate' + ${calculate.id}" style="width:70px;font-size: 20px;float: left;"
                            class="form-control" type="text" name="discount"
-                           th:value="${calculate.discount}"/>
+                           th:value="${calculate.discount}" required=""/>
 
                     <br/><br/>
 
@@ -110,7 +115,7 @@
 
                         <div style="float: left" th:if="(${calculate.getCard().balance} lt ${calculate.allPrice})">
                             <h5 style="color: red; font-size: 16px"
-                                th:text="'Недостаточный баланс ('+${calculate.getCard().balance}+'р) для погашения суммы'"></h5>
+                                th:text="'Баланс на карте('+${calculate.getCard().balance}+'р) недостаточен для погашения суммы'"></h5>
                         </div>
                         <h4 style="float: left">Использовать карту:</h4>
                         <button style="float:left;background: rgba(255,255,255,0);border: none;margin-left: 50px"
@@ -136,7 +141,8 @@
                         </form>
 
 
-                        <button data-dismiss="modal" th:onclick="'cookieFalse(\'' +'checkModal'+ ${calculate.id} + '\');'"
+                        <button data-dismiss="modal"
+                                th:onclick="'cookieFalse(\'' +'checkModal'+ ${calculate.id} + '\');'"
                                 class="btn btn-danger" style="float:left;margin-left:60px">
                             Закрыть
                         </button>

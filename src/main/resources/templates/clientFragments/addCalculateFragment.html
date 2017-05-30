@@ -18,12 +18,12 @@
                 <div class="modal-body" style="width:300px;" >
                    <h4> Описание</h4>
                     <form id="formMod" action="/add-calculate" method="post">
-                        <input class="form-control" type="text" name="description"/>
+                        <input class="form-control" type="text" name="description" required=""/>
                         <h4 style="margin-right: 20px; float: left">Кол-во человек</h4>
                         <h4>Стол</h4>
 
                         <input style="width: 90px;margin-right: 60px; float: left" class="form-control" type="text"
-                               name="number" list="data"/>
+                               name="number" list="data" required=""/>
                     </form>
                     <datalist id="data">
                         <option value="1">1</option>

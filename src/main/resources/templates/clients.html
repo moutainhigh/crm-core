@@ -64,6 +64,8 @@
                     <form style="float: left" method="post" action="/refresh-board" th:id="'formRef'+${calculate.id}">
                         <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
 
+                        <!-- German selection board-->
+
                         <select onchange="submit();" style="width:130px; float: left; height: 34px;font-size:18px "
                                 class="form-control" th:form="'formRef'+${calculate.id}" name="boardId">
 
@@ -85,7 +87,6 @@
                             data-toggle="collapse" th:href="'#accord' + ${calculate.id}"
                             th:text="${calculate.description}" th:value="${calculate.id}">
                     </button>
-                    <h4 style="float: left" th:text="${calculate.spend} + 'р'"></h4>
                 </div>
             </div>
             <!-- -->
@@ -145,7 +146,9 @@
                     </center>
 
 
-                    <button class="btn btn-primary" style="float: right; ">Общий расчет
+                    <button class="btn btn-primary" style="float: right; "
+                            th:onclick="'clientId(\'' + ${calculate.id} + '\' , \'' + '-1' + '\'); cookieTrue(\'' +'checkModal'+ ${calculate.id} + '\'); '">
+                        Общий расчет
                     </button>
                     <hr style="margin-top:50px;margin-bottom: 20px; height: 1px;background: rgba(0,0,0,0.24);"/>
 
