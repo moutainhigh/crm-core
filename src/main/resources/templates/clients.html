@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script th:src="@{/cookie.js}"></script>
+
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+            background: #3a6186;
+            background: -webkit-linear-gradient(to right, #89253e, #3a6186);
+            background: linear-gradient(to right, #89253e, #3a6186);
+        }
+    </style>
+
+</head>
+<body>
+
+<header>
+
+
+    <div class="container" style="margin-top:50px;">
+        <div class="row">
+
+            <div class="navbar navbar-inverse navbar-fixed-top">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand">Project Name</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#">Заказы</a></li>
+                        <li><a href="#">Что-то другое</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<button class="btn btn-default" style="float: left">Редактирование столов</button>
+
+<div class="container"
+     style=" box-shadow: 0 3px 6px 0; border-radius: 10px; background: #ffffff; min-width: 900px;width:900px; ">
+
+    <!--modal window with create calculate-->
+    <div th:replace="clientFragments/addCalculateFragment :: calculateModal"></div>
+    <!-- -->
+
+    <br/>
+    <div th:each="calculate : ${listCalculate}">
+
+        <!--head panel -->
+        <div class="panel panel-primary">
+            <div class="panel-heading" style="height: 50px">
+                <div class="panel-title">
+                    <form style="float: left" method="post" action="/refresh-board" th:id="'formRef'+${calculate.id}">
+                        <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
+
+                        <select onchange="submit();" style="width:130px; float: left; height: 34px;font-size:18px "
+                                class="form-control" th:form="'formRef'+${calculate.id}" name="boardId">
+
+                            <p th:each="b : ${listBoard}">
+
+                            <p th:if="(${calculate.getBoard().name} != ${b.name})">
+                                <option th:value="${b.id}" th:text="${b.name}"></option>
+                            </p>
+
+                            <p th:if="(${calculate.getBoard().name} == ${b.name})">
+                                <option th:value="${b.id}" th:text="${b.name}" selected=""></option>
+                            </p>
+                            </p>
+                        </select>
+                    </form>
+
+                    <button th:onclick="'cookiePanel(\'' +'accord'+ ${calculate.id} + '\');'"
+                            style="float: left; width: 590px; word-wrap: break-word; font-size: 20px; height: 40px; text-align: center; background: rgba(255,0,0,0);border: none"
+                            data-toggle="collapse" th:href="'#accord' + ${calculate.id}"
+                            th:text="${calculate.description}" th:value="${calculate.id}">
+                    </button>
+                </div>
+            </div>
+            <!-- -->
+
+            <!--body panel -->
+            <div th:id="'accord' + ${calculate.id}" class="collapse">
+                <script th:inline="javascript">
+                    var id = 'accord' + [[${calculate.id}]];
+                    if ($.cookie(id) == true.toString()) {
+                        $('#' + id).collapse();
+                    }
+                </script>
+
+                <div class="panel-body" style="background: #f0efee">
+
+                    <!--modal window with create client-->
+                    <div th:replace="clientFragments/addClientFragment :: clientModal"></div>
+                    <!-- -->
+
+                    <!--menu-->
+                    <div class="dropdown" style="float: left;margin-left: 15px;margin-right: 5px;">
+                        <button data-toggle="dropdown" class="dropdown-toggle btn btn-default">
+                            Меню
+                            <b class="caret"></b>
+                        </button>
+                        <div class="dropdown-menu" style=" width:130px;min-width: 130px">
+                            <div style="font-size: 20px">Салат</div>
+                            <div style="font-size: 20px">Суп</div>
+                            <div style="font-size: 20px">Отбивная</div>
+                            <button class="btn btn-primary">Добавить заказ</button>
+                        </div>
+
+                    </div>
+                    <!-- -->
+
+                    <center>
+                        <div style="float: left;height: 42px;" th:if="(${calculate.getCard()})">
+
+                            <h4 style="float: left;font-size: 20px; margin-left: 150px"
+                                th:text="${calculate.getCard().name}"></h4>
+
+                            <img style="float:left;margin-left: 20px"
+                                 src="http://icon-icons.com/icons2/37/PNG/512/bagofmoney_dollar_4399.png" width="30px"
+                                 height="30px"/>
+
+                            <h4 style="float: left;font-size: 20px;"
+                                th:text="${calculate.getCard().balance} + 'р ' + '('+${calculate.getCard().discount} +'%)'"></h4>
+
+                        </div>
+
+                        <div style="float: left;width: 200px;margin-left: 200px"
+                             th:if="(${calculate.getCard()} == null)">
+                            <h4 style="font-size: 20px;float: left">Карта не подключена</h4>
+
+                        </div>
+
+                    </center>
+
+
+                    <button class="btn btn-primary" style="float: right; " data-toggle="modal" data-backdrop="false"
+                            th:href="'#checkModal' + ${calculate.id}"
+                            th:onclick="'clientId(\'' + ${calculate.id} + '\' , \'' + '-1' + '\');'">
+                        Общий расчет
+                    </button>
+                    <hr style="margin-top:50px;margin-bottom: 20px; height: 1px;background: rgba(0,0,0,0.24);"/>
+
+                    <h5 style="float: left; margin-left: 270px  ">Описание</h5>
+                    <h5 style="float: left;margin-left: 125px">Время создания</h5>
+                    <h5 style="float: left;margin-left: 20px">Осталось человек</h5>
+                    <br/>
+
+                    <!--modal window check(calculate)-->
+                    <div th:replace="clientFragments/getCheckFragment :: checkModal"></div>
+                    <!-- -->
+
+                    <div th:each="client : ${calculate.getClient()}">
+
+                        <center>
+                            <div style="background: #dbdbdd;margin-top: 15px; border-radius: 3px;height: 34px;width: 600px">
+
+                                <button class="btn btn-default" type="submit" data-toggle="modal" data-backdrop="false"
+                                        th:href="'#checkModal' + ${calculate.id}"
+                                        th:onclick="'clientId(\'' + ${calculate.id} + '\' , \'' + ${client.id} + '\');'"
+                                        style="float: left;margin-right:5px;">
+                                    <img width="16px" height="16px"
+                                         src="http://icon-icons.com/icons2/936/PNG/512/dollar-symbol_icon-icons.com_73598.png"/>
+                                </button>
+
+
+                                <h4 style="float: left; width: 280px; height: 1px;"
+                                    th:text="${client.description}"></h4>
+                                <h4 style="float: left;width: 150px; height: 1px;"
+                                    th:text="${client.timeStart}"></h4>
+                                <h4 style="float: left;width: 110px; height: 1px;"
+                                    th:text="${client.totalNumber}"></h4>
+
+                            </div>
+
+                        </center>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    console.log(document.cookie);
+
+    function cookiePanel(id) {
+        if ($.cookie(id) == true.toString()) {
+            $.cookie(id, "false");
+        } else if ($.cookie(id) == false.toString() || $.cookie(id) == null) {
+            $.cookie(id, "true");
+        }
+    }
+
+    function payWithCard(calculateId) {
+        var inp = document.getElementById("i1" + calculateId);
+        inp.value = true;
+        ajax(calculateId);
+        inp.value = false;
+    }
+
+    function clientId(calculateId, clientId) {
+        var inp = document.getElementById('i2' + calculateId);
+        inp.value = clientId;
+        ajax(calculateId);
+    }
+
+
+    function ajax(calculateId) {
+        var map = {
+            flag: $("#i1" + calculateId).val(),
+            clientId: $("#i2" + calculateId).val(),
+            calculateId: $("#i3" + calculateId).val(),
+            calculateNumber: $("#i4" + calculateId).val(),
+            discount: $("#i5" + calculateId).val()
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/calculate-price",
+            data: map,
+            success: function (data) {
+                $('#v4' + calculateId).html(data[0].descriptionCheck);
+                $('#v1' + calculateId).html(data[1]);
+                $('#v2' + calculateId).html(data[0].priceTime + "р");
+                $('#v3' + calculateId).html(data[0].allPrice + "р");
+                //<![CDATA[
+                var str;
+                if ($("#i2" + calculateId).val() != -1) {
+                    for (var i = 1; i <= data[0].totalNumber; i++) {
+                        if (i == data[0].calculateNumber) {
+                            str = str + '<option value=' + i + ' selected="">' + i + '</option>';
+                        } else {
+                            str = str + '<option value=' + i + '>' + i + '</option>';
+                        }
+                    }
+                } else {
+                    str = '<option value=' + data[0].calculateNumber + ' selected="">' + data[0].calculateNumber + '</option>';
+                }
+
+                $('#i4' + calculateId).html(str);
+                $('#v5' + calculateId).html(data[0].payWithCard);
+                //]]>
+            },
+            error: function () {
+                alert('Возникла ошибка ajax: ');
+            }
+        });
+
+
+    }
+</script>
+
+</body>
+</html>

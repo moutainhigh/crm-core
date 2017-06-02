@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<div th:fragment="clientModal">
+    <button class="btn btn-primary" data-toggle="modal"
+            th:href="'#clientModal' + ${calculate.id}"
+            style="float: left"><img width="10px" height="10px"
+                                     src="http://www.imbf.org/interesnye-stati/images/simvol-087.png"/>
+    </button>
+
+    <div th:id="'clientModal' + ${calculate.id}" class="modal fade">
+        <div class="modal-dialog " style="width: 300px;" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" type="button" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">Добавление клиента</h4>
+                </div>
+                <div class="modal-body" style="width:300px;">
+                    <h4> Описание клиента </h4>
+                    <form th:id="'formMod1' + ${calculate.id}" action="/add-client"
+                          method="post">
+
+                        <input class="form-control" type="text" name="description" required=""/>
+
+                        <input type="hidden" name="calculateId"
+                               th:value="${calculate.id}"/>
+
+                        <h4 style="margin-right: 20px; float: left">Кол-во человек</h4>
+
+                        <input style="width: 90px;margin-right: 60px; float: left"
+                               class="form-control" type="text" name="number"
+                               list="data1" required=""/>
+                    </form>
+                    <datalist id="data1">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </datalist>
+
+                    <br/>
+                    <br/>
+                    <button th:form="'formMod1' + ${calculate.id}"
+                            class="btn btn-primary" type="submit">
+                        Создать
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
