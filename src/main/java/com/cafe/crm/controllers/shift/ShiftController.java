@@ -49,7 +49,7 @@ public class ShiftController {
 			} else {
 				shiftService.newShift(box);
 			}
-			return "redirect:/manager/shift/edit";
+			return "redirect:/manager";
 		}
 		if (!shiftService.getLast().getOpen()) {                 // if shift is closed
 			if (box == null) {
@@ -58,10 +58,10 @@ public class ShiftController {
 			} else {
 				shiftService.newShift(box);
 			}
-			return "redirect:/manager/shift/edit";
+			return "redirect:/manager";
 
 		} else {                                                  // if shift is open
-			return "redirect:/manager/shift/edit";
+			return "redirect:/manager";
 		}
 	}
 

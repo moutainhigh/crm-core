@@ -1,5 +1,6 @@
 package com.cafe.crm.configs;
 
+import com.cafe.crm.initMet.InitClient;
 import com.cafe.crm.initMet.InitMenu;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,5 +16,10 @@ public class CommonConfig {
 	@Bean(initMethod = "init")
 	public InitMenu initTestData() {
 		return new InitMenu();
+	}
+
+	@Bean(initMethod = "init")
+	public InitClient initTestClient() {
+		return new InitClient();
 	}
 }
