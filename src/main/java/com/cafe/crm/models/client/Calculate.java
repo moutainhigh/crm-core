@@ -1,16 +1,19 @@
 package com.cafe.crm.models.client;
 
 import com.cafe.crm.models.card.Card;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.Set;
 
 @Entity
 @Table(name = "calculations")
-public class Calculate {
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Calculate implements Serializable{
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -38,8 +41,6 @@ public class Calculate {
 	private Double priceTime = 0.0;
 
 	private Double payWithCard = 0.0;
-
-	private Long clientId;
 
 	private Long totalNumber = 0L;
 
@@ -152,14 +153,6 @@ public class Calculate {
 
 	public void setPayWithCard(Double payWithCard) {
 		this.payWithCard = payWithCard;
-	}
-
-	public Long getClientId() {
-		return clientId;
-	}
-
-	public void setClientId(Long clientId) {
-		this.clientId = clientId;
 	}
 
 	public Long getTotalNumber() {

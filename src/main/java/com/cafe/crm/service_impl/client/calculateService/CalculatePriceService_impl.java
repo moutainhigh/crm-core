@@ -14,7 +14,7 @@ public class CalculatePriceService_impl implements CalculatePriceService {
 	public Double calculatePriceTime(Calculate calculate) {
 		Double allPriceTime = 0.0;
 		Long totalNumber = 0L;
-		calculate.setPassedTime(LocalTime.of(0,0,0));
+		calculate.setPassedTime(LocalTime.of(0, 0, 0));
 		for (Client client : calculate.getClient()) {
 			LocalTime timeStart = client.getTimeStart();
 			LocalTime timeNow = LocalTime.now().withSecond(0);

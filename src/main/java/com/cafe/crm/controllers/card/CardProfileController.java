@@ -25,7 +25,7 @@ public class CardProfileController {
 	private CardControllerService cardControllerService;
 
 	@RequestMapping(value = {"/card"}, method = RequestMethod.GET)
-	public ModelAndView getCard(@RequestParam(name = "token") Long id) {
+	public ModelAndView getCard(@RequestParam("token") Long id) {
 		ModelAndView modelAndView = new ModelAndView("card");
 		modelAndView.addObject("card", cardService.getOne(id));
 		modelAndView.addObject("listCalculate", calculateService.getAllOpen());
@@ -34,15 +34,15 @@ public class CardProfileController {
 
 	@RequestMapping(value = {"/add-card-to-calculate"}, method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void addCardToCalculate(@RequestParam(name = "idCard") Long idCard,
-								   @RequestParam(name = "idCalculate") Long idCalculate) {
+	public void addCardToCalculate(@RequestParam("idCard") Long idCard,
+								   @RequestParam("idCalculate") Long idCalculate) {
 		cardControllerService.addCardToCalculate(idCard, idCalculate);
 	}
 
 	@RequestMapping(value = {"/add-money"}, method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void addMoney(@RequestParam(name = "idCard") Long idCard,
-						 @RequestParam(name = "money") Double money) {
+	public void addMoney(@RequestParam("idCard") Long idCard,
+						 @RequestParam("money") Double money) {
 		cardControllerService.addMoney(idCard, money);
 	}
 

@@ -7,12 +7,12 @@
     <script th:src="@{/cookie.js}"></script>
 
     <style>
-        body{
+        body {
             width: 100%;
-            height:100%;
-            background: #3a6186 ;
-            background: -webkit-linear-gradient(to right, #89253e , #3a6186 );
-            background: linear-gradient(to right, #89253e , #3a6186 );
+            height: 100%;
+            background: #3a6186;
+            background: -webkit-linear-gradient(to right, #89253e, #3a6186);
+            background: linear-gradient(to right, #89253e, #3a6186);
         }
     </style>
 
@@ -63,8 +63,6 @@
                 <div class="panel-title">
                     <form style="float: left" method="post" action="/refresh-board" th:id="'formRef'+${calculate.id}">
                         <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
-
-                        <!-- German selection board-->
 
                         <select onchange="submit();" style="width:130px; float: left; height: 34px;font-size:18px "
                                 class="form-control" th:form="'formRef'+${calculate.id}" name="boardId">
@@ -146,8 +144,9 @@
                     </center>
 
 
-                    <button class="btn btn-primary" style="float: right; "
-                            th:onclick="'clientId(\'' + ${calculate.id} + '\' , \'' + '-1' + '\'); cookieTrue(\'' +'checkModal'+ ${calculate.id} + '\'); '">
+                    <button class="btn btn-primary" style="float: right; " data-toggle="modal" data-backdrop="false"
+                            th:href="'#checkModal' + ${calculate.id}"
+                            th:onclick="'clientId(\'' + ${calculate.id} + '\' , \'' + '-1' + '\');'">
                         Общий расчет
                     </button>
                     <hr style="margin-top:50px;margin-bottom: 20px; height: 1px;background: rgba(0,0,0,0.24);"/>
@@ -161,28 +160,18 @@
                     <div th:replace="clientFragments/getCheckFragment :: checkModal"></div>
                     <!-- -->
 
-                    <script th:inline="javascript">
-                        var options = {
-                            "backdrop": false,
-                            "show": "true"
-                        }
-                        var id = 'checkModal' + [[${calculate.id}]];
-                        if ($.cookie(id) == true.toString()) {
-                            $('#' + id).modal(options);
-                        }
-
-                    </script>
                     <div th:each="client : ${calculate.getClient()}">
 
                         <center>
                             <div style="background: #dbdbdd;margin-top: 15px; border-radius: 3px;height: 34px;width: 600px">
 
-                        <button class="btn btn-default" type="submit"
-                                th:onclick="'clientId(\'' + ${calculate.id} + '\' , \'' + ${client.id} + '\'); cookieTrue(\'' +'checkModal'+ ${calculate.id} + '\'); '"
-                               style="float: left;margin-right:5px;">
-                            <img width="16px" height="16px"
-                                 src="http://icon-icons.com/icons2/936/PNG/512/dollar-symbol_icon-icons.com_73598.png"/>
-                        </button>
+                                <button class="btn btn-default" type="submit" data-toggle="modal" data-backdrop="false"
+                                        th:href="'#checkModal' + ${calculate.id}"
+                                        th:onclick="'clientId(\'' + ${calculate.id} + '\' , \'' + ${client.id} + '\');'"
+                                        style="float: left;margin-right:5px;">
+                                    <img width="16px" height="16px"
+                                         src="http://icon-icons.com/icons2/936/PNG/512/dollar-symbol_icon-icons.com_73598.png"/>
+                                </button>
 
 
                                 <h4 style="float: left; width: 280px; height: 1px;"
@@ -204,7 +193,7 @@
     </div>
 </div>
 
-<script>
+<script type="text/javascript">
     console.log(document.cookie);
 
     function cookiePanel(id) {
@@ -215,24 +204,62 @@
         }
     }
 
-    function cookieTrue(id) {
-        $.cookie(id, "true");
-    }
-
-    function cookieFalse(id) {
-        $.cookie(id, "false");
-    }
-
-    function payWithCard(id) {
-        var inp = document.getElementById(id);
-       inp.value = true;
+    function payWithCard(calculateId) {
+        var inp = document.getElementById("i1" + calculateId);
+        inp.value = true;
+        ajax(calculateId);
+        inp.value = false;
     }
 
     function clientId(calculateId, clientId) {
-
-        var inp = document.getElementById('inputClientId' + calculateId);
+        var inp = document.getElementById('i2' + calculateId);
         inp.value = clientId;
-        document.getElementById("formCalculate" + calculateId).submit();
+        ajax(calculateId);
+    }
+
+
+    function ajax(calculateId) {
+        var map = {
+            flag: $("#i1" + calculateId).val(),
+            clientId: $("#i2" + calculateId).val(),
+            calculateId: $("#i3" + calculateId).val(),
+            calculateNumber: $("#i4" + calculateId).val(),
+            discount: $("#i5" + calculateId).val()
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/calculate-price",
+            data: map,
+            success: function (data) {
+                $('#v4' + calculateId).html(data[0].descriptionCheck);
+                $('#v1' + calculateId).html(data[1]);
+                $('#v2' + calculateId).html(data[0].priceTime + "р");
+                $('#v3' + calculateId).html(data[0].allPrice + "р");
+                //<![CDATA[
+                var str;
+                if ($("#i2" + calculateId).val() != -1) {
+                    for (var i = 1; i <= data[0].totalNumber; i++) {
+                        if (i == data[0].calculateNumber) {
+                            str = str + '<option value=' + i + ' selected="">' + i + '</option>';
+                        } else {
+                            str = str + '<option value=' + i + '>' + i + '</option>';
+                        }
+                    }
+                } else {
+                    str = '<option value=' + data[0].calculateNumber + ' selected="">' + data[0].calculateNumber + '</option>';
+                }
+
+                $('#i4' + calculateId).html(str);
+                $('#v5' + calculateId).html(data[0].payWithCard);
+                //]]>
+            },
+            error: function () {
+                alert('Возникла ошибка ajax: ');
+            }
+        });
+
+
     }
 </script>
 

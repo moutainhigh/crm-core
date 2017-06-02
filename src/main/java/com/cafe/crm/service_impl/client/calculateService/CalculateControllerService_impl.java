@@ -32,7 +32,7 @@ public class CalculateControllerService_impl implements CalculateControllerServi
 	@Autowired
 	private CalculatePriceService_impl calculatePriceService;
 
-	public void addCalculate(Long id, Long number, String descr) {
+	public void createCalculate(Long id, Long number, String descr) {
 		Board board = boardService.getOne(id);
 		Client client = new Client();
 		client.setTotalNumber(number);
@@ -65,42 +65,22 @@ public class CalculateControllerService_impl implements CalculateControllerServi
 		calculateService.add(calculate);
 	}
 
-	public void calculatePrice(Long clientId, Long calculateNumber, Long discount, Boolean flagCard, Long calculateId) {
-		Calculate calculate = calculateService.getOne(calculateId); //-1 this all calculate. null Recalculation.
-
-		/* в общем логика такая. Жмем на кнопку кого нужно расчитать. Передается айди клиента и мы его достатем и считаем,
-		 если айди клиента не передается  (null), значит мы пересчитываем по старому айди, которое занесено в поле, потому что это значит, что человек находится
-		 в модальном окне и настраивает параметры. Если же передается -1 значит он жмет на кнопку общего расчета,
-		 будем использовать другую логику и метод расчета, который я перегрузил. У карты есть флаг, который обозначает оплачиваем
-		 ли мы с карты или нет*/
-
-		if (clientId != null) {
-			calculate.setClientId(clientId);
-		}
-		if (calculate.getClientId() != -1) {
-			Client client = clientService.getOne(calculate.getClientId());
+	public Calculate calculatePrice(Long clientId, Long calculateNumber, Long discount, Boolean flagCard, Long calculateId) {
+		Calculate calculate = calculateService.getOne(calculateId); //if clientId = -1 - all calculate.
+		Double priceTime;
+		if (clientId != -1) {
+			Client client = clientService.getOne(clientId);
 			calculate.setDescriptionCheck(calculate.getDescription() + "(" + client.getDescription() + ")");
 			calculate.setTotalNumber(client.getTotalNumber()); //Duplication field totalNumber in calculate, is needed for frontend
-			if (clientId != null) {
-				calculate.setCalculateNumber(client.getTotalNumber());
-				calculate.setDiscount(0L);
-			} else {
-				calculate.setCalculateNumber(calculateNumber);
-				calculate.setDiscount(discount);
-			}
-			Double priceTime = calculatePriceService.calculatePriceTime(client, calculate);
-			calculate.setPriceTime(priceTime);
+			calculate.setCalculateNumber(calculateNumber);
+			priceTime = calculatePriceService.calculatePriceTime(client, calculate);
 			clientService.add(client);
 		} else {
 			calculate.setDescriptionCheck(calculate.getDescription() + "(" + "общий расчет" + ")");
-			if (clientId != null) {
-				calculate.setDiscount(0L);
-			} else {
-				calculate.setDiscount(discount);
-			}
-			Double priceTime = calculatePriceService.calculatePriceTime(calculate);
-			calculate.setPriceTime(priceTime);
+			priceTime = calculatePriceService.calculatePriceTime(calculate);
 		}
+		calculate.setPriceTime(priceTime);
+		calculate.setDiscount(discount);
 		calculate.setAllPrice(calculatePriceService.addDiscountToAllPrice(calculate));
 		calculate.setAllPrice(calculatePriceService.round(calculate.getAllPrice()));
 		if (flagCard) {
@@ -115,24 +95,24 @@ public class CalculateControllerService_impl implements CalculateControllerServi
 			calculate.setPayWithCard(0.0);
 		}
 		calculateService.add(calculate);
+		return calculate;
 	}
 
-	public void closeClient(Long id) {
-		Calculate calculate = calculateService.getOne(id);
-		Client client = clientService.getOne(calculate.getClientId());
+	public void closeClient(Long idCal, Long idCl) {
+		Calculate calculate = calculateService.getOne(idCal);
+
+		Client client = clientService.getOne(idCl);
 		Card card = calculate.getCard();
 
-		if (calculate.getPayWithCard() != 0) {
+		if (calculate.getPayWithCard() > 0) {
 			card.setBalance(card.getBalance() - calculate.getPayWithCard());
 			cardService.add(card);
 		}
 
-		if (calculate.getClientId() != -1) {
+		if (idCl != -1) {
 			if (client.getTotalNumber() > 0) {
 				client.setTotalNumber(client.getTotalNumber() - calculate.getCalculateNumber());
 				clientService.add(client);
-
-				calculateService.add(calculate);
 			}
 			if (client.getTotalNumber() == 0) { // not else. Both conditions are used
 				Set<Client> set = calculate.getClient();
