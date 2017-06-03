@@ -7,7 +7,7 @@ import java.io.File;
 
 public interface AmazonService {
 
-	AmazonS3 getConnection();
+	AmazonS3 getConnection(String accessKey, String secretKey);
 
 	void putObject(AmazonS3 s3client, File file, String bucketName, String keyName);
 

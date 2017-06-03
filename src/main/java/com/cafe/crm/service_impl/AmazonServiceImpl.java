@@ -11,20 +11,21 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.cafe.crm.service_abstract.AmazonService;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 
+@Service
 public class AmazonServiceImpl implements AmazonService {
 
 	@Override
-	public AmazonS3 getConnection() {
+	public AmazonS3 getConnection(String accessKey, String secretKey) {
 		BasicAWSCredentials awsCreds = new BasicAWSCredentials
-				("AKIAJPQMJ3CS5JROOTVA", "kY9sjvr2Ju5eKv2w5ZM/MK42z9r40eecpBukGttJ");
-		AmazonS3 s3client = AmazonS3ClientBuilder.standard()
+				(accessKey, secretKey);
+		return AmazonS3ClientBuilder.standard()
 				.withCredentials(new AWSStaticCredentialsProvider(awsCreds))
 				.withRegion(Regions.DEFAULT_REGION)
 				.build();
-		return s3client;
 	}
 
 	@Override
