@@ -163,10 +163,10 @@
         <input type="text" class="form-control" placeholder="Ссылка"  name="link"/>
         <br></br>
         <h4 style="color: #5bc0de">Сколько Карт Сгенерировать?</h4>
-        <input type="text" class="form-control" placeholder="Количество карт" th:value ="1" name="iterator"/>
+        <input type="text" class="form-control" placeholder="Количество карт" th:value ="1" name="amountOfCards"/>
         <br></br>
 
-        <button class="btn btn-lg btn-primary btn-block" type="submit" data-toggle="modal" data-target="#myModal">Сгенерировать Карты</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Сгенерировать Карты</button>
     </form>
 
 
@@ -217,23 +217,5 @@
     });
 </script>
 
-
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-            </div>
-            <div class="modal-body">
-                <h1>Все Карты Сгенерированы!</h1>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-            </div>
-        </div>
-    </div>
-</div>
 </body>
 </html>

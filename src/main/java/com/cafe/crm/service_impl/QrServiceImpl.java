@@ -1,6 +1,6 @@
 package com.cafe.crm.service_impl;
 
-import com.cafe.crm.models.Card;
+import com.cafe.crm.models.card.Card;
 import com.cafe.crm.service_abstract.QrService;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.MultiFormatReader;

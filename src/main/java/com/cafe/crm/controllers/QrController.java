@@ -2,7 +2,7 @@ package com.cafe.crm.controllers;
 
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.cafe.crm.models.Card;
+import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.CardRepository;
 import com.cafe.crm.service_impl.AmazonServiceImpl;
 import com.cafe.crm.service_impl.QrServiceImpl;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -21,6 +20,7 @@ import java.util.UUID;
 
 @Controller
 public class QrController {
+
 	@Autowired
 	private QrServiceImpl qrService;
 	@Autowired
@@ -34,13 +34,12 @@ public class QrController {
 	}
 
 	@RequestMapping(value = "/generateCard", method = RequestMethod.POST)
-	public void generateCard(@RequestParam(value = "accessKey") String accessKey,
-							 @RequestParam(value = "secretKey") String secretKey,
-							 @RequestParam(value = "link") String link,
-							 @RequestParam(value = "iterator") Integer iterator,
-							 HttpServletResponse response) throws IOException {
+	public String generateCard(@RequestParam(value = "accessKey") String accessKey,
+							   @RequestParam(value = "secretKey") String secretKey,
+							   @RequestParam(value = "link") String link,
+							   @RequestParam(value = "amountOfCards") Integer amountOfCards) throws IOException {
 		AmazonS3 s3client = amazonService.getConnection(accessKey, secretKey);
-		for (int i = 1; i <= iterator; i++) {
+		for (int i = 1; i <= amountOfCards; i++) {
 			Card card = new Card();
 			card.setAccessKey(accessKey);
 			card.setSecretKey(secretKey);
@@ -54,7 +53,7 @@ public class QrController {
 			cardRepository.saveAndFlush(card);
 			amazonService.putObject(s3client, file, bucketName, keyNameQrCode);
 		}
-		response.sendRedirect("/cardGenerationPage");
+		return "cardGenerationPage";
 	}
 
 	@RequestMapping(value = "/getQr", method = RequestMethod.GET)

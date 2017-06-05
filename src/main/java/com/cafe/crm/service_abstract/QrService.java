@@ -1,7 +1,7 @@
 package com.cafe.crm.service_abstract;
 
 
-import com.cafe.crm.models.Card;
+import com.cafe.crm.models.card.Card;
 import com.google.zxing.NotFoundException;
 
 import java.io.File;

@@ -1,4 +1,4 @@
-package com.cafe.crm.models;
+package com.cafe.crm.models.card;
 
 import org.joda.time.LocalDate;
 
