@@ -1,4 +1,4 @@
-package com.cafe.crm.service_abstract;
+package com.cafe.crm.service_abstract.qrService;
 
 
 import com.cafe.crm.models.card.Card;

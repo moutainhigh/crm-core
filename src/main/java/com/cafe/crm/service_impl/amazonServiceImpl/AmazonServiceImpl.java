@@ -1,4 +1,4 @@
-package com.cafe.crm.service_impl;
+package com.cafe.crm.service_impl.amazonServiceImpl;
 
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -10,7 +10,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.cafe.crm.service_abstract.AmazonService;
+import com.cafe.crm.service_abstract.amazonService.AmazonService;
 import org.springframework.stereotype.Service;
 
 import java.io.File;

@@ -1,11 +1,11 @@
-package com.cafe.crm.controllers;
+package com.cafe.crm.controllers.boss;
 
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.cafe.crm.dao.card.CardRepository;
 import com.cafe.crm.models.card.Card;
-import com.cafe.crm.models.CardRepository;
-import com.cafe.crm.service_impl.AmazonServiceImpl;
-import com.cafe.crm.service_impl.QrServiceImpl;
+import com.cafe.crm.service_impl.amazonServiceImpl.AmazonServiceImpl;
+import com.cafe.crm.service_impl.qrServiceImpl.QrServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +19,7 @@ import java.net.URL;
 import java.util.UUID;
 
 @Controller
-public class QrController {
+public class CardGenerationController {
 
 	@Autowired
 	private QrServiceImpl qrService;

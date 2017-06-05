@@ -1,7 +1,8 @@
-package com.cafe.crm.service_impl;
+package com.cafe.crm.service_impl.qrServiceImpl;
 
 import com.cafe.crm.models.card.Card;
-import com.cafe.crm.service_abstract.QrService;
+import com.cafe.crm.service_abstract.qrService.QrService;
+import com.cafe.crm.service_impl.amazonServiceImpl.AmazonServiceImpl;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.NotFoundException;

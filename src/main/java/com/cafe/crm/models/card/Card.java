@@ -1,6 +1,7 @@
 package com.cafe.crm.models.card;
 
 import javax.persistence.*;
+import java.io.File;
 import java.time.LocalDate;
 
 @Entity

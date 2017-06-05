@@ -1,4 +1,4 @@
-package com.cafe.crm.service_abstract;
+package com.cafe.crm.service_abstract.amazonService;
 
 
 import com.amazonaws.services.s3.AmazonS3;
