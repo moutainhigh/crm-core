@@ -1,4 +1,4 @@
-package com.cafe.crm.dao;
+package com.cafe.crm.dao.shift;
 
 import com.cafe.crm.models.shift.Shift;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,6 +1,10 @@
 package com.cafe.crm.models.Menu;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.util.Set;
 
 
@@ -13,6 +17,7 @@ public class Category {
     private Long id;
 
     @Column(name = "name", nullable = false)
+    @NotEmpty@Length(min=1, max=20)
     private String name;
 
     @OneToMany(fetch = FetchType.EAGER)

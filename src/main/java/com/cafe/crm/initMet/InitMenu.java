@@ -1,13 +1,13 @@
 package com.cafe.crm.initMet;
 
 
-import com.cafe.crm.dao.BossRepository;
-import com.cafe.crm.dao.ManagerRepository;
-import com.cafe.crm.dao.RoleRepository;
-import com.cafe.crm.dao.WorkerRepository;
-import com.cafe.crm.dao.dao_menu.CategoryRepository;
-import com.cafe.crm.dao.dao_menu.MenuRepository;
-import com.cafe.crm.dao.dao_menu.ProductRepository;
+import com.cafe.crm.dao.boss.BossRepository;
+import com.cafe.crm.dao.manager.ManagerRepository;
+import com.cafe.crm.dao.role.RoleRepository;
+import com.cafe.crm.dao.worker.WorkerRepository;
+import com.cafe.crm.dao.menu.CategoryRepository;
+import com.cafe.crm.dao.menu.MenuRepository;
+import com.cafe.crm.dao.menu.ProductRepository;
 import com.cafe.crm.models.Menu.Category;
 import com.cafe.crm.models.Menu.Menu;
 import com.cafe.crm.models.Menu.Product;

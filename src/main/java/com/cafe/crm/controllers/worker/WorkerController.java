@@ -1,4 +1,4 @@
-package com.cafe.crm.controllers.user;
+package com.cafe.crm.controllers.worker;
 
 import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;
@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
-public class UserController {
+public class WorkerController {
 
 	@Autowired
 	private BossService bossService;
@@ -37,7 +39,8 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/manager/changePassword", method = RequestMethod.POST)
-	public String managerPasword(@RequestParam(name = "password") String password, @RequestParam(name = "secondPassword") String secondPassword) {
+	public String managerPasword(@RequestParam(name = "password") String password, @RequestParam(name = "secondPassword") String secondPassword,
+								 HttpServletRequest request) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
@@ -50,11 +53,13 @@ public class UserController {
 				managerService.save(manager);
 			}
 		}
-		return "redirect:/manager/shift/edit";
+		String referer = request.getHeader("Referer");
+		return "redirect:"+ referer;
 	}
 
 	@RequestMapping(value = "/boss/changePassword", method = RequestMethod.POST)
-	public String bossPassword(@RequestParam(name = "password") String password, @RequestParam(name = "secondPassword") String secondPassword) {
+	public String bossPassword(@RequestParam(name = "password") String password, @RequestParam(name = "secondPassword") String secondPassword,
+							   HttpServletRequest request) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
@@ -67,6 +72,7 @@ public class UserController {
 				bossService.save(boss);
 			}
 		}
-		return "redirect:/boss/menu";
+		String referer = request.getHeader("Referer");
+		return "redirect:"+ referer;
 	}
 }

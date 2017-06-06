@@ -1,8 +1,8 @@
-package com.cafe.crm.service_impl.workerServiceImpl;
+package com.cafe.crm.service_impl.worker;
 
-import com.cafe.crm.dao.BossRepository;
-import com.cafe.crm.dao.ManagerRepository;
-import com.cafe.crm.dao.WorkerRepository;
+import com.cafe.crm.dao.boss.BossRepository;
+import com.cafe.crm.dao.manager.ManagerRepository;
+import com.cafe.crm.dao.worker.WorkerRepository;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;

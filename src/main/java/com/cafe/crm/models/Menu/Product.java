@@ -3,7 +3,11 @@ package com.cafe.crm.models.Menu;
 
 
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -14,13 +18,17 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull(message = "Укажите название")
+    @NotEmpty
+    @Length(min=1, max=30)
     @Column(name = "name", nullable = false)
     private String name;
 
-
+    @NotNull(message = "Укажите описание")
     @Column(name = "description")
     private String description;
 
+    @NotNull(message = "Укажите цену")
     @Column(name="cost")
     private Double cost;
 

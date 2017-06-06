@@ -1,7 +1,7 @@
-package com.cafe.crm.service_impl.workerServiceImpl;
+package com.cafe.crm.service_impl.worker;
 
 
-import com.cafe.crm.dao.ManagerRepository;
+import com.cafe.crm.dao.manager.ManagerRepository;
 import com.cafe.crm.models.worker.Manager;
 import com.cafe.crm.service_abstract.worker_service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;

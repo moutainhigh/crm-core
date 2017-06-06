@@ -1,4 +1,4 @@
-package com.cafe.crm.dao;
+package com.cafe.crm.dao.manager;
 
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.worker.Manager;

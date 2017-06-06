@@ -1,7 +1,7 @@
 package com.cafe.crm.controllers.shift;
 
 
-import com.cafe.crm.dao.WorkerRepository;
+import com.cafe.crm.dao.worker.WorkerRepository;
 import com.cafe.crm.service_abstract.shift_service.ShiftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

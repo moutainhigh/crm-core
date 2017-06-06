@@ -2,20 +2,26 @@ package com.cafe.crm.controllers.boss;
 
 import com.cafe.crm.models.Menu.Category;
 import com.cafe.crm.models.Menu.Product;
+import com.cafe.crm.models.property.Property;
+import com.cafe.crm.models.property.PropertyWrapper;
 import com.cafe.crm.service_abstract.menu_service.CategoriesService;
 import com.cafe.crm.service_abstract.menu_service.MenuService;
 import com.cafe.crm.service_abstract.menu_service.ProductService;
+import com.cafe.crm.service_abstract.property.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 
 
 @Controller
@@ -30,6 +36,21 @@ public class MenuBossContoller {
 
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private PropertyService propertyService;
+
+	@ModelAttribute(value = "properties")
+	public List<Property> addProperties() {
+		return propertyService.findAll() ;
+	}
+
+	@ModelAttribute(value = "wrapper")
+	public PropertyWrapper addClass() {
+		PropertyWrapper PropertyWrapper = new PropertyWrapper();
+		PropertyWrapper.setProperties(propertyService.findAll());
+		return PropertyWrapper;
+	}
 
 	@ModelAttribute(value = "product")
 	public Product newProduct() {
@@ -76,17 +97,16 @@ public class MenuBossContoller {
 	}
 
 	@RequestMapping(value = "/addProduct", method = RequestMethod.POST)
-	public String addProduct(Product product, @RequestParam(name = "add") Long id) {
+	public String addProduct(@Valid Product product, BindingResult result, @RequestParam(name = "add") Long id) {
+
+		if (result.hasErrors()) {
+			return "bossMenu";
+		}
 		Category category = categoriesService.getOne(id);
-
 		product.setCategory(category);
-
-
 		productService.saveAndFlush(product);
-
 		category.getProducts().add(product);
 		categoriesService.saveAndFlush(category);
-
 
 		return "redirect:/boss/menu";
 	}

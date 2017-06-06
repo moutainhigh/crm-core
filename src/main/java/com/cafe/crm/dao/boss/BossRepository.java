@@ -1,4 +1,4 @@
-package com.cafe.crm.dao;
+package com.cafe.crm.dao.boss;
 
 import com.cafe.crm.models.worker.Boss;
 import org.springframework.data.jpa.repository.JpaRepository;

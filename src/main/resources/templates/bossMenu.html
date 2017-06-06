@@ -92,35 +92,37 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="form-group">
-                                                        <input required="" type="hidden" class="form-control" id="id" name="id"
+                                                        <input required="" type="hidden" class="form-control" id="id"
+                                                               name="id"
                                                                th:value="${prod.id}"
                                                         ></input>
-                                                        <h4>     <label>Название</label> </h4>
+                                                        <h4><label>Название</label></h4>
                                                         <input type="text" class="form-control" id="login2" name="name"
                                                                th:value="${prod.name}"
                                                         ></input>
                                                     </div>
                                                     <div class="form-group">
-                                                        <h4>  <label>Описание</label></h4>
+                                                        <h4><label>Описание</label></h4>
                                                         <input type="text" class="form-control" id="des"
                                                                name="description"
                                                                th:value="${prod.description}"
                                                         ></input>
                                                     </div>
                                                     <div class="form-group">
-                                                        <h4>  <label>Цена</label></h4>
+                                                        <h4><label>Цена</label></h4>
                                                         <input type="text" class="form-control" id="costt" name="cost"
                                                                th:value="${prod.cost}"
                                                         ></input>
                                                     </div>
                                                     <div class="form-group">
-                                                        <h4>  <label>Цена</label></h4>
+                                                        <h4><label>Цена</label></h4>
                                                         <input type="hidden" class="form-control" id="costt" name="cat"
                                                                th:value="${prod.category.id}"
                                                         ></input>
                                                     </div>
                                                 </div>
-                                                <button id="super" type="submit" class="btn btn-lg btn-primary btn-block" name="upd"
+                                                <button id="super" type="submit"
+                                                        class="btn btn-lg btn-primary btn-block" name="upd"
                                                         th:value="submit">Сохранить
                                                 </button>
 
@@ -153,13 +155,15 @@
                                     <div class="modal-body">
                                         <div class="form-group">
                                             <label>Название</label>
-                                            <input required="" type="text" class="form-control" id="loginCat" name="name"
+                                            <input required="" type="text" class="form-control" id="loginCat"
+                                                   name="name"
                                                    th:value="${categor.name}"
                                             ></input>
                                         </div>
 
                                     </div>
-                                    <button type="submit" class="btn btn-lg btn-primary btn-block" name="upd" th:value="${categor.id}">
+                                    <button type="submit" class="btn btn-lg btn-primary btn-block" name="upd"
+                                            th:value="${categor.id}">
                                         Сохранить
                                     </button>
 
@@ -181,26 +185,29 @@
                                         <button type="button" class="close" data-dismiss="modal"
                                                 aria-label="Close"><span
                                                 aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title" id="myModalLabel4">Редактирование категории</h4>
+                                        <h4 class="modal-title" id="myModalLabel4">Новый продукт</h4>
                                     </div>
-                                    <div class="modal-body">
-                                        <div th:object="${product}" class="form-group">
+                                    <div class="modal-body" th:object="${product}">
+                                        <div class="form-group">
                                             <label>Название</label>
-                                            <input required="" type="text" class="form-control" id="loginProd" name="name"
+                                            <input required="" type="text" class="form-control" id="loginProd"
+                                                   th:field="*{name}"
                                             ></input>
                                         </div>
                                         <div class="form-group">
                                             <label>Описание</label>
-                                            <input type="text" class="form-control" id="des22" name="description"
+                                            <input type="text" class="form-control" id="des22" th:field="*{description}"
                                             ></input>
                                         </div>
                                         <div class="form-group">
                                             <label>Цена</label>
-                                            <input type="text" class="form-control" id="desprod" name="cost"
-                                            ></input>
+                                            <input type="text" class="form-control" id="desprod" th:field="*{cost}" pattern="\d+" title="только цифры">
+                                            </input>
+                                            <td th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}">Age Error</td>
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-lg btn-primary btn-block" name="add" th:value="${categor.id}">
+                                    <button type="submit" class="btn btn-lg btn-primary btn-block" name="add"
+                                            th:value="${categor.id}">
                                         Сохранить
                                     </button>
 
@@ -288,7 +295,6 @@
                             <label>Введите новый пароль</label>
                             <input type="password" required="" class="form-control" id="loginCat" name="password"
                                    placeholder="Введите пароль"
-
                             ></input>
                             <label>Повторите ввод</label>
                             <input type="password" required="" class="form-control" id="loginCat2" name="secondPassword"
@@ -309,6 +315,8 @@
             </div>
         </div>
     </form>
+    <div th:replace="propertiesForm :: PropertyForm">
+    </div>
 </header>
 
 <script>

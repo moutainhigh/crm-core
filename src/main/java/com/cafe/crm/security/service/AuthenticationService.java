@@ -1,8 +1,8 @@
 package com.cafe.crm.security.service;
 
 
-import com.cafe.crm.dao.BossRepository;
-import com.cafe.crm.dao.ManagerRepository;
+import com.cafe.crm.dao.boss.BossRepository;
+import com.cafe.crm.dao.manager.ManagerRepository;
 import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;
 import org.springframework.beans.factory.annotation.Autowired;

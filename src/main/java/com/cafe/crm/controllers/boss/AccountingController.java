@@ -1,9 +1,12 @@
 package com.cafe.crm.controllers.boss;
 
+import com.cafe.crm.models.property.Property;
+import com.cafe.crm.models.property.PropertyWrapper;
 import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;
 import com.cafe.crm.models.worker.Worker;
-import com.cafe.crm.service_impl.workerServiceImpl.WorkerServiceImpl;
+import com.cafe.crm.service_abstract.property.PropertyService;
+import com.cafe.crm.service_impl.worker.WorkerServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,6 +40,21 @@ public class AccountingController {
 
 	@Autowired
 	private WorkerServiceImpl workerService;
+
+	@Autowired
+	private PropertyService propertyService;
+
+	@ModelAttribute(value = "properties")
+	public List<Property> addProperties() {
+
+		return propertyService.findAll() ;
+	}
+	@ModelAttribute(value = "wrapper")
+	public PropertyWrapper addClass() {
+		PropertyWrapper PropertyWrapper = new PropertyWrapper();
+		PropertyWrapper.setProperties(propertyService.findAll());
+		return PropertyWrapper;
+	}
 
 	@RequestMapping(value = {"/worker"}, method = RequestMethod.GET)
 	public ModelAndView getAllWorker(ModelAndView model) {

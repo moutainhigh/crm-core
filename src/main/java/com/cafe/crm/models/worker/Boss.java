@@ -1,9 +1,12 @@
 package com.cafe.crm.models.worker;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Set;
 
@@ -23,7 +26,6 @@ public class Boss extends Worker implements UserDetails  {
 			joinColumns = {@JoinColumn(name = "worker_id")},
 			inverseJoinColumns = {@JoinColumn(name = "role_id")})
 	private Set<Role> roles;
-
 
 	@Column(name = "enabled", nullable = false)
 	private Boolean enabled = true;
