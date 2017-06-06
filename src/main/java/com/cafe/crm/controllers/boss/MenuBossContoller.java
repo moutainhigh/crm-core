@@ -40,10 +40,6 @@ public class MenuBossContoller {
 	@Autowired
 	private PropertyService propertyService;
 
-	@ModelAttribute(value = "properties")
-	public List<Property> addProperties() {
-		return propertyService.findAll() ;
-	}
 
 	@ModelAttribute(value = "wrapper")
 	public PropertyWrapper addClass() {

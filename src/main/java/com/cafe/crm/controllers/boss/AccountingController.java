@@ -1,6 +1,5 @@
 package com.cafe.crm.controllers.boss;
 
-import com.cafe.crm.models.property.Property;
 import com.cafe.crm.models.property.PropertyWrapper;
 import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;
@@ -44,11 +43,6 @@ public class AccountingController {
 	@Autowired
 	private PropertyService propertyService;
 
-	@ModelAttribute(value = "properties")
-	public List<Property> addProperties() {
-
-		return propertyService.findAll() ;
-	}
 	@ModelAttribute(value = "wrapper")
 	public PropertyWrapper addClass() {
 		PropertyWrapper PropertyWrapper = new PropertyWrapper();

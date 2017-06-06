@@ -27,11 +27,6 @@ public class ShiftStatistics {
 	@Autowired
 	private PropertyService propertyService;
 
-	@ModelAttribute(value = "properties")
-	public List<Property> addProperties() {
-
-		return propertyService.findAll() ;
-	}
 	@ModelAttribute(value = "wrapper")
 	public PropertyWrapper addClass() {
 		PropertyWrapper PropertyWrapper = new PropertyWrapper();
