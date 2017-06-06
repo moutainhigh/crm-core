@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/body.css}" type="text/css"/>
+
+
+
+    <script>
+        function toggleIcon(e) {
+            $(e.target)
+                .prev('.panel-heading')
+                .find(".more-less")
+                .toggleClass('glyphicon-plus glyphicon-minus');
+        }
+        $('.panel-group').on('hidden.bs.collapse', toggleIcon);
+        $('.panel-group').on('shown.bs.collapse', toggleIcon);
+    </script>
+</head>
+<body>
+
+<div class="class container">
+    <div th:replace="bossnavbar :: bossNavbar">
+    </div><!--/.navbar -->
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="margin-top: 100px">
+        <h1 align="center" style="color: #5bc0de">FAQ</h1>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <i class="more-less glyphicon glyphicon-plus"></i>
+                       Что такое сервис Amazon AWS?
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                <div class="panel-body"><h3 style="color: black">
+                    Amazon Web Services (AWS) представляет собой безопасную платформу облачных сервисов, которая предоставляет вычислительные мощности, доступ к хранилищам, базам данных, услугам доставки контента и другим функциональным возможностям, помогающим в масштабировании и развитии бизнеса.
+                </h3>
+                    <br></br>
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/eVjz-Q-vH9Y"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingTwo">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <i class="more-less glyphicon glyphicon-plus"></i>
+                        Как зарегистрироваться в сервисе?
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                <div class="panel-body">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/SG1CuKdw2nA"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingThree">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        <i class="more-less glyphicon glyphicon-plus"></i>
+                        Что такое AWS Cred(Credentials)?
+                        <br></br>
+                        Как изменить Access Key и Secret Key?
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                <div class="panel-body"><h3 style="color: black">
+                    AWS Security Credentials - Учетные данные безопасности AWS.Когда вы взаимодействуете с AWS, вы указываете свои учетные данные безопасности AWS, чтобы проверить, кто вы, и имеете ли вы разрешение на доступ к ресурсам, которые вы запрашиваете. AWS использует учетные данные безопасности для аутентификации и авторизации ваших запросов.
+                </h3>
+                    <br></br>
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/pBtOZwRljcs"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="heading3">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                        <i class="more-less glyphicon glyphicon-plus"></i>
+                       Как создать корзину?
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading3">
+                <div class="panel-body">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/x3HHWKaeo_U"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="heading4">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                        <i class="more-less glyphicon glyphicon-plus"></i>
+                        Что такое Access Key и Secret Key?
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading4">
+                <div class="panel-body">
+                    <h3 style="color: black">
+                        Access Key и Secret Key это необходимые элементы AWS Credentials.Они необходимы чтобы установить соединение с Amazon service.
+                        <br></br>
+                        <br></br>
+                        Пример как выглядит:
+                        <br></br>
+                        <br></br>
+                        Access Key : "AKIAJXIXESWQYSC3YLGQ"
+                        <br></br>
+                        <br></br>
+                        Secret Key : "dPrk5bjlLYODt2tSXgYJdy5QRbC6jcMkvGCVc4lV"
+
+                    </h3>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div><!-- panel-group -->
+
+    <h1 align="center" style="color: #5bc0de">Генерация Карт</h1>
+    <br></br>
+    <form action="/generateCard"  method="POST">
+<div>
+        <h4 style="color: #5bc0de;display: inline-block;margin-right: 30px">Access Key</h4>
+         <p style="color:#5bc0de;display: inline-block;margin-right: 30px">Чтобы изменить "Access Key" снимите флаг!</p>
+
+        <input type="checkbox" style="width: 35px;height: 35px;" id="ch" checked="checked"/>
+</div>
+        <input class="form-control" id="sr" type="text" th:value="AKIAJXIXESWQYSC3YLGQ"  name="accessKey" />
+        <br></br>
+        <div>
+        <h4 style="color: #5bc0de;display: inline-block;margin-right: 30px">Secret Key</h4>
+        <p style="color:#5bc0de;display: inline-block;margin-right: 40px">Чтобы изменить "Secret Key" снимите флаг!</p>
+
+        <input type="checkbox" style="width: 35px;height: 35px;" id="ch2" checked="checked"/>
+        </div>
+        <input class="form-control" id="sr2" type="text" th:value="dPrk5bjlLYODt2tSXgYJdy5QRbC6jcMkvGCVc4lV"  name="secretKey" />
+        <br></br>
+
+        <h4 style="color: #5bc0de">Ссылка</h4>
+        <input type="text" class="form-control" placeholder="Ссылка"  name="link"/>
+        <br></br>
+        <h4 style="color: #5bc0de">Сколько Карт Сгенерировать?</h4>
+        <input type="text" class="form-control" placeholder="Количество карт" th:value ="1" name="amountOfCards"/>
+        <br></br>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Сгенерировать Карты</button>
+    </form>
+
+
+
+    <form action="/getQr" method="GET">
+        <h1 align="center" style="color: #5bc0de">Получить QrCode по ID Карты</h1>
+        <h4 style="color: #5bc0de">Введите ID Карты</h4>
+        <input type="text" class="form-control" placeholder="Введите ID" name="id"/>
+        <br></br>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Вывести QrCode</button>
+        <br></br>
+        <div align="center">
+            <img th:src="${url}"/>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+        if($('#ch:checked').length){
+            $('#sr').attr('readonly',true); // On Load, should it be read only?
+        }
+
+        $('#ch').change(function(){
+            if($('#ch:checked').length){
+                $('#sr').attr('readonly',true); //If checked - Read only
+            }else{
+                $('#sr').attr('readonly',false);//Not Checked - Normal
+            }
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function(){
+        if($('#ch2:checked').length){
+            $('#sr2').attr('readonly',true); // On Load, should it be read only?
+        }
+
+        $('#ch2').change(function(){
+            if($('#ch2:checked').length){
+                $('#sr2').attr('readonly',true); //If checked - Read only
+            }else{
+                $('#sr2').attr('readonly',false);//Not Checked - Normal
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

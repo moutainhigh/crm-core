@@ -1,6 +1,7 @@
 package com.cafe.crm.models.card;
 
 import javax.persistence.*;
+import java.io.File;
 import java.time.LocalDate;
 
 @Entity
@@ -25,6 +26,55 @@ public class Card {
 
 	private LocalDate visitDate;
 
+	private File qrCode;
+
+	private String keyNameQrCode;
+
+	private String accessKey;
+
+	private String secretKey;
+
+	private String link;
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
+	}
+
+	public String getAccessKey() {
+		return accessKey;
+	}
+
+	public void setAccessKey(String accessKey) {
+		this.accessKey = accessKey;
+	}
+
+	public String getSecretKey() {
+		return secretKey;
+	}
+
+	public void setSecretKey(String secretKey) {
+		this.secretKey = secretKey;
+	}
+
+	public File getQrCode() {
+		return qrCode;
+	}
+
+	public String getKeyNameQrCode() {
+		return keyNameQrCode;
+	}
+
+	public void setKeyNameQrCode(String keyNameQrCode) {
+		this.keyNameQrCode = keyNameQrCode;
+	}
+
+	public void setQrCode(File qrCode) {
+		this.qrCode = qrCode;
+	}
 
 	public Card() {
 	}
