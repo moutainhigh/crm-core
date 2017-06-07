@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
@@ -25,6 +24,7 @@
                         <h4 class="modal-title" id="myModalLabel23">Настройки</h4>
                     </div>
                     <div class="modal-body">
+
                         <table class="table table-striped table-bordered table-hover">
                             <tr>
                                 <th>#</th>
@@ -42,14 +42,15 @@
                                 <td th:text="*{properties[__${stat.index}__].name}"></td>
 
                                 <td><input th:class="form2" type="number" required="" class="form-control" name="value"
-                                           th:field="*{properties[__${stat.index}__].value}" pattern="\d+" title="только цифры" min="0" max="100"
+                                           th:field="*{properties[__${stat.index}__].value}" pattern="\d+"
+                                           title="только цифры" min="0" max="100"
                                 ></input></td>
 
-                                <td><input type="checkbox" th:checked="${property.getEnable()}"
+                                <td><input type="checkbox" data-toggle="toggle" data-on="Вкл" data-off="Выкл"
+                                           th:checked="${property.getEnable()}"
                                            style="width:20px;height:20px;" th:id="'check_'+${property.getId()}"
                                            name="enable"
                                            th:field="*{properties[__${stat.index}__].enable}"/></td>
-
                             </tr>
 
                             </tbody>

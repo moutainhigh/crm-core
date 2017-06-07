@@ -6,11 +6,11 @@ public class PropertyWrapper {
 
 	private List<Property> properties;
 
-	public PropertyWrapper(List<Property> properties) {
-		this.properties = properties;
+	public PropertyWrapper() {
 	}
 
-	public PropertyWrapper() {
+	public PropertyWrapper(List<Property> properties) {
+		this.properties = properties;
 	}
 
 	public List<Property> getProperties() {

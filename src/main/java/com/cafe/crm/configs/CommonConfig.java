@@ -18,7 +18,6 @@ public class CommonConfig {
 	public InitMenu initTestData() {
 		return new InitMenu();
 	}
-
 	@Bean(initMethod = "init")
 	public InitClient initTestClient() {
 		return new InitClient();

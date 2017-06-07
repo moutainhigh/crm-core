@@ -33,13 +33,13 @@ public class Property {
 		enable = enabled;
 	}
 
+	public Property() {
+	}
+
 	public Property(String name, Integer value, Boolean enable) {
 		this.name = name;
 		this.value = value;
 		this.enable = enable;
-	}
-
-	public Property() {
 	}
 
 	public void setEnable(Boolean enable) {
@@ -54,8 +54,6 @@ public class Property {
 	public void setValue(Integer value) {
 		this.value = value;
 	}
-
-
 
 	public Long getId() {
 		return id;
@@ -95,7 +93,4 @@ public class Property {
 		result = 31 * result + (enable != null ? enable.hashCode() : 0);
 		return result;
 	}
-
-
-
 }
