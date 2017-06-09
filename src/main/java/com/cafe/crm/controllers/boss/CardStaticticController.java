@@ -19,14 +19,14 @@ public class CardStaticticController {
 	private PropertyService propertyService;
 
 	@ModelAttribute(value = "wrapper")
-	public PropertyWrapper addClass() {
+	public PropertyWrapper addProperties() {
 		PropertyWrapper PropertyWrapper = new PropertyWrapper();
 		PropertyWrapper.setProperties(propertyService.findAll());
 		return PropertyWrapper;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-   	public ModelAndView getCard() {
+   	public ModelAndView getCards() {
 		ModelAndView view = new ModelAndView("pages/CardStatistic");
 		view.addObject("cards",cardService.getAll());
 		return view;
