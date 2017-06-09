@@ -1,6 +1,5 @@
 package com.cafe.crm.controllers.boss;
 
-import com.cafe.crm.models.property.Property;
 import com.cafe.crm.models.property.PropertyWrapper;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.service_abstract.property.PropertyService;
@@ -19,7 +18,7 @@ import java.util.Set;
 
 @Controller
 @RequestMapping("/boss/statistics")
-public class ShiftStatistics {
+public class ShiftStatisticController {
 
 	@Autowired
 	private ShiftService shiftService;
@@ -52,16 +51,17 @@ public class ShiftStatistics {
 		LocalDate start = LocalDate.now();
 		LocalDate end = start.minusDays(7);
 		ModelAndView mv = new ModelAndView("shiftStatistics");
-		Set<Shift> dates = shiftService.findByDates(end,start);
+		Set<Shift> dates = shiftService.findByDates(end, start);
 		mv.addObject("shifts", dates);
 		return mv;
 	}
+
 	@RequestMapping(value = "/search/lastMonth", method = RequestMethod.GET)
 	public ModelAndView searchMonth() {
 		LocalDate start = LocalDate.now();
 		LocalDate end = start.minusMonths(1);
 		ModelAndView mv = new ModelAndView("shiftStatistics");
-		Set<Shift> dates = shiftService.findByDates(end,start);
+		Set<Shift> dates = shiftService.findByDates(end, start);
 		mv.addObject("shifts", dates);
 		return mv;
 	}
@@ -79,7 +79,7 @@ public class ShiftStatistics {
 		LocalDate start = LocalDate.now();
 		LocalDate end = start.minusMonths(2);
 		ModelAndView mv = new ModelAndView("shiftStatistics");
-		Set<Shift> dates = shiftService.findByDates(end,start);
+		Set<Shift> dates = shiftService.findByDates(end, start);
 		mv.addObject("shifts", dates);
 		return mv;
 	}
@@ -89,7 +89,7 @@ public class ShiftStatistics {
 		LocalDate start = LocalDate.now();
 		LocalDate end = start.minusMonths(6);
 		ModelAndView mv = new ModelAndView("shiftStatistics");
-		Set<Shift> dates = shiftService.findByDates(end,start);
+		Set<Shift> dates = shiftService.findByDates(end, start);
 		mv.addObject("shifts", dates);
 		return mv;
 	}

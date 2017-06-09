@@ -9,7 +9,6 @@ $(document).ready(function () {
             $('.searchable tr').filter(function () {
                 return rex.test($(this).text());
             }).show();
-
         })
 
     }(jQuery));

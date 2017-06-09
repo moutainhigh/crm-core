@@ -18,6 +18,8 @@ public class Card {
 
 	private String photo;
 
+	private String email;
+
 	private Long discount = 0L;
 
 	private Double balance = 0.0;
@@ -35,6 +37,9 @@ public class Card {
 	private String secretKey;
 
 	private String link;
+
+	public Card() {
+	}
 
 	public String getLink() {
 		return link;
@@ -76,9 +81,13 @@ public class Card {
 		this.qrCode = qrCode;
 	}
 
-	public Card() {
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
+	public String getEmail() {
+		return email;
+	}
 	public Long getId() {
 		return id;
 	}
