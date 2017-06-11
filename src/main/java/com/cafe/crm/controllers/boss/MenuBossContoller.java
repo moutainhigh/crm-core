@@ -72,14 +72,6 @@ public class MenuBossContoller {
 		return "redirect:/boss/menu";
 	}
 
-/*	@RequestMapping(value = "/upd", method = RequestMethod.POST)
-	public String updProduct(Product product, @RequestParam(name = "cat") Long id) {
-		product.setCategory(categoriesService.getOne(id));
-		productService.saveAndFlush(product);
-
-		return "redirect:/boss/menu";
-	}*/
-
 	@RequestMapping(value = "/updCategory", method = RequestMethod.POST)
 	public String updCategory(@RequestParam(name = "upd") Long id,
 									@RequestParam(name = "name") String name) {
