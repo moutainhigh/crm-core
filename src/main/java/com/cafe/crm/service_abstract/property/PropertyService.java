@@ -15,4 +15,6 @@ public interface PropertyService {
 
 	void delete(Long id);
 
+	void saveCollection(List<Property>list);
+
 }

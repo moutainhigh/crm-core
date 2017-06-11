@@ -34,4 +34,11 @@ public class PropertyServiceImpl implements PropertyService {
 	public void delete(Long id) {
 		propertyRepository.delete(id);
 	}
+
+	@Override
+	public void saveCollection(List<Property> list) {
+		propertyRepository.save(list);
+	}
+
+
 }

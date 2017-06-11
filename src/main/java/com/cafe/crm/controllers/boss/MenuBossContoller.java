@@ -11,10 +11,7 @@ import com.cafe.crm.service_abstract.property.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -75,13 +72,13 @@ public class MenuBossContoller {
 		return "redirect:/boss/menu";
 	}
 
-	@RequestMapping(value = "/upd", method = RequestMethod.POST)
+/*	@RequestMapping(value = "/upd", method = RequestMethod.POST)
 	public String updProduct(Product product, @RequestParam(name = "cat") Long id) {
 		product.setCategory(categoriesService.getOne(id));
 		productService.saveAndFlush(product);
 
 		return "redirect:/boss/menu";
-	}
+	}*/
 
 	@RequestMapping(value = "/updCategory", method = RequestMethod.POST)
 	public String updCategory(@RequestParam(name = "upd") Long id,
@@ -123,5 +120,15 @@ public class MenuBossContoller {
 			categoriesService.delete(id);
 		}
 		return "redirect:/boss/menu";
+	}
+
+	@RequestMapping(value = "/updProd", method = RequestMethod.POST)
+	@ResponseBody
+	public Product ajax(@RequestBody Product product) {
+		product.setCategory(productService.findOne(product.getId()).getCategory());
+		productService.saveAndFlush(product);
+		product.setCategory(null);
+
+		return product;
 	}
 }
