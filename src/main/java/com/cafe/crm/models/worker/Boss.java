@@ -21,6 +21,12 @@ public class Boss extends Worker implements UserDetails  {
 	@Column(name = "password")
 	private String password;
 
+	@Column(name = "email")
+	private String email;
+
+	@Column(name = "phone")
+	private Long phone;
+
 	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
 	@JoinTable(name = "boss_roles",
 			joinColumns = {@JoinColumn(name = "worker_id")},

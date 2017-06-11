@@ -51,12 +51,10 @@
                                data-toggle="modal">Начать смену</a>
                         </div>
                     </div>
-
                 </form>
             </div>
         </div>
     </div>
-
 </div>
 <form role="form" method="post" action="/manager/shift/begin" style="margin: 10px auto; width: 50%">
     <div align="center" class="modal fade" th:id="'add'" tabindex="-1" role="dialog"
@@ -102,6 +100,8 @@
         </div>
     </div>
 </form>
+<div th:replace="managerChangePassword :: managerChangePassword">
+</div>
 <script>
     $(document).ready(function () {
 

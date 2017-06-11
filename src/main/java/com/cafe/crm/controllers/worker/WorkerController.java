@@ -39,18 +39,20 @@ public class WorkerController {
 	}
 
 	@RequestMapping(value = "/manager/changePassword", method = RequestMethod.POST)
-	public String managerPasword(@RequestParam(name = "password") String password, @RequestParam(name = "secondPassword") String secondPassword,
+	public String managerPasword(@RequestParam(name = "oldPassword") String oldPassword,@RequestParam(name = "newPassword") String newPassword, @RequestParam(name = "secondNewPassword") String secondNewPassword,
 								 HttpServletRequest request) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
 			UserDetails userDetails = (UserDetails) auth.getPrincipal();
+			Manager manager = managerService.getUserByLogin(userDetails.getUsername());
+			if(oldPassword.equals(manager.getPassword())) {
+				if (newPassword.equals(secondNewPassword)) {
+					manager = managerService.getUserByLogin(userDetails.getUsername());
 
-			if (password.equals(secondPassword)) {
-				Manager manager = managerService.getUserByLogin(userDetails.getUsername());
-
-				manager.setPassword(password);
-				managerService.save(manager);
+					manager.setPassword(newPassword);
+					managerService.save(manager);
+				}
 			}
 		}
 		String referer = request.getHeader("Referer");
@@ -58,18 +60,20 @@ public class WorkerController {
 	}
 
 	@RequestMapping(value = "/boss/changePassword", method = RequestMethod.POST)
-	public String bossPassword(@RequestParam(name = "password") String password, @RequestParam(name = "secondPassword") String secondPassword,
+	public String bossPassword(@RequestParam(name = "oldPassword") String oldPassword,@RequestParam(name = "newPassword") String newPassword, @RequestParam(name = "secondNewPassword") String secondNewPassword,
 							   HttpServletRequest request) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
 			UserDetails userDetails = (UserDetails) auth.getPrincipal();
+			Boss boss = bossService.getUserByLogin(userDetails.getUsername());
+			if(oldPassword.equals(boss.getPassword())) {
+				if (newPassword.equals(secondNewPassword)) {
+					boss = bossService.getUserByLogin(userDetails.getUsername());
 
-			if (password.equals(secondPassword)) {
-				Boss boss = bossService.getUserByLogin(userDetails.getUsername());
-
-				boss.setPassword(password);
-				bossService.save(boss);
+					boss.setPassword(newPassword);
+					bossService.save(boss);
+				}
 			}
 		}
 		String referer = request.getHeader("Referer");
