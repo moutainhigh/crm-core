@@ -19,64 +19,61 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class WorkerController {
 
-	@Autowired
-	private BossService bossService;
+    @Autowired
+    private BossService bossService;
 
-	@Autowired
-	private ManagerService managerService;
+    @Autowired
+    private ManagerService managerService;
 
-	@RequestMapping(value = {"/"}, method = RequestMethod.GET)
-	public String log() {
-		return "redirect:/login";
-	}
+    @RequestMapping(value = {"/"}, method = RequestMethod.GET)
+    public String redirectToLoginPage() {
+        return "redirect:/login";
+    }
 
-	@RequestMapping(value = {"/login"}, method = RequestMethod.GET)
-	public void login() {
-	}
+    @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
+    public String showLoginPage() {
+        return "login";
+    }
 
-	@RequestMapping(value = {"/logout"}, method = RequestMethod.GET)
-	public void logout() {
-	}
+    @RequestMapping(value = "/manager/changePassword", method = RequestMethod.POST)
+    public String managerPasword(@RequestParam(name = "oldPassword") String oldPassword, @RequestParam(name = "newPassword") String newPassword, @RequestParam(name = "secondNewPassword") String secondNewPassword,
+                                 HttpServletRequest request) {
 
-	@RequestMapping(value = "/manager/changePassword", method = RequestMethod.POST)
-	public String managerPasword(@RequestParam(name = "oldPassword") String oldPassword,@RequestParam(name = "newPassword") String newPassword, @RequestParam(name = "secondNewPassword") String secondNewPassword,
-								 HttpServletRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            UserDetails userDetails = (UserDetails) auth.getPrincipal();
+            Manager manager = managerService.getUserByLogin(userDetails.getUsername());
+            if (oldPassword.equals(manager.getPassword())) {
+                if (newPassword.equals(secondNewPassword)) {
+                    manager = managerService.getUserByLogin(userDetails.getUsername());
 
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (!(auth instanceof AnonymousAuthenticationToken)) {
-			UserDetails userDetails = (UserDetails) auth.getPrincipal();
-			Manager manager = managerService.getUserByLogin(userDetails.getUsername());
-			if(oldPassword.equals(manager.getPassword())) {
-				if (newPassword.equals(secondNewPassword)) {
-					manager = managerService.getUserByLogin(userDetails.getUsername());
+                    manager.setPassword(newPassword);
+                    managerService.save(manager);
+                }
+            }
+        }
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
+    }
 
-					manager.setPassword(newPassword);
-					managerService.save(manager);
-				}
-			}
-		}
-		String referer = request.getHeader("Referer");
-		return "redirect:"+ referer;
-	}
+    @RequestMapping(value = "/boss/changePassword", method = RequestMethod.POST)
+    public String bossPassword(@RequestParam(name = "oldPassword") String oldPassword, @RequestParam(name = "newPassword") String newPassword, @RequestParam(name = "secondNewPassword") String secondNewPassword,
+                               HttpServletRequest request) {
 
-	@RequestMapping(value = "/boss/changePassword", method = RequestMethod.POST)
-	public String bossPassword(@RequestParam(name = "oldPassword") String oldPassword,@RequestParam(name = "newPassword") String newPassword, @RequestParam(name = "secondNewPassword") String secondNewPassword,
-							   HttpServletRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            UserDetails userDetails = (UserDetails) auth.getPrincipal();
+            Boss boss = bossService.getUserByLogin(userDetails.getUsername());
+            if (oldPassword.equals(boss.getPassword())) {
+                if (newPassword.equals(secondNewPassword)) {
+                    boss = bossService.getUserByLogin(userDetails.getUsername());
 
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (!(auth instanceof AnonymousAuthenticationToken)) {
-			UserDetails userDetails = (UserDetails) auth.getPrincipal();
-			Boss boss = bossService.getUserByLogin(userDetails.getUsername());
-			if(oldPassword.equals(boss.getPassword())) {
-				if (newPassword.equals(secondNewPassword)) {
-					boss = bossService.getUserByLogin(userDetails.getUsername());
-
-					boss.setPassword(newPassword);
-					bossService.save(boss);
-				}
-			}
-		}
-		String referer = request.getHeader("Referer");
-		return "redirect:"+ referer;
-	}
+                    boss.setPassword(newPassword);
+                    bossService.save(boss);
+                }
+            }
+        }
+        String referer = request.getHeader("Referer");
+        return "redirect:" + referer;
+    }
 }

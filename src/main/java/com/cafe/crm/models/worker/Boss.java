@@ -1,118 +1,110 @@
 package com.cafe.crm.models.worker;
 
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Set;
 
 @Entity
 @Table(name = "boss")
 @PrimaryKeyJoinColumn(name = "worker_id")
-public class Boss extends Worker implements UserDetails  {
+public class Boss extends Worker implements UserDetails {
 
-	@Column(name = "login")
-	private String login;
+    @Column(name = "login")
+    private String login;
 
-	@Column(name = "password")
-	private String password;
+    @Column(name = "password")
+    private String password;
 
-	@Column(name = "email")
-	private String email;
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
+    @JoinTable(name = "boss_roles",
+            joinColumns = {@JoinColumn(name = "worker_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    private Set<Role> roles;
 
-	@Column(name = "phone")
-	private Long phone;
+    @Column(name = "enabled", nullable = false)
+    private Boolean enabled = true;
 
-	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
-	@JoinTable(name = "boss_roles",
-			joinColumns = {@JoinColumn(name = "worker_id")},
-			inverseJoinColumns = {@JoinColumn(name = "role_id")})
-	private Set<Role> roles;
+    public Boss(String login, String password) {
+    }
 
-	@Column(name = "enabled", nullable = false)
-	private Boolean enabled = true;
+    public Boss() {
+    }
 
-	public Boss(String login, String password) {
-	}
+    public Set<Role> getRoles() {
+        return roles;
+    }
 
-	public Boss() {
-	}
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
-	public Set<Role> getRoles() {
-		return roles;
-	}
+    public String getLogin() {
+        return login;
+    }
 
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}
+    public void setLogin(String login) {
+        this.login = login;
+    }
 
-	public String getLogin() {
-		return login;
-	}
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
 
-	public void setLogin(String login) {
-		this.login = login;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return roles;
-	}
+    @Override
+    public String getUsername() {
+        return login;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
-	@Override
-	public String getUsername() {
-		return login;
-	}
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-		Boss boss = (Boss) o;
+        Boss boss = (Boss) o;
 
-		if (login != null ? !login.equals(boss.login) : boss.login != null) return false;
-		return password != null ? password.equals(boss.password) : boss.password == null;
-	}
+        if (login != null ? !login.equals(boss.login) : boss.login != null) return false;
+        return password != null ? password.equals(boss.password) : boss.password == null;
+    }
 
-	@Override
-	public int hashCode() {
-		int result = login != null ? login.hashCode() : 0;
-		result = 31 * result + (password != null ? password.hashCode() : 0);
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        int result = login != null ? login.hashCode() : 0;
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        return result;
+    }
 
-	@Override
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
 }

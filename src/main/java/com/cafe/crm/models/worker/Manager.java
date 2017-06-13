@@ -13,119 +13,113 @@ import java.util.Set;
 @PrimaryKeyJoinColumn(name = "worker_id")
 public class Manager extends Worker implements UserDetails {
 
-	@Column(name = "login")
-	private String login;
+    @Column(name = "login")
+    private String login;
 
-	@Column(name = "password")
-	private String password;
+    @Column(name = "password")
+    private String password;
 
-	@Column(name = "email")
-	private String email;
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
+    @JoinTable(name = "manager_roles",
+            joinColumns = {@JoinColumn(name = "worker_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    private Set<Role> roles;
 
-	@Column(name = "phone")
-	private Long phone;
+    @Column(name = "enabled", nullable = false)
+    private Boolean enabled = true;
 
-	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class)
-	@JoinTable(name = "manager_roles",
-			joinColumns = {@JoinColumn(name = "worker_id")},
-			inverseJoinColumns = {@JoinColumn(name = "role_id")})
-	private Set<Role> roles;
+    public Set<Role> getRoles() {
+        return roles;
+    }
 
-	@Column(name = "enabled", nullable = false)
-	private Boolean enabled = true;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
-	public Set<Role> getRoles() {
-		return roles;
-	}
+    public Manager() {
+    }
 
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}
+    public Manager(String firstName, String lastName, String position, Long shiftSalary, String login, String password) {
+        super(firstName, lastName, position, shiftSalary);
+        this.login = login;
+        this.password = password;
+    }
 
-	public Manager() {
-	}
+    public Manager(Long id, String firstName, String lastName, String login, String password, String position,
+                   Long shiftSalary) {
+        super(id, firstName, lastName, position, shiftSalary);
+        this.login = login;
+        this.password = password;
+    }
 
-	public Manager(String firstName, String lastName, String position, Long shiftSalary, String login, String password) {
-		super(firstName, lastName, position, shiftSalary);
-		this.login = login;
-		this.password = password;
-	}
+    public Manager(String firstName, String lastName, String login, String password, String position,
+                   Long shiftSalary) {
+        super(firstName, lastName, position, shiftSalary);
+        this.login = login;
+        this.password = password;
+    }
 
-	public Manager(Long id, String firstName, String lastName, String login, String password, String position,
-				   Long shiftSalary) {
-		super(id, firstName, lastName, position, shiftSalary);
-		this.login = login;
-		this.password = password;
-	}
+    public String getLogin() {
+        return login;
+    }
 
-	public Manager(String firstName, String lastName, String login, String password, String position,
-				   Long shiftSalary) {
-		super(firstName, lastName, position, shiftSalary);
-		this.login = login;
-		this.password = password;
-	}
+    public void setLogin(String login) {
+        this.login = login;
+    }
 
-	public String getLogin() {
-		return login;
-	}
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
 
-	public void setLogin(String login) {
-		this.login = login;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return roles;
-	}
+    @Override
+    public String getUsername() {
+        return login;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
 
-	@Override
-	public String getUsername() {
-		return login;
-	}
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
 
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	@Override
-	public boolean isEnabled() {
-		return enabled;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+        Manager manager = (Manager) o;
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+        if (login != null ? !login.equals(manager.login) : manager.login != null) return false;
+        return password != null ? password.equals(manager.password) : manager.password == null;
+    }
 
-		Manager manager = (Manager) o;
-
-		if (login != null ? !login.equals(manager.login) : manager.login != null) return false;
-		return password != null ? password.equals(manager.password) : manager.password == null;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = login != null ? login.hashCode() : 0;
-		result = 31 * result + (password != null ? password.hashCode() : 0);
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        int result = login != null ? login.hashCode() : 0;
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        return result;
+    }
 }

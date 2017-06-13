@@ -20,4 +20,8 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
 	// for login
 	@Query("SELECT u FROM Manager u WHERE u.login =:name")
 	Manager getUserByLogin(@Param("name") String login);
+
+	Manager findByEmail(String email);
+
+	Manager findByPhone(Long phone);
 }

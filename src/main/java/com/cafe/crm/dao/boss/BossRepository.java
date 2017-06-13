@@ -10,5 +10,9 @@ public interface BossRepository extends JpaRepository<Boss, Long> {
 	// for login
 	@Query("SELECT u FROM Boss u WHERE u.login =:name")
 	Boss getUserByLogin(@Param("name") String login);
+
+	Boss findByEmail(String email);
+
+	Boss findByPhone(Long phone);
 }
 
