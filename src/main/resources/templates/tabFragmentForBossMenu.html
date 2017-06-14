@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script th:src="@{/js/jquery-3.2.0.min.js}"></script>
+    <script th:src="@{/static/js/bootstrap.min.js}"></script>
+    <link rel="stylesheet" th:href="@{/st.css}" type="text/css"/>
+
+</head>
+<body>
+    <div th:fragment="BossTab" class="tab-pane " th:id="allProd">
+        <h1 th:align="center" style="color: #5bc0de;">Меню</h1>
+        <div class="row">
+        </div>
+        <div class="table" style="border-radius:5px;" data-page="bossview.html">
+            <table th:id="allTable" class="table table-striped">
+                <tr>
+                    <th>#</th>
+                    <th>Наименование</th>
+                    <th>Описание</th>
+                    <th>Цена</th>
+                    <th>Редактировать</th>
+                    <th>Удалить</th>
+                </tr>
+                <tbody class="searchable" th:each="prod,iter:${products}">
+                <tr th:id="'allTR' + ${prod.id}">
+                    <td th:id="'allA' + ${prod.id}"><p th:text="${iter.count}"></p></td>
+                    <td th:id="'allB' + ${prod.id}"><p th:text="${prod.name}"></p></td>
+                    <td th:id="'allC' + ${prod.id}"><p th:text="${prod.description}"></p></td>
+                    <td th:id="'allD' + ${prod.id}"><p th:text="${prod.cost}"></p></td>
+                    <td class="col-lg-2"><a id="ins" class="btn btn-primary btn-info"
+                                            th:href="'#allP'+${prod.id}"
+                                            data-toggle="modal">Редактировать </a></td>
+
+                    <td>
+                        <button th:onclick="'del(\''+ ${prod.id} + '\');'"
+                                class="btn btn-primary btn-danger" name="del">
+                            Удалить
+                        </button>
+                    </td>
+                    <form role="form" method="post" action="/boss/menu/upd"
+                          style="margin: 10px auto; width: 50%; paddng-bottom:40px;">
+                        <div th:object="${product}" align="center" class="modal fade" th:id="'allP'+${prod.id}"
+                             tabindex="-1"
+                             role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close"><span
+                                                aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">Редактирование </h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+
+                                            <input required="" type="hidden" class="form-control"
+                                                   th:id="allId + ${prod.id}"
+                                                   th:value="${prod.id}"
+                                            ></input>
+                                            <h4><label>Название</label></h4>
+                                            <input type="text" class="form-control"
+                                                   th:id="allName + ${prod.id}" name="name"
+                                                   th:value="${prod.name}"
+                                            ></input>
+                                        </div>
+                                        <div class="form-group">
+                                            <h4><label>Описание</label></h4>
+                                            <input type="text" class="form-control"
+                                                   th:id="allDes + ${prod.id}"
+                                                   name="description"
+                                                   th:value="${prod.description}"
+                                            ></input>
+                                        </div>
+                                        <div class="form-group">
+                                            <h4><label>Цена</label></h4>
+                                            <input type="text" class="form-control"
+                                                   th:id="allCost + ${prod.id}" name="cost" required=""
+                                                   pattern="\d+" title="только цифры"
+                                                   th:value="${prod.cost}"
+                                            ></input>
+                                        </div>
+                                    </div>
+                                    <button id="super" type="button" name="upd"
+                                            class="btn btn-lg btn-primary btn-block"
+                                            data-dismiss="modal"
+                                            th:onclick="'editProdAll(\''+ ${prod.id} + '\');'"
+                                    >Сохранить
+                                    </button>
+
+                                    <div class="modal-footer">
+                                        <button id="clsoe" type="button" name="upd" class="btn btn-default"
+                                                data-dismiss="modal">
+                                            Отмена
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <script th:inline="javascript">
+            function showModal(id) {
+                var modal = $('.dima_modal');
+
+                modal.find("#d_id").val(id);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/boss/menu/getProduct",
+                    data: ({
+                        id: id
+                    }),
+                    success: function (product) {
+
+                        modal.find("#d_name").val(product.name);
+                        modal.find("#d_des").val(product.description);
+                        modal.find("#d_cost").val(product.cost);
+
+                    },
+                    error: function (e) {
+
+                        alert("Error show modal ");
+                        console.log("ERROR: ", e);
+                    }
+                });
+
+                modal.fadeIn();
+            }
+        </script>
+        <script>
+            function editProdAll(id) {
+
+                var formData = {
+                    id: $("#allId" + id).val(),
+                    name: $("#allName" + id).val(),
+                    description: $("#allDes" + id).val(),
+                    cost: $("#allCost" + id).val(),
+                }
+                var cst = $("#allCost" + id).val();
+                var nme = $("#allName" + id).val();
+
+                if (!isNaN(+cst)) {
+
+                    if ("" != nme) {
+                        $.ajax({
+                            type: "POST",
+                            contentType: "application/json",
+                            url: "/boss/menu/updProd",
+                            data: JSON.stringify(formData),
+                            dataType: 'json',
+                            success: function (result) {
+
+                                alert(result.name)
+                                alert(result.cost)
+                                alert(result.description)
+                                $("#b" + id).html(result.name);
+                                $("#c" + id).html(result.description);
+                                $("#d" + id).html(result.cost);
+                                $("#allB" + id).html(result.name);
+                                $("#allC" + id).html(result.description);
+                                $("#allD" + id).html(result.cost);
+                            },
+                            error: function (e) {
+                                alert("Неверный формат данных!")
+                                console.log("ERROR: ", e);
+                            }
+                        });
+                    }
+                    else {
+                        alert("Неверный формат названия!")
+                    }
+                }
+                else {
+                    alert("Неверный формат цены!")
+                }
+            }
+        </script>
+        <script>
+            function closeModal() {
+                var modal = $('.dima_modal');
+                modal.fadeOut();
+            }
+        </script>
+        <script>
+            $(document).ready(function () {
+
+                (function ($) {
+
+                    $('#filter').keyup(function () {
+
+                        var rex = new RegExp($(this).val(), 'i');
+                        $('.searchable tr').hide();
+                        $('.searchable tr').filter(function () {
+                            return rex.test($(this).text());
+                        }).show();
+                    })
+                }(jQuery));
+            });
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#myTab a").click(function (e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                });
+            });
+        </script>
+        <script>
+            $('.super').click(function () {
+                var pageName = $(this).data('page');
+                // ajax-запрос
+                $.ajax({
+                    url: '/boss/menu/upd',
+                    cache: false,
+                    success: function (html) {
+                        $("#bossview").html(html);
+                    }
+                });
+            });
+        </script>
+    </div>
+
+
+</body>
+</html>

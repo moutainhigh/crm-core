@@ -53,7 +53,6 @@ public class WorkerController {
 			if (oldPassword.equals(manager.getPassword())) {
 				if (newPassword.equals(secondNewPassword)) {
 					manager = managerService.getUserByLogin(userDetails.getUsername());
-
 					manager.setPassword(newPassword);
 					managerService.save(manager);
 				}
@@ -66,8 +65,6 @@ public class WorkerController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Неизвестная ошибка");
 		}
 	}
-
-
 	@RequestMapping(value = "/boss/changePassword", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> bossPassword(@RequestParam(name = "new") String newPassword,
@@ -81,7 +78,6 @@ public class WorkerController {
 			if (oldPassword.equals(boss.getPassword())) {
 				if (newPassword.equals(secondNewPassword)) {
 					boss = bossService.getUserByLogin(userDetails.getUsername());
-
 					boss.setPassword(newPassword);
 					bossService.save(boss);
 				}
