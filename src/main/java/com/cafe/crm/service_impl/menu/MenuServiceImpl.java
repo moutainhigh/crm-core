@@ -16,6 +16,6 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public Menu getOne(Long id) {
-        return menuRepository.getOne(id);
+        return menuRepository.findOne(id);
     }
 }

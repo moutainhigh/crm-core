@@ -2,23 +2,22 @@ package com.cafe.crm.controllers.boss;
 
 import com.cafe.crm.models.Menu.Category;
 import com.cafe.crm.models.Menu.Product;
-import com.cafe.crm.models.property.Property;
 import com.cafe.crm.models.property.PropertyWrapper;
 import com.cafe.crm.service_abstract.menu_service.CategoriesService;
 import com.cafe.crm.service_abstract.menu_service.MenuService;
 import com.cafe.crm.service_abstract.menu_service.ProductService;
 import com.cafe.crm.service_abstract.property.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.List;
 
 
 @Controller
@@ -62,38 +61,50 @@ public class MenuBossContoller {
 	}
 
 	@RequestMapping(value = {"/deleteProduct"}, method = RequestMethod.POST)
-	public String deleteProduct(ModelAndView modelAndView,
-								@RequestParam(value = "del", required = false) Long id) throws IOException {
+	@ResponseBody
+	public ResponseEntity<?> deleteProduct(ModelAndView modelAndView,
+										   @RequestParam(value = "del", required = false) Long id) throws IOException {
 
 		productService.delete(id);
-		modelAndView.addObject("menu", menuService.getOne(1L));
-		modelAndView.addObject("categories", categoriesService.findAll());
-		modelAndView.addObject("products", productService.findAll());
-		return "redirect:/boss/menu";
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/updCategory", method = RequestMethod.POST)
 	public String updCategory(@RequestParam(name = "upd") Long id,
-									@RequestParam(name = "name") String name) {
+							  @RequestParam(name = "name") String name) {
 		Category category = categoriesService.getOne(id);
 		category.setName(name);
 		categoriesService.saveAndFlush(category);
 		return "redirect:/boss/menu/";
 	}
 
-	@RequestMapping(value = "/addProduct", method = RequestMethod.POST)
-	public String addProduct(@Valid Product product, BindingResult result, @RequestParam(name = "add") Long id) {
+	@RequestMapping(value = "/getProduct", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> getProductForAjax(@RequestParam(name = "id") Long id) {
 
-		if (result.hasErrors()) {
-			return "bossMenu";
-		}
-		Category category = categoriesService.getOne(id);
+		Product product = productService.findOne(id);
+		product.setCategory(null);
+		return new ResponseEntity<>(product, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/addAjax", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity<?> ajax2(@RequestParam("idCat") Long idCat,
+								   @RequestParam("name") String name,
+								   @RequestParam("description") String des,
+								   @RequestParam("cost") Double cost
+	) {
+		Category category = categoriesService.getOne(idCat);
+		Product product = new Product();
 		product.setCategory(category);
+		product.setName(name);
+		product.setCost(cost);
+		product.setDescription(des);
 		productService.saveAndFlush(product);
 		category.getProducts().add(product);
 		categoriesService.saveAndFlush(category);
 
-		return "redirect:/boss/menu";
+		return new ResponseEntity<>(product.getId(), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/addCategory", method = RequestMethod.POST)
