@@ -10,7 +10,7 @@
 
 </head>
 <body>
-    <div th:fragment="BossTab" class="tab-pane " th:id="allProd">
+    <div th:fragment="BossTab" class="tab-pane active"  th:id="allProd">
         <h1 th:align="center" style="color: #5bc0de;">Меню</h1>
         <div class="row">
         </div>
@@ -107,9 +107,7 @@
         <script th:inline="javascript">
             function showModal(id) {
                 var modal = $('.dima_modal');
-
                 modal.find("#d_id").val(id);
-
                 $.ajax({
                     type: "POST",
                     url: "/boss/menu/getProduct",
@@ -124,8 +122,7 @@
 
                     },
                     error: function (e) {
-
-                        alert("Error show modal ");
+                        alert("Ошибка ;( ");
                         console.log("ERROR: ", e);
                     }
                 });
@@ -156,9 +153,6 @@
                             dataType: 'json',
                             success: function (result) {
 
-                                alert(result.name)
-                                alert(result.cost)
-                                alert(result.description)
                                 $("#b" + id).html(result.name);
                                 $("#c" + id).html(result.description);
                                 $("#d" + id).html(result.cost);

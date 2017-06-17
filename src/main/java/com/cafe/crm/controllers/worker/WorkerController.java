@@ -7,10 +7,8 @@ import com.cafe.crm.service_abstract.worker_service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,28 +22,28 @@ import java.util.Collection;
 @Controller
 public class WorkerController {
 
-    @Autowired
-    private BossService bossService;
+	@Autowired
+	private BossService bossService;
 
-    @Autowired
-    private ManagerService managerService;
+	@Autowired
+	private ManagerService managerService;
 
-    @RequestMapping(value = {"/"}, method = RequestMethod.GET)
-    public String redirectToLoginPage() {
-        return "redirect:/login";
-    }
+	@RequestMapping(value = {"/"}, method = RequestMethod.GET)
+	public String redirectToLoginPage() {
+		return "redirect:/login";
+	}
 
-    @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
-    public String showLoginPage() {
-        return "login";
-    }
+	@RequestMapping(value = {"/login"}, method = RequestMethod.GET)
+	public String showLoginPage() {
+		return "login";
+	}
 
 
 	@RequestMapping(path = {"/manager/changePassword", "/boss/changePassword"}, method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> changePassword(@RequestParam(name = "old") String oldPassword,
-								 @RequestParam(name = "new") String newPassword,
-								 @RequestParam(name = "secondNew") String secondNewPassword,                                           Authentication auth, HttpServletRequest request) {
+											@RequestParam(name = "new") String newPassword,
+											@RequestParam(name = "secondNew") String secondNewPassword, Authentication auth, HttpServletRequest request) {
 		UserDetails userDetails = (UserDetails) auth.getPrincipal();
 		String password = userDetails.getPassword();
 		String login = userDetails.getUsername();
