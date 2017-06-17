@@ -3,7 +3,8 @@
 *.iml
 *.DS_Store
 
-log/
+log/c
+crm.cafe.log
 ## Directory-based project format:
 .idea/
 src/main/resources/hibernate.properties

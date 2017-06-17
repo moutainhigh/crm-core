@@ -1,43 +1,52 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script th:src="@{/js/jquery-3.2.0.min.js}"></script>
-    <script th:src="@{/static/js/bootstrap.min.js}"></script>
     <link rel="stylesheet" th:href="@{/login.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/st.css}" type="text/css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"
+            th:src="@{/webjars/jquery/3.2.1/jquery.min.js}"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"></link>
 </head>
 <body>
 <div class="container-login col-xs-12 col-sm-offset-2 col-sm-8 col-md-offset-3 col-md-6 col-lg-offset-4 col-lg-4">
     <br/>
-    <form class="form-signin" name='loginForm' action="" method='POST'>
+    <form id="signin" class="form-signin" name='loginForm' action="" th:action="@{/processing-url}" method='POST'>
         <div class="panel panel-default" style="margin-top: 15%">
             <div class="panel-heading">
                 <h1 th:align="center">Добро пожаловать. </h1>
             </div>
             <div class="panel-body">
+                <p th:if="${param.logout}" class="alert-success" id="successful-logout">Вы успешно разлогинились</p>
                 <div class="form-group">
                     <div class="input-group">
                             <span class="input-group-addon">
                                 <i class="glyphicon glyphicon-user" style="width: auto"></i>
                             </span>
-                        <input id="txtUsuario"  runat="server" type="text" class="form-control" name="username"
-                               placeholder="Логин" required=""/>
+                        <input id="username" type="text" class="form-control" name="username"
+                               data-container="body" data-toggle="popover" data-placement="right"
+                               data-content="Пример e-mail: man@email.ru
+                                             Примеры телефона: +7xxxxxxxxxx,
+                                                                8xxxxxxxxxx,
+                                                                xxxxxxxxxxx ." data-trigger="focus"
+                               placeholder="Телефон или e-mail" required=""/>
                     </div>
                 </div>
+                <p id="incorrect"></p>
+                <p th:if="${param.error}" class="alert-danger" id="wrong">Неправильный номер телефона, e-mail или пароль</p>
                 <div class="form-group">
                     <div class="input-group">
                             <span class="input-group-addon">
                                 <i class="glyphicon glyphicon-lock" style="width: auto"></i>
                             </span>
-                        <input id="txtSenha" runat="server" required="" type="password" class="form-control" name="password"
-                               placeholder="Пароль" />
+                        <input id="password" required="" type="password" class="form-control" name="password"
+                               placeholder="Пароль"/>
                     </div>
                 </div>
-                <button id="btnLogin" runat="server" class="btn btn-default" type="submit" style="width: 100%">
+                <button class="btn btn-default" type="submit" style="width: 100%">
                     Вход <i class="glyphicon glyphicon-log-in"></i>
                 </button>
             </div>
@@ -45,6 +54,6 @@
     </form>
 
 </div>
-
+<script src="../static/js/login.js" th:src="@{js/login.js}"></script>
 </body>
 </html>

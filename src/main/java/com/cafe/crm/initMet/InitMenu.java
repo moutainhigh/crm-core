@@ -61,6 +61,8 @@ public class InitMenu {
 
 		Boss admin = new Boss();
 		admin.setLogin("boss");
+		admin.setEmail("boss@mail.ru");
+		admin.setPhone(9111111111L);
 		admin.setPassword("boss");
 		admin.setFirstName("Martin");
 		admin.setLastName("Jons");
@@ -89,6 +91,8 @@ public class InitMenu {
 
 		Manager manager = new Manager();
 		manager.setLogin("manager");
+		manager.setEmail("manager@mail.ru");
+		manager.setPhone(9123456789L);
 		manager.setPassword("manager");
 		manager.setFirstName("Anna");
 		manager.setLastName("Jons");

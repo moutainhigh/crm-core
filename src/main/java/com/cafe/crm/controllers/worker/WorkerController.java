@@ -24,24 +24,21 @@ import java.util.Collection;
 @Controller
 public class WorkerController {
 
-	@Autowired
-	private BossService bossService;
+    @Autowired
+    private BossService bossService;
 
-	@Autowired
-	private ManagerService managerService;
+    @Autowired
+    private ManagerService managerService;
 
-	@RequestMapping(value = {"/"}, method = RequestMethod.GET)
-	public String log() {
-		return "redirect:/login";
-	}
+    @RequestMapping(value = {"/"}, method = RequestMethod.GET)
+    public String redirectToLoginPage() {
+        return "redirect:/login";
+    }
 
-	@RequestMapping(value = {"/login"}, method = RequestMethod.GET)
-	public void login() {
-	}
-
-	@RequestMapping(value = {"/logout"}, method = RequestMethod.GET)
-	public void logout() {
-	}
+    @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
+    public String showLoginPage() {
+        return "login";
+    }
 
 
 	@RequestMapping(path = {"/manager/changePassword", "/boss/changePassword"}, method = RequestMethod.POST)
