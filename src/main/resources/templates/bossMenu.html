@@ -166,7 +166,7 @@
                                             <label>Название</label>
                                             <input required="" type="text" class="form-control" id="loginCat"
                                                    name="name"
-                                                   th:value="${categor.name}"
+                                                   th:value="${categor.name}" autocomplete="off"
                                             ></input>
                                         </div>
                                     </div>
@@ -197,21 +197,21 @@
                                 <div class="modal-body">
                                     <div th:object="${product}" class="form-group">
                                         <label>Название</label>
-                                        <input required="" type="text" class="form-control"
+                                        <input required="" type="text" class="form-control" autocomplete="off"
                                                th:id="addName+${categor.id}"
                                                name="name" placeholder="Название"
                                         ></input>
                                     </div>
                                     <div class="form-group">
                                         <label>Описание</label>
-                                        <input type="text" class="form-control" th:id="addDes+${categor.id}"
+                                        <input type="text" class="form-control" th:id="addDes+${categor.id}" autocomplete="off"
                                                name="description"
                                                placeholder="Описание"
                                         ></input>
                                     </div>
                                     <div class="form-group">
                                         <label>Цена</label>
-                                        <input type="text" class="form-control" th:id="addCost+${categor.id}"
+                                        <input type="text" class="form-control" th:id="addCost+${categor.id}" autocomplete="off"
                                                name="cost"
                                                placeholder="Цена"
                                         ></input>
@@ -305,11 +305,11 @@
                                             <label>Название</label>
                                             <input type="text" readonly="readonly" class="form-control" id="deleteCat"
                                                    name="name"
-                                                   th:value="${categor.name}"
+                                                   th:value="${categor.name}" autocomplete="off"
                                             ></input>
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-lg btn-primary btn-block" name="del"
+                                    <button type="submit" class="btn btn-lg btn-primary btn-block" name="del" autocomplete="off"
                                             th:value="${categor.id}">
                                         Удалить
                                     </button>
@@ -322,7 +322,6 @@
                         </div>
                     </form>
                 </div>
-
             </div>
         </div>
         <form role="form" method="post" action="/boss/menu/addCategory" style="margin: 10px auto; width: 50%">
@@ -338,7 +337,7 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label>Название</label>
-                                <input required="" type="text" class="form-control" id="loginProd2" name="name"
+                                <input required="" type="text" class="form-control" id="loginProd2" name="name" autocomplete="off"
                                 ></input>
                             </div>
                         </div>
@@ -368,13 +367,13 @@
 
                             ></input>
                             <h4><label>Название</label></h4>
-                            <input type="text" class="form-control"
+                            <input type="text" class="form-control" autocomplete="off"
                                    id="d_name"
                             ></input>
                         </div>
                         <div class="form-group">
                             <h4><label>Описание</label></h4>
-                            <input type="text" class="form-control"
+                            <input type="text" class="form-control" autocomplete="off"
                                    id="d_des"
                                    name="description"
 
@@ -384,7 +383,7 @@
                             <h4><label>Цена</label></h4>
                             <input type="text" class="form-control"
                                    id="d_cost"
-                                   pattern="\d+" title="только цифры"
+                                   pattern="\d+" title="только цифры" autocomplete="off"
 
                             ></input>
                         </div>
@@ -501,7 +500,6 @@
 </script>
 <script>
     function editProd(id) {
-        alert("pop")
         var formData = {
             id: $("#updId" + id).val(),
             name: $("#updName" + id).val(),

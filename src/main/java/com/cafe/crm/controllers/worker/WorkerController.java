@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 
 @Controller
 public class WorkerController {
@@ -41,53 +43,31 @@ public class WorkerController {
 	public void logout() {
 	}
 
-	@RequestMapping(value = "/manager/changePassword", method = RequestMethod.POST)
+
+	@RequestMapping(path = {"/manager/changePassword", "/boss/changePassword"}, method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> managerPasword(@RequestParam(name = "old") String oldPassword,
-											@RequestParam(name = "new") String newPassword,
-											@RequestParam(name = "secondNew") String secondNewPassword) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (!(auth instanceof AnonymousAuthenticationToken)) {
-			UserDetails userDetails = (UserDetails) auth.getPrincipal();
-			Manager manager = managerService.getUserByLogin(userDetails.getUsername());
-			if (oldPassword.equals(manager.getPassword())) {
-				if (newPassword.equals(secondNewPassword)) {
-					manager = managerService.getUserByLogin(userDetails.getUsername());
+	public ResponseEntity<?> changePassword(@RequestParam(name = "old") String oldPassword,
+								 @RequestParam(name = "new") String newPassword,
+								 @RequestParam(name = "secondNew") String secondNewPassword,                                           Authentication auth, HttpServletRequest request) {
+		UserDetails userDetails = (UserDetails) auth.getPrincipal();
+		String password = userDetails.getPassword();
+		String login = userDetails.getUsername();
+		Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
+		if (newPassword.equals(secondNewPassword) && oldPassword.equals(password)) {
+			roles.forEach(role -> {
+				if (role.getAuthority().equals("BOSS")) {
+					Boss boss = bossService.getUserByLogin(login);
+					boss.setPassword(newPassword);
+					bossService.save(boss);
+
+				} else if (role.getAuthority().equals("MANAGER")) {
+					Manager manager = managerService.getUserByLogin(login);
 					manager.setPassword(newPassword);
 					managerService.save(manager);
 				}
-				return new ResponseEntity<>(HttpStatus.OK);
-			} else {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-			}
-		} else {
-
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Неизвестная ошибка");
+			});
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
-	}
-	@RequestMapping(value = "/boss/changePassword", method = RequestMethod.POST)
-	@ResponseBody
-	public ResponseEntity<?> bossPassword(@RequestParam(name = "new") String newPassword,
-										  @RequestParam(name = "old") String oldPassword,
-										  @RequestParam(name = "secondNew") String secondNewPassword) {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (!(auth instanceof AnonymousAuthenticationToken)) {
-			UserDetails userDetails = (UserDetails) auth.getPrincipal();
-			Boss boss = bossService.getUserByLogin(userDetails.getUsername());
-			if (oldPassword.equals(boss.getPassword())) {
-				if (newPassword.equals(secondNewPassword)) {
-					boss = bossService.getUserByLogin(userDetails.getUsername());
-					boss.setPassword(newPassword);
-					bossService.save(boss);
-				}
-				return new ResponseEntity<>(HttpStatus.OK);
-			} else {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-			}
-		} else {
-
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Неизвестная ошибка");
-		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 	}
 }
