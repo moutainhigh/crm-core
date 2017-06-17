@@ -73,8 +73,10 @@ public class MenuBossContoller {
 	public String updCategory(@RequestParam(name = "upd") Long id,
 							  @RequestParam(name = "name") String name) {
 		Category category = categoriesService.getOne(id);
-		category.setName(name);
-		categoriesService.saveAndFlush(category);
+		if(category!=null) {
+			category.setName(name);
+			categoriesService.saveAndFlush(category);
+		}
 		return "redirect:/boss/menu/";
 	}
 
@@ -95,16 +97,19 @@ public class MenuBossContoller {
 								   @RequestParam("cost") Double cost
 	) {
 		Category category = categoriesService.getOne(idCat);
-		Product product = new Product();
-		product.setCategory(category);
-		product.setName(name);
-		product.setCost(cost);
-		product.setDescription(des);
-		productService.saveAndFlush(product);
-		category.getProducts().add(product);
-		categoriesService.saveAndFlush(category);
+		if(category!=null) {
+			Product product = new Product();
+			product.setCategory(category);
+			product.setName(name);
+			product.setCost(cost);
+			product.setDescription(des);
+			productService.saveAndFlush(product);
+			category.getProducts().add(product);
+			categoriesService.saveAndFlush(category);
+			return new ResponseEntity<>(product.getId(), HttpStatus.OK);
+		}
+		else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-		return new ResponseEntity<>(product.getId(), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/addCategory", method = RequestMethod.POST)
@@ -118,7 +123,8 @@ public class MenuBossContoller {
 
 	@RequestMapping(value = "/deleteCat", method = RequestMethod.POST)
 	public String deleteCategories(@RequestParam(name = "del") Long id) {
-		if (id != null) {
+		Category category = categoriesService.getOne(id);
+		if (category != null) {
 			menuService.getOne(1L).getCategories().remove(categoriesService.getOne(id));
 			categoriesService.delete(id);
 		}
