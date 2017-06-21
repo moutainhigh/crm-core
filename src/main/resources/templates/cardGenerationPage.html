@@ -23,10 +23,10 @@
     </script>
 </head>
 <body>
-
+<div th:replace="bossnavbar :: bossNavbar">
+</div><!--/.navbar -->
 <div class="class container">
-    <div th:replace="bossnavbar :: bossNavbar">
-    </div><!--/.navbar -->
+
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="margin-top: 100px">
         <h1 align="center" style="color: #5bc0de">FAQ</h1>
         <div class="panel panel-default">
@@ -161,7 +161,7 @@
         <input class="form-control" id="sr2" type="text" th:value="dPrk5bjlLYODt2tSXgYJdy5QRbC6jcMkvGCVc4lV"  name="secretKey" />
         <br></br>
 
-        <h4 style="color: #5bc0de">Ссылка</h4>
+        <h4 style="color: #5bc0de" title = "Ссылка для генерации qr кода">Ссылка</h4>
         <input type="text" class="form-control" placeholder="Ссылка"  name="link"/>
         <br></br>
         <h4 style="color: #5bc0de">Сколько Карт Сгенерировать?</h4>

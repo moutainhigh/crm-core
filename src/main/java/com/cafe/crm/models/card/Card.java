@@ -12,6 +12,9 @@ public class Card {
 	@GeneratedValue
 	private Long id;
 
+	@Column(unique = true)
+	private String phoneNumber;
+
 	private String token;
 
 	private String name;
@@ -39,6 +42,14 @@ public class Card {
 	private String link;
 
 	public Card() {
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
 	public Long getId() {

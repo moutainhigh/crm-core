@@ -48,7 +48,7 @@
                 </div>
                 <div class="modal-body" style="width:300px;">
                     <div th:each="calculate : ${listCalculate}">
-                        <form method="post" action="/add-card-to-calculate">
+                        <form method="post" action="/manager/add-card-to-calculate">
                             <input type="hidden" name="idCard" th:value="${card.id}"/>
                             <input type="hidden" name="idCalculate" th:value="${calculate.id}"/>
                             <button type="submit" class="btn btn-default"

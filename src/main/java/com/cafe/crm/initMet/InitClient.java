@@ -41,6 +41,7 @@ public class InitClient {
         card.setDiscount(10L);
         card.setPhoto("https://pp.userapi.com/c636325/v636325810/41955/hBIdPv42Q38.jpg");
         card.setVisitDate(LocalDate.now());
+        card.setPhoneNumber("+7(123)123-12-12");
         cardService.save(card);
 
         Card card1 = new Card();
@@ -49,6 +50,7 @@ public class InitClient {
         card1.setDiscount(15L);
         card1.setPhoto("http://usiter.com/uploads/20111118/zhivotnie+koshki+kartinka+s+malenkim+kotyonkom+35121656913.jpg");
         card1.setVisitDate(LocalDate.now());
+        card1.setPhoneNumber("+7(123)123-22-22");
         cardService.save(card1);
 
     }
