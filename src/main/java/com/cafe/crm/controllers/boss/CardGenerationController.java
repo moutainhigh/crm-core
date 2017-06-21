@@ -22,6 +22,7 @@ import java.net.URL;
 import java.util.UUID;
 
 @Controller
+@RequestMapping("/boss")
 public class CardGenerationController {
 
 	@Autowired

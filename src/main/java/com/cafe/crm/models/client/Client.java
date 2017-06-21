@@ -1,31 +1,127 @@
 package com.cafe.crm.models.client;
 
+import com.cafe.crm.models.card.Card;
+
 import javax.persistence.*;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "clients")
+@Table(name = "client")
 public class Client {
 	@Id
 	@GeneratedValue
 	private Long id;
 
-	@Size(min = 1, max = 30)
-	private String description = "Нет описания";
+	@Size(max = 30)
+	private String description = "";
 
-	private LocalTime timeStart = LocalTime.now().withSecond(0);
+	private LocalTime timeStart = LocalTime.now().withSecond(0).withNano(0);
 
-	private Long totalNumber = 0L;
+	private boolean state = true;
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Calculate.class)
-	@JoinTable(name = "clients_calculations",
-			joinColumns = {@JoinColumn(name = "client_id")},
-			inverseJoinColumns = {@JoinColumn(name = "calculate_id")})
-	private Calculate calculate;
+	@NotNull
+	private Long discount = 0L;
+
+	private Long discountWithCard = 0L;
+
+	private Double allPrice = 0D;
+
+	private Long cache = 0L;
+
+	private LocalTime passedTime = LocalTime.of(0,0,0);
+
+	private Double priceMenu = 0D;
+
+	private Double priceTime = 0D;
+
+	private Long payWithCard = 0L;
+
+	@ManyToOne
+	private Card card;
 
 	public Client() {
+	}
+
+	public Long getDiscountWithCard() {
+		return discountWithCard;
+	}
+
+	public void setDiscountWithCard(Long discountWithCard) {
+		this.discountWithCard = discountWithCard;
+	}
+
+	public Card getCard() {
+		return card;
+	}
+
+	public void setCard(Card card) {
+		this.card = card;
+	}
+
+	public Long getCache() {
+		return cache;
+	}
+
+	public void setCache(Long cache) {
+		this.cache = cache;
+	}
+
+	public boolean isState() {
+		return state;
+	}
+
+	public void setState(boolean state) {
+		this.state = state;
+	}
+
+	public Long getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Long discount) {
+		this.discount = discount;
+	}
+
+	public Double getAllPrice() {
+		return allPrice;
+	}
+
+	public void setAllPrice(Double allPrice) {
+		this.allPrice = allPrice;
+	}
+
+	public LocalTime getPassedTime() {
+		return passedTime;
+	}
+
+	public void setPassedTime(LocalTime passedTime) {
+		this.passedTime = passedTime;
+	}
+
+	public Double getPriceMenu() {
+		return priceMenu;
+	}
+
+	public void setPriceMenu(Double priceMenu) {
+		this.priceMenu = priceMenu;
+	}
+
+	public Double getPriceTime() {
+		return priceTime;
+	}
+
+	public void setPriceTime(Double priceTime) {
+		this.priceTime = priceTime;
+	}
+
+	public Long getPayWithCard() {
+		return payWithCard;
+	}
+
+	public void setPayWithCard(Long payWithCard) {
+		this.payWithCard = payWithCard;
 	}
 
 	public Long getId() {
@@ -50,22 +146,6 @@ public class Client {
 
 	public void setTimeStart(LocalTime timeStart) {
 		this.timeStart = timeStart;
-	}
-
-	public Long getTotalNumber() {
-		return totalNumber;
-	}
-
-	public void setTotalNumber(Long totalNumber) {
-		this.totalNumber = totalNumber;
-	}
-
-	public Calculate getCalculate() {
-		return calculate;
-	}
-
-	public void setCalculate(Calculate calculate) {
-		this.calculate = calculate;
 	}
 
 	@Override

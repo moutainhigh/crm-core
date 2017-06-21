@@ -22,9 +22,9 @@ public class Card {
 
 	private Long discount = 0L;
 
-	private Double balance = 0.0;
+	private Long balance = 0L;
 
-	private Double spend = 0.0;
+	private Long spend = 0L;
 
 	private LocalDate visitDate;
 
@@ -41,53 +41,6 @@ public class Card {
 	public Card() {
 	}
 
-	public String getLink() {
-		return link;
-	}
-
-	public void setLink(String link) {
-		this.link = link;
-	}
-
-	public String getAccessKey() {
-		return accessKey;
-	}
-
-	public void setAccessKey(String accessKey) {
-		this.accessKey = accessKey;
-	}
-
-	public String getSecretKey() {
-		return secretKey;
-	}
-
-	public void setSecretKey(String secretKey) {
-		this.secretKey = secretKey;
-	}
-
-	public File getQrCode() {
-		return qrCode;
-	}
-
-	public String getKeyNameQrCode() {
-		return keyNameQrCode;
-	}
-
-	public void setKeyNameQrCode(String keyNameQrCode) {
-		this.keyNameQrCode = keyNameQrCode;
-	}
-
-	public void setQrCode(File qrCode) {
-		this.qrCode = qrCode;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getEmail() {
-		return email;
-	}
 	public Long getId() {
 		return id;
 	}
@@ -120,6 +73,14 @@ public class Card {
 		this.photo = photo;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public Long getDiscount() {
 		return discount;
 	}
@@ -128,19 +89,19 @@ public class Card {
 		this.discount = discount;
 	}
 
-	public Double getBalance() {
+	public Long getBalance() {
 		return balance;
 	}
 
-	public void setBalance(Double balance) {
+	public void setBalance(Long balance) {
 		this.balance = balance;
 	}
 
-	public Double getSpend() {
+	public Long getSpend() {
 		return spend;
 	}
 
-	public void setSpend(Double spend) {
+	public void setSpend(Long spend) {
 		this.spend = spend;
 	}
 
@@ -150,6 +111,46 @@ public class Card {
 
 	public void setVisitDate(LocalDate visitDate) {
 		this.visitDate = visitDate;
+	}
+
+	public File getQrCode() {
+		return qrCode;
+	}
+
+	public void setQrCode(File qrCode) {
+		this.qrCode = qrCode;
+	}
+
+	public String getKeyNameQrCode() {
+		return keyNameQrCode;
+	}
+
+	public void setKeyNameQrCode(String keyNameQrCode) {
+		this.keyNameQrCode = keyNameQrCode;
+	}
+
+	public String getAccessKey() {
+		return accessKey;
+	}
+
+	public void setAccessKey(String accessKey) {
+		this.accessKey = accessKey;
+	}
+
+	public String getSecretKey() {
+		return secretKey;
+	}
+
+	public void setSecretKey(String secretKey) {
+		this.secretKey = secretKey;
+	}
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
 	}
 
 	@Override

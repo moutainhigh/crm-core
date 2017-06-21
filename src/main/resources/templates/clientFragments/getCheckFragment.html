@@ -5,132 +5,52 @@
 
 <div th:fragment="checkModal">
 
+    <style> .cent {  text-align: center;} </style>
 
-    <div th:id="'checkModal' + ${calculate.id}" class="modal"><!---->
+    <button th:onclick="'ajaxModal(\'' + ${calculate.id} + '\');'" style="float: right" class="btn btn-danger" data-toggle="modal" th:href="'#checkModal' + ${calculate.id}">
+        Рассчитать
+    </button>
+    <br/><br/>
+    <div th:id="'checkModal' + ${calculate.id}" class="modal"><!--class="modal "-->
+        <div class="modal-dialog " style="width: 1000px;margin-top: 50px">
+            <div class="modal-content" style="height:630px;">
+                <button style="background: rgba(170,170,170,0);border: none;float: right;margin-top: 10px;margin-right: 10px" type="button" data-dismiss="modal">
+                    <img src="http://iloveislam.ru/frontend/web/image/6.png" width="30px" height="30px"/>
+                </button>
+                <p th:id="'head' + ${calculate.id}" style="font-size: 30px;margin-left: 10px;margin-top: 20px"> Пусто </p>
+                <div class="modal-body">
+                    <div style="width: 968px; height: 400px;border-radius:5px;box-shadow: 0px 0px 2px 1px; overflow: scroll">
 
-        <div class="modal-dialog " style="width: 300px;">
-            <div class="modal-content">
-                <div th:id="'v4' + ${calculate.id}" style="font-size: 25px" class="modal-header">null
-                </div>
-                <div class="modal-body" th:style="${calculate.getCard()}? 'width:320px;' : 'width:300px;'">
+                        <table class="table ">
 
-                    <div style="width: 190px;float: left;font-size: 18px;text-align: left">
-                        Кол-во человек:
+                            <thead >
+                            <tr style="font-size: 17px">
+                                <th class="cent" style="text-align: center;">Карта</th>
+                                <th class="cent">Описание</th>
+                                <th class="cent">Время</th>
+                                <th class="cent">₽ за время</th>
+                                <th class="cent">Заказ</th>
+                                <th class="cent"> Скидка</th>
+                                <th class="cent">С карты</th>
+                                <th class="cent">Кэш</th>
+                            </tr>
+
+                            </thead >
+
+                            <tbody th:id="'tb' + ${calculate.id}" style="font-size: 20px">
+
+                            </tbody>
+                        </table>
                     </div>
+                    <p style="font-size: 30px;margin-left: 700px;float: left">Карты:<br/>Кэш:</p>
+                    <p style="text-align:center;font-size: 30px;float: left" th:id="'all' + ${calculate.id}"></p>
 
-                   <!-- <form th:id="'formCalculate' + ${calculate.id}" action="/calculate-price" method="post">-->
-                        <input th:id="'i1' + ${calculate.id}" type="hidden" name="flag" value="false"/>
-
-                        <input th:form="'closeClientFrorm' + ${calculate.id}" th:id="'i2' + ${calculate.id}" type="hidden" name="clientId"/>
-
-                        <input th:id="'i3' + ${calculate.id}" type="hidden" name="calculateId" th:value="${calculate.id}"/>
-
-
-                            <select th:id="'i4' + ${calculate.id}" name="calculateNumber" class="form-control" th:onchange="'ajax(\'' + ${calculate.id} + '\');'"
-                                    style="width:70px;height: 34px;font-size: 17px; float: left;">
-
-                                <option value="1">1</option>
-
-                            </select>
-
-                    <br/>
-                    <div style="width: 170px;float: left;font-size: 18px;margin-top: 5px;text-align: left">
-                        Времени прошло:
-                    </div>
-
-                    <div th:id = "'v1' + ${calculate.id}" style="width: 100px;float: left;font-size: 25px;"></div>
-                    <br/><br/><br/>
-
-
-
-                    <div style="width: 170px;float: left;font-size: 18px;text-align: left">
-                        Цена за время:
-                    </div>
-                    <div th:id="'v2' + ${calculate.id}" style="width: 100px;float: left;font-size: 25px;" ></div>
-                    <br/>
-                    <hr/>
-
-                    <div class="dropdown" style="float: left;">
-                        <button data-toggle="dropdown" class="dropdown-toggle btn btn-primary">
-                            Заказы
-                            <b class="caret"></b>
-                        </button>
-                        <div class="dropdown-menu" style="width: 180px">
-                            <button style="float: left" class="btn btn-default">Добавить</button>
-                            <button style="float: right" class="btn btn-default">Всё</button>
-                            <br/><br/>
-                            <input type="checkbox" class="form-control" style="width: 18px;height:18px;float: left"/>
-                            <div style="font-size: 18px">Салат - 250.0р</div>
-                            <br/>
-                            <input type="checkbox" class="form-control" style="width: 18px;height:18px;float: left"/>
-                            <div style="font-size: 18px">Суп - 150.0р</div>
-                            <br/>
-                            <input type="checkbox" class="form-control" style="width: 18px;height:18px;float: left"/>
-                            <div style="font-size: 18px">Отбивная - 500.0р</div>
-                            <br/>
-                        </div>
-                    </div>
-                    <br/><br/>
-                    <div style="width: 170px;float: left;font-size: 18px;margin-top: 3px;text-align: left">
-                        Цена заказа:
-                    </div>
-                    <div style="width: 100px;float: left;font-size: 23px;">0р</div>
-                    <br/>
-                    <hr/>
-
-                    <div style="width: 160px;float: left;font-size: 18px;margin-top: 5px;text-align: left">
-                        <p th:text="${calculate.getCard()} ? 'Скидка(+'+${calculate.getCard().discount} +'%):' : 'Скидка:'"></p>
-                    </div>
-                    <button style="float:left;background: rgba(255,0,0,0);border: none;height: 33px" th:onclick="'ajax(\'' + ${calculate.id} + '\');'">
-                        <img width="20px" height="20px"
-                             src="http://icon-icons.com/icons2/510/PNG/512/checkmark_icon-icons.com_50429.png"/>
-                    </button>
-
-                    <input th:id="'i5' + ${calculate.id}" style="width:70px;font-size: 20px;float: left;" class="form-control" type="text" name="discount"
-                           value="0" required=""/>
-
-                    <br/><br/>
-
-                    <div style="width: 170px;float: left;font-size: 18px;margin-top: 5px;text-align: left;">
-                        Сумма к оплате наличными:
-                    </div>
-
-                    <div th:id="'v3' + ${calculate.id}" style="width: 100px;float: left;font-size: 25px;" ></div>
-                    <hr style="margin-top: 65px;margin-bottom: 0px"/>
-                    <div style="height:100px;" th:if="${calculate.getCard()}">
-
-                        <h4 style="float: left">Использовать карту:</h4>
-                        <button style="float:left;background: rgba(255,255,255,0);border: none;margin-left: 50px"
-                                th:onclick="'payWithCard(\'' + ${calculate.id} +'\');'">
-                            <img width="35px" height="35px"
-                                 src="http://icon-icons.com/icons2/38/PNG/512/carduse_card_payment_5122.png"/>
-                        </button>
-                        <div style="float: left;font-size: 18px;width: 170px;text-align: left">К оплате с карты:</div>
-                        <div th:id="'v5' + ${calculate.id}" style="float: left;font-size: 25px;width: 100px" ></div>
-                    </div>
-
-                    <br/>
-
-                    <div style="height: 40px">
-                        <form th:id="'closeClientFrorm' + ${calculate.id}" method="post" action="/close-client">
-                            <input type="hidden" th:value="${calculate.id}" name="calculateId"/>
-                            <button
-                                    class="btn btn-danger" type="submit" style="float:left;margin-right: 20px">
-                                Раcсчитано
-                            </button>
-                        </form>
-
-
-                        <button data-dismiss="modal" onclick="location.reload()"
-                                class="btn btn-danger" style="float:left;margin-left:60px">
-                            Закрыть
-                        </button>
-
-                    </div>
+                    <button type="submit" th:form="'formTest' + ${calculate.id}" formaction="/manager/close-client" style="font-size:20px;float: left;" class="btn btn-danger">Рассчитано</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 </body>
 </html>

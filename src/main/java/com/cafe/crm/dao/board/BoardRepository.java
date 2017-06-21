@@ -1,4 +1,4 @@
-package com.cafe.crm.dao.client;
+package com.cafe.crm.dao.board;
 
 import com.cafe.crm.models.client.Board;
 import org.springframework.data.jpa.repository.JpaRepository;

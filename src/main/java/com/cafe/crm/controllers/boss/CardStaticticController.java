@@ -1,8 +1,8 @@
 package com.cafe.crm.controllers.boss;
 
 import com.cafe.crm.models.property.PropertyWrapper;
+import com.cafe.crm.service_abstract.cardService.CardService;
 import com.cafe.crm.service_abstract.property.PropertyService;
-import com.cafe.crm.service_impl.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

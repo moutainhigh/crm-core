@@ -1,62 +1,43 @@
 package com.cafe.crm.models.client;
 
 import com.cafe.crm.models.card.Card;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalTime;
-import java.util.Set;
+import java.util.List;
 
 @Entity
-@Table(name = "calculations")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Table(name = "calculation")
 public class Calculate implements Serializable{
 	@Id
 	@GeneratedValue
 	private Long id;
 
 	@NotNull
-	@Size(min = 1, max = 30)
+	@Size(max = 30)
 	private String description;
-
-	private String descriptionCheck;
 
 	private boolean state = true;
 
-	private Double spend = 0.0;
-	@NotNull
-	private Long discount = 0L;
-	@NotNull
-	private Long calculateNumber = 0L;
+	@OneToMany
+	private List<Client> client;
 
-	private Double allPrice = 0.0;
-
-	private LocalTime passedTime = LocalTime.of(0,0,0);
-
-	private Double priceMenu = 0.0;
-
-	private Double priceTime = 0.0;
-
-	private Double payWithCard = 0.0;
-
-	private Long totalNumber = 0L;
-
-	@OneToMany(fetch = FetchType.EAGER, targetEntity = Client.class)
-	@JoinTable(name = "clients_calculations",
-			joinColumns = {@JoinColumn(name = "calculate_id")},
-			inverseJoinColumns = {@JoinColumn(name = "client_id")})
-	private Set<Client> client;
-
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Board.class)
+	@ManyToOne
 	private Board board;
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Card.class)
-	private Card card;
+	@ManyToMany
+	private List<Card> cards;
 
 	public Calculate() {
+	}
+
+	public List<Card> getCards() {
+		return cards;
+	}
+
+	public void setCards(List<Card> cards) {
+		this.cards = cards;
 	}
 
 	public Long getId() {
@@ -75,14 +56,6 @@ public class Calculate implements Serializable{
 		this.description = description;
 	}
 
-	public String getDescriptionCheck() {
-		return descriptionCheck;
-	}
-
-	public void setDescriptionCheck(String descriptionCheck) {
-		this.descriptionCheck = descriptionCheck;
-	}
-
 	public boolean isState() {
 		return state;
 	}
@@ -91,83 +64,11 @@ public class Calculate implements Serializable{
 		this.state = state;
 	}
 
-	public Double getSpend() {
-		return spend;
-	}
-
-	public void setSpend(Double spend) {
-		this.spend = spend;
-	}
-
-	public Long getDiscount() {
-		return discount;
-	}
-
-	public void setDiscount(Long discount) {
-		this.discount = discount;
-	}
-
-	public Long getCalculateNumber() {
-		return calculateNumber;
-	}
-
-	public void setCalculateNumber(Long calculateNumber) {
-		this.calculateNumber = calculateNumber;
-	}
-
-	public Double getAllPrice() {
-		return allPrice;
-	}
-
-	public void setAllPrice(Double allPrice) {
-		this.allPrice = allPrice;
-	}
-
-	public LocalTime getPassedTime() {
-		return passedTime;
-	}
-
-	public void setPassedTime(LocalTime passedTime) {
-		this.passedTime = passedTime;
-	}
-
-	public Double getPriceMenu() {
-		return priceMenu;
-	}
-
-	public void setPriceMenu(Double priceMenu) {
-		this.priceMenu = priceMenu;
-	}
-
-	public Double getPriceTime() {
-		return priceTime;
-	}
-
-	public void setPriceTime(Double priceTime) {
-		this.priceTime = priceTime;
-	}
-
-	public Double getPayWithCard() {
-		return payWithCard;
-	}
-
-	public void setPayWithCard(Double payWithCard) {
-		this.payWithCard = payWithCard;
-	}
-
-	public Long getTotalNumber() {
-		return totalNumber;
-	}
-
-	public void setTotalNumber(Long totalNumber) {
-		this.totalNumber = totalNumber;
-	}
-
-	public Set<Client> getClient() {
+	public List<Client> getClient() {
 		return client;
 	}
 
-	public void setClient(Set<Client> client) {
+	public void setClient(List<Client> client) {
 		this.client = client;
 	}
 
@@ -177,14 +78,6 @@ public class Calculate implements Serializable{
 
 	public void setBoard(Board board) {
 		this.board = board;
-	}
-
-	public Card getCard() {
-		return card;
-	}
-
-	public void setCard(Card card) {
-		this.card = card;
 	}
 
 	@Override

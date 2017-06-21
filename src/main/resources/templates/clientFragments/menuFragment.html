@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" th:href="@{/st.css}" type="text/css"/>
+    <script th:src="@{/filter.js}"></script>
+</head>
+<body>
+<div th:fragment="menuModal">
+    <button style="float:left; margin-left: 20px" class="btn btn-default"
+            data-toggle="modal" th:href="'#menuModal' + ${calculate.id}"> Меню
+    </button>
+    <div th:id="'menuModal' + ${calculate.id}" class="modal">
+        <div class="modal-dialog" style="width: 900px;margin-top: 50px">
+            <div class="modal-content" style="height: 600px">
+                <div class="modal-body">
+
+                    <div style="background: rgb(218,218,218);border-radius: 5px;float: left;height: 560px;">
+                        <input class="form-control" style="width:150px;" type="text"/>
+                        <center style="font-size: 25px;">
+                        <a style="color: black" data-toggle="tab">Всё</a>
+                        <p  th:each="categor : ${listMenu.categories}">
+                            <a style="color: black" th:id="'categor'+${categor.id}" data-toggle="tab" th:href="'#panel' + ${categor.id}"><p
+                                    th:text="${categor.name}"></p></a>
+                        </p>
+                        </center>
+                    </div>
+                    <div style=" float: left;margin-left:15px;background: rgb(246,246,246);width: 500px;height: 560px; border-radius: 5px">
+                        <center><input class="form-control" style="width:250px;" type="text"/></center>
+                        <div class="tab-content">
+                            <p th:each="cat : ${listMenu.categories}">
+                                <div th:id="'panel' + ${cat.id}" class="tab-pane">
+                                    <table class="table">
+                                        <thead>
+                                        <tr style="font-size: 17px">
+                                            <th>Название</th>
+                                            <th>Описание</th>
+                                            <th>Цена</th>
+                                            <th>Добавить</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                            <p  th:each="prod : ${cat.products}">
+                            <tr style="font-size: 20px">
+                            <td><p th:text="${prod.name} "></p></td>
+                            <td><p th:text="${prod.description} "></p></td>
+                            <td><p th:text="${prod.cost} + 'р'"></p></td>
+                            <td>
+                                <button style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;">
+                                    <img src="http://www.suttonflooring.co/images/Icon-check.png" width="25px"
+                                         height="25px"/>
+                                </button>
+                            </td>
+
+                            </tr>
+                            </p>
+                            </tbody>
+                            </table>
+
+                        </div>
+                        </p>
+
+                    </div>
+
+                </div>
+                <div style="background: rgb(218,218,218);border-radius: 5px;float: left;height: 560px;margin-left: 15px;font-size: 20px;width: 185px">
+                    <center>
+                        <p>Герман</p>
+                        <p>Меню на счете:</p>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>

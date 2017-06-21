@@ -9,13 +9,13 @@
 
 </head>
 <body>
+
 <div th:replace="managernavbar :: managerNavbar"></div>
 
 <div style="margin-top:52px">
-    <button class="btn btn-default" style="float: left">Редактирование столов</button>
 
-    <div class="container"
-         style=" box-shadow: 0 3px 6px 0; border-radius: 10px; background: #ffffff; min-width: 900px;width:900px; ">
+    <div class="container" style=" box-shadow: 0 3px 6px 0; border-radius: 10px;
+     background: #ffffff; width:950px; ">
 
         <!--modal window with create calculate-->
         <div th:replace="clientFragments/addCalculateFragment :: calculateModal"></div>
@@ -26,13 +26,14 @@
 
             <!--head panel -->
             <div class="panel panel-primary">
-                <div class="panel-heading" style="height: 50px">
+                <div class="panel-heading" style="height: 44px">
                     <div class="panel-title">
-                        <form style="float: left" method="post" action="/refresh-board"
+                        <form style="float: left" method="post" action="/manager/refresh-board"
                               th:id="'formRef'+${calculate.id}">
                             <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
 
-                            <select onchange="submit();" style="width:130px; float: left; height: 34px;font-size:18px "
+                            <select onchange="submit();"
+                                    style="width:130px; float: left; height: 34px;font-size:18px;margin-top: -5px;margin-left: -10px "
                                     class="form-control" th:form="'formRef'+${calculate.id}" name="boardId">
 
                                 <p th:each="b : ${listBoard}">
@@ -48,10 +49,16 @@
                             </select>
                         </form>
 
-                        <button th:onclick="'cookiePanel(\'' +'accord'+ ${calculate.id} + '\');'"
-                                style="float: left; width: 590px; word-wrap: break-word; font-size: 20px; height: 40px; text-align: center; background: rgba(255,0,0,0);border: none"
+                        <!--modal window with create calculate-->
+                        <div th:replace="clientFragments/addClientFragment :: clientModal"></div>
+                        <!-- -->
+
+                        <button th:id="'head1' + ${calculate.id}"
+                                th:onclick="'cookiePanel(\'' +'accord'+ ${calculate.id} + '\');'"
+                                style="float: left; width: 560px; word-wrap: break-word; font-size: 20px; height: 33px;
+                                 text-align: center; background: rgba(255,0,0,0);border: none;margin-top: -5px"
                                 data-toggle="collapse" th:href="'#accord' + ${calculate.id}"
-                                th:text="${calculate.description}" th:value="${calculate.id}">
+                                th:text="${calculate.description}">
                         </button>
                     </div>
                 </div>
@@ -66,108 +73,128 @@
                         }
                     </script>
 
-                    <div class="panel-body" style="background: #f0efee">
 
-                        <!--modal window with create client-->
-                        <div th:replace="clientFragments/addClientFragment :: clientModal"></div>
-                        <!-- -->
+                    <div class="panel-body" style="background: #f6f6f6">
+                        <table style="margin-top: -15px;" class="table ">
+                            <thead>
 
-                        <!--menu-->
-                        <div class="dropdown" style="float: left;margin-left: 15px;margin-right: 5px;">
-                            <button data-toggle="dropdown" class="dropdown-toggle btn btn-default">
-                                Меню
-                                <b class="caret"></b>
-                            </button>
-                            <div class="dropdown-menu" style=" width:130px;min-width: 130px">
-                                <div style="font-size: 20px">Салат</div>
-                                <div style="font-size: 20px">Суп</div>
-                                <div style="font-size: 20px">Отбивная</div>
-                                <button class="btn btn-primary">Добавить заказ</button>
-                            </div>
+                            <tr style="font-size: 17px">
+                                <th style="text-align: center;">Карта</th>
+                                <th style="text-align: center;">Описание</th>
+                                <th style="text-align: center;">Старт</th>
+                                <th style="text-align: center;"></th>
 
-                        </div>
-                        <!-- -->
+                                <th style="text-align: center;">Скидка</th>
+                                <th style="text-align: center;"> ₽ с карты</th>
+                                <th style="text-align: center;">Сумма</th>
+                                <th th:id="${calculate.id}">
+                                    <input th:id="'checked' + ${calculate.id}" type="checkbox"
+                                           th:onchange="'check(\'' + ${calculate.id} + '\')'"
+                                           class="form-control" style="width: 20px;height: 20px"/>
+                                </th>
 
-                        <center>
-                            <div style="float: left;height: 42px;" th:if="(${calculate.getCard()})">
+                                <form th:id="'formTest' + ${calculate.id}"
+                                      method="post">
+                                    <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
+                                </form>
+                            </tr>
 
-                                <h4 style="float: left;font-size: 20px; margin-left: 150px"
-                                    th:text="${calculate.getCard().name}"></h4>
-
-                                <img style="float:left;margin-left: 20px"
-                                     src="http://icon-icons.com/icons2/37/PNG/512/bagofmoney_dollar_4399.png"
-                                     width="30px"
-                                     height="30px"/>
-
-                                <h4 style="float: left;font-size: 20px;"
-                                    th:text="${calculate.getCard().balance} + 'р ' + '('+${calculate.getCard().discount} +'%)'"></h4>
-
-                            </div>
-
-                            <div style="float: left;width: 200px;margin-left: 200px"
-                                 th:if="(${calculate.getCard()} == null)">
-                                <h4 style="font-size: 20px;float: left">Карта не подключена</h4>
-
-                            </div>
-
-                        </center>
+                            </thead>
+                            <tbody style="font-size: 20px">
+                            <p th:each="client : ${calculate.client}">
+                                <tr>
 
 
-                        <button class="btn btn-primary" style="float: right; " data-toggle="modal" data-backdrop="false"
-                                th:href="'#checkModal' + ${calculate.id}"
-                                th:onclick="'clientId(\'' + ${calculate.id} + '\' , \'' + '-1' + '\');'">
-                            Общий расчет
-                        </button>
-                        <hr style="margin-top:50px;margin-bottom: 20px; height: 1px;background: rgba(0,0,0,0.24);"/>
+                                    <td>
+                                        <!-- Выбор карт-->
+                                        <form th:id="'cardSel' + ${client.id}" method="post"
+                                              action="/manager/add-card-on-client">
+                                            <input type="hidden" name="clientId" th:value="${client.id}"/>
+                                            <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
+                                            <select th:onchange="'ajaxCardDiscount(\'' + ${client.id} + '\');'" class="form-control" name="cardId"
+                                                    style="width: 130px; margin: auto; font-size: 17px;font-weight:bold">
+                                                <option value="-1"
+                                                        th:selected="${client.card} == null ? 'true' : 'false'">Нет
+                                                </option>
+                            <p th:each="card : ${calculate.cards}">
+                                <option th:text="${card.name} + ' ('+${card.balance}+ 'р, ' + ${card.discount} +'% )'"
+                                        th:value="${card.id}"
+                                        th:selected="(${client.card} == ${card}) ? 'true' : 'false' ">
 
-                        <h5 style="float: left; margin-left: 270px  ">Описание</h5>
-                        <h5 style="float: left;margin-left: 125px">Время создания</h5>
-                        <h5 style="float: left;margin-left: 20px">Осталось человек</h5>
-                        <br/>
+                                </option>
+                            </p>
+                            </select>
 
-                        <!--modal window check(calculate)-->
+
+                            </form>
+                            <!-- -->
+
+                            </td>
+
+
+                            <form th:id="'updateForm' + ${client.id}" action="/manager/update-fields-client"
+                                  method="post">
+                                <input type="hidden" name="clientId" th:value="${client.id}"/>
+
+                                <td>
+                                    <input autocomplete="off" th:id="'one' + ${client.id}"
+                                           th:onblur="'sub(\'' + ${client.id} + '\');'" class="form-control"
+                                           style="width:150px;margin: auto;font-size: 17px"
+                                           name="description" th:value="${client.description}" maxlength="30"/>
+                                </td>
+                                <td style="text-align: center">
+                                    <p th:text="${client.timeStart}"></p></td>
+                                <td style="text-align: center">
+
+                                </td>
+                                <td>
+                                    <p th:id = "'dopDiscount' + ${client.id}" style="float: left;" th:text="${client.discountWithCard} + '% + '"> </p>
+                                    <select th:id="'two' + ${client.id}" autocomplete="off" th:onchange="'sub(\'' + ${client.id} + '\');'" class="form-control" name="discount"
+                                            style="width: 90px; margin: auto; font-size: 17px;font-weight:bold">
+                                        <option value="0" th:selected="${client.discount} == 0 ? 'true' : 'false' ">Нет</option>
+                                        <option value="15" th:selected="${client.discount} == 15 ? 'true' : 'false' ">15% &emsp; Пенсионерам/Студентам</option>
+                                        <option value="25" th:selected="${client.discount} == 25 ? 'true' : 'false' ">25% &emsp; Праздничная</option>
+                                        <option value="35" th:selected="${client.discount} == 35 ? 'true' : 'false' ">35% &emsp; Админская</option>
+                                    </select>
+
+                                </td>
+                                <td>
+
+                                    <input autocomplete="off" th:id="'three' + ${client.id}"
+                                           th:onblur="'sub(\'' + ${client.id} + '\');'"
+                                           class="form-control"
+                                           style="width:85px;margin: auto;font-size: 20px"
+                                           name="payWithCard" maxlength="7" th:value="${client.payWithCard}"/>
+                                </td>
+                                <td th:id="'price' + ${client.id}" style="text-align: center">
+                                </td>
+
+                            </form>
+                            <td>
+                                <input th:form="'formTest' + ${calculate.id}" th:class="'class' + ${calculate.id}"
+                                       th:id="'test' + ${client.id}" type="checkbox" class="form-control"
+                                       style="width: 20px;height: 20px;margin-top: 5px" th:value="${client.id}"
+                                       name="clientsId"/>
+                            </td>
+                            </tr>
+                            </p>
+                            </tbody>
+                        </table>
+                        <button style="float: left; margin-left: 700px" class="btn btn-primary">Заказ</button>
                         <div th:replace="clientFragments/getCheckFragment :: checkModal"></div>
-                        <!-- -->
 
-                        <div th:each="client : ${calculate.getClient()}">
-
-                            <center>
-                                <div style="background: #dbdbdd;margin-top: 15px; border-radius: 3px;height: 34px;width: 600px">
-
-                                    <button class="btn btn-default" type="submit" data-toggle="modal"
-                                            data-backdrop="false"
-                                            th:href="'#checkModal' + ${calculate.id}"
-                                            th:onclick="'clientId(\'' + ${calculate.id} + '\' , \'' + ${client.id} + '\');'"
-                                            style="float: left;margin-right:5px;">
-                                        <img width="16px" height="16px"
-                                             src="http://icon-icons.com/icons2/936/PNG/512/dollar-symbol_icon-icons.com_73598.png"/>
-                                    </button>
-
-
-                                    <h4 style="float: left; width: 280px; height: 1px;"
-                                        th:text="${client.description}"></h4>
-                                    <h4 style="float: left;width: 150px; height: 1px;"
-                                        th:text="${client.timeStart}"></h4>
-                                    <h4 style="float: left;width: 110px; height: 1px;"
-                                        th:text="${client.totalNumber}"></h4>
-
-                                </div>
-
-                            </center>
-
-
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div th:replace="managerChangePassword :: managerChangePassword">
-</div>
-<script type="text/javascript">
-    console.log(document.cookie);
 
+<script type="text/javascript">
+    ajax();
+    setInterval(ajax, 2000);
+
+    console.log(document.cookie);
     function cookiePanel(id) {
         if ($.cookie(id) == true.toString()) {
             $.cookie(id, "false");
@@ -176,63 +203,109 @@
         }
     }
 
-    function payWithCard(calculateId) {
-        var inp = document.getElementById("i1" + calculateId);
-        inp.value = true;
-        ajax(calculateId);
-        inp.value = false;
-    }
-
-    function clientId(calculateId, clientId) {
-        var inp = document.getElementById('i2' + calculateId);
-        inp.value = clientId;
-        ajax(calculateId);
-    }
-
-
-    function ajax(calculateId) {
-        var map = {
-            flag: $("#i1" + calculateId).val(),
-            clientId: $("#i2" + calculateId).val(),
-            calculateId: $("#i3" + calculateId).val(),
-            calculateNumber: $("#i4" + calculateId).val(),
-            discount: $("#i5" + calculateId).val()
-        };
+    function ajaxCardDiscount(id) {
 
         $.ajax({
             type: "POST",
-            url: "/calculate-price",
-            data: map,
-            success: function (data) {
-                $('#v4' + calculateId).html(data[0].descriptionCheck);
-                $('#v1' + calculateId).html(data[1]);
-                $('#v2' + calculateId).html(data[0].priceTime + "р");
-                $('#v3' + calculateId).html(data[0].allPrice + "р");
-                //<![CDATA[
-                var str;
-                if ($("#i2" + calculateId).val() != -1) {
-                    for (var i = 1; i <= data[0].totalNumber; i++) {
-                        if (i == data[0].calculateNumber) {
-                            str = str + '<option value=' + i + ' selected="">' + i + '</option>';
-                        } else {
-                            str = str + '<option value=' + i + '>' + i + '</option>';
-                        }
-                    }
-                } else {
-                    str = '<option value=' + data[0].calculateNumber + ' selected="">' + data[0].calculateNumber + '</option>';
-                }
+            url: "/manager/add-card-on-client",
+            data: $('#cardSel' + id).serialize(),
 
-                $('#i4' + calculateId).html(str);
-                $('#v5' + calculateId).html(data[0].payWithCard);
+            success: function (data) {
+                //<![CDATA[
+
+                    $('#dopDiscount' + id).html(data + '%' +  ' + ');
+
                 //]]>
             },
             error: function () {
-                alert('Возникла ошибка ajax: ');
+                console.log('ajaxCardDiscount сломался? ');
             }
         });
-
-
     }
+
+
+    function ajaxModal(id) {
+
+        $.ajax({
+            type: "POST",
+            url: "/manager/output-clients",
+            data: $('#formTest' + id).serialize(),
+
+            success: function (data) {
+                //<![CDATA[
+                if (data == "") {
+                    $('#tb' + id).html(" ");
+                } else {
+                    var allpr = 0;
+                    var payWithCard = 0;
+                    var str;
+                    for (var i = 0; i < data.length; i++) {
+                        var hours = +data[i].passedTime.hour < 10 ? ('0' + data[i].passedTime.hour) : data[i].passedTime.hour;
+                        var min = +data[i].passedTime.minute < 10 ? ('0' + data[i].passedTime.minute) : data[i].passedTime.minute;
+                        var time = hours + ':' + min;
+                        if (data[i].card == null) {
+                            str = str + '<tr><td class="cent">' + 'Нет' + '</td><td class="cent">' + data[i].description + '</td><td class="cent">' + time + '</td><td class="cent">' + data[i].priceTime + '</td><td class="cent"><button style="height: 30px" class="btn btn-primary"><p style="font-size: 20px;margin-top: -5px;width: 70px">0р</p></button></td><td class="cent">' + ((+data[i].discount) + (+data[i].discountWithCard)) + '</td><td class="cent">' + data[i].payWithCard + '</td><td class="cent">' + data[i].cache + '</td></tr>';
+                        } else {
+                            str = str + '<tr><td class="cent">' + data[i].card.name + '</td><td class="cent">' + data[i].description + '</td><td class="cent">' + time + '</td><td class="cent">' + data[i].priceTime + '</td><td class="cent"><button style="height: 30px" class="btn btn-primary"><p style="font-size: 20px;margin-top: -5px;width: 70px">0р</p></button></td><td class="cent">' + ((+data[i].discount) + (+data[i].discountWithCard)) + '</td><td class="cent">' + data[i].payWithCard + '</td><td class="cent">' + data[i].cache + '</td></tr>';
+                        }
+                        payWithCard += data[i].payWithCard;
+                        allpr += data[i].cache;
+                    }
+                    $('#head' + id).html($('#head1' + id).text())
+                    $('#all' + id).html(payWithCard + 'р<br/>' + allpr + 'р');
+                    $('#tb' + id).html(str);
+                }
+                //]]>
+            },
+            error: function () {
+                console.log('ajaxModal сломался? ');
+            }
+        });
+    }
+
+    function ajax() {
+
+        $.ajax({
+            type: "POST",
+            url: "/manager/calculate-price",
+            success: function (data) {
+                //<![CDATA[
+                for (var i = 0; i < data.length; i++) {
+                    $('#price' + data[i].id).html(data[i].allPrice);
+
+                    // $('#one' + data[i].id).val(data[i].description);
+                    //$('#two' + data[i].id).val(data[i].discount);
+                    // $('#three' + data[i].id).val(data[i].payWithCard);
+                }
+                //]]>
+            },
+            error: function () {
+                console.log('ajax сломался? ');
+            }
+        });
+    }
+
+    function check(id) {
+        if ($('#checked' + id).is(':checked')) {
+            $(".class" + id).prop("checked", true);
+        } else {
+            $(".class" + id).prop("checked", false);
+        }
+    }
+
+    function sub(id) {
+        //<![CDATA[
+        var one = $('#one' + id).val();
+        var two = $('#two' + id).val();
+        var three = $('#three' + id).val();
+        if (!isNaN(+three)) {
+            if (three != "") {
+                $('#updateForm' + id).submit();
+            }
+        }
+        //]]>
+    }
+
 </script>
 
 </body>

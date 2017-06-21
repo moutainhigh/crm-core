@@ -4,34 +4,33 @@
 </head>
 <body>
 <div th:fragment="clientModal">
-    <button class="btn btn-primary" data-toggle="modal"
-            th:href="'#clientModal' + ${calculate.id}"
-            style="float: left"><img width="10px" height="10px"
-                                     src="http://www.imbf.org/interesnye-stati/images/simvol-087.png"/>
+    <button data-toggle="modal"
+            th:href="'#clientModal' + ${calculate.id}" style="float: left;background: rgba(249,246,255,0);border: none;margin-top: -5px">
+        <img width="34px" height="33px" src="http://download.seaicons.com/icons/icons8/windows-8/512/Users-Add-User-icon.png"/>
     </button>
 
     <div th:id="'clientModal' + ${calculate.id}" class="modal fade">
-        <div class="modal-dialog " style="width: 300px;" role="document">
-            <div class="modal-content">
+        <div class="modal-dialog " style="width: 300px;margin-top: 50px" role="document">
+            <div class="modal-content" style="height:280px;">
                 <div class="modal-header">
                     <button class="close" type="button" data-dismiss="modal">×</button>
-                    <h4 class="modal-title">Добавление клиента</h4>
+                    <h4 style="color: black" class="modal-title">Добавление клиента</h4>
                 </div>
                 <div class="modal-body" style="width:300px;">
-                    <h4> Описание клиента </h4>
-                    <form th:id="'formMod1' + ${calculate.id}" action="/add-client"
+                    <h4 style="color: black"> Описание клиента </h4>
+                    <form th:id="'formMod1' + ${calculate.id}" action="/manager/add-client"
                           method="post">
 
-                        <input class="form-control" type="text" name="description" required=""/>
+                        <input autocomplete="off" style="font-size: 20px" class="form-control" type="text" name="description" maxlength="30" />
 
                         <input type="hidden" name="calculateId"
                                th:value="${calculate.id}"/>
 
-                        <h4 style="margin-right: 20px; float: left">Кол-во человек</h4>
+                        <h4 style="margin-right: 20px; float: left;color: black">Кол-во человек</h4>
 
-                        <input style="width: 90px;margin-right: 60px; float: left"
+                        <input autocomplete="off" style="width: 90px;margin-right: 60px; float: left;font-size: 20px"
                                class="form-control" type="text" name="number"
-                               list="data1" required=""/>
+                               list="data1" maxlength="2" required=""/>
                     </form>
                     <datalist id="data1">
                         <option value="1">1</option>
@@ -43,7 +42,9 @@
 
                     <br/>
                     <br/>
-                    <button th:form="'formMod1' + ${calculate.id}"
+                    <br/>
+                    <br/>
+                    <button style="float: right" th:form="'formMod1' + ${calculate.id}"
                             class="btn btn-primary" type="submit">
                         Создать
                     </button>
