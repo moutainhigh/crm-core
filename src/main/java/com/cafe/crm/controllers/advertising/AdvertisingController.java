@@ -34,11 +34,6 @@ public class AdvertisingController {
     @RequestMapping(path = "/advertising/file", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<?> sendAdvertisingFromImageFile(@RequestParam("subject") String subject, @RequestParam("urlToLink") String urlToLink, @RequestParam("file") MultipartFile file) {
-        try {
-            System.out.println(file.getBytes().length);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         advertisingService.sendAdvertisingFromImageFile(file, subject, urlToLink);
 
         return ResponseEntity.ok("Реклама успешно разослана!");

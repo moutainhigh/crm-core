@@ -37,7 +37,6 @@ public class CloudServiceImpl implements CloudService {
         if (data == null){
             throw new AdvertisingImageFileException("Не удалось загрузить файл на сервер!");
         }
-        System.out.println((String) data.get("url"));
         return (String) data.get("url");
 
     }
