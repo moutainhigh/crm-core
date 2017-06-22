@@ -272,7 +272,6 @@
                                             cost: $("#addCost" + id).val()
                                         }),
                                         success: function (result) {
-
                                             var button = '<a id="ins"  class="btn btn-primary btn-info" onclick="showModal(' + result + ')"  data-toggle="modal" >Редактировать </a>';
                                             var button2 = '<a id="del"  class="btn btn-primary btn-danger" onclick="del2(' + result + ')"   >Удалить </a>';
                                             var tr = '<tr id="tr' + result + '"><td>#</td><td id="b' + result + '"><p id="E' + result + '">' + setName + '</p></td><td id="c' + result + '">' + setDes + '</td><td id="d' + result + '">' + setCost + '</td><td>' + button + '</td><td>' + button2 + '</td></tr>';

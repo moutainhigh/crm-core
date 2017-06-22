@@ -29,4 +29,11 @@ public class BoardServiceImpl implements BoardService {
 		return boardRepository.findOne(id);
 	}
 
+	@Override
+	public void deleteById(Long id) {
+		boardRepository.delete(id);
+	}
+
+
+
 }

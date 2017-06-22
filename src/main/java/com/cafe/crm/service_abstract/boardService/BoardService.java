@@ -9,4 +9,6 @@ public interface BoardService {
 	 void delete(Board board);
 	 List<Board> getAll();
 	 Board getOne(Long id);
+	 void deleteById(Long id);
+
 }

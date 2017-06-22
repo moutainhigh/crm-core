@@ -10,4 +10,6 @@ public interface CalculateService {
 	 List<Calculate> getAll();
 	 Calculate getOne(Long id);
 	 List<Calculate> getAllOpen();
+
+
 }
