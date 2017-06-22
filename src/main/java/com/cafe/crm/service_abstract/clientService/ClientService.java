@@ -12,4 +12,5 @@ public interface ClientService {
 	List<Client> getAll();
 	Client getOne(Long id);
 	List<Client> getAllOpen();
+	List<Client> findByEmailNotNullAndAdvertisingIsTrue();
 }

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Рассылка рекламы</title>
+    <link rel="stylesheet" th:href="@{/css/advertising.css}" href="../../static/css/advertising.css" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/st.css}" type="text/css"/>
+    <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
+</head>
+<body>
+<div class="ad-status" th:if="${message}">
+    <p th:text="${message}"></p>
+</div>
+<div th:unless="${message}">
+    <div class="ad-status" th:if="${status}">
+        <p>Рассылка рекламы была успешно подключена.</p>
+    </div>
+    <div class="ad-status" th:unless="${status}">
+        <p>Рассылка рекламы была успешно отключена.</p>
+    </div>
+</div>
+</body>
+</html>

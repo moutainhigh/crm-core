@@ -19,6 +19,7 @@ import com.cafe.crm.models.worker.Worker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,7 +47,7 @@ public class InitMenu {
 	@Autowired
 	private ManagerRepository managerRepository;
 
-
+    @PostConstruct
 	public void init() {
 
 		Role roleBoss = new Role();

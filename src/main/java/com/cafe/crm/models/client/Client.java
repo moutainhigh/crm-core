@@ -1,6 +1,8 @@
 package com.cafe.crm.models.client;
 
 import com.cafe.crm.models.card.Card;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,6 +15,11 @@ public class Client {
 	@Id
 	@GeneratedValue
 	private Long id;
+
+	@Email
+	private String email;
+
+	private boolean advertising = true;
 
 	@Size(max = 30)
 	private String description = "";
@@ -146,6 +153,22 @@ public class Client {
 
 	public void setTimeStart(LocalTime timeStart) {
 		this.timeStart = timeStart;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public boolean isAdvertising() {
+		return advertising;
+	}
+
+	public void setAdvertising(boolean advertising) {
+		this.advertising = advertising;
 	}
 
 	@Override

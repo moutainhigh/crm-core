@@ -1,0 +1,16 @@
+advertising:
+  mail:
+    sender: smtp.gmail.com
+    image-view: media/mail/image-advertising
+    text-view: media/mail/text-advertising
+    disable-view: media/mail/disable-advertising
+    disable-subject: Отключение рекламной рассылки
+    enable-view: media/mail/enable-advertising
+
+  cloud:
+    name: hookahpacman
+    key: 172681431197699
+    secret: p1B4kuIACB-7avW2KXrAXgHuMj0
+
+site:
+  address: localhost:8080
