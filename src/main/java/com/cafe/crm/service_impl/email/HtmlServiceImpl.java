@@ -1,7 +1,7 @@
-package com.cafe.crm.service_impl.advertising;
+package com.cafe.crm.service_impl.email;
 
 
-import com.cafe.crm.service_abstract.advertising.AdvertisingHtmlCreator;
+import com.cafe.crm.service_abstract.email.HtmlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 @Component
-public class AdvertisingHtmlCreatorImpl implements AdvertisingHtmlCreator {
+public class HtmlServiceImpl implements HtmlService {
 
     private final TemplateEngine templateEngine;
 
@@ -17,11 +17,11 @@ public class AdvertisingHtmlCreatorImpl implements AdvertisingHtmlCreator {
     private String siteAddress;
 
     @Autowired
-    public AdvertisingHtmlCreatorImpl(TemplateEngine templateEngine) {
+    public HtmlServiceImpl(TemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
     }
 
-    public String getFromImage(String advertisingUrl, String view, String urlToLink, Long id, String token) {
+    public String getAdvertisingFromImage(String advertisingUrl, String view, String urlToLink, Long id, String token) {
         Context context = new Context();
         context.setVariable("advertisingUrl", advertisingUrl);
         context.setVariable("urlToLink", urlToLink);
@@ -31,7 +31,7 @@ public class AdvertisingHtmlCreatorImpl implements AdvertisingHtmlCreator {
         return templateEngine.process(view, context);
     }
 
-    public String getFromText(String advertisingText, String view, Long id, String token) {
+    public String getAdvertisingFromText(String advertisingText, String view, Long id, String token) {
         Context context = new Context();
         context.setVariable("advertisingText", advertisingText);
         context.setVariable("number", id);
@@ -40,11 +40,19 @@ public class AdvertisingHtmlCreatorImpl implements AdvertisingHtmlCreator {
         return templateEngine.process(view, context);
     }
 
-    public String getForDisable(String view, Long id, String token) {
+    public String getAdvertisingForDisable(String view, Long id, String token) {
         Context context = new Context();
         context.setVariable("number", id);
         context.setVariable("token", token);
         context.setVariable("siteAddress", siteAddress);
+        return templateEngine.process(view, context);
+    }
+
+    @Override
+    public String getBalanceInfoAfterDebiting(Long newBalance, Long debited, String view) {
+        Context context = new Context();
+        context.setVariable("newBalance", newBalance);
+        context.setVariable("debited", debited);
         return templateEngine.process(view, context);
     }
 }

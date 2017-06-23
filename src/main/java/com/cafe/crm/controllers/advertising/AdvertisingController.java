@@ -25,12 +25,6 @@ public class AdvertisingController {
         this.advertisingService = advertisingService;
     }
 
-    @RequestMapping(path = "/advertising", method = RequestMethod.GET)
-    public String showAdvertisingPage() {
-        return "media/advertisingDispatch";
-    }
-
-
     @RequestMapping(path = "/advertising/file", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<?> sendAdvertisingFromImageFile(@RequestParam("subject") String subject, @RequestParam("urlToLink") String urlToLink, @RequestParam("file") MultipartFile file) {

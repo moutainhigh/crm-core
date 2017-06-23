@@ -50,6 +50,7 @@ public class InitClient {
         card.setPhoto("https://pp.userapi.com/c636325/v636325810/41955/hBIdPv42Q38.jpg");
         card.setVisitDate(LocalDate.now());
         card.setPhoneNumber("+7(123)123-12-12");
+        card.setEmail("cafe.crm.test@gmail.com");
         cardService.save(card);
 
         Card card1 = new Card();

@@ -6,7 +6,6 @@ advertising:
     disable-view: media/mail/disable-advertising
     disable-subject: Отключение рекламной рассылки
     enable-view: media/mail/enable-advertising
-
   cloud:
     name: hookahpacman
     key: 172681431197699
@@ -14,3 +13,9 @@ advertising:
 
 site:
   address: localhost:8080
+
+balance-info:
+  debiting:
+    mail:
+      view: balance-info-debiting
+      subject: Изменение баланса карты!
