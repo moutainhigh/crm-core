@@ -229,64 +229,7 @@
                                 </div>
                             </div>
                         </div>
-                        <script th:inline="javascript">
-                            function showModal(id) {
-                                var modal = $('.dima_modal');
-                                modal.find("#d_id").val(id);
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/boss/menu/getProduct",
-                                    data: ({
-                                        id: id
-                                    }),
-                                    success: function (product) {
 
-                                        modal.find("#d_name").val(product.name);
-                                        modal.find("#d_des").val(product.description);
-                                        modal.find("#d_cost").val(product.cost);
-
-                                    },
-                                    error: function (e) {
-
-                                        alert("Error show modal ");
-                                        console.log("ERROR: ", e);
-                                    }
-                                });
-
-                                modal.fadeIn();
-                            }
-
-                            function createProd(id) {
-                                var setName = $("#addName" + id).val();
-                                var setDes = $("#addDes" + id).val();
-                                var setCost = $("#addCost" + id).val();
-                                ajaxPost();
-                                function ajaxPost() {
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "/boss/menu/addAjax",
-                                        data: ({
-                                            idCat: id,
-                                            name: $("#addName" + id).val(),
-                                            description: $("#addDes" + id).val(),
-                                            cost: $("#addCost" + id).val()
-                                        }),
-                                        success: function (result) {
-                                            var button = '<a id="ins"  class="btn btn-primary btn-info" onclick="showModal(' + result + ')"  data-toggle="modal" >Редактировать </a>';
-                                            var button2 = '<a id="del"  class="btn btn-primary btn-danger" onclick="del2(' + result + ')"   >Удалить </a>';
-                                            var tr = '<tr id="tr' + result + '"><td>#</td><td id="b' + result + '"><p id="E' + result + '">' + setName + '</p></td><td id="c' + result + '">' + setDes + '</td><td id="d' + result + '">' + setCost + '</td><td>' + button + '</td><td>' + button2 + '</td></tr>';
-                                            var allTR = '<tr id="allTR' + result + '"><td>#</td><td id="allB' + result + '">' + setName + '</td><td id="allC' + result + '">' + setDes + '</td><td id="allD' + result + '">' + setCost + '</td><td>' + button + '</td><td>' + button2 + '</td></tr>';
-                                            $('#qwe' + id + ' tr:last').after(tr);
-                                            $('#allTable' + ' tr:last').after(allTR);
-                                        },
-                                        error: function (e) {
-                                            alert("Неверный формат данных");
-                                            console.log("ERROR: ", e);
-                                        }
-                                    });
-                                }
-                            }
-                        </script>
                     </div>
                     <form role="form" method="post" action="/boss/menu/deleteCat" style="margin: 10px auto; width: 50%">
                         <div align="center" class="modal fade" th:id="'delCat'+${categor.id}" tabindex="-1"
@@ -412,6 +355,64 @@
 
 
 </header>
+<script th:inline="javascript">
+    function showModal(id) {
+        var modal = $('.dima_modal');
+        modal.find("#d_id").val(id);
+        $.ajax({
+            type: "POST",
+            url: "/boss/menu/getProduct",
+            data: ({
+                id: id
+            }),
+            success: function (product) {
+
+                modal.find("#d_name").val(product.name);
+                modal.find("#d_des").val(product.description);
+                modal.find("#d_cost").val(product.cost);
+
+            },
+            error: function (e) {
+
+                alert("Error show modal ");
+                console.log("ERROR: ", e);
+            }
+        });
+
+        modal.fadeIn();
+    }
+
+    function createProd(id) {
+        var setName = $("#addName" + id).val();
+        var setDes = $("#addDes" + id).val();
+        var setCost = $("#addCost" + id).val();
+        ajaxPost();
+        function ajaxPost() {
+            $.ajax({
+                type: "POST",
+                url: "/boss/menu/addAjax",
+                data: ({
+                    idCat: id,
+                    name: $("#addName" + id).val(),
+                    description: $("#addDes" + id).val(),
+                    cost: $("#addCost" + id).val()
+                }),
+                success: function (result) {
+                    var button = '<a id="ins"  class="btn btn-primary btn-info" onclick="showModal(' + result + ')"  data-toggle="modal" >Редактировать </a>';
+                    var button2 = '<a id="del"  class="btn btn-primary btn-danger" onclick="del2(' + result + ')"   >Удалить </a>';
+                    var tr = '<tr id="tr' + result + '"><td>#</td><td id="b' + result + '"><p id="E' + result + '">' + setName + '</p></td><td id="c' + result + '">' + setDes + '</td><td id="d' + result + '">' + setCost + '</td><td>' + button + '</td><td>' + button2 + '</td></tr>';
+                    var allTR = '<tr id="allTR' + result + '"><td>#</td><td id="allB' + result + '">' + setName + '</td><td id="allC' + result + '">' + setDes + '</td><td id="allD' + result + '">' + setCost + '</td><td>' + button + '</td><td>' + button2 + '</td></tr>';
+                    $('#qwe' + id + ' tr:last').after(tr);
+                    $('#allTable' + ' tr:last').after(allTR);
+                },
+                error: function (e) {
+                    alert("Неверный формат данных");
+                    console.log("ERROR: ", e);
+                }
+            });
+        }
+    }
+</script>
 <script>
     function closeModal() {
         var modal = $('.dima_modal');
