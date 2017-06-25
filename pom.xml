@@ -26,7 +26,12 @@
             <artifactId>aws-java-sdk</artifactId>
             <version>1.11.126</version>
         </dependency>
-
+        <!-- for take time from external server -->
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>3.6</version>
+        </dependency>
 
         <!-- ZXING(QrCode) -->
 

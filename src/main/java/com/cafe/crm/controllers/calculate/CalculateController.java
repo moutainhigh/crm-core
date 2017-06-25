@@ -6,7 +6,7 @@ import com.cafe.crm.service_abstract.calculateService.CalculateControllerService
 import com.cafe.crm.service_abstract.calculateService.CalculateService;
 import com.cafe.crm.service_abstract.cardService.CardService;
 import com.cafe.crm.service_abstract.clientService.ClientService;
-import com.cafe.crm.service_abstract.menu_service.MenuService;
+import com.cafe.crm.service_abstract.menu.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

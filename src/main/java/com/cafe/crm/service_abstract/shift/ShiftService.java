@@ -1,4 +1,4 @@
-package com.cafe.crm.service_abstract.shift_service;
+package com.cafe.crm.service_abstract.shift;
 
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.worker.Worker;

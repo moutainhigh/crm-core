@@ -19,7 +19,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/boss")
-public class EditBossController {
+public class EditController {
 
 	@Autowired
 	private PropertyService propertyService;

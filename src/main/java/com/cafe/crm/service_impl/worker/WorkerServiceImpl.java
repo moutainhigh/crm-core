@@ -8,7 +8,7 @@ import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;
 import com.cafe.crm.models.worker.Worker;
 
-import com.cafe.crm.service_abstract.worker_service.WorkerService;
+import com.cafe.crm.service_abstract.worker.WorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

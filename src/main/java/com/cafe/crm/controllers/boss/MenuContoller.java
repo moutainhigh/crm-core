@@ -3,9 +3,9 @@ package com.cafe.crm.controllers.boss;
 import com.cafe.crm.models.Menu.Category;
 import com.cafe.crm.models.Menu.Product;
 import com.cafe.crm.models.property.PropertyWrapper;
-import com.cafe.crm.service_abstract.menu_service.CategoriesService;
-import com.cafe.crm.service_abstract.menu_service.MenuService;
-import com.cafe.crm.service_abstract.menu_service.ProductService;
+import com.cafe.crm.service_abstract.menu.CategoriesService;
+import com.cafe.crm.service_abstract.menu.MenuService;
+import com.cafe.crm.service_abstract.menu.ProductService;
 import com.cafe.crm.service_abstract.property.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ import java.util.Set;
 
 @Controller
 @RequestMapping("/boss/menu")
-public class MenuBossContoller {
+public class MenuContoller {
 
 	@Autowired
 	private MenuService menuService;

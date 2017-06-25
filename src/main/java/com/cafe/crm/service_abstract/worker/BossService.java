@@ -1,4 +1,4 @@
-package com.cafe.crm.service_abstract.worker_service;
+package com.cafe.crm.service_abstract.worker;
 
 
 import com.cafe.crm.models.worker.Boss;

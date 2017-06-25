@@ -4,7 +4,7 @@ import com.cafe.crm.dao.shift.ShiftRepository;
 import com.cafe.crm.dao.worker.WorkerRepository;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.worker.Worker;
-import com.cafe.crm.service_abstract.shift_service.ShiftService;
+import com.cafe.crm.service_abstract.shift.ShiftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

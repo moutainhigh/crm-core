@@ -1,4 +1,4 @@
-package com.cafe.crm.service_abstract.menu_service;
+package com.cafe.crm.service_abstract.menu;
 
 import com.cafe.crm.models.Menu.Product;
 

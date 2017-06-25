@@ -3,7 +3,7 @@ package com.cafe.crm.controllers.boss;
 import com.cafe.crm.models.property.PropertyWrapper;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.service_abstract.property.PropertyService;
-import com.cafe.crm.service_abstract.shift_service.ShiftService;
+import com.cafe.crm.service_abstract.shift.ShiftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;

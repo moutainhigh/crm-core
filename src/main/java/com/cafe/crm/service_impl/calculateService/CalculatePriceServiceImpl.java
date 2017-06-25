@@ -2,6 +2,8 @@ package com.cafe.crm.service_impl.calculateService;
 
 import com.cafe.crm.service_abstract.calculateService.CalculatePriceService;
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.utils.TimeManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -9,9 +11,12 @@ import java.time.LocalTime;
 @Service
 public class CalculatePriceServiceImpl implements CalculatePriceService {
 
+	@Autowired
+	private TimeManager timeManager;
+
 	public void calculatePriceTime(Client client) {
 		LocalTime timeStart = client.getTimeStart();
-		LocalTime timeNow = LocalTime.now().withSecond(0).withNano(0);
+		LocalTime timeNow = timeManager.getDate().withSecond(0).withNano(0).toLocalTime();
 		LocalTime timePassed = timeNow.minusHours(timeStart.getHour()).minusMinutes(timeStart.getMinute());
 		client.setPassedTime(timePassed);
 		long hour = (long) timePassed.getHour();

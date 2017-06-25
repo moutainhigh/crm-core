@@ -2,7 +2,7 @@ package com.cafe.crm.service_impl.menu;
 
 import com.cafe.crm.dao.menu.ProductRepository;
 import com.cafe.crm.models.Menu.Product;
-import com.cafe.crm.service_abstract.menu_service.ProductService;
+import com.cafe.crm.service_abstract.menu.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

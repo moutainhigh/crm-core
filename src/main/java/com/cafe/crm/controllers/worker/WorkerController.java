@@ -2,8 +2,8 @@ package com.cafe.crm.controllers.worker;
 
 import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;
-import com.cafe.crm.service_abstract.worker_service.BossService;
-import com.cafe.crm.service_abstract.worker_service.ManagerService;
+import com.cafe.crm.service_abstract.worker.BossService;
+import com.cafe.crm.service_abstract.worker.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

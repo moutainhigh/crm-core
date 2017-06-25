@@ -6,7 +6,7 @@ import com.cafe.crm.service_abstract.calculateService.CalculatePriceService;
 import com.cafe.crm.service_abstract.calculateService.CalculateService;
 import com.cafe.crm.service_abstract.cardService.CardService;
 import com.cafe.crm.service_abstract.clientService.ClientService;
-import com.cafe.crm.service_abstract.menu_service.ProductService;
+import com.cafe.crm.service_abstract.menu.ProductService;
 import com.cafe.crm.models.client.Board;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.card.Card;

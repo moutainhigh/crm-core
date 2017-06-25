@@ -2,7 +2,8 @@ package com.cafe.crm.controllers.shift;
 
 
 import com.cafe.crm.dao.worker.WorkerRepository;
-import com.cafe.crm.service_abstract.shift_service.ShiftService;
+import com.cafe.crm.service_abstract.shift.ShiftService;
+import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 
@@ -24,11 +25,14 @@ public class ShiftController {
 	@Autowired
 	private WorkerRepository workerService;
 
+	@Autowired
+	private TimeManager timeManager;
+
 	@RequestMapping(value = "/manager/shift/", method = RequestMethod.GET)
 	public ModelAndView getAdminPage() {
 
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("d.MM.YYYY");
-		LocalDate date = LocalDate.now();
+		LocalDateTime date = timeManager.getDate();
 		ModelAndView mv;
 		if (shiftService.getLast() == null || !shiftService.getLast().getOpen()) {
 			mv = new ModelAndView("shiftPage");

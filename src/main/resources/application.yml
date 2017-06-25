@@ -1,0 +1,3 @@
+time:
+ server:
+   address: time-a.nist.gov
