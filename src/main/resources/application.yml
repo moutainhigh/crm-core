@@ -1,3 +1,24 @@
 time:
  server:
    address: time-a.nist.gov
+
+advertising:
+  mail:
+    sender: smtp.gmail.com
+    image-view: db:image-advertising
+    text-view: db:text-advertising
+    disable-view: db:disable-advertising
+    disable-subject: Отключение рекламной рассылки
+  cloud:
+    name: hookahpacman
+    key: 172681431197699
+    secret: p1B4kuIACB-7avW2KXrAXgHuMj0
+
+site:
+  address: localhost:8080
+
+balance-info:
+  debiting:
+    mail:
+      view: db:balance-info-debiting
+      subject: Изменение баланса карты!

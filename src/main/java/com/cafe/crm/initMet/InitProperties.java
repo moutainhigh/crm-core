@@ -5,12 +5,15 @@ import com.cafe.crm.service_abstract.property.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+
 @Component
 public class InitProperties {
 
 	@Autowired
 	private PropertyService propertyService;
 
+	@PostConstruct
 	public void	init() {
 
 

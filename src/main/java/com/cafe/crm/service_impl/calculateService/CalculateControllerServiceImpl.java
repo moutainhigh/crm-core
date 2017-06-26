@@ -6,6 +6,7 @@ import com.cafe.crm.service_abstract.calculateService.CalculatePriceService;
 import com.cafe.crm.service_abstract.calculateService.CalculateService;
 import com.cafe.crm.service_abstract.cardService.CardService;
 import com.cafe.crm.service_abstract.clientService.ClientService;
+import com.cafe.crm.service_abstract.email.EmailService;
 import com.cafe.crm.service_abstract.menu.ProductService;
 import com.cafe.crm.models.client.Board;
 import com.cafe.crm.models.client.Calculate;
@@ -37,20 +38,23 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	@Autowired
 	private ProductService productService;
 
-	public void createCalculate(Long id, Long number, String description) {
-		Board board = boardService.getOne(id);
-		Calculate calculate = new Calculate();
-		List<Client> list = new ArrayList<>();
-		for (int i = 0; i < number; i++) {
-			Client client = new Client();
-			list.add(client);
-		}
-		clientService.saveAll(list);
-		calculate.setDescription(description);
-		calculate.setBoard(board);
-		calculate.setClient(list);
-		calculateService.save(calculate);
-	}
+    @Autowired
+    private EmailService emailService;
+
+    public void createCalculate(Long id, Long number, String description) {
+        Board board = boardService.getOne(id);
+        Calculate calculate = new Calculate();
+        List<Client> list = new ArrayList<>();
+        for (int i = 0; i < number; i++) {
+            Client client = new Client();
+            list.add(client);
+        }
+        clientService.saveAll(list);
+        calculate.setDescription(description);
+        calculate.setBoard(board);
+        calculate.setClient(list);
+        calculateService.save(calculate);
+    }
 
 	public void refreshBoard(Long idC, Long idB) {
 		Board board = boardService.getOne(idB);
@@ -102,21 +106,22 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		return cl;
 	}
 
-	public void closeClient(Long[] clientsId, Long calculateId) {
-		List<Client> listClient = new ArrayList<>();
-		List<Card> listCard = new ArrayList<>();
-		for (Long idCl : clientsId) {
-			Client client = clientService.getOne(idCl);
-			client.setState(false);
-			listClient.add(client);
-			if (client.getCard() != null) {
-				Card card = client.getCard();
-				card.setBalance(card.getBalance() - client.getPayWithCard());
-				listCard.add(card);
-			}
-		}
-		cardService.saveAll(listCard);
-		clientService.saveAll(listClient);
+    public void closeClient(Long[] clientsId, Long calculateId) {
+        List<Client> listClient = new ArrayList<>();
+        List<Card> listCard = new ArrayList<>();
+        for (Long idCl : clientsId) {
+            Client client = clientService.getOne(idCl);
+            client.setState(false);
+            listClient.add(client);
+            if (client.getCard() != null) {
+                Card card = client.getCard();
+                card.setBalance(card.getBalance() - client.getPayWithCard());
+                listCard.add(card);
+                sendBalanceInfoAfterDebiting(card.getBalance(), client.getPayWithCard(), card.getEmail());
+            }
+        }
+        cardService.saveAll(listCard);
+        clientService.saveAll(listClient);
 
 		boolean flag = false;
 		Calculate calculate = calculateService.getOne(calculateId);
@@ -156,4 +161,9 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		return client.getDiscountWithCard();
 	}
 
+    private void sendBalanceInfoAfterDebiting(Long balance, Long distinction, String email) {
+        if (email != null) {
+            emailService.sendBalanceInfoAfterDebiting(balance, distinction, email);
+        }
+    }
 }

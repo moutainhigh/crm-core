@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ClientService_impl implements ClientService{
+public class ClientServiceImpl implements ClientService{
     @Autowired
     private ClientRepository clientRepository;
 
@@ -35,5 +35,10 @@ public class ClientService_impl implements ClientService{
 
     public List<Client> getAllOpen() {
         return clientRepository.getAllOpen();
+    }
+
+    @Override
+    public List<Client> findByEmailNotNullAndAdvertisingIsTrue() {
+        return clientRepository.findByEmailNotNullAndAdvertisingIsTrue();
     }
 }
