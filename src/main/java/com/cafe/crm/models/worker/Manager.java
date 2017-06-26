@@ -10,11 +10,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "manager")
-@PrimaryKeyJoinColumn(name = "worker_id")
 public class Manager extends Worker implements UserDetails {
-
-    @Column(name = "login")
-    private String login;
 
     @Column(name = "password")
     private String password;
@@ -37,35 +33,13 @@ public class Manager extends Worker implements UserDetails {
     }
 
     public Manager() {
+        super();
     }
 
-    public Manager(String firstName, String lastName, String position, Long shiftSalary, String login, String password) {
-        super(firstName, lastName, position, shiftSalary);
-        this.login = login;
-        this.password = password;
+    public Manager(String actionForm) {
+        super(actionForm);
     }
 
-    public Manager(Long id, String firstName, String lastName, String login, String password, String position,
-                   Long shiftSalary) {
-        super(id, firstName, lastName, position, shiftSalary);
-        this.login = login;
-        this.password = password;
-    }
-
-    public Manager(String firstName, String lastName, String login, String password, String position,
-                   Long shiftSalary) {
-        super(firstName, lastName, position, shiftSalary);
-        this.login = login;
-        this.password = password;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -76,9 +50,14 @@ public class Manager extends Worker implements UserDetails {
         return password;
     }
 
+    //    @Override
+//    public String getUsername() {
+//        return login;
+//    }
+//
     @Override
     public String getUsername() {
-        return login;
+        return getEmail();
     }
 
     @Override
@@ -109,16 +88,16 @@ public class Manager extends Worker implements UserDetails {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         Manager manager = (Manager) o;
 
-        if (login != null ? !login.equals(manager.login) : manager.login != null) return false;
         return password != null ? password.equals(manager.password) : manager.password == null;
     }
 
     @Override
     public int hashCode() {
-        int result = login != null ? login.hashCode() : 0;
+        int result = super.hashCode();
         result = 31 * result + (password != null ? password.hashCode() : 0);
         return result;
     }

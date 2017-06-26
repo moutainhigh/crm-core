@@ -1,0 +1,125 @@
+package com.cafe.crm.initMet;
+
+import com.cafe.crm.dao.boss.BossRepository;
+import com.cafe.crm.dao.manager.ManagerRepository;
+import com.cafe.crm.dao.position.PositionRepository;
+import com.cafe.crm.dao.role.RoleRepository;
+import com.cafe.crm.dao.shift.ShiftRepository;
+import com.cafe.crm.dao.worker.WorkerRepository;
+import com.cafe.crm.models.shift.Shift;
+import com.cafe.crm.models.worker.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+
+@Component
+public class InitWorker {
+
+	@Autowired
+	private WorkerRepository workerRepository;
+
+	@Autowired
+	private ManagerRepository managerRepository;
+
+	@Autowired
+	private BossRepository bossRepository;
+
+	@Autowired
+	private PositionRepository positionRepository;
+
+	@Autowired
+	private RoleRepository roleRepository;
+
+	@Autowired
+	private ShiftRepository shiftRepository;
+
+@PostConstruct
+	public void init() {
+
+		Position workerPos = new Position("Кальянщик");
+		Position adminPos = new Position("Администратор");
+		Position bossPos = new Position("Владелец");
+		Position workerPos2 = new Position("Чайница");
+
+		List<Position> workerPosList = new ArrayList<>();
+		List<Position> adminPosList = new ArrayList<>();
+		List<Position> bossPosList = new ArrayList<>();
+
+
+		workerPosList.add(workerPos);
+		workerPosList.add(workerPos2);
+		adminPosList.add(adminPos);
+		bossPosList.add(bossPos);
+
+		Role roleBoss = new Role();
+		roleBoss.setName("BOSS");
+		roleRepository.saveAndFlush(roleBoss);
+
+		Role roleAdmin = new Role();
+		roleAdmin.setName("MANAGER");
+		roleRepository.saveAndFlush(roleAdmin);
+
+
+		Set<Shift> test = new HashSet<>();
+		Set<Shift> test2 = new HashSet<>();
+		Set<Shift> test3 = new HashSet<>();
+
+		Worker worker=new Worker();
+		worker.setFirstName("Max");
+		worker.setLastName("Worker");
+		worker.setEmail("Smith@gmail.com");
+		worker.setPhone(9123456789L);
+		worker.setAllPosition(workerPosList);
+		worker.setShiftSalary(1000L);
+		worker.setCountShift(2L);
+		worker.setSalary(2000L);
+		worker.setActionForm("Worker");
+		worker.setAllShifts(test);
+
+		Manager manager=new Manager();
+		manager.setPassword("manager");
+		manager.setFirstName("Anna");
+		manager.setLastName("Jons");
+		manager.setEmail("manager@mail.ru");
+		manager.setPhone(9123456789L);
+		manager.setAllPosition(adminPosList);
+		manager.setShiftSalary(1000L);
+		manager.setCountShift(2L);
+		manager.setSalary(2000L);
+		manager.setActionForm("Admin");
+		Set<Role> adminRoles = new HashSet<>();
+		adminRoles.add(roleAdmin);
+		manager.setRoles(adminRoles);
+		manager.setAllShifts(test2);
+
+
+
+
+		Boss boss=new Boss();
+		boss.setPassword("boss");
+		boss.setFirstName("Martin");
+		boss.setLastName("Set");
+		boss.setEmail("boss@mail.ru");
+		boss.setPhone(9123456789L);
+		boss.setAllPosition(bossPosList);
+		boss.setShiftSalary(1000L);
+		boss.setCountShift(2L);
+		boss.setSalary(2000L);
+		boss.setActionForm("Boss");
+		Set<Role> bossRoles = new HashSet<>();
+		bossRoles.add(roleBoss);
+		boss.setRoles(bossRoles);
+		boss.setAllShifts(test3);
+
+
+		workerRepository.saveAndFlush(worker);
+		managerRepository.saveAndFlush(manager);
+		bossRepository.saveAndFlush(boss);
+	}
+}

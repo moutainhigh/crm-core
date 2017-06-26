@@ -1,0 +1,96 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script th:src="@{/js/filter.js}" ></script>
+</head>
+
+<body>
+
+<div class="table" style="border-radius:5px;padding-right: 250px;padding-left: 250px" th:fragment="positionList">
+    <table class="table table-striped">
+        <tr>
+            <th> Название должности </th>
+            <th> Действия </th>
+            <th></th>
+        </tr>
+        <tbody class="searchablePosition" th:each="pos : ${positionList}">
+        <tr>
+            <td th:text="${pos.jobName}" ></td>
+            <td  class="col-lg-2" >
+                <a class="btn btn-primary btn-info" th:href="'#posC'+${pos.id}" data-toggle="modal" >Редактировать</a>
+            </td>
+
+            <td class="col-lg-2" >
+                <a class="btn btn-primary btn-danger" th:href="'#posD'+${pos.id}" data-toggle="modal" >Удалить</a>
+            </td>
+
+
+            <div class="modal fade" th:id="'posC'+${pos.id}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="form-signin-heading">Форма Редактирования Должности</h2>
+                        </div>
+                        <div class="modal-body">
+
+                            <form class="form-signin" action="worker/editPosition" method="POST">
+
+                                <input type="hidden" class="form-control" th:value="${pos.id}" name="id"/>
+
+                                <h4>Название должности</h4>
+                                <input type="text" class="form-control" th:value="${pos.jobName}" name="jobName"/>
+                                <br></br>
+
+                                <button type="submit" class="btn btn-lg btn-primary btn-block">Изменить Должность</button>
+                                <br></br>
+                            </form>
+
+                            <div  class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="modal fade" th:id="'posD'+${pos.id}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="form-signin-heading">Форма Удаления Должности</h2>
+                        </div>
+                        <div class="modal-body">
+                            <h3 style="color: crimson">Удалить должность?</h3>
+                            <br></br>
+                            <form class="form-signin" th:action="'worker/deletePosition/'+${pos.id}"  method="GET">
+
+                                <input type="hidden" class="form-control" readonly="readonly" th:value="${pos.id}" name="id"/>
+
+                                <h4>Название должности</h4>
+                                <input type="text" class="form-control" th:value="${pos.jobName}" name="jobName"/>
+                                <br></br>
+
+                                <button type="submit" class="btn btn-lg btn-primary btn-block">Да</button>
+                                <br></br>
+                                <button type="button" class="btn btn-lg btn-primary btn-block" data-dismiss="modal">Нет</button>
+                                <br></br>
+                            </form>
+
+                            <div  class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

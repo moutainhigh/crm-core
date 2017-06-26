@@ -46,17 +46,17 @@ public class WorkerController {
 											@RequestParam(name = "secondNew") String secondNewPassword, Authentication auth, HttpServletRequest request) {
 		UserDetails userDetails = (UserDetails) auth.getPrincipal();
 		String password = userDetails.getPassword();
-		String login = userDetails.getUsername();
+		String email = userDetails.getUsername();
 		Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
 		if (newPassword.equals(secondNewPassword) && oldPassword.equals(password)) {
 			roles.forEach(role -> {
 				if (role.getAuthority().equals("BOSS")) {
-					Boss boss = bossService.getUserByLogin(login);
+					Boss boss = bossService.getUserByEmail(email);
 					boss.setPassword(newPassword);
 					bossService.save(boss);
 
 				} else if (role.getAuthority().equals("MANAGER")) {
-					Manager manager = managerService.getUserByLogin(login);
+					Manager manager = managerService.getUserByEmail(email);
 					manager.setPassword(newPassword);
 					managerService.save(manager);
 				}

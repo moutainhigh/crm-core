@@ -10,30 +10,32 @@ import java.util.List;
 
 public interface WorkerService {
 
-	void shiftByDate(LocalDate start, LocalDate end);
-
 	List<Worker> listAllWorker();
 
 	List<Manager> listAllManager();
 
 	List<Boss> listAllBoss();
 
-	void saveWorker(Worker worker);
+	void addWorker(Worker worker);
 
-	void saveManager(Manager manager);
+	void addManager(Manager manager);
 
-	void saveBoss(Boss boss);
+	void addBoss(Boss boss);
 
-	void delete(Long id);
+	void editWorker(Worker worker,Long adminId,Long bossId,String password);
 
-	Worker getUserById(long id);
+	void editManager(Manager manager,Long adminId,Long bossId);
 
-	Worker getUserByLogin(String name);
+	void editBoss(Boss boss,Long bossId,Long adminId);
 
-	List<Worker> findAll();
+	Worker findWorkerById(Long id);
 
-	Worker getUserByNameForShift(String name);
+	void deleteWorker(Worker worker);
 
-	void save(Worker worker);
+	void castWorkerToManager(Worker worker,String password,Long adminPositionId);
+
+	void castWorkerToBoss(Worker worker,String password,Long bossPositionId);
+
+	void castManagerToBoss(Manager manager,Long bossPositionId);
 
 }

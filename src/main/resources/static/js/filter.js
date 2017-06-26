@@ -5,10 +5,11 @@ $(document).ready(function () {
         $('#filter').keyup(function () {
 
             var rex = new RegExp($(this).val(), 'i');
-            $('.searchable tr').hide();
-            $('.searchable tr').filter(function () {
+            $('.searchableWorker tr').hide();
+            $('.searchableWorker tr').filter(function () {
                 return rex.test($(this).text());
             }).show();
+
         })
 
     }(jQuery));
@@ -22,8 +23,44 @@ $(document).ready(function () {
         $('#filter2').keyup(function () {
 
             var rex = new RegExp($(this).val(), 'i');
-            $('.searchable tr').hide();
-            $('.searchable tr').filter(function () {
+            $('.searchableManager tr').hide();
+            $('.searchableManager tr').filter(function () {
+                return rex.test($(this).text());
+            }).show();
+
+        })
+
+    }(jQuery));
+
+});
+
+$(document).ready(function () {
+
+    (function ($) {
+
+        $('#filter3').keyup(function () {
+
+            var rex = new RegExp($(this).val(), 'i');
+            $('.searchableBoss tr').hide();
+            $('.searchableBoss tr').filter(function () {
+                return rex.test($(this).text());
+            }).show();
+
+        })
+
+    }(jQuery));
+
+});
+
+$(document).ready(function () {
+
+    (function ($) {
+
+        $('#filter4').keyup(function () {
+
+            var rex = new RegExp($(this).val(), 'i');
+            $('.searchablePosition tr').hide();
+            $('.searchablePosition tr').filter(function () {
                 return rex.test($(this).text());
             }).show();
 

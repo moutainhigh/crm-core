@@ -4,17 +4,18 @@ import com.cafe.crm.models.shift.Shift;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 
 @Entity
 @Table(name = "worker")
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Worker implements Serializable {
 
     @Id
-    @GeneratedValue
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     @Column(name = "firstName", length = 256)
@@ -30,8 +31,8 @@ public class Worker implements Serializable {
     @Column(name = "phone")
     private Long phone;
 
-    @Column(name = "position", length = 256)
-    private String position;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Position> allPosition;
 
     @Column(name = "shiftSalary", nullable = true)
     private Long shiftSalary;
@@ -45,24 +46,40 @@ public class Worker implements Serializable {
     @Column(name = "salary", nullable = true)
     private Long salary;
 
+    @Column(name = "actionForm")
+    private String actionForm;
+
     public Worker() {
+        this.allPosition=new ArrayList<>();
     }
 
-    public Worker(String firstName, String lastName, String position, Long shiftSalary) {
+    public Worker(String actionForm) {
+        this.actionForm=actionForm;
+        this.allPosition=new ArrayList<>();
+    }
+
+    public Worker(String firstName, String lastName, List<Position> position, Long shiftSalary) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.position = position;
+        this.allPosition = position;
         this.shiftSalary = shiftSalary;
     }
 
-    public Worker(Long id, String firstName, String lastName, String position, Long shiftSalary) {
+    public Worker(Long id, String firstName, String lastName, List<Position> position, Long shiftSalary) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.position = position;
+        this.allPosition = position;
         this.shiftSalary = shiftSalary;
     }
 
+    public String getActionForm() {
+        return actionForm;
+    }
+
+    public void setActionForm(String actionForm) {
+        this.actionForm = actionForm;
+    }
 
     public Long getId() {
         return id;
@@ -88,12 +105,12 @@ public class Worker implements Serializable {
         this.lastName = lastName;
     }
 
-    public String getPosition() {
-        return position;
+    public List<Position> getAllPosition() {
+        return allPosition;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setAllPosition(List<Position> allPosition) {
+        this.allPosition = allPosition;
     }
 
     public Long getShiftSalary() {

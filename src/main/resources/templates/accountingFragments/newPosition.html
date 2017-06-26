@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"></meta>
+    <title>Title</title>
+</head>
+<body>
+
+<div class="wrapper" th:fragment="newPosition">
+    <form action="" method="POST" class="form-signin">
+        <button type="button" class="btn btn-lg btn-primary btn-block"
+                data-toggle="modal" data-target="#myModalPosition">Добавить Новую Должность</button>
+    </form>
+    <!-- Modal -->
+    <div id="myModalPosition" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Форма Добавления Новой Должности</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="#" th:action="@{/worker/addPosition}" th:object="${position}"
+                          method="POST" class="form-signin">
+                        <h2 class="form-signin-heading">Заполните Поля</h2>
+                        <input type="text" class="form-control" th:field="*{jobName}"  placeholder="Введите название должности" required="" autofocus="" />
+                        <br></br>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Добавить Должность В Базу Данных</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

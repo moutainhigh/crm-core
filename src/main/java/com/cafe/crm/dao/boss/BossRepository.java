@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface BossRepository extends JpaRepository<Boss, Long> {
 	// for login
-	@Query("SELECT u FROM Boss u WHERE u.login =:name")
+	@Query("SELECT u FROM Boss u WHERE u.email =:name")
 	Boss getUserByLogin(@Param("name") String login);
 
 	Boss findByEmail(String email);

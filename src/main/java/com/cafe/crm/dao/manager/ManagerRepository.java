@@ -12,13 +12,12 @@ import java.util.Set;
 
 public interface ManagerRepository extends JpaRepository<Manager, Long> {
 
-
 	@Query("SELECT e FROM Shift e WHERE e.dateShift BETWEEN :startDate and :endDate")
 	Set<Shift> findByDates(@Param("startDate") LocalDate startDate,
 						   @Param("endDate") LocalDate endDate);
 
 	// for login
-	@Query("SELECT u FROM Manager u WHERE u.login =:name")
+	@Query("SELECT u FROM Manager u WHERE u.email =:name")
 	Manager getUserByLogin(@Param("name") String login);
 
 	Manager findByEmail(String email);

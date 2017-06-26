@@ -9,11 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "boss")
-@PrimaryKeyJoinColumn(name = "worker_id")
 public class Boss extends Worker implements UserDetails {
-
-    @Column(name = "login")
-    private String login;
 
     @Column(name = "password")
     private String password;
@@ -27,10 +23,12 @@ public class Boss extends Worker implements UserDetails {
     @Column(name = "enabled", nullable = false)
     private Boolean enabled = true;
 
-    public Boss(String login, String password) {
+    public Boss() {
+        super();
     }
 
-    public Boss() {
+    public Boss(String actionForm) {
+        super(actionForm);
     }
 
     public Set<Role> getRoles() {
@@ -39,14 +37,6 @@ public class Boss extends Worker implements UserDetails {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
     }
 
     @Override
@@ -58,9 +48,14 @@ public class Boss extends Worker implements UserDetails {
         return password;
     }
 
+//    @Override
+//    public String getUsername() {
+//        return login;
+//    }
+
     @Override
     public String getUsername() {
-        return login;
+        return getEmail();
     }
 
     @Override
@@ -79,21 +74,20 @@ public class Boss extends Worker implements UserDetails {
     }
 
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
 
         Boss boss = (Boss) o;
 
-        if (login != null ? !login.equals(boss.login) : boss.login != null) return false;
         return password != null ? password.equals(boss.password) : boss.password == null;
     }
 
     @Override
     public int hashCode() {
-        int result = login != null ? login.hashCode() : 0;
+        int result = super.hashCode();
         result = 31 * result + (password != null ? password.hashCode() : 0);
         return result;
     }

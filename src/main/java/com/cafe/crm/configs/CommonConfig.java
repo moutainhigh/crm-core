@@ -3,11 +3,16 @@ package com.cafe.crm.configs;
 import com.cafe.crm.initMet.InitClient;
 import com.cafe.crm.initMet.InitMenu;
 import com.cafe.crm.initMet.InitProperties;
+import com.cafe.crm.initMet.InitWorker;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class CommonConfig {
+	@Bean(initMethod = "init")
+	public InitWorker initWorker() {
+		return new InitWorker();
+	}
 	@Bean(initMethod = "init")
 	public InitMenu initTestData() {
 		return new InitMenu();
