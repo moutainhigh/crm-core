@@ -5,46 +5,44 @@ import org.apache.commons.net.ntp.TimeInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 
 @Component
 public class TimeManager {
 
-	@Value("${time.server.address}")
-	private String TIME_SERVER;
+	@Value("#{'${time.server}'.split(',')}")
+	private List<String> servers;
 
 	private LocalDateTime date;
+
+	private NTPUDPClient timeClient = new NTPUDPClient();
+
+	private InetAddress inetAddress;
+
+	private TimeInfo timeInfo;
 
 	public TimeManager() {
 	}
 
-	@PostConstruct
-	public void genericTime() {
-		NTPUDPClient timeClient = new NTPUDPClient();
-		InetAddress inetAddress;
-		TimeInfo timeInfo;
-		try {
-			inetAddress = InetAddress.getByName(TIME_SERVER);
-			timeInfo = timeClient.getTime(inetAddress);
-			long returnTime = timeInfo.getReturnTime();
-			date = Instant.ofEpochMilli(returnTime).atZone(ZoneId.systemDefault()).toLocalDateTime();
-
-		} catch (IOException e) {
-			date = LocalDateTime.now();
-		}
-	}
-
 	public LocalDateTime getDate() {
+			for (String server : servers) {
+				try {
+					inetAddress = InetAddress.getByName(server);
+					timeInfo = timeClient.getTime(inetAddress);
+					long returnTime = timeInfo.getReturnTime();
+					date = Instant.ofEpochMilli(returnTime).atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+					return date;
+				} catch (IOException e) {
+					continue;
+				}
+			}
+		date = LocalDateTime.now();
 		return date;
 	}
-
-	public void setDate(LocalDateTime date) {
-		this.date = date;
-	}
-
 }

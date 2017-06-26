@@ -1,6 +1,5 @@
 time:
- server:
-   address: time-a.nist.gov
+ server: ntp.xs4all.nl,ntp04.oal.ul.pt,ntp02.oal.ul.pt,time-a.nist.gov
 
 advertising:
   mail:
