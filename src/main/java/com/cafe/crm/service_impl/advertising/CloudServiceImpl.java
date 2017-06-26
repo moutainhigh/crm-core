@@ -1,7 +1,7 @@
 package com.cafe.crm.service_impl.advertising;
 
 
-import com.cafe.crm.exception.advertising.AdvertisingImageFileException;
+import com.cafe.crm.exception.advertising.AdvertisingFileNotImageException;
 import com.cafe.crm.service_abstract.advertising.CloudService;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Transformation;
@@ -31,11 +31,11 @@ public class CloudServiceImpl implements CloudService {
                     "transformation", new Transformation().width("550")
             ));
         } catch (IOException e) {
-            throw new AdvertisingImageFileException("Не удалось загрузить файл на сервер!");
+            throw new AdvertisingFileNotImageException("Не удалось загрузить файл на сервер!");
         }
 
         if (data == null){
-            throw new AdvertisingImageFileException("Не удалось загрузить файл на сервер!");
+            throw new AdvertisingFileNotImageException("Не удалось загрузить файл на сервер!");
         }
         return (String) data.get("url");
 

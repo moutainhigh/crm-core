@@ -1,7 +1,7 @@
 package com.cafe.crm.service_impl.advertising;
 
 import com.cafe.crm.exception.advertising.AdvertisingClientIdIncorrectException;
-import com.cafe.crm.exception.advertising.AdvertisingImageFileException;
+import com.cafe.crm.exception.advertising.AdvertisingFileNotImageException;
 import com.cafe.crm.exception.advertising.AdvertisingTokenNotMatchException;
 import com.cafe.crm.exception.advertising.AdvertisingUrlIncorrectException;
 import com.cafe.crm.models.client.Client;
@@ -105,7 +105,7 @@ public class AdvertisingServiceImpl implements AdvertisingService {
         try (InputStream in = file.getInputStream()) {
             ImageIO.read(in).toString();
         } catch (Exception e) {
-            throw new AdvertisingImageFileException("Переданный файл не является картинкой!");
+            throw new AdvertisingFileNotImageException("Переданный файл не является картинкой!");
         }
     }
 

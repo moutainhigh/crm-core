@@ -16,7 +16,6 @@ public class AdvertisingProperties {
         private String textView;
         private String disableView;
         private String disableSubject;
-        private String enableView;
 
         public String getSender() {
             return sender;
@@ -48,14 +47,6 @@ public class AdvertisingProperties {
 
         public void setDisableView(String disableView) {
             this.disableView = disableView;
-        }
-
-        public String getEnableView() {
-            return enableView;
-        }
-
-        public void setEnableView(String enableView) {
-            this.enableView = enableView;
         }
 
         public String getDisableSubject() {

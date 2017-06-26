@@ -93,39 +93,43 @@ public class EmailServiceImpl implements EmailService {
         javaMailSender.send(mimeMessages);
     }
 
-    @Override
-    public void sendDispatchStatusNotification(Client client) {
-        String email;
-        if (client == null || (email = client.getEmail()) == null) {
-            return;
-        }
-        MimeMessagePreparator message = mimeMessage -> {
-            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-            messageHelper.setFrom(properties.getMail().getSender());
-            messageHelper.setTo(email);
-            messageHelper.setSubject(properties.getMail().getDisableSubject());
-            Long id = client.getId();
-            String token = bCryptPasswordEncoder.encode(email);
-            String view = properties.getMail().getDisableView();
-            String html = htmlService.getAdvertisingForDisable(view, id, token);
-            messageHelper.setText(html, true);
-        };
-        javaMailSender.send(message);
-    }
+	@Override
+	public void sendDispatchStatusNotification(Client client) {
+		if (client == null) {
+			return;
+		}
+		String email = client.getEmail();
+		if (email == null) {
+			return;
+		}
+		MimeMessagePreparator message = mimeMessage -> {
+			MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+			messageHelper.setFrom(properties.getMail().getSender());
+			messageHelper.setTo(email);
+			messageHelper.setSubject(properties.getMail().getDisableSubject());
+			Long id = client.getId();
+			String token = bCryptPasswordEncoder.encode(email);
+			String view = properties.getMail().getDisableView();
+			String html = htmlService.getAdvertisingForDisable(view, id, token);
+			messageHelper.setText(html, true);
+		};
+		javaMailSender.send(message);
+	}
 
-    @Override
-    public void sendBalanceInfoAfterDebiting(Long newBalance, Long debited, String email) {
-        if (email == null) {
-            return;
-        }
-        MimeMessagePreparator message = mimeMessage -> {
-            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-            messageHelper.setFrom(properties.getMail().getSender());
-            messageHelper.setTo(email);
-            messageHelper.setSubject(debitingSubject);
-            String html = htmlService.getBalanceInfoAfterDebiting(newBalance, debited, debitingView);
-            messageHelper.setText(html, true);
-        };
-        javaMailSender.send(message);
-    }
+	// TODO: 25.06.2017 Сделать возможность добалять чек в письмо
+	@Override
+	public void sendBalanceInfoAfterDebiting(Long newBalance, Long debited, String email) {
+		if (email == null) {
+			return;
+		}
+		MimeMessagePreparator message = mimeMessage -> {
+			MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+			messageHelper.setFrom(properties.getMail().getSender());
+			messageHelper.setTo(email);
+			messageHelper.setSubject(debitingSubject);
+			String html = htmlService.getBalanceInfoAfterDebiting(newBalance, debited, debitingView);
+			messageHelper.setText(html, true);
+		};
+		javaMailSender.send(message);
+	}
 }

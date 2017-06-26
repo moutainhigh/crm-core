@@ -1,11 +1,10 @@
 advertising:
   mail:
     sender: smtp.gmail.com
-    image-view: media/mail/image-advertising
-    text-view: media/mail/text-advertising
-    disable-view: media/mail/disable-advertising
+    image-view: db:image-advertising
+    text-view: db:text-advertising
+    disable-view: db:disable-advertising
     disable-subject: Отключение рекламной рассылки
-    enable-view: media/mail/enable-advertising
   cloud:
     name: hookahpacman
     key: 172681431197699
@@ -17,5 +16,5 @@ site:
 balance-info:
   debiting:
     mail:
-      view: balance-info-debiting
+      view: db:balance-info-debiting
       subject: Изменение баланса карты!

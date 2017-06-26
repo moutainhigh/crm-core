@@ -1,19 +1,14 @@
 package com.cafe.crm.controllers.advertising;
 
-import com.cafe.crm.exception.advertising.AdvertisingClientIdIncorrectException;
-import com.cafe.crm.exception.advertising.AdvertisingImageFileException;
-import com.cafe.crm.exception.advertising.AdvertisingTokenNotMatchException;
-import com.cafe.crm.exception.advertising.AdvertisingUrlIncorrectException;
+import com.cafe.crm.exception.advertising.*;
 import com.cafe.crm.service_abstract.advertising.AdvertisingService;
-import com.cafe.crm.service_abstract.advertising.CloudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailPreparationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @Controller
 public class AdvertisingController {
@@ -65,10 +60,23 @@ public class AdvertisingController {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
-    @ExceptionHandler(value = AdvertisingImageFileException.class)
+    @ExceptionHandler(value = AdvertisingFileNotImageException.class)
     @ResponseBody
-    public ResponseEntity<?> handleIncorrectUrl(AdvertisingImageFileException ex) {
+    public ResponseEntity<?> handleIncorrectUrl(AdvertisingFileNotImageException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(value = AdvertisingTemplateNotFoundException.class)
+    @ResponseBody
+    public ResponseEntity<?> handleTemplateNotFound(AdvertisingTemplateNotFoundException ex) {
+        System.out.println(ex.getMessage());
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(value = MailPreparationException.class)
+    @ResponseBody
+    public ResponseEntity<?> handleMailPreparation(MailPreparationException ex) {
+        return ResponseEntity.badRequest().body("Не удалось отправить рассылку!");
     }
 
     @ExceptionHandler(value = AdvertisingTokenNotMatchException.class)
