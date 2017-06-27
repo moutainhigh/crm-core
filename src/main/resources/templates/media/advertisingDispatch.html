@@ -17,7 +17,7 @@
 <div class="modal fade" role="dialog" id="advertising" th:fragment="advertising">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="adForm" th:action="@{/advertising}" method="post" class="form-horizontal" enctype="multipart/form-data">
+            <form id="mailForm" method="post" class="form-horizontal" enctype="multipart/form-data">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
@@ -25,16 +25,16 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="messageAd"></div>
+                        <div class="messageMail"></div>
                         <div class="col-md-11 col-md-offset-1">
                             <div class="row">
                                 <div class="col-md-6 col-md-offset-1">
                                     <div class="form-group">
-                                        <input id="adSubject" type="text" class="form-control" placeholder="Тема письма" required="" name="subject"/>
+                                        <input id="mailSubject" type="text" class="form-control" placeholder="Тема письма" required="" name="subject"/>
                                     </div>
                                     <div class="form-group" id="inputLink">
-                                        <input id="adLink" type="text" class="form-control"
-                                               placeholder="Переход рекламы" name="urlToLink"/>
+                                        <input id="mailLink" type="text" class="form-control"
+                                               placeholder="Ссылка для перехода" name="urlToLink"/>
                                     </div>
                                 </div>
                             </div>
@@ -51,17 +51,17 @@
                                 <div class="col-md-8">
                                     <div id="fromUrl" class="form-group collapse">
                                         <br/>
-                                        <input id="adUrl" type="text" class="form-control"
+                                        <input id="mailUrl" type="text" class="form-control"
                                                placeholder="Ссылка на рекламу" name="url"/>
                                     </div>
                                     <div id="fromFile" class="form-group collapse">
                                         <br/>
-                                        <input type="file" id="adFile" name="file"
+                                        <input type="file" id="mailFile" name="file"
                                                placeholder="Загрузить с компьютера"/>
                                     </div>
                                     <div id="fromText" class="form-group collapse">
                                         <br/>
-                                        <textarea id="adText" type="text" rows="7" class="form-control"
+                                        <textarea id="mailText" type="text" rows="7" class="form-control"
                                                   placeholder="Вставте HTML код" name="text"/>
                                     </div>
                                 </div>
@@ -77,7 +77,7 @@
         </div>
     </div>
 </div>
-<script th:src="@{js/advertising.js}"></script>
+<script th:src="@{js/mail.js}"></script>
 
 </body>
 </html>

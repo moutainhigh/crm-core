@@ -12,7 +12,6 @@
 
 <header>
     <div th:replace="bossnavbar :: bossNavbar"></div><!--/.navbar -->
-    <div th:replace="media/advertisingDispatch :: advertising"></div>
     <div class="container" style="margin-top:50px">
 
         <div>
@@ -354,6 +353,7 @@
     <div th:replace="propertiesForm :: PropertyForm">
     </div>
 
+    <div th:replace="media/advertisingDispatch :: advertising"></div>
 
 </header>
 <script th:inline="javascript">
@@ -580,7 +580,7 @@
         });
     });
 </script>
-<script th:src="@{/js/advertising.js}"></script>
+<script th:src="@{/js/mail.js}"></script>
 </body>
 
 </html>

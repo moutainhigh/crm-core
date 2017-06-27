@@ -15,28 +15,31 @@ $(document).ready(function () {
 
     $('#collapseUrl').click(function () {
         url = "/advertising/url";
-        resetValues($('#adFile'), $('#adText'));
+        resetValues($('#mailFile'), $('#mailText'));
         hideIfVisible($('#fromFile'));
         hideIfVisible($('#fromText'));
+        $('#mailLink').show();
     });
     $('#collapseFile').click(function () {
         url = "/advertising/file";
-        resetValues($('#adUrl'), $('#adText'));
+        resetValues($('#mailUrl'), $('#mailText'));
         hideIfVisible($('#fromUrl'));
         hideIfVisible($('#fromText'));
+        $('#mailLink').show();
     });
     $('#collapseText').click(function () {
         url = "/advertising/text";
-        resetValues($('#adFile'), $('#adUrl'));
+        resetValues($('#mailFile'), $('#mailUrl'));
         hideIfVisible($('#fromUrl'));
         hideIfVisible($('#fromFile'));
+        $('#mailLink').hide();
     });
 
-    $('#adForm').submit(function (e) {
-        var input = $("#adLink").val();
-        if ((input.trim().length == 0) && (($('#adFile').val() != "") || ($('#adUrl').val() != ""))) {
-            $('#adLink').val("https://vk.com/hookahpacman");
-        };
+    $('#mailForm').submit(function (e) {
+        // var input = $("#mailLink").val();
+        // if ((input.trim().length == 0) && (($('#mailFile').val() != "") || ($('#mailUrl').val() != ""))) {
+        //     $('#mailLink').val("https://vk.com/hookahpacman");
+        // };
         e.preventDefault();
 
         var hasInputData = function (elem) {
@@ -51,26 +54,26 @@ $(document).ready(function () {
         var formData = new FormData($(this)[0]);
 
         var clean = function () {
-            $('#adUrl').val(null);
-            $('#adFile').val(null);
-            $('#adText').val(null);
-            $('#adLink, #adSubject').val("");
+            $('#mailUrl').val(null);
+            $('#mailFile').val(null);
+            $('#mailText').val(null);
+            $('#mailLink, #mailSubject').val("");
             $('#fromFile, #fromUrl, #fromText').collapse('hide');
         };
 
-        if (!inputDataIsEmpty($('#adUrl'), $('#adFile'), $('#adText'))) {
+        if (!inputDataIsEmpty($('#mailUrl'), $('#mailFile'), $('#mailText'))) {
             $.ajax({
                 type: "POST",
                 url: url,
                 data: formData,
                 success: function (data) {
                     var successMessage = '<h4 style="color:green;" align="center">' + data + '</h4>';
-                    $('.messageAd').html(successMessage).show().delay(3000).hide(500);
+                    $('.messageMail').html(successMessage).show().delay(3000).hide(500);
                     clean();
                 },
                 error: function (error) {
                     var errorMessage = '<h4 style="color:red;" align="center">' + error.responseText + '</h4>';
-                    $('.messageAd').html(errorMessage).show().delay(3000).hide(500);
+                    $('.messageMail').html(errorMessage).show().delay(3000).hide(500);
                     clean();
                 },
                 cache: false,
@@ -79,7 +82,7 @@ $(document).ready(function () {
             })
         } else {
             var warningMessage = '<h4 style="color:orangered;" align="center">Выберите одну из форм загрузки рекламы</h4>';
-            $('.messageAd').html(warningMessage).show().delay(3000).hide(500);
+            $('.messageMail').html(warningMessage).show().delay(3000).hide(500);
         }
     });
 });

@@ -188,6 +188,7 @@
     </div>
     <div th:replace="bossChangePassword :: BossChangePassword">
     </div>
+    <div th:replace="media/advertisingDispatch :: advertising"></div>
 </div>
 
 
@@ -222,6 +223,6 @@
         });
     });
 </script>
-
+<script th:src="@{/js/mail.js}"></script>
 </body>
 </html>

@@ -1,8 +1,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 
-<head th:replace="css :: cssMain">
-
+<head>
+    <link rel="stylesheet" th:href="@{/st.css}" type="text/css"/>
+    <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
 </head>
 
 <body>
@@ -58,5 +59,7 @@
 </div>
 <div th:replace="propertiesForm :: PropertyForm">
 </div>
+<div th:replace="media/advertisingDispatch :: advertising"></div>
+<script th:src="@{/js/mail.js}"></script>
 </body>
 </html>
