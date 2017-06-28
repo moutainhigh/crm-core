@@ -43,6 +43,7 @@ public class CommonConfig {
 		resolver.setPrefix("classpath:/templates/");
 		resolver.setSuffix(".html");
 		resolver.setOrder(1);
+		resolver.setCacheable(false);
 		return resolver;
 	}
 
