@@ -14,6 +14,9 @@ public class Position {
 	@Column(name = "jobName")
 	private String jobName;
 
+	@Column(name = "enabled", nullable = false)
+	private Boolean enabled = true;
+
 	public Position() {
 	}
 
@@ -35,6 +38,14 @@ public class Position {
 
 	public void setJobName(String jobName) {
 		this.jobName = jobName;
+	}
+
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	@Override

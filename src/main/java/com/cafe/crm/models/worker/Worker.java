@@ -14,170 +14,195 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Worker implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE)
+	private Long id;
 
-    @Column(name = "firstName", length = 256)
-    private String firstName;
+	@Column(name = "firstName", length = 256)
+	private String firstName;
 
-    @Column(name = "lastName", length = 256)
-    private String lastName;
+	@Column(name = "lastName", length = 256)
+	private String lastName;
 
-    @Column(name = "email")
-    private String email;
+	@Column(name = "email")
+	private String email;
 
-    // Must be exactly 10 digits
-    @Column(name = "phone")
-    private Long phone;
+	// Must be exactly 10 digits
+	@Column(name = "phone")
+	private Long phone;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Position> allPosition;
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	private List<Position> allPosition;
 
-    @Column(name = "shiftSalary", nullable = true)
-    private Long shiftSalary;
+	@Column(name = "shiftSalary", nullable = true)
+	private Long shiftSalary;
 
-    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Shift.class)
-    private Set<Shift> allShifts;
+	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Shift.class)
+	private Set<Shift> allShifts;
 
-    @Column(name = "countShift", nullable = true)
-    private Long countShift;
+	@Column(name = "countShift", nullable = true)
+	private Long countShift;
 
-    @Column(name = "salary", nullable = true)
-    private Long salary;
+	@Column(name = "salary", nullable = true)
+	private Long salary;
 
-    @Column(name = "actionForm")
-    private String actionForm;
+	@Column(name = "actionForm")
+	private String actionForm;
 
-    public Worker() {
-        this.allPosition=new ArrayList<>();
-    }
+	public Worker() {
+		this.allPosition = new ArrayList<>();
+	}
 
-    public Worker(String actionForm) {
-        this.actionForm=actionForm;
-        this.allPosition=new ArrayList<>();
-    }
+	public Worker(String actionForm) {
+		this.actionForm = actionForm;
+		this.allPosition = new ArrayList<>();
+	}
 
-    public Worker(String firstName, String lastName, List<Position> position, Long shiftSalary) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.allPosition = position;
-        this.shiftSalary = shiftSalary;
-    }
+	public Worker(String firstName, String lastName, List<Position> position, Long shiftSalary) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.allPosition = position;
+		this.shiftSalary = shiftSalary;
+	}
 
-    public Worker(Long id, String firstName, String lastName, List<Position> position, Long shiftSalary) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.allPosition = position;
-        this.shiftSalary = shiftSalary;
-    }
+	public Worker(Long id, String firstName, String lastName, List<Position> position, Long shiftSalary) {
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.allPosition = position;
+		this.shiftSalary = shiftSalary;
+	}
 
-    public String getActionForm() {
-        return actionForm;
-    }
+	public Worker(String firstName, String lastName, String email, Long phone, List<Position> allPosition,
+				  Long shiftSalary, Long countShift, Long salary, String actionForm, Boolean enabled) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.phone = phone;
+		this.allPosition = allPosition;
+		this.shiftSalary = shiftSalary;
+		this.countShift = countShift;
+		this.salary = salary;
+		this.actionForm = actionForm;
+		this.enabled = enabled;
+	}
 
-    public void setActionForm(String actionForm) {
-        this.actionForm = actionForm;
-    }
+	@Column(name = "enabled", nullable = false)
+	private Boolean enabled = true;
 
-    public Long getId() {
-        return id;
-    }
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Boolean getEnabled() {
+		return enabled;
+	}
 
-    public String getFirstName() {
-        return firstName;
-    }
+	public String getActionForm() {
+		return actionForm;
+	}
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+	public void setActionForm(String actionForm) {
+		this.actionForm = actionForm;
+	}
 
-    public String getLastName() {
-        return lastName;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public List<Position> getAllPosition() {
-        return allPosition;
-    }
+	public String getFirstName() {
+		return firstName;
+	}
 
-    public void setAllPosition(List<Position> allPosition) {
-        this.allPosition = allPosition;
-    }
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
 
-    public Long getShiftSalary() {
-        return shiftSalary;
-    }
+	public String getLastName() {
+		return lastName;
+	}
 
-    public void setShiftSalary(Long shiftSalary) {
-        this.shiftSalary = shiftSalary;
-    }
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-    public Set<Shift> getAllShifts() {
-        return allShifts;
-    }
+	public List<Position> getAllPosition() {
+		return allPosition;
+	}
 
-    public void setAllShifts(Set<Shift> allShifts) {
-        this.allShifts = allShifts;
-    }
+	public void setAllPosition(List<Position> allPosition) {
+		this.allPosition = allPosition;
+	}
 
-    public Long getCountShift() {
-        return countShift;
-    }
+	public Long getShiftSalary() {
+		return shiftSalary;
+	}
 
-    public void setCountShift(Long countShift) {
-        this.countShift = countShift;
-    }
+	public void setShiftSalary(Long shiftSalary) {
+		this.shiftSalary = shiftSalary;
+	}
 
-    public Long getSalary() {
-        return salary;
-    }
+	public Set<Shift> getAllShifts() {
+		return allShifts;
+	}
 
-    public void setSalary(Long salary) {
-        this.salary = salary;
-    }
+	public void setAllShifts(Set<Shift> allShifts) {
+		this.allShifts = allShifts;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public Long getCountShift() {
+		return countShift;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setCountShift(Long countShift) {
+		this.countShift = countShift;
+	}
 
-    public Long getPhone() {
-        return phone;
-    }
+	public Long getSalary() {
+		return salary;
+	}
 
-    public void setPhone(Long phone) {
-        this.phone = phone;
-    }
+	public void setSalary(Long salary) {
+		this.salary = salary;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	public String getEmail() {
+		return email;
+	}
 
-        Worker worker = (Worker) o;
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-        if (id != null ? !id.equals(worker.id) : worker.id != null) return false;
-        if (firstName != null ? !firstName.equals(worker.firstName) : worker.firstName != null) return false;
-        return lastName != null ? lastName.equals(worker.lastName) : worker.lastName == null;
-    }
+	public Long getPhone() {
+		return phone;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
-        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-        return result;
-    }
+	public void setPhone(Long phone) {
+		this.phone = phone;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Worker worker = (Worker) o;
+
+		if (id != null ? !id.equals(worker.id) : worker.id != null) return false;
+		if (firstName != null ? !firstName.equals(worker.firstName) : worker.firstName != null) return false;
+		return lastName != null ? lastName.equals(worker.lastName) : worker.lastName == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+		result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+		return result;
+	}
 }

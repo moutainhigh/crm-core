@@ -21,6 +21,12 @@
         </tr>
         <tbody class="searchableWorker">
         <tr th:each="worker : ${workerList}">
+
+            <div th:if="${worker.enabled==false}">
+            </div>
+
+            <div th:if="${worker.enabled==true}">
+
             <td  th:text="${worker.firstName}"></td>
             <td  th:text="${worker.lastName}"></td>
             <td  th:text="${worker.allPosition}"></td>
@@ -38,7 +44,7 @@
 
 
             <div class="modal fade" th:id="'workerEdit'+${worker.id}">
-                <div th:if="${worker.actionForm} == 'Admin'">
+                <div th:if="${worker.actionForm} == 'admin'">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -85,19 +91,10 @@
                                             <br></br>
                                         </div>
                                     </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6 ">
                                             <h4>Зарплата</h4>
                                             <input type="text" class="form-control"  th:value="${worker.salary}" name="salary"/>
                                             <br></br>
-                                        </div>
-                                        <div class="col-md-6 ">
-                                            <h4>Пароль</h4>
-                                            <input type="password" class="form-control" th:value="${worker.password}" name="password"/>
-                                            <br></br>
-                                        </div>
-                                    </div>
+
 
 
 
@@ -144,7 +141,7 @@
                 </div>
 
 
-                <div th:if="${worker.actionForm} == 'Boss'">
+                <div th:if="${worker.actionForm} == 'boss'">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -192,19 +189,9 @@
                                             <br></br>
                                         </div>
                                     </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6 ">
                                             <h4>Зарплата</h4>
                                             <input type="text" class="form-control"  th:value="${worker.salary}" name="salary"/>
                                             <br></br>
-                                        </div>
-                                        <div class="col-md-6 ">
-                                            <h4>Пароль</h4>
-                                            <input type="password" class="form-control" th:value="${worker.password}" name="password"/>
-                                            <br></br>
-                                        </div>
-                                    </div>
 
 
                                     <h3 style="color: black" align="center">Активные должности  &nbsp;&nbsp;&nbsp; <i style="font-size: 30px" class="fa fa-question" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Чтобы удалить должность снимите флаг с нужной позиции!"></i></h3>
@@ -255,7 +242,7 @@
 
 
 
-                <div th:if="${worker.actionForm} == 'Worker'">
+                <div th:if="${worker.actionForm} == 'worker'">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -303,17 +290,6 @@
                                             <br></br>
                                         </div>
                                     </div>
-
-
-                                    <div th:each="pos: ${worker.getAllPosition()}">
-                                        <div th:if="${pos.jobName} == 'Администратор' OR ${pos.jobName} == 'Владелец'">
-                                            <h4>Пароль для входа в систему</h4>
-                                            <div th:each="worker : ${workerList}"></div>
-                                            <input type="text" class="form-control" th:value="${worker.password}" name="password"/>
-                                            <br></br>
-                                        </div>
-                                    </div>
-
 
                                     <h4 align="center">Зарплата</h4>
                                     <input type="text" class="form-control"  th:value="${worker.salary}" name="salary"/>
@@ -485,14 +461,6 @@
                                 <input type="text" class="form-control" th:value="${worker.phone}" name="phone"/>
                                 <br></br>
 
-                                <div th:each="pos: ${worker.getAllPosition()}">
-                                    <p th:if="${pos.jobName} == 'Администратор' OR ${pos.jobName} == 'Владелец'">
-                                    <h4>Пароль для входа в систему</h4>
-                                    <input type="text" class="form-control" th:value="${worker.password}" name="password"/>
-                                    </p>
-                                </div>
-                                <br></br>
-
                                 <h4>Оклад За Смену</h4>
                                 <input type="text" class="form-control" th:value="${worker.shiftSalary}" name="shiftSalary"/>
                                 <br></br>
@@ -512,7 +480,9 @@
                     </div>
                 </div>
             </div>
+            </div>
         </tr>
+
         </tbody>
     </table>
 </div>

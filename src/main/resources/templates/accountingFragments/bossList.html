@@ -10,7 +10,6 @@
             <th> Имя </th>
             <th> Фамилия </th>
             <th> Email </th>
-            <th> Пароль </th>
             <th> Номер телефона </th>
             <th> Должность </th>
             <th> Оклад за смену </th>
@@ -22,10 +21,15 @@
         </tr>
         <tbody class="searchableBoss">
         <tr th:each="boss : ${bossList}">
+
+            <div th:if="${boss.enabled==false}">
+            </div>
+
+            <div th:if="${boss.enabled==true}">
+
             <td th:text="${boss.firstName}"></td>
             <td th:text="${boss.lastName}"></td>
             <td th:text="${boss.email}"></td>
-            <td th:text="${boss.password}" th:type="password"></td>
             <td th:text="${boss.phone}"></td>
             <td th:text="${boss.allPosition}"></td>
             <td th:text="${boss.shiftSalary}"></td>
@@ -53,39 +57,6 @@
                             <form class="form-signin" action="worker/editBoss" method="POST">
 
                                 <input type="hidden" class="form-control" th:value="${boss.id}" name="id"/>
-
-                                <!--<h4>Имя</h4>-->
-                                <!--<input type="text" class="form-control" th:value="${boss.firstName}" name="firstName"/>-->
-                                <!--<br></br>-->
-
-                                <!--<h4>Фамилия</h4>-->
-                                <!--<input type="text" class="form-control" th:value="${boss.lastName}" name="lastName"/>-->
-                                <!--<br></br>-->
-
-                                <!--<h4>Email</h4>-->
-                                <!--<input type="text" class="form-control" th:value="${boss.email}" name="email"/>-->
-                                <!--<br></br>-->
-
-                                <!--<h4>Номер телефона</h4>-->
-                                <!--<input type="text" class="form-control" th:value="${boss.phone}" name="phone"/>-->
-                                <!--<br></br>-->
-
-                                <!--<h4>Оклад за смену</h4>-->
-                                <!--<input type="text" class="form-control"  th:value="${boss.shiftSalary}" name="shiftSalary"/>-->
-                                <!--<br></br>-->
-
-                                <!--<h4>Количество смен</h4>-->
-                                <!--<input type="text" class="form-control"  th:value="${boss.countShift}" name="countShift"/>-->
-                                <!--<br></br>-->
-
-                                <!--<h4>Зарплата</h4>-->
-                                <!--<input type="text" class="form-control"  th:value="${boss.salary}" name="salary"/>-->
-                                <!--<br></br>-->
-
-                                <!--<h4>Пароль</h4>-->
-                                <!--<input type="text" class="form-control" th:value="${boss.password}" name="password"/>-->
-                                <!--<br></br>-->
-
 
                                 <div class="row">
                                     <div class="col-md-6 ">
@@ -124,18 +95,9 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-md-6 ">
                                         <h4>Зарплата</h4>
                                         <input type="text" class="form-control"  th:value="${boss.salary}" name="salary"/>
                                         <br></br>
-                                    </div>
-                                    <div class="col-md-6 ">
-                                        <h4>Пароль</h4>
-                                        <input type="password" class="form-control" th:value="${boss.password}" name="password"/>
-                                        <br></br>
-                                    </div>
-                                </div>
 
                                 <h3 style="color: black" align="center">Активные должности  &nbsp;&nbsp;&nbsp; <i style="font-size: 30px" class="fa fa-question" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Чтобы удалить должность снимите флаг с нужной позиции!"></i></h3>
                                 <div  th:each="position : ${boss.getAllPosition()}" style="margin-left: 25%">
@@ -207,8 +169,6 @@
                                 <h4>Login</h4>
                                 <input type="text" class="form-control" th:value="${boss.email}" name="email"/>
                                 <br></br>
-                                <h4>Password</h4>
-                                <input type="password" class="form-control" th:value="${boss.password}" name="password"/>
 
                                 <br></br>
 
@@ -230,6 +190,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </tr>
         </tbody>

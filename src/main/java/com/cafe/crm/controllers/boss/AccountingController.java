@@ -33,17 +33,17 @@ public class AccountingController {
 
 	@ModelAttribute(value = "worker")
 	public Worker newEntityWorker() {
-		return new Worker("Worker");
+		return new Worker("worker");
 	}
 
 	@ModelAttribute(value = "manager")
 	public Manager newEntityManager() {
-		return new Manager("Admin");
+		return new Manager("admin");
 	}
 
 	@ModelAttribute(value = "boss")
 	public Boss newEntityBoss() {
-		return new Boss("Boss");
+		return new Boss("boss");
 	}
 
 	@ModelAttribute(value = "position")
@@ -68,17 +68,17 @@ public class AccountingController {
 		List<Boss> bossList = workerService.listAllBoss();
 		List<Position> positionList = positionService.listAllPosition();
 		List<Position> allPosManager = positionService.listAllPosition();
-		for (Manager m : managerList) {
-			allPosManager.removeAll(m.getAllPosition());
+		for (Manager manager : managerList) {
+			allPosManager.removeAll(manager.getAllPosition());
 		}
 		List<Position> allPosBoss = positionService.listAllPosition();
-		for (Boss b : bossList) {
-			allPosBoss.removeAll(b.getAllPosition());
+		for (Boss boss : bossList) {
+			allPosBoss.removeAll(boss.getAllPosition());
 		}
 		List<Position> allPosWorker = positionService.listAllPosition();
-		for (Worker w : workerList) {
-			if (w.getActionForm().equalsIgnoreCase("Worker")) {
-				allPosWorker.removeAll(w.getAllPosition());
+		for (Worker worker : workerList) {
+			if (worker.getActionForm().equalsIgnoreCase("Worker")) {
+				allPosWorker.removeAll(worker.getAllPosition());
 			}
 		}
 		workerList.sort(Comparator.comparing(o -> (o.getLastName())));

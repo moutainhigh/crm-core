@@ -1,6 +1,5 @@
 package com.cafe.crm.service_impl.position;
 
-import com.cafe.crm.dao.manager.ManagerRepository;
 import com.cafe.crm.dao.position.PositionRepository;
 import com.cafe.crm.dao.worker.WorkerRepository;
 import com.cafe.crm.models.worker.Position;
@@ -19,9 +18,6 @@ public class PositionServiceImpl implements PositionService {
 
 	@Autowired
 	private WorkerRepository workerRepository;
-
-	@Autowired
-	private ManagerRepository managerRepository;
 
 	@Override
 	public void addPosition(Position position) {
@@ -42,9 +38,9 @@ public class PositionServiceImpl implements PositionService {
 	public void deletePosition(Long id) {
 		List<Worker> allWorkerList = workerRepository.findAll();
 		Position position = positionRepository.findOne(id);
-		for (Worker w : allWorkerList) {
-			w.getAllPosition().remove(position);
-			workerRepository.saveAndFlush(w);
+		for (Worker worker : allWorkerList) {
+			worker.getAllPosition().remove(position);
+			workerRepository.saveAndFlush(worker);
 		}
 		positionRepository.delete(id);
 	}

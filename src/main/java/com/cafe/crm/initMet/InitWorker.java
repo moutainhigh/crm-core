@@ -31,15 +31,9 @@ public class InitWorker {
 	private BossRepository bossRepository;
 
 	@Autowired
-	private PositionRepository positionRepository;
-
-	@Autowired
 	private RoleRepository roleRepository;
 
-	@Autowired
-	private ShiftRepository shiftRepository;
-
-@PostConstruct
+	@PostConstruct
 	public void init() {
 
 		Position workerPos = new Position("Кальянщик");
@@ -70,7 +64,7 @@ public class InitWorker {
 		Set<Shift> test2 = new HashSet<>();
 		Set<Shift> test3 = new HashSet<>();
 
-		Worker worker=new Worker();
+		Worker worker = new Worker();
 		worker.setFirstName("Max");
 		worker.setLastName("Worker");
 		worker.setEmail("Smith@gmail.com");
@@ -79,10 +73,11 @@ public class InitWorker {
 		worker.setShiftSalary(1000L);
 		worker.setCountShift(2L);
 		worker.setSalary(2000L);
-		worker.setActionForm("Worker");
+		worker.setActionForm("worker");
 		worker.setAllShifts(test);
+		worker.setEnabled(true);
 
-		Manager manager=new Manager();
+		Manager manager = new Manager();
 		manager.setPassword("manager");
 		manager.setFirstName("Anna");
 		manager.setLastName("Jons");
@@ -92,16 +87,15 @@ public class InitWorker {
 		manager.setShiftSalary(1000L);
 		manager.setCountShift(2L);
 		manager.setSalary(2000L);
-		manager.setActionForm("Admin");
+		manager.setActionForm("admin");
 		Set<Role> adminRoles = new HashSet<>();
 		adminRoles.add(roleAdmin);
 		manager.setRoles(adminRoles);
 		manager.setAllShifts(test2);
+		manager.setEnabled(true);
 
 
-
-
-		Boss boss=new Boss();
+		Boss boss = new Boss();
 		boss.setPassword("boss");
 		boss.setFirstName("Martin");
 		boss.setLastName("Set");
@@ -111,11 +105,12 @@ public class InitWorker {
 		boss.setShiftSalary(1000L);
 		boss.setCountShift(2L);
 		boss.setSalary(2000L);
-		boss.setActionForm("Boss");
+		boss.setActionForm("boss");
 		Set<Role> bossRoles = new HashSet<>();
 		bossRoles.add(roleBoss);
 		boss.setRoles(bossRoles);
 		boss.setAllShifts(test3);
+		boss.setEnabled(true);
 
 
 		workerRepository.saveAndFlush(worker);

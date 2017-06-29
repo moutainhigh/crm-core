@@ -52,194 +52,132 @@ public class WorkerServiceImpl implements WorkerService {
 
 	@Override
 	public void addWorker(Worker worker) {
+		worker.setEnabled(true);
 		workerRepository.saveAndFlush(worker);
 	}
 
 	@Override
 	public void addManager(Manager manager) {
-		Set<Role> roles=new HashSet<>();
+		Set<Role> roles = new HashSet<>();
 		roles.add(roleRepository.getRoleByName("MANAGER"));
-		if (positionRepository.getPositionByName("Администратор")==null){
-			Position adminPosition=new Position("Администратор");
-			positionRepository.saveAndFlush(adminPosition);
-			List<Position> activePosition=manager.getAllPosition();
-			activePosition.add(adminPosition);
-			manager.setAllPosition(activePosition);
-			manager.setRoles(roles);
-			managerRepository.saveAndFlush(manager);
-		}else {
-			manager.setRoles(roles);
-			managerRepository.saveAndFlush(manager);
-		}
+		List<Position> activePosition = manager.getAllPosition();
+		manager.setAllPosition(activePosition);
+		manager.setRoles(roles);
+		manager.setEnabled(true);
+		managerRepository.saveAndFlush(manager);
 	}
 
 	@Override
 	public void addBoss(Boss boss) {
-		Set<Role> roles=new HashSet<>();
+		Set<Role> roles = new HashSet<>();
 		roles.add(roleRepository.getRoleByName("BOSS"));
-		if (positionRepository.getPositionByName("Владелец")==null){
-			Position bossPosition=new Position("Владелец");
-			positionRepository.saveAndFlush(bossPosition);
-			List<Position> activePosition=boss.getAllPosition();
-			activePosition.add(bossPosition);
-			boss.setAllPosition(activePosition);
-			boss.setRoles(roles);
-			bossRepository.saveAndFlush(boss);
-		}else {
-			boss.setRoles(roles);
-			bossRepository.saveAndFlush(boss);
-		}
+		List<Position> activePosition = boss.getAllPosition();
+		boss.setAllPosition(activePosition);
+		boss.setRoles(roles);
+		boss.setEnabled(true);
+		bossRepository.saveAndFlush(boss);
 	}
 
 	@Override
-	public void editWorker(Worker worker, Long adminId, Long bossId,String password) {
-		List<Position> active=worker.getAllPosition();
-		if (adminId==null && bossId==null){
+	public void editWorker(Worker worker, Long adminId, Long bossId, String password) {
+		List<Position> active = worker.getAllPosition();
+		if (adminId == null && bossId == null) {
 			workerRepository.saveAndFlush(worker);
-		}else if (adminId!=null && bossId==null){
-			Set<Role> rolesAdmin=new HashSet<>();
+		} else if (adminId != null && bossId == null) {
+			Set<Role> rolesAdmin = new HashSet<>();
 			rolesAdmin.add(roleRepository.getRoleByName("MANAGER"));
 			active.add(positionRepository.findOne(adminId));
 			worker.setAllPosition(active);
-			Manager manager=new Manager();
-			manager.setFirstName(worker.getFirstName());
-			manager.setLastName(worker.getLastName());
-			manager.setEmail(worker.getEmail());
-			manager.setPhone(worker.getPhone());
-			manager.setShiftSalary(worker.getShiftSalary());
-			manager.setAllPosition(worker.getAllPosition());
-			manager.setPassword(password);
-			manager.setCountShift(worker.getCountShift());
-			manager.setSalary(worker.getSalary());
-			manager.setActionForm("Admin");
-			manager.setRoles(rolesAdmin);
+			Manager manager = new Manager(worker.getFirstName(), worker.getLastName(), worker.getEmail(), worker.getPhone(),
+					worker.getAllPosition(), worker.getShiftSalary(), worker.getCountShift(), worker.getSalary(), password,
+					rolesAdmin, "admin", true);
+			worker.setEnabled(false);
 			managerRepository.saveAndFlush(manager);
-			workerRepository.delete(worker);
-		}else if (adminId == null && bossId!=null){
-			Set<Role> rolesBoss=new HashSet<>();
+			workerRepository.saveAndFlush(worker);
+		} else if (adminId == null && bossId != null) {
+			Set<Role> rolesBoss = new HashSet<>();
 			rolesBoss.add(roleRepository.getRoleByName("BOSS"));
 			active.add(positionRepository.findOne(bossId));
 			worker.setAllPosition(active);
-			Boss boss=new Boss();
-			boss.setFirstName(worker.getFirstName());
-			boss.setLastName(worker.getLastName());
-			boss.setEmail(worker.getEmail());
-			boss.setPhone(worker.getPhone());
-			boss.setShiftSalary(worker.getShiftSalary());
-			boss.setAllPosition(worker.getAllPosition());
-			boss.setPassword(password);
-			boss.setCountShift(worker.getCountShift());
-			boss.setSalary(worker.getSalary());
-			boss.setActionForm("Boss");
-			boss.setRoles(rolesBoss);
+			Boss boss = new Boss(worker.getFirstName(), worker.getLastName(), worker.getEmail(), worker.getPhone(),
+					worker.getAllPosition(), worker.getShiftSalary(), worker.getCountShift(), worker.getSalary(), password,
+					rolesBoss, "boss", true);
+			worker.setEnabled(false);
 			bossRepository.saveAndFlush(boss);
-			workerRepository.delete(worker);
+			workerRepository.saveAndFlush(worker);
 		}
 	}
 
 	@Override
-	public void editManager(Manager manager, Long adminId,Long bossId) {
+	public void editManager(Manager manager, Long adminId, Long bossId) {
 
-		if (adminId!=null && bossId!=null){
-			Set<Role> rolesBoss=new HashSet<>();
+		if (adminId != null && bossId != null) {
+			Set<Role> rolesBoss = new HashSet<>();
 			rolesBoss.add(roleRepository.getRoleByName("BOSS"));
-			List<Position> active=manager.getAllPosition();
+			List<Position> active = manager.getAllPosition();
 			active.add(positionRepository.findOne(adminId));
 			active.add(positionRepository.findOne(bossId));
 			manager.setAllPosition(active);
-			Boss boss=new Boss();
-			boss.setFirstName(manager.getFirstName());
-			boss.setLastName(manager.getLastName());
-			boss.setEmail(manager.getEmail());
-			boss.setPhone(manager.getPhone());
-			boss.setShiftSalary(manager.getShiftSalary());
-			boss.setAllPosition(manager.getAllPosition());
-			boss.setPassword(manager.getPassword());
-			boss.setActionForm("Boss");
-			boss.setCountShift(manager.getCountShift());
-			boss.setSalary(manager.getSalary());
-			boss.setRoles(rolesBoss);
+			Boss boss = new Boss(manager.getFirstName(), manager.getLastName(), manager.getEmail(), manager.getPhone(),
+					manager.getAllPosition(), manager.getShiftSalary(), manager.getCountShift(), manager.getSalary(),
+					manager.getPassword(),
+					rolesBoss, "boss", true);
+			manager.setEnabled(false);
 			bossRepository.saveAndFlush(boss);
-			managerRepository.delete(manager);
-		}else if (adminId!=null) {
-			List<Position> active=manager.getAllPosition();
+			managerRepository.saveAndFlush(manager);
+		} else if (adminId != null) {
+			List<Position> active = manager.getAllPosition();
 			active.add(positionRepository.findOne(adminId));
 			manager.setAllPosition(active);
 			managerRepository.saveAndFlush(manager);
-		} else if (bossId!=null){
-			Set<Role> rolesBoss=new HashSet<>();
+		} else if (bossId != null) {
+			Set<Role> rolesBoss = new HashSet<>();
 			rolesBoss.add(roleRepository.getRoleByName("BOSS"));
-			List<Position> active=manager.getAllPosition();
+			List<Position> active = manager.getAllPosition();
 			active.add(positionRepository.findOne(bossId));
 			manager.setAllPosition(active);
-			Boss boss=new Boss();
-			boss.setFirstName(manager.getFirstName());
-			boss.setLastName(manager.getLastName());
-			boss.setEmail(manager.getEmail());
-			boss.setPhone(manager.getPhone());
-			boss.setShiftSalary(manager.getShiftSalary());
-			boss.setAllPosition(manager.getAllPosition());
-			boss.setPassword(manager.getPassword());
-			boss.setActionForm("Boss");
-			boss.setCountShift(manager.getCountShift());
-			boss.setSalary(manager.getSalary());
-			boss.setRoles(rolesBoss);
+			Boss boss = new Boss(manager.getFirstName(), manager.getLastName(), manager.getEmail(), manager.getPhone(),
+					manager.getAllPosition(), manager.getShiftSalary(), manager.getCountShift(), manager.getSalary(),
+					manager.getPassword(),
+					rolesBoss, "boss", true);
+			manager.setEnabled(false);
 			bossRepository.saveAndFlush(boss);
-			managerRepository.delete(manager);
-		}else {
-			Worker worker=new Worker();
-			worker.setFirstName(manager.getFirstName());
-			worker.setLastName(manager.getLastName());
-			worker.setEmail(manager.getEmail());
-			worker.setPhone(manager.getPhone());
-			worker.setShiftSalary(manager.getShiftSalary());
-			worker.setAllPosition(manager.getAllPosition());
-			worker.setActionForm("Worker");
-			worker.setCountShift(manager.getCountShift());
-			worker.setSalary(manager.getSalary());
-			managerRepository.delete(manager);
-			workerRepository.saveAndFlush(worker);
-		}
-
-	}
-	@Override
-	public void editBoss(Boss boss, Long bossId,Long adminId) {
-		List<Position> active=boss.getAllPosition();
-		boss.setAllPosition(active);
-		if (bossId==null && adminId==null){
-			Worker worker=new Worker();
-			worker.setFirstName(boss.getFirstName());
-			worker.setLastName(boss.getLastName());
-			worker.setEmail(boss.getEmail());
-			worker.setPhone(boss.getPhone());
-			worker.setShiftSalary(boss.getShiftSalary());
-			worker.setAllPosition(boss.getAllPosition());
-			worker.setCountShift(boss.getCountShift());
-			worker.setSalary(boss.getSalary());
-			worker.setActionForm("Worker");
-			workerRepository.saveAndFlush(worker);
-			bossRepository.delete(boss);
-		}else if (bossId == null) {
-			Set<Role> rolesAdmin=new HashSet<>();
-			rolesAdmin.add(roleRepository.getRoleByName("MANAGER"));
-			Manager manager=new Manager();
-			manager.setFirstName(boss.getFirstName());
-			manager.setLastName(boss.getLastName());
-			manager.setEmail(boss.getEmail());
-			manager.setPhone(boss.getPhone());
-			manager.setShiftSalary(boss.getShiftSalary());
-			manager.setAllPosition(boss.getAllPosition());
-			manager.setCountShift(boss.getCountShift());
-			manager.setSalary(boss.getSalary());
-			manager.setPassword(boss.getPassword());
-			manager.setActionForm("Admin");
-			manager.setRoles(rolesAdmin);
 			managerRepository.saveAndFlush(manager);
-			bossRepository.delete(boss);
 		} else {
-			Set<Role> rolesAdmin=new HashSet<>();
+			Worker worker = new Worker(manager.getFirstName(), manager.getLastName(), manager.getEmail(), manager.getPhone(),
+					manager.getAllPosition(), manager.getShiftSalary(), manager.getCountShift(), manager.getSalary(),
+					"worker", true);
+			manager.setEnabled(false);
+			managerRepository.saveAndFlush(manager);
+			workerRepository.saveAndFlush(worker);
+		}
+
+	}
+
+	@Override
+	public void editBoss(Boss boss, Long bossId, Long adminId) {
+		List<Position> active = boss.getAllPosition();
+		boss.setAllPosition(active);
+		if (bossId == null && adminId == null) {
+			Worker worker = new Worker(boss.getFirstName(), boss.getLastName(), boss.getEmail(), boss.getPhone(),
+					boss.getAllPosition(), boss.getShiftSalary(), boss.getCountShift(), boss.getSalary(),
+					"worker", true);
+			boss.setEnabled(false);
+			workerRepository.saveAndFlush(worker);
+			bossRepository.saveAndFlush(boss);
+		} else if (bossId == null) {
+			Set<Role> rolesAdmin = new HashSet<>();
+			rolesAdmin.add(roleRepository.getRoleByName("MANAGER"));
+			Manager manager = new Manager(boss.getFirstName(), boss.getLastName(), boss.getEmail(), boss.getPhone(),
+					boss.getAllPosition(), boss.getShiftSalary(), boss.getCountShift(), boss.getSalary(), boss.getPassword(),
+					rolesAdmin, "admin", true);
+			boss.setEnabled(false);
+			managerRepository.saveAndFlush(manager);
+			bossRepository.saveAndFlush(boss);
+		} else {
+			Set<Role> rolesAdmin = new HashSet<>();
 			rolesAdmin.add(roleRepository.getRoleByName("BOSS"));
-			List<Position> activePosBoss=boss.getAllPosition();
+			List<Position> activePosBoss = boss.getAllPosition();
 			activePosBoss.add(positionRepository.findOne(bossId));
 			boss.setAllPosition(activePosBoss);
 			boss.setRoles(rolesAdmin);
@@ -249,81 +187,60 @@ public class WorkerServiceImpl implements WorkerService {
 
 	@Override
 	public void deleteWorker(Worker worker) {
-		workerRepository.delete(worker);
+		worker.setEnabled(false);
+		workerRepository.saveAndFlush(worker);
 	}
 
 	@Override
-	public void castWorkerToManager(Worker worker,String password,Long adminPositionId) {
-		Set<Role> rolesAdmin=new HashSet<>();
+	public void castWorkerToManager(Worker worker, String password, Long adminPositionId) {
+		Set<Role> rolesAdmin = new HashSet<>();
 		rolesAdmin.add(roleRepository.getRoleByName("MANAGER"));
-		List<Position> active=worker.getAllPosition();
+		List<Position> active = worker.getAllPosition();
 		active.add(positionRepository.findOne(adminPositionId));
 		worker.setAllPosition(active);
-		Manager manager=new Manager();
-		manager.setFirstName(worker.getFirstName());
-		manager.setLastName(worker.getLastName());
-		manager.setEmail(worker.getEmail());
-		manager.setPhone(worker.getPhone());
-		manager.setShiftSalary(worker.getShiftSalary());
-		manager.setAllPosition(worker.getAllPosition());
-		manager.setPassword(password);
-		manager.setCountShift(worker.getCountShift());
-		manager.setSalary(worker.getSalary());
-		manager.setActionForm("Admin");
-		manager.setRoles(rolesAdmin);
+		Manager manager = new Manager(worker.getFirstName(), worker.getLastName(), worker.getEmail(), worker.getPhone(),
+				worker.getAllPosition(), worker.getShiftSalary(), worker.getCountShift(), worker.getSalary(), password,
+				rolesAdmin, "admin", true);
+		worker.setEnabled(false);
 		managerRepository.saveAndFlush(manager);
+		workerRepository.saveAndFlush(worker);
 	}
 
 	@Override
-	public void castWorkerToBoss(Worker worker, String password,Long bossPositionId) {
-		Set<Role> rolesBoss=new HashSet<>();
+	public void castWorkerToBoss(Worker worker, String password, Long bossPositionId) {
+		Set<Role> rolesBoss = new HashSet<>();
 		rolesBoss.add(roleRepository.getRoleByName("BOSS"));
-		List<Position> active=worker.getAllPosition();
+		List<Position> active = worker.getAllPosition();
 		active.add(positionRepository.findOne(bossPositionId));
 		worker.setAllPosition(active);
-		Boss boss=new Boss();
-		boss.setFirstName(worker.getFirstName());
-		boss.setLastName(worker.getLastName());
-		boss.setEmail(worker.getEmail());
-		boss.setPhone(worker.getPhone());
-		boss.setShiftSalary(worker.getShiftSalary());
-		boss.setAllPosition(worker.getAllPosition());
-		boss.setPassword(password);
-		boss.setCountShift(worker.getCountShift());
-		boss.setSalary(worker.getSalary());
-		boss.setActionForm("Boss");
-		boss.setRoles(rolesBoss);
+		Boss boss = new Boss(worker.getFirstName(), worker.getLastName(), worker.getEmail(), worker.getPhone(),
+				worker.getAllPosition(), worker.getShiftSalary(), worker.getCountShift(), worker.getSalary(), password,
+				rolesBoss, "Boss", true);
+		worker.setEnabled(false);
 		bossRepository.saveAndFlush(boss);
+		workerRepository.saveAndFlush(worker);
 	}
 
 	@Override
 	public void castManagerToBoss(Manager manager, Long bossPositionId) {
-		Set<Role> rolesBoss=new HashSet<>();
+		Set<Role> rolesBoss = new HashSet<>();
 		rolesBoss.add(roleRepository.getRoleByName("BOSS"));
-		List<Position> active=manager.getAllPosition();
+		List<Position> active = manager.getAllPosition();
 		active.add(positionRepository.findOne(bossPositionId));
 		manager.setAllPosition(active);
-		Boss boss=new Boss();
-		boss.setFirstName(manager.getFirstName());
-		boss.setLastName(manager.getLastName());
-		boss.setEmail(manager.getEmail());
-		boss.setPhone(manager.getPhone());
-		boss.setShiftSalary(manager.getShiftSalary());
-		boss.setAllPosition(manager.getAllPosition());
-		boss.setPassword(manager.getPassword());
-		boss.setCountShift(manager.getCountShift());
-		boss.setSalary(manager.getSalary());
-		boss.setActionForm("Boss");
-		boss.setRoles(rolesBoss);
+		Boss boss = new Boss(manager.getFirstName(), manager.getLastName(), manager.getEmail(), manager.getPhone(),
+				manager.getAllPosition(), manager.getShiftSalary(), manager.getCountShift(), manager.getSalary(),
+				manager.getPassword(), rolesBoss, "boss", true);
+		boss.setEnabled(true);
+		manager.setEnabled(false);
 		bossRepository.saveAndFlush(boss);
+		managerRepository.saveAndFlush(manager);
 	}
 
 	@Override
 	public Worker findWorkerById(Long id) {
 		return workerRepository.findOne(id);
 	}
-
-
 }
 
 
