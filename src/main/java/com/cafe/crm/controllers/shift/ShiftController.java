@@ -2,6 +2,7 @@ package com.cafe.crm.controllers.shift;
 
 
 import com.cafe.crm.dao.worker.WorkerRepository;
+import com.cafe.crm.models.worker.Worker;
 import com.cafe.crm.service_abstract.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
 
 
 @Controller
@@ -100,6 +102,14 @@ public class ShiftController {
 
 	@RequestMapping(value = "manager/shift/endOfShift", method = RequestMethod.GET)
 	public String endOfShift() {
+		Set<Worker> allWorker=shiftService.getActiveWorkers();// добавленные воркеры на смену
+		for (Worker worker:allWorker) {
+			Long workerShift=worker.getShiftSalary();
+			Long salaryWorker=worker.getSalary();
+			Long finalSalary=salaryWorker+workerShift;
+			worker.setSalary(finalSalary);
+			workerService.saveAndFlush(worker);
+		}
 		shiftService.closeShift();
 		return "redirect:/login";
 	}

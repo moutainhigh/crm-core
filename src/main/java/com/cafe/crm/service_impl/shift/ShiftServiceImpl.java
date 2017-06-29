@@ -37,6 +37,9 @@ public class ShiftServiceImpl implements ShiftService {
 		}
 		Shift shift = new Shift(LocalDate.now(), 0, users);
 		shift.setOpen(true);
+		for (Worker worker:users) {
+			worker.getAllShifts().add(shift);
+		}
 		shiftRepository.saveAndFlush(shift);
 		return shift;
 	}
@@ -57,6 +60,11 @@ public class ShiftServiceImpl implements ShiftService {
 		List<Worker> workers = workerRepository.findAll();
 		workers.removeAll(shiftRepository.getLast().getUsers());
 		return workers;
+	}
+
+	@Override   // Рабочие добавленные в открытую  смену
+	public Set<Worker> getActiveWorkers() {
+		return shiftRepository.getLast().getUsers();
 	}
 
 	@Override
