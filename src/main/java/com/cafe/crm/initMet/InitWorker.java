@@ -9,6 +9,7 @@ import com.cafe.crm.dao.worker.WorkerRepository;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.worker.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -77,8 +78,12 @@ public class InitWorker {
 		worker.setAllShifts(test);
 		worker.setEnabled(true);
 
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String adminPassword = "manager";
+		String hashedAdminPassword = passwordEncoder.encode(adminPassword);
+
 		Manager manager = new Manager();
-		manager.setPassword("manager");
+		manager.setPassword(hashedAdminPassword);
 		manager.setFirstName("Anna");
 		manager.setLastName("Jons");
 		manager.setEmail("manager@mail.ru");
@@ -94,9 +99,11 @@ public class InitWorker {
 		manager.setAllShifts(test2);
 		manager.setEnabled(true);
 
+		String bossPassword = "boss";
+		String hashedBossPassword = passwordEncoder.encode(bossPassword);
 
 		Boss boss = new Boss();
-		boss.setPassword("boss");
+		boss.setPassword(hashedBossPassword);
 		boss.setFirstName("Martin");
 		boss.setLastName("Set");
 		boss.setEmail("boss@mail.ru");

@@ -1,8 +1,7 @@
 package com.cafe.crm.security.configs;
 
 
-
-import  com.cafe.crm.security.handlers.CustomAuthenticationSuccessHandler;
+import com.cafe.crm.security.handlers.CustomAuthenticationSuccessHandler;
 import com.cafe.crm.security.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -13,6 +12,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -21,55 +22,57 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private AuthenticationService authenticationService;
+	@Autowired
+	private AuthenticationService authenticationService;
 
-    @Autowired
-    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+	@Autowired
+	private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
-    @Bean
-    public CustomAuthenticationSuccessHandler getHandler() {
-        return new CustomAuthenticationSuccessHandler();
-    }
-    @Bean
-    public AuthenticationService getService() {
-        return new AuthenticationService();
-    }
+	@Bean
+	public CustomAuthenticationSuccessHandler getHandler() {
+		return new CustomAuthenticationSuccessHandler();
+	}
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(authenticationService);
-    }
+	@Bean
+	public AuthenticationService getService() {
+		return new AuthenticationService();
+	}
 
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        CharacterEncodingFilter filter = new CharacterEncodingFilter();
-        filter.setEncoding("UTF-8");
-        filter.setForceEncoding(true);
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(authenticationService).passwordEncoder(passwordEncoder());
+	}
 
-        http
-            .authorizeRequests()
-                .antMatchers("/manager/**").hasAuthority("MANAGER")
-                .antMatchers("/boss/**" ,"/worker").hasAuthority("BOSS")
-            .and()
-            .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/processing-url")
-                .successHandler(customAuthenticationSuccessHandler)
-                .usernameParameter("username")
-                .passwordParameter("password")
-            .and()
-            .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
-                .invalidateHttpSession(true)
-                .permitAll()
-            .and()
-                .csrf().disable()
-                .addFilterBefore(filter, CsrfFilter.class);
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		CharacterEncodingFilter filter = new CharacterEncodingFilter();
+		filter.setEncoding("UTF-8");
+		filter.setForceEncoding(true);
 
-    }
-
-
+		http
+				.authorizeRequests()
+				.antMatchers("/manager/**").hasAuthority("MANAGER")
+				.antMatchers("/boss/**", "/worker").hasAuthority("BOSS")
+				.and()
+				.formLogin()
+				.loginPage("/login")
+				.loginProcessingUrl("/processing-url")
+				.successHandler(customAuthenticationSuccessHandler)
+				.usernameParameter("username")
+				.passwordParameter("password")
+				.and()
+				.logout()
+				.logoutUrl("/logout")
+				.logoutSuccessUrl("/login?logout")
+				.invalidateHttpSession(true)
+				.permitAll()
+				.and()
+				.csrf().disable()
+				.addFilterBefore(filter, CsrfFilter.class);
+	}
 }
