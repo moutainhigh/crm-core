@@ -1,3 +1,44 @@
+# Database settings
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/sys?serverTimezone=Europe/Moscow
+    username: root
+    password: 12345
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
+    database: default
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+  mandatory-file-encoding: UTF-8
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+    multipart:
+      max-file-size: 5MB
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: cafe.crm.test@gmail.com
+    password: Integer123
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+      defaultEncoding: UTF-8
+#Logging
+logging:
+  config: classpath:logback.xml
+
 time:
  server: ntp.xs4all.nl,ntp04.oal.ul.pt,ntp02.oal.ul.pt,time-a.nist.gov
 

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/createPassword.css"/>
+    <link rel="stylesheet" th:href="@{/st.css}" type="text/css"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script th:src="@{/filter.js}"></script>
+</head>
+<body>
+
+<header>
+    <div th:replace="bossnavbar :: bossNavbar"></div>
+    <!--/.navbar -->
+    <div class="container" style="margin-top:50px">
+
+        <!--Модали для смены пароля-->
+        <div class="modal fade bs-example-modal-sm" id="successModal" tabindex="-1" role="dialog"
+             aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Success</h3>
+                        </div>
+                        <div class="panel-body">
+                            Смена пароля прошла успешно.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade bs-example-modal-sm" id="errorModal" tabindex="-1" role="dialog"
+             aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Error</h3>
+                        </div>
+                        <div class="panel-body">
+                            Действующий пароль введён неверно.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade bs-example-modal-sm" id="wrongModal" tabindex="-1" role="dialog"
+             aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Warning</h3>
+                        </div>
+                        <div class="panel-body">
+                            Новые пароли не совпадают.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 align="center"><h1 th:align="center" style="color: #5bc0de;">Меню настроек</h1></h3>
+
+        </div>
+        <div class="tabbable"> <!-- Only required for left/right tabs -->
+            <div class="col-md-12">
+                <ul class="nav nav-tabs">
+                    <li><a th:href="'#discounts'" data-toggle="tab">
+                        <h4 style="color: #5bc0de;" text="Общие настройки">Общие настройки</h4></a>
+                    </li>
+                    <li><a th:href="'#tables' " data-toggle="tab">
+                        <h4 style="color: #5bc0de;" text="Редактирование столов">Редактирование столов</h4></a>
+                    </li>
+                    <li><a th:href="'#passwordChange'" data-toggle="tab">
+                        <h4 style="color: #5bc0de;" text="Смена пароля">Смена пароля</h4></a>
+                    </li>
+                    <li><a th:href="'#smtpSettings'" data-toggle="tab">
+                        <h4 style="color: #5bc0de;" text="Настройки SMTP">Настройки SMTP</h4></a>
+                    </li>
+                    <li><a th:href="'#loggerSettings'" data-toggle="tab">
+                        <h4 style="color: #5bc0de;" text="Логирование">Логирование</h4></a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane active" id="discounts">
+                    <h1 th:align="center" style="color: #5bc0de;">Скидки</h1>
+
+                    <div class="table" style="border-radius:5px;" th:object="${wrapper}">
+                        <table class="table table-striped table-bordered table-hover">
+                            <tr>
+                                <th>#</th>
+                                <th>Параметр</th>
+                                <th>Значение</th>
+                                <th>Активация</th>
+                            </tr>
+                            <tbody class="searchable" th:each="property, stat : *{properties}">
+                            <tr>
+                                <input type="hidden" th:field="*{properties[__${stat.index}__].id}"/>
+                                <input type="hidden" th:field="*{properties[__${stat.index}__].name}"/>
+
+                                <td th:text="*{properties[__${stat.index}__].id}"></td>
+                                <td th:text="*{properties[__${stat.index}__].name}"></td>
+
+                                <td>
+                                    <input th:class="form2" type="number" required="" class="form-control" name="value"
+                                           th:field="*{properties[__${stat.index}__].value}" pattern="\d+"
+                                           title="только цифры" min="0" max="100"></input>
+                                </td>
+
+                                <td>
+                                    <input type="checkbox" data-toggle="toggle" data-on="Вкл" data-off="Выкл"
+                                           th:checked="${property.getEnable()}"
+                                           style="width:20px;height:20px;" th:id="'check_'+${property.getId()}"
+                                           name="enable"
+                                           th:field="*{properties[__${stat.index}__].enable}"/>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div th:align="center">
+                            <button type="submit" class="tn btn-lg btn-primary btn-block" id="send" name="upd">
+                                Сохранить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="tables">
+                    <div class="row">
+                        <h1 th:align="center" style="color: #5bc0de;">Редактирование столов</h1>
+
+                        <br/>
+                        <table data-page-length='25' class="table table-striped table-bordered">
+                            <tr>
+                                <th><p th:align="center">Номер</p></th>
+                                <th><p th:align="center">Название</p></th>
+                                <th><p th:align="center">Редактировать</p></th>
+                                <th><p th:align="center">Удалить</p></th>
+                            </tr>
+                            <tbody class="searchable" th:each="board,iter:${boards}">
+                            <tr th:id="'boardTR' + ${board.id}">
+                                <td><p th:align="center" th:text="${iter.count}"></p></td>
+                                <td><p th:align="center" th:text="${board.name}"></p></td>
+                                <td class="col-lg-2"><a id="createBoard" class="btn btn-primary btn-info"
+                                                        th:href="'#editBoard'+${board.id}"
+                                                        data-toggle="modal">Редактировать </a></td>
+                                <td class="col-lg-2">
+                                    <form method="post" th:action="'/boss/board/delete/'+${board.id}">
+                                        <button type="submit"
+                                                class="btn btn-primary btn-danger" name="del">
+                                            Удалить
+                                        </button>
+                                    </form>
+
+                                </td>
+                            </tr>
+                            <form role="form" method="post" action="/boss/board/edit"
+                                  style="margin: 10px auto; width: 50%; paddng-bottom:40px;">
+                                <div th:object="${board}" align="center" class="modal fade"
+                                     th:id="'editBoard'+${board.id}"
+                                     tabindex="-1"
+                                     role="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close"><span
+                                                        aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">Редактирование </h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group">
+
+                                                    <input required="" type="hidden" class="form-control"
+                                                           th:value="${board.id}" name="id"
+                                                            ></input>
+                                                    <h4><label>Название</label></h4>
+                                                    <input type="text" class="form-control"
+                                                           name="name"
+                                                           th:value="${board.name}" required=""
+                                                            ></input>
+                                                </div>
+
+                                            </div>
+                                            <button id="super" type="submit" name="upd"
+                                                    class="btn btn-lg btn-primary btn-block">Сохранить
+                                            </button>
+
+                                            <div class="modal-footer">
+                                                <button id="clsoe" type="button" name="upd" class="btn btn-default"
+                                                        data-dismiss="modal">
+                                                    Отмена
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                            <form role="form" method="post" action="/boss/board/new"
+                                  style="margin: 10px auto; width: 50%; paddng-bottom:40px;">
+                                <div th:object="${board}" align="center" class="modal fade" th:id="'newBoard'"
+                                     tabindex="-1"
+                                     role="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close"><span
+                                                        aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title">Новый стол</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group">
+
+                                                    <input required="" type="hidden" class="form-control"
+                                                           name="id"
+                                                            ></input>
+                                                    <h4><label>Название</label></h4>
+                                                    <input type="text" class="form-control"
+                                                           name="name"
+                                                           required=""
+                                                            ></input>
+                                                </div>
+
+                                            </div>
+                                            <button id="superr" type="submit" name="upd"
+                                                    class="btn btn-lg btn-primary btn-block">Создать
+                                            </button>
+
+                                            <div class="modal-footer">
+                                                <button id="close" type="button" name="upd" class="btn btn-default"
+                                                        data-dismiss="modal">
+                                                    Отмена
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="button" class="btn btn-lg btn-primary btn-block"
+                            data-toggle="modal" data-target="#newBoard">Создать новый стол
+                    </button>
+                </div>
+                <div class="tab-pane" id="passwordChange">
+                    <div class="container" style="min-width: 50%">
+                        <br/>
+
+                        <div class="row">
+                            <div class="col-md-5 col-md-offset-3">
+                                <h1> </h1>
+                                <div class="form-group">
+                                    <div class="form-group" style="border-radius: 10px; background-color: white">
+                                        <label class="col-md-offset-4" style="font-size: large">Старый пароль</label>
+                                        <div class="input-group"><span class="input-group-addon"><span
+                                                class="glyphicon glyphicon-exclamation-sign"></span></span>
+                                            <input type="password" class="form-control" name="oldPassword" id="old"
+                                                   th:required="required"></input>
+                                        </div>
+
+                                        <label class="col-md-offset-4" style="font-size: large">Новый пароль</label>
+                                        <div class="input-group"><span class="input-group-addon"><span
+                                                class="glyphicon glyphicon-lock"></span></span>
+                                            <input type="password" class="form-control" name="newPassword" id="new"
+                                                   th:required="required" data-toggle="popover" title="Сложность пароля"
+                                                   data-content="Введите пароль..."></input>
+                                        </div>
+
+                                        <label class="col-md-offset-4" style="font-size: large">Подтверждение</label>
+                                        <div class="input-group"><span class="input-group-addon"><span
+                                                class="glyphicon glyphicon-resize-vertical"></span></span>
+                                            <input type="password" class="form-control" name="secondNewPassword"
+                                                   id="secondNew" th:required="required"></input>
+                                        </div>
+                                        <br/>
+                                    </div>
+                                </div>
+                                <input type="submit" name="submit" id="submit" value="Сохранить" onclick="testB()"
+                                       class="tn btn-lg btn-primary btn-block"></input>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="smtp"></div>
+                <div class="tab-pane" id="loggerSettings">
+                    <div class="container" style="min-width: 50%">
+                        <br/>
+
+                        <div class="row">
+                            <div class="col-md-5 col-md-offset-3">
+                                <h1></h1>
+
+                                <form class="form-horizontal" role="form">
+                                    <div class="form-group " style="border-radius: 10px; background-color: white">
+                                        <h4 th:align="center">Текущий уровень логирования</h4>
+
+                                        <div th:align="center" th:text="${logLevel}"
+                                             style="font-size: larger; color: blueviolet"></div>
+
+                                        <div class="form-group">
+                                            <h4 th:align="center">Выберите уровень логирования</h4>
+
+                                            <div class="col-md-4 col-md-offset-4">
+                                                <select class="form-control" id="chooseLogLevel" name="level">
+                                                    <option value="ERROR">ERROR</option>
+                                                    <option value="INFO">INFO</option>
+                                                    <option value="DEBUG">DEBUG</option>
+                                                    <option value="TRACE">TRACE</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="submit" name="submit" value="Сохранить" onclick="sendLogLevel()"
+                                           class="tn btn-lg btn-primary btn-block"></input>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/.container -->
+</header>
+<script type="text/javascript" src="/js/createPassword.js"></script>
+<script type="text/javascript" src="/js/base.js"></script>
+
+</body>
+
+</html>
