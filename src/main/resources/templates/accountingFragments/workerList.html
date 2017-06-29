@@ -16,6 +16,7 @@
             <th> Оклад за смену </th>
             <th> Количество смен </th>
             <th> Зарплата </th>
+            <th> Бонус </th>
             <th></th>
             <th></th>
         </tr>
@@ -35,6 +36,7 @@
             <td  th:text="${worker.shiftSalary}"></td>
             <td  th:text="${worker.allShifts.size()}"></td>
             <td  th:text="${worker.salary}"></td>
+            <td  th:text="${worker.bonus}"></td>
             <td  class="col-lg-2" >
                 <a class="btn btn-primary btn-info" th:href="'#workerEdit'+${worker.id}" data-toggle="modal" >Редактировать</a>
             </td>

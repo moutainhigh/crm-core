@@ -46,6 +46,9 @@ public class Worker implements Serializable {
 	@Column(name = "salary", nullable = true)
 	private Long salary;
 
+	@Column(name = "bonus", nullable = true)
+	private Long bonus=0L;
+
 	@Column(name = "actionForm")
 	private String actionForm;
 
@@ -89,6 +92,14 @@ public class Worker implements Serializable {
 
 	@Column(name = "enabled", nullable = false)
 	private Boolean enabled = true;
+
+	public Long getBonus() {
+		return bonus;
+	}
+
+	public void setBonus(Long bonus) {
+		this.bonus = bonus;
+	}
 
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;

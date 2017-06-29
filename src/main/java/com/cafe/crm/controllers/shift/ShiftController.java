@@ -14,6 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -101,16 +103,28 @@ public class ShiftController {
 	}
 
 	@RequestMapping(value = "manager/shift/endOfShift", method = RequestMethod.GET)
-	public String endOfShift() {
-		Set<Worker> allWorker=shiftService.getActiveWorkers();// добавленные воркеры на смену
-		for (Worker worker:allWorker) {
-			Long workerShift=worker.getShiftSalary();
-			Long salaryWorker=worker.getSalary();
-			Long finalSalary=salaryWorker+workerShift;
-			worker.setSalary(finalSalary);
+	public String endOfShift(@RequestParam(name = "bonus") Long[] bonus2,
+							 @RequestParam(name = "idWorker") Long[] idWorker) {
+
+		Map<Long, Long> workerBonus = new HashMap<>();
+		for (int i = 0; i < bonus2.length; i++) {
+			for (int j = 0; j < idWorker.length; j++) {
+				workerBonus.put(idWorker[j], bonus2[j]);
+			}
+		}
+		for (Map.Entry<Long, Long> entry : workerBonus.entrySet()) {
+			Worker worker = workerService.findOne(entry.getKey());
+			Long bonus = worker.getBonus();
+			bonus = bonus + entry.getValue();
+			worker.setBonus(bonus);
+			Long shiftSalary = worker.getShiftSalary();
+			Long salaryWorker = worker.getSalary();
+			salaryWorker = salaryWorker + shiftSalary;
+			worker.setSalary(salaryWorker);
 			workerService.saveAndFlush(worker);
 		}
 		shiftService.closeShift();
 		return "redirect:/login";
 	}
 }
+

@@ -49,6 +49,7 @@ public class CalculateController {
 	public ModelAndView manager() {
 		Set<Worker> allWorker=shiftService.getActiveWorkers();// добавленные воркеры на смену
 		ModelAndView modelAndView = new ModelAndView("clients");
+		modelAndView.addObject("allWorker", allWorker);
 		modelAndView.addObject("listBoard", boardService.getAll());
 		modelAndView.addObject("listCalculate", calculateService.getAllOpen());
 		modelAndView.addObject("listMenu", menuService.getOne(1L));
