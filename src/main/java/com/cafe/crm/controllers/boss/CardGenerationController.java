@@ -58,8 +58,8 @@ public class CardGenerationController {
 			card.setSecretKey(secretKey);
 			card.setLink(link);
 			UUID uuid = UUID.randomUUID();
-			String bucketName = "cafe-crm/qrCode";
-			String keyNameQrCode = "cafe-crm-content-stringQr" + uuid;
+			String bucketName = "cafe-com.cafe.crm/qrCode";
+			String keyNameQrCode = "cafe-com.cafe.crm-content-stringQr" + uuid;
 			File file = qrService.generateQrImage(link);
 			card.setQrCode(file);
 			card.setKeyNameQrCode(keyNameQrCode);
@@ -72,7 +72,7 @@ public class CardGenerationController {
 	@RequestMapping(value = "/getQr", method = RequestMethod.GET)
 	public ModelAndView getQrFromCardById(@RequestParam(value = "id") Long id) throws IOException {
 		Card card = cardRepository.getCardById(id);
-		String bucketName = "cafe-crm/qrCode";
+		String bucketName = "cafe-com.cafe.crm/qrCode";
 		AmazonS3 s3client = amazonService.getConnection(card.getAccessKey(), card.getSecretKey());
 		String keyNameQrCode = card.getKeyNameQrCode();
 		URL s3clientUrl = s3client.getUrl(bucketName, keyNameQrCode);

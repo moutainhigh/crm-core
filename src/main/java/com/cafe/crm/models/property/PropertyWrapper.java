@@ -1,6 +1,7 @@
 package com.cafe.crm.models.property;
 
 import java.util.List;
+
 // wrapper for send properties to view
 public class PropertyWrapper {
 

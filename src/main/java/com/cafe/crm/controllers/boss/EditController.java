@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -40,8 +41,8 @@ public class EditController {
 	@RequestMapping(value = "/property/edit", method = RequestMethod.POST)
 	public String map(@ModelAttribute PropertyWrapper wrapper, HttpServletRequest request) {
 		propertyService.saveCollection(wrapper.getProperties());
-		String referer = request.getHeader("Referer");
-		return "redirect:" + referer;
+		String referrer = request.getHeader("Referer");
+		return "redirect:" + referrer;
 	}
 
 	@RequestMapping(value = "/board/edit", method = RequestMethod.GET)
@@ -57,8 +58,8 @@ public class EditController {
 		if (br != null) {
 			boardService.save(board);
 		}
-		String referer = request.getHeader("Referer");
-		return "redirect:" + referer;
+		String referrer = request.getHeader("Referer");
+		return "redirect:" + referrer;
 	}
 
 	@RequestMapping(value = "/board/delete/{id}", method = RequestMethod.POST)
@@ -71,13 +72,16 @@ public class EditController {
 			}
 		}
 		boardService.deleteById(id);
+
+
+
 		return "redirect:" + referer;
 	}
 
 	@RequestMapping(value = "/board/new", method = RequestMethod.POST)
 	public String newBoard(Board board, HttpServletRequest request) {
 		boardService.save(board);
-		String referer = request.getHeader("Referer");
-		return "redirect:" + referer;
+		String referrer = request.getHeader("Referer");
+		return "redirect:" + referrer;
 	}
 }

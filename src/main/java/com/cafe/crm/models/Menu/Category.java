@@ -2,6 +2,7 @@ package com.cafe.crm.models.Menu;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
 import java.util.Set;
 

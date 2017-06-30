@@ -1,8 +1,7 @@
 package com.cafe.crm.security.configs;
 
 
-
-import  com.cafe.crm.security.handlers.CustomAuthenticationSuccessHandler;
+import com.cafe.crm.security.handlers.CustomAuthenticationSuccessHandler;
 import com.cafe.crm.security.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;

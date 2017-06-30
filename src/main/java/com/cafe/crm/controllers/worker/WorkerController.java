@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 
 @Controller
@@ -43,7 +42,7 @@ public class WorkerController {
 	@ResponseBody
 	public ResponseEntity<?> changePassword(@RequestParam(name = "old") String oldPassword,
 											@RequestParam(name = "new") String newPassword,
-											@RequestParam(name = "secondNew") String secondNewPassword, Authentication auth, HttpServletRequest request) {
+											@RequestParam(name = "secondNew") String secondNewPassword, Authentication auth) {
 		UserDetails userDetails = (UserDetails) auth.getPrincipal();
 		String password = userDetails.getPassword();
 		String login = userDetails.getUsername();

@@ -5,7 +5,6 @@ import com.cafe.crm.models.worker.Worker;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 
@@ -93,6 +92,7 @@ public class Shift {
 		isOpen = open;
 	}
 
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -103,8 +103,7 @@ public class Shift {
 		if (id != null ? !id.equals(shift.id) : shift.id != null) return false;
 		if (dateShift != null ? !dateShift.equals(shift.dateShift) : shift.dateShift != null) return false;
 		if (checkValue != null ? !checkValue.equals(shift.checkValue) : shift.checkValue != null) return false;
-		if (isOpen != null ? !isOpen.equals(shift.isOpen) : shift.isOpen != null) return false;
-		return users != null ? users.equals(shift.users) : shift.users == null;
+		return isOpen != null ? isOpen.equals(shift.isOpen) : shift.isOpen == null;
 	}
 
 	@Override
@@ -113,7 +112,6 @@ public class Shift {
 		result = 31 * result + (dateShift != null ? dateShift.hashCode() : 0);
 		result = 31 * result + (checkValue != null ? checkValue.hashCode() : 0);
 		result = 31 * result + (isOpen != null ? isOpen.hashCode() : 0);
-		result = 31 * result + (users != null ? users.hashCode() : 0);
 		return result;
 	}
 
