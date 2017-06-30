@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CardServiceImpl implements CardService{
+public class CardServiceImpl implements CardService {
 	@Autowired
 	private CardRepository cardRepository;
 
@@ -32,6 +32,38 @@ public class CardServiceImpl implements CardService{
 	public Card getOne(Long id) {
 		return cardRepository.findOne(id);
 	}
+
+	@Override
+	public Card checkWhoInvitedMe(String searchParam) {
+
+		Card card = cardRepository.findByPhoneNumber(searchParam);
+		if (card != null) {
+			return card;
+		}
+		card = cardRepository.findByEmail(searchParam);
+		if (card != null) {
+			return card;
+		}
+		String[] split = searchParam.split(" ");
+		if (split.length == 2) {
+		card =	cardRepository.findByNameAndSurname(split[0], split[1]);
+			if (card != null) {
+				return card;
+			}
+			card = cardRepository.findBySurnameAndName(split[0],split[1]);
+			if (card != null) {
+				return card;
+			}
+		}
+
+		card = cardRepository.findBySurname(searchParam);
+		if (card != null) {
+			return card;
+		}
+		return null;
+	}
+
+
 }
 
 

@@ -1,8 +1,13 @@
 package com.cafe.crm.models.card;
 
+import org.hibernate.validator.constraints.Range;
+
 import javax.persistence.*;
 import java.io.File;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "cards")
@@ -19,10 +24,13 @@ public class Card {
 
 	private String name;
 
-	private String photo;
+	@Basic(fetch = FetchType.LAZY)
+	@Column(name="photo")@Lob
+	private byte[] photo = new byte[1];
 
 	private String email;
 
+    @Range(min=0,max=100)
 	private Long discount = 0L;
 
 	private Long balance = 0L;
@@ -35,13 +43,53 @@ public class Card {
 
 	private String keyNameQrCode;
 
+    private String surname;
+
 	private String accessKey;
 
 	private String secretKey;
 
 	private String link;
 
+	private Boolean activatedCard = false;
+
+	@ElementCollection
+	private Set<Long> idMyInvitedUsers = new HashSet<>();
+
+	private Long WhoInvitedMe;
+
 	public Card() {
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+	public Boolean getActivatedCard() {
+		return activatedCard;
+	}
+
+	public void setActivatedCard(Boolean activatedCard) {
+		this.activatedCard = activatedCard;
+	}
+
+	public Set<Long> getIdMyInvitedUsers() {
+		return idMyInvitedUsers;
+	}
+
+	public void setIdMyInvitedUsers(Set<Long> idMyInvitedUsers) {
+		this.idMyInvitedUsers = idMyInvitedUsers;
+	}
+
+	public Long getWhoInvitedMe() {
+		return WhoInvitedMe;
+	}
+
+	public void setWhoInvitedMe(Long whoInvitedMe) {
+		WhoInvitedMe = whoInvitedMe;
 	}
 
 	public String getPhoneNumber() {
@@ -76,11 +124,11 @@ public class Card {
 		this.name = name;
 	}
 
-	public String getPhoto() {
+	public byte[] getPhoto() {
 		return photo;
 	}
 
-	public void setPhoto(String photo) {
+	public void setPhoto(byte[] photo) {
 		this.photo = photo;
 	}
 
@@ -172,7 +220,11 @@ public class Card {
 		Card card = (Card) o;
 
 		if (id != null ? !id.equals(card.id) : card.id != null) return false;
-		return token != null ? token.equals(card.token) : card.token == null;
+		if (phoneNumber != null ? !phoneNumber.equals(card.phoneNumber) : card.phoneNumber != null) return false;
+		if (token != null ? !token.equals(card.token) : card.token != null) return false;
+		if (name != null ? !name.equals(card.name) : card.name != null) return false;
+		if (!Arrays.equals(photo, card.photo)) return false;
+		return email != null ? email.equals(card.email) : card.email == null;
 	}
 
 	@Override

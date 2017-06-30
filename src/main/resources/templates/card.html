@@ -7,63 +7,295 @@
 
 </head>
 <body>
-
 <div class="container" style="width: 250px; box-shadow: 0 0 3px 0; border-radius: 10px" th:each="card : ${card}">
-    <center>
 
-        <img style="border-radius: 5px" th:src="${card.photo}" width="150" height="150"/><br/>
+    <div th:if="${card.activatedCard}">
 
-        <button class="btn" style="background: rgba(193,211,226,0.38); height:30px; width:150px;font-size: 15px">
+        <center>
+            <label for="myFile">
+                <img alt="Выбрать фото" style="border-radius: 5px" class="picture"
+                     th:src="@{'/manager/image/'+${card.id}}" width="150" height="150"/><br/>
+            </label>
+            <div>
+                <form method="POST" enctype="multipart/form-data" action="/manager/uploadPhoto">
+                    <input id="myFile" class="hide" style="display:none" type="file" name="file"/>
+                    <input id="id" class="hide2" type="hidden" name="id" th:value="${card.id}"/>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </form>
+            </div>
+            <h3 style="margin-right: 20px;" th:text="${card.name}"></h3>
+        </center>
+        <br/>
+        <div style="float:left; height: 40px; width: 110px"><h4>Скидка:</h4></div>
+        <div style="height: 40px;float:left; width: 110px"><h4 th:text="${card.discount} + '%'"></h4></div>
+        <div style="float:left; height: 40px; width: 110px"><h4>Баланс:</h4></div>
+        <div style="height: 40px;float:left; width: 110px"><h4 th:text="${card.balance} + 'р'"></h4></div>
+        <div style="float:left; height: 40px; width: 110px"><h4>Потрачено:</h4></div>
+        <div style="height: 40px;float:left; width: 110px"><h4 th:text="${card.spend} + 'р'"></h4></div>
+        <div style="float:left; height: 70px; width: 110px"><h4>Дата последнего визита:</h4></div>
+        <div style="height: 70px;float:left; width: 110px"><h4 th:text="${card.visitDate != null} ? ${card.visitDate} : ''"></h4></div>
+
+        <button class="btn"
+                style="background: rgba(182,200,215,0.58); height:30px; width:220px; margin-bottom: 10px; font-size: 18px; padding:0"
+                data-toggle="modal" href="#1myModal">
             Редактировать
         </button>
+        <button class="btn" data-toggle="modal" href="#2myModal"
+                style="background: rgba(182,200,215,0.58); height:30px; width:220px; margin-bottom: 10px; font-size: 18px; padding:0">
+            Пополнить баланс
+        </button>
+        <button class="btn" data-toggle="modal" href="#3myModal"
+                style="background: rgba(182,200,215,0.58); height:30px; width:220px;margin-bottom: 10px;font-size: 18px; padding:0">
+            Прикрепить к расчету
+        </button>
 
-        <h3 style="margin-right: 20px;" th:text="${card.name}"></h3>
-    </center>
-    <br/>
+        <button class="btn" data-toggle="modal" href="#4myModal"
+                style="background: rgba(182,200,215,0.58); height:30px; width:220px;margin-bottom: 10px;font-size: 18px; padding:0">
+            Открыть счёт
+        </button>
+    </div>
+    <div th:if="!${card.activatedCard}">
+        <center>
+            <label for="myFile">
+                <img alt="Выбрать фото" style="border-radius: 5px" class="picture"
+                     th:src="@{'/manager/image/'+${card.id}}" width="150" height="150"/><br/>
+            </label>
+            <div>
+                <form method="POST" enctype="multipart/form-data" action="/manager/uploadPhoto">
+                    <input id="myFile" class="hide" style="display:none" type="file" name="file"/>
+                    <input id="id" class="hide2" type="hidden" name="id" th:value="${card.id}"/>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </form>
+            </div>
+            <hr/>
+            <button class="btn "
+                    style="background: rgba(182,200,215,0.58); height:30px; width:220px; margin-bottom: 10px; font-size: 18px; padding:0 "
+                    data-toggle="modal" href="#regModal">
+                Регистрация
+            </button>
 
-    <div style="float:left; height: 40px; width: 110px"><h4>Скидка:</h4></div>
-    <div style="height: 40px;float:left; width: 110px"><h4 th:text="${card.discount} + '%'"></h4></div>
-    <div style="float:left; height: 40px; width: 110px"><h4>Баланс:</h4></div>
-    <div style="height: 40px;float:left; width: 110px"><h4 th:text="${card.balance} + 'р'"></h4></div>
-    <div style="float:left; height: 40px; width: 110px"><h4>Потрачено:</h4></div>
-    <div style="height: 40px;float:left; width: 110px"><h4 th:text="${card.spend} + 'р'"></h4></div>
-    <div style="float:left; height: 70px; width: 110px"><h4>Дата последнего визита:</h4></div>
-    <div style="height: 70px;float:left; width: 110px"><h4 th:text="${card.visitDate}"></h4></div>
+            <h3 style="margin-right: 20px;" th:text="${card.name}"></h3>
+        </center>
+        <br/>
 
-    <button class="btn"
-            style="background: rgba(182,200,215,0.58); height:30px; width:220px; margin-bottom: 10px; font-size: 18px">
-        Пополнить баланс
-    </button>
-    <button class="btn" data-toggle="modal" href="#myModal"
-            style="background: rgba(182,200,215,0.58); height:30px; width:220px;margin-bottom: 10px;font-size: 18px">
-        Прикрепить к расчету
-    </button>
+    </div>
 
-    <div th:id="myModal" class="modal fade">
+    <div th:id="1myModal" class="modal fade">
         <div class="modal-dialog " style="width: 300px;" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button class="close" type="button" data-dismiss="modal">×</button>
-                    <h4 class="modal-title">Добавление карты к расчету</h4>
-                </div>
-                <div class="modal-body" style="width:300px;">
-                    <div th:each="calculate : ${listCalculate}">
-                        <form method="post" action="/manager/add-card-to-calculate">
+                <div class="modal-photo">
+                    <div class="modal-header">
+                        <button class="close" type="button" data-dismiss="modal">×</button>
+                        <h4 class="modal-title">Редактирование</h4>
+                    </div>
+                    <div class="modal-body" style="width:300px;">
+                        <form method="post" th:action="@{/manager/card/edit}">
                             <input type="hidden" name="idCard" th:value="${card.id}"/>
-                            <input type="hidden" name="idCalculate" th:value="${calculate.id}"/>
-                            <button type="submit" class="btn btn-default"
-                                    style=" font-size: 17px; float: left; height: 40px"
-                                    th:text="${calculate.getBoard().name}"></button>
+                            <div class="form-group">
+                                <label>Имя владельца</label>
+                                <input class="form-control" required="" autocomplete="off" name="name"
+                                       th:value="${card.name}"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Номер телефона (8xxxxxxxxxx)</label>
+                                <input class="form-control" pattern="^8\+?\d{10}" required="" th:type="text" autocomplete="off" name="phone"
+                                       th:value="${card.phoneNumber}"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Почтовый ящик</label>
+                                <input class="form-control" required="" th:type="email" autocomplete="off" name="email"
+                                       th:value="${card.email}"/>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-default">Сохранить
+                                </button>
+                                <button type="button"
+                                        class="btn btn-default" data-dismiss="modal">Отмена
+                                </button>
+                            </div>
                         </form>
-                        <div th:text="${calculate.description}" style="border: 1px solid #858585;
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:id="2myModal" class="modal fade">
+        <div class="modal-dialog " style="width: 300px;" role="document">
+            <div class="modal-content">
+                <div class="modal-photo">
+                    <div class="modal-header">
+                        <button class="close" type="button" data-dismiss="modal">×</button>
+                        <h4 class="modal-title">Пополнение баланса</h4>
+                    </div>
+                    <div class="modal-body" style="width:300px;">
+                        <form method="post" th:action="@{/manager/card/addMoney}">
+                            <div class="form-group">
+                                <input type="hidden" name="id" th:value="${card.id}"/>
+                                <input class="form-control" required="" th:type="number" autocomplete="off" name="money"
+                                       pattern="\d+" title="только цифры" placeholder="Введите сумму"/>
+                            </div>
+                            <button type="submit" class="btn btn-default"
+                            >Пополнить
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:id="3myModal" class="modal fade">
+        <div class="modal-dialog " style="width: 300px;" role="document">
+            <div class="modal-content">
+                <div class="modal-photo">
+                    <div class="modal-header">
+                        <button class="close" type="button" data-dismiss="modal">×</button>
+                        <h4 class="modal-title">Добавление карты к расчету</h4>
+                    </div>
+                    <div class="modal-body" style="width:300px;">
+                        <div th:each="calculate : ${listCalculate}">
+                            <form method="post" action="/manager/add-card-to-calculate">
+                                <input type="hidden" name="idCard" th:value="${card.id}"/>
+                                <input type="hidden" name="idCalculate" th:value="${calculate.id}"/>
+                                <button type="submit" class="btn btn-default"
+                                        style=" font-size: 17px; float: left; height: 40px"
+                                        th:text="${calculate.getBoard().name}"></button>
+                            </form>
+                            <div th:text="${calculate.description}" style="border: 1px solid #858585;
                         border-radius:5px; margin-left: 78px; width:200px;height: 40px;margin-bottom: 15px;font-size: 15px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="4myModal" class="modal fade">
+        <div class="modal-dialog " style="width: 300px;margin-top: 50px" role="document">
+            <div class="modal-content">
+                <div class="modal-photo">
+                    <div class="modal-header">
+                        <button class="close" type="button" data-dismiss="modal">×</button>
+                        <h4 class="modal-title">Новый счёт</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4> Описание</h4>
+                        <form id="formMod" action="/manager/add-calculate-with-card" method="post">
+                            <input autocomplete="off" style="font-size: 20px" class="form-control" type="text"
+                                   name="description" maxlength="30" required=""/>
+                            <h4 style="margin-right: 50px; float: left">Кол-во человек</h4>
+                            <h4>Стол</h4>
+                            <input type="hidden" style="font-size: 20px" class="form-control" th:value="${card.id}"
+                                   name="idCard" required=""/>
+                            <input autocomplete="off"
+                                   style="width: 90px;margin-right: 60px; float: left;font-size: 20px"
+                                   class="form-control" type="text"
+                                   name="number" list="data" maxlength="2" required=""/>
+                        </form>
+                        <datalist id="data">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </datalist>
+
+                        <select class="form-control " form="formMod" style="width:110px;font-size: 17px" name="boardId">
+                            <c th:each="board : ${boards}">
+                                <option th:value="${board.id}"><h4 th:text="${board.name}"></h4></option>
+                            </c>
+                        </select>
+                        <br/>
+                        <br/>
+                        <button form="formMod" class="btn btn-primary" type="submit">Создать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:id="regModal" class="modal fade">
+        <div class="modal-dialog " style="width: 300px;" role="document">
+            <div class="modal-content">
+                <div class="modal-photo">
+                    <div class="modal-header">
+                        <button class="close" type="button" data-dismiss="modal">×</button>
+                        <h4 class="modal-title">Регистрация</h4>
+                    </div>
+                    <div class="modal-body" style="width:300px;">
+                        <form method="post" th:action="@{/manager/card/registration}">
+                            <input type="hidden" name="idCard" th:value="${card.id}"/>
+                            <div class="form-group">
+                                <center>
+                                <img  id="invitedAvatar" alt="Фото нет"  style="border-radius: 5px ; display: none;" class="picture"
+                                      width="150" height="150"/>
+
+                                <h4 id="checkLabel">Пригласивший друг</h4>
+                                <input th:type="hidden" id="idInvited" name="invited"/>
+                                <input id="checkForm" placeholder="Введите имя , телефон либо email"
+                                       class="form-control" autocomplete="off"/>
+                                <button th:onclick="'check(event);'" class="btn btn-info">Проверить</button>
+                                </center>
+                            </div>
+                            <div class="form-group">
+                                <label>Имя владельца</label>
+                                <input class="form-control" required="" autocomplete="off" name="name"
+                                       th:value="${card.name}"/>
+
+                            </div>
+                            <div class="form-group">
+                                <label>Номер телефона (8xxxxxxxxxx)</label>
+                                <input class="form-control" required="" autocomplete="off" name="phone"
+                                       th:value="${card.phoneNumber}" pattern="^8\+?\d{10}"
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label>Почтовый ящик</label>
+                                <input class="form-control" type="email" required="" autocomplete="off" name="email"
+                                       th:value="${card.email}"/>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-default">Сохранить
+                                </button>
+                                <button type="button"
+                                        class="btn btn-default" data-dismiss="modal">Отмена
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script th:inline="javascript">
+	function check(e) {
+		e.preventDefault();
+		var our = [[${card.id}]];
 
+		var formData = {
+			searchParam: $("#checkForm").val(),
+            ourId: our
+		}
+		$.ajax({
+			type: "POST",
+			url: "/manager/card/checkUser",
+			data: formData,
+			success: function (card) {
+				$("#checkLabel").attr('style', 'color:green ;');
+				$("#checkLabel").html(card.name + " " + card.surname);
+				$("#idInvited").val(card.id);
+				var imageURL = "/manager/image/"+card.id;
+				$("#invitedAvatar").attr("src",imageURL).fadeIn();
+				$("#invitedAvatar").attr('style', ' border-radius: 5px ');
 
+			},
+			error: function (result) {
+				var notFound = '<h4 style="color:red">Пользователь не найден</h4>';
+				$("#checkLabel").html(notFound);
+				$("#invitedAvatar").attr('style', ' border-radius: 5px ; display: none;');
+				$("#idInvited").val(null);
+			}
+		});
+	}
+</script>
 </body>
 </html>

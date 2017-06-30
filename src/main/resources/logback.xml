@@ -16,6 +16,17 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
+    <appender name="BALANCE" class="ch.qos.logback.core.FileAppender">
+        <!-- Name of the file where the log messages are written -->
+        <file>crm.cafe.cardBalance</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="com.cafe.crm.utils.CardLogger" level="INFO">
+        <appender-ref ref="BALANCE" />
+        <appender-ref ref="STDOUT" />
+    </logger>
     <logger name="org.springframework.web" level="INFO">
         <appender-ref ref="FILE" />
         <appender-ref ref="STDOUT" />
