@@ -1,6 +1,6 @@
 package com.cafe.crm.dao.goods;
 
-import com.cafe.crm.models.estimate.GoodsCategory;
+import com.cafe.crm.models.goods.GoodsCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Set;

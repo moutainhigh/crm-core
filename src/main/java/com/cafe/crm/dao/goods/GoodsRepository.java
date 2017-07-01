@@ -1,6 +1,6 @@
 package com.cafe.crm.dao.goods;
 
-import com.cafe.crm.models.estimate.Goods;
+import com.cafe.crm.models.goods.Goods;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -12,6 +12,6 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
     List<Goods> findByNameIgnoreCaseAndVisibleIsTrueAndDateBetween(String name, LocalDate from, LocalDate to);
     List<Goods> findByNameIgnoreCaseAndCategoryNameIgnoreCaseAndVisibleIsTrueAndDateBetween(String name, String categoryName, LocalDate from, LocalDate to);
     List<Goods> findByVisibleIsTrueAndDateBetween(LocalDate from, LocalDate to);
-    Set<Goods> 	findByNameStartingWith(String startName);
+    Set<Goods> findByNameStartingWith(String startName);
     List<Goods> findByIdIn(long[] ids);
 }

@@ -1,8 +1,8 @@
 package com.cafe.crm.service_impl.goods;
 
 import com.cafe.crm.dao.goods.GoodsRepository;
-import com.cafe.crm.models.estimate.Goods;
-import com.cafe.crm.models.estimate.GoodsCategory;
+import com.cafe.crm.models.goods.Goods;
+import com.cafe.crm.models.goods.GoodsCategory;
 import com.cafe.crm.service_abstract.goods.GoodsCategoryService;
 import com.cafe.crm.service_abstract.goods.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;

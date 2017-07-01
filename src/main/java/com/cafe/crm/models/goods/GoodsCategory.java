@@ -1,4 +1,4 @@
-package com.cafe.crm.models.estimate;
+package com.cafe.crm.models.goods;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -14,7 +14,7 @@ public class GoodsCategory {
     @GeneratedValue
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Поле \"Название\" не может быть пустым")
     private String name;
 
     public GoodsCategory() {

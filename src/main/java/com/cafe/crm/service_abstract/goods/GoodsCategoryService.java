@@ -1,6 +1,6 @@
 package com.cafe.crm.service_abstract.goods;
 
-import com.cafe.crm.models.estimate.GoodsCategory;
+import com.cafe.crm.models.goods.GoodsCategory;
 
 import java.util.Set;
 

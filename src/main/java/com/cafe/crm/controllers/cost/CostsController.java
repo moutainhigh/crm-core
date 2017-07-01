@@ -1,7 +1,7 @@
 package com.cafe.crm.controllers.cost;
 
-import com.cafe.crm.models.estimate.Goods;
-import com.cafe.crm.models.estimate.GoodsCategory;
+import com.cafe.crm.models.goods.Goods;
+import com.cafe.crm.models.goods.GoodsCategory;
 import com.cafe.crm.service_abstract.goods.GoodsCategoryService;
 import com.cafe.crm.service_abstract.goods.GoodsService;
 import com.cafe.crm.utils.TimeManager;
@@ -109,7 +109,7 @@ public class CostsController {
 	@ResponseBody
 	public ResponseEntity<?> saveGoods(@ModelAttribute @Valid Goods goods, BindingResult result) {
 		if (result.hasErrors()) {
-			ResponseEntity.badRequest().body("Не удалось добавить товар!");
+			return ResponseEntity.badRequest().body("Не удалось добавить товар!");
 		}
 		goodsService.save(goods);
 
@@ -120,7 +120,7 @@ public class CostsController {
 	@ResponseBody
 	public ResponseEntity<?> updateGoods(@ModelAttribute @Valid Goods goods, BindingResult result) {
 		if (result.hasErrors()) {
-			ResponseEntity.badRequest().body("Не удалось изменить товар!");
+			return ResponseEntity.badRequest().body("Не удалось изменить товар!");
 		}
 		goodsService.save(goods);
 
@@ -143,7 +143,7 @@ public class CostsController {
 			long[] longIds = Arrays.stream(strIds).mapToLong(Long::parseLong).toArray();
 			goodsService.offVisibleStatus(longIds);
 		}catch (NumberFormatException ex){
-			ResponseEntity.badRequest().body("Не удалось удалить товары!");
+			return ResponseEntity.badRequest().body("Не удалось удалить товары!");
 		}
 
 		return ResponseEntity.ok("Товары успешно удалены!");

@@ -1,9 +1,10 @@
-package com.cafe.crm.models.estimate;
+package com.cafe.crm.models.goods;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
@@ -26,6 +27,7 @@ public class Goods {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
+    @Valid
     @NotNull(message = "Поле \"Категория\" не может быть пустым")
     @ManyToOne
     @JoinColumn(name = "goods_category_id")

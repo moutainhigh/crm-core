@@ -1,7 +1,7 @@
 package com.cafe.crm.service_impl.goods;
 
 import com.cafe.crm.dao.goods.GoodsCategoryRepository;
-import com.cafe.crm.models.estimate.GoodsCategory;
+import com.cafe.crm.models.goods.GoodsCategory;
 import com.cafe.crm.service_abstract.goods.GoodsCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

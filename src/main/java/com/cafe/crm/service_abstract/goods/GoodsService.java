@@ -1,7 +1,7 @@
 package com.cafe.crm.service_abstract.goods;
 
 
-import com.cafe.crm.models.estimate.Goods;
+import com.cafe.crm.models.goods.Goods;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,5 +15,5 @@ public interface GoodsService {
     List<Goods> findByNameAndDateBetween(String name, LocalDate from, LocalDate to);
     List<Goods> findByNameAndCategoryNameAndDateBetween(String name, String categoryName, LocalDate from, LocalDate to);
     List<Goods> findByDateBetween(LocalDate from, LocalDate to);
-    Set<Goods> 	findByNameStartingWith(String startName);
+    Set<Goods> findByNameStartingWith(String startName);
 }
