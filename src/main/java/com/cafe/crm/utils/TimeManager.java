@@ -30,6 +30,7 @@ public class TimeManager {
 	}
 
 	public LocalDateTime getDate() {
+		timeClient.setDefaultTimeout(500);
 			for (String server : servers) {
 				try {
 					inetAddress = InetAddress.getByName(server);
