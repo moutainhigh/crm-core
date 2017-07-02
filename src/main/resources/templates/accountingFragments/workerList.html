@@ -21,12 +21,6 @@
         </tr>
         <tbody class="searchableWorker">
         <tr th:each="worker : ${workerList}">
-
-            <div th:if="${worker.enabled==false}">
-            </div>
-
-            <div th:if="${worker.enabled==true}">
-
             <td  th:text="${worker.firstName}"></td>
             <td  th:text="${worker.lastName}"></td>
             <td  th:text="${worker.allPosition}"></td>
@@ -479,7 +473,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
         </tr>
 

@@ -22,12 +22,6 @@
         <tbody class="searchableManager">
         <tr th:each="manager : ${managerList}">
 
-            <div th:if="${manager.enabled==false}">
-            </div>
-
-            <div th:if="${manager.enabled==true}">
-
-
             <td  th:text="${manager.firstName}"></td>
             <td  th:text="${manager.lastName}"></td>
             <td  th:text="${manager.email}"></td>
@@ -193,7 +187,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
         </tr>
         </tbody>

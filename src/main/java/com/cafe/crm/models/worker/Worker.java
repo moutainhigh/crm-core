@@ -49,6 +49,9 @@ public class Worker implements Serializable {
 	@Column(name = "actionForm")
 	private String actionForm;
 
+	@Column(name = "enabled", nullable = false)
+	private Boolean enabled = true;
+
 	public Worker() {
 		this.allPosition = new ArrayList<>();
 	}
@@ -86,9 +89,6 @@ public class Worker implements Serializable {
 		this.actionForm = actionForm;
 		this.enabled = enabled;
 	}
-
-	@Column(name = "enabled", nullable = false)
-	private Boolean enabled = true;
 
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;

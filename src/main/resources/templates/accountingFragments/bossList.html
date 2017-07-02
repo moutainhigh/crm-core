@@ -22,11 +22,6 @@
         <tbody class="searchableBoss">
         <tr th:each="boss : ${bossList}">
 
-            <div th:if="${boss.enabled==false}">
-            </div>
-
-            <div th:if="${boss.enabled==true}">
-
             <td th:text="${boss.firstName}"></td>
             <td th:text="${boss.lastName}"></td>
             <td th:text="${boss.email}"></td>
@@ -190,7 +185,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
         </tr>
         </tbody>

@@ -11,6 +11,7 @@ import com.cafe.crm.models.worker.*;
 import com.cafe.crm.service_abstract.worker.WorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -36,19 +37,24 @@ public class WorkerServiceImpl implements WorkerService {
 	@Autowired
 	private RoleRepository roleRepository;
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+//	private BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+
 	@Override
 	public List<Worker> listAllWorker() {
-		return workerRepository.findAll();
+		return workerRepository.getAllActiveWorker();
 	}
 
 	@Override
 	public List<Manager> listAllManager() {
-		return managerRepository.findAll();
+		return managerRepository.getAllActiveManager();
 	}
 
 	@Override
 	public List<Boss> listAllBoss() {
-		return bossRepository.findAll();
+		return bossRepository.getAllActiveBoss();
 	}
 
 	@Override
@@ -59,7 +65,6 @@ public class WorkerServiceImpl implements WorkerService {
 
 	@Override
 	public void addManager(Manager manager) {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String hashedPassword = passwordEncoder.encode(manager.getPassword());
 		manager.setPassword(hashedPassword);
 		Set<Role> roles = new HashSet<>();
@@ -73,7 +78,6 @@ public class WorkerServiceImpl implements WorkerService {
 
 	@Override
 	public void addBoss(Boss boss) {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String hashedPassword = passwordEncoder.encode(boss.getPassword());
 		boss.setPassword(hashedPassword);
 		Set<Role> roles = new HashSet<>();
@@ -87,7 +91,6 @@ public class WorkerServiceImpl implements WorkerService {
 
 	@Override
 	public void editWorker(Worker worker, Long adminId, Long bossId, String password) {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String hashedPassword = passwordEncoder.encode(password);
 		List<Position> active = worker.getAllPosition();
 		if (adminId == null && bossId == null) {
@@ -119,7 +122,6 @@ public class WorkerServiceImpl implements WorkerService {
 
 	@Override
 	public void editManager(Manager manager, Long adminId, Long bossId) {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String hashedPassword = passwordEncoder.encode(manager.getPassword());
 		if (adminId != null && bossId != null) {
 			Set<Role> rolesBoss = new HashSet<>();
@@ -166,7 +168,6 @@ public class WorkerServiceImpl implements WorkerService {
 
 	@Override
 	public void editBoss(Boss boss, Long bossId, Long adminId) {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String hashedPassword = passwordEncoder.encode(boss.getPassword());
 		List<Position> active = boss.getAllPosition();
 		boss.setAllPosition(active);
@@ -205,7 +206,6 @@ public class WorkerServiceImpl implements WorkerService {
 
 	@Override
 	public void castWorkerToManager(Worker worker, String password, Long adminPositionId) {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String hashedPassword = passwordEncoder.encode(password);
 		Set<Role> rolesAdmin = new HashSet<>();
 		rolesAdmin.add(roleRepository.getRoleByName("MANAGER"));
@@ -222,7 +222,6 @@ public class WorkerServiceImpl implements WorkerService {
 
 	@Override
 	public void castWorkerToBoss(Worker worker, String password, Long bossPositionId) {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String hashedPassword = passwordEncoder.encode(password);
 		Set<Role> rolesBoss = new HashSet<>();
 		rolesBoss.add(roleRepository.getRoleByName("BOSS"));
@@ -239,7 +238,6 @@ public class WorkerServiceImpl implements WorkerService {
 
 	@Override
 	public void castManagerToBoss(Manager manager, Long bossPositionId) {
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String hashedPassword = passwordEncoder.encode(manager.getPassword());
 		Set<Role> rolesBoss = new HashSet<>();
 		rolesBoss.add(roleRepository.getRoleByName("BOSS"));
