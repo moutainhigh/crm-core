@@ -40,8 +40,6 @@ public class WorkerServiceImpl implements WorkerService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
-//	private BCryptPasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
-
 	@Override
 	public List<Worker> listAllWorker() {
 		return workerRepository.getAllActiveWorker();
