@@ -5,8 +5,7 @@ import com.cafe.crm.models.worker.Manager;
 
 public interface ManagerService {
 
-
-	Manager getUserByLogin(String login);
+	Manager getUserByEmail(String login);
 
 
 	void save(Manager manager);

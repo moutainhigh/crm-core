@@ -15,8 +15,8 @@ public class ManagerServiceImpl implements ManagerService {
 	private ManagerRepository managerRepository;
 
 	@Override
-	public Manager getUserByLogin(@Param("name") String login) {
-		return managerRepository.getUserByLogin(login);
+	public Manager getUserByEmail(String email) {
+		return managerRepository.findByEmail(email);
 	}
 
 	@Override

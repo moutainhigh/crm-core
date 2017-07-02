@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"></meta>
+    <title>Title</title>
+</head>
+<body>
+
+<div class="wrapper" th:fragment="newManager">
+    <form action="" method="POST" class="form-signin">
+        <button type="button" class="btn btn-lg btn-primary btn-block"
+                data-toggle="modal" data-target="#myModalManager">Добавить Нового Администратора</button>
+    </form>
+    <!-- Modal -->
+    <div id="myModalManager" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Форма Добавления Нового Администратора</h4>
+                </div>
+                <div class="modal-body">
+
+                    <form action="#" th:action="@{/worker/addManager}" th:object="${manager}" method="POST" class="form-signin">
+                        <h2 class="form-signin-heading">Заполните Поля</h2>
+                        <input type="text" class="form-control" th:field="*{firstName}"  placeholder="Имя" required="" autofocus="" />
+                        <br></br>
+
+                        <input type="text" class="form-control" th:field="*{lastName}" placeholder="Фамилия" required="" autofocus="" />
+                        <br></br>
+
+                        <h3 style="color: black" align="center">Выберете нужные должности</h3>
+                        <div th:each="position : ${positionList}">
+                            <div style="margin-left: 25%">
+                                <div th:if="${position.jobName}=='Администратор'">
+                                    <input id="pos4" style="margin-right: 20px ;width: 30px;height: 30px;" type="checkbox"  th:value="${position.id}" th:checked="checked" name="allPosition" autocomplete="off" value=""/>
+                                    <label for="pos4"><h3 style="color: black;font-size: 30px" th:text="${position.jobName}"></h3></label>
+                                </div>
+
+                                <div class="question" th:if="${position.jobName} == 'Владелец'" >
+                                    <input id="pos6" class="coupon_questionBoss" style="width: 30px;height: 30px; margin-right: 20px" type="checkbox" th:value="${position.id}" name="bossPositionId" autocomplete="off" value=""/>
+                                    <label for="pos6"><h3 style="color: black;font-size: 30px" th:text="${position.jobName}"></h3></label>
+                                </div>
+
+
+                                <div th:if="${position.jobName}!='Администратор' AND ${position.jobName}!='Владелец'">
+                                    <input id="pos1" style="margin-right: 20px ;width: 30px;height: 30px;" type="checkbox"  th:value="${position.id}" name="allPosition" autocomplete="off" value=""/>
+                                    <label for="pos1"><h3 style="color: black;font-size: 30px" th:text="${position.jobName}"></h3></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br></br>
+
+                        <input type="text" class="form-control" th:field="*{shiftSalary}"  placeholder="Размер Оклада За Смену" required="" autofocus="" />
+                        <br></br>
+
+                        <input type="text" class="form-control" th:field="*{email}"  placeholder="Email" required="" autofocus="" />
+                        <br></br>
+
+                        <input type="text" class="form-control" th:field="*{phone}"  placeholder="Номер телефона" required="" autofocus="" />
+                        <br></br>
+
+
+                        <div id="errorBlock"></div>
+
+                        <input type="password" class="form-control"  id="pass5" placeholder="Пароль для входа в систему" name="password" required="" autofocus="" />
+                        <br></br>
+
+                        <input type="password" class="form-control"  id="repPass5" placeholder="Подтвердите пароль" name="submitAdminPassword" required="" autofocus="" />
+                        <br></br>
+
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Добавить Администратора В Базу Данных</button>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+
+                <script>
+                    $(document).ready(function() {
+                        $('#repPass5').change(function() {
+                            var pass = $("#pass5").val();
+                            var pass_rep = $("#repPass5").val();
+                            if (pass != pass_rep) {
+                                $("#pass5").css('border', 'red 1px solid');
+                                $("#repPass5").css('border', 'red 1px solid');
+                                $('#errorBlock').html('<h4 align="center" style="color:red">Пароли не совпадают</h4>');
+                                alert("Пароли не совпадают!");
+                            }
+                        });
+                    });
+                </script>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

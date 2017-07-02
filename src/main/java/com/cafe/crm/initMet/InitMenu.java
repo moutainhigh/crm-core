@@ -49,68 +49,6 @@ public class InitMenu {
 
     @PostConstruct
 	public void init() {
-
-		Role roleBoss = new Role();
-		roleBoss.setName("BOSS");
-		roleRepository.saveAndFlush(roleBoss);
-
-		Role roleUser = new Role();
-		roleUser.setName("MANAGER");
-		roleRepository.saveAndFlush(roleUser);
-        Set<Shift> test = new HashSet<>();
-        Set<Shift> test2 = new HashSet<>();
-
-		Boss admin = new Boss();
-		admin.setLogin("boss");
-		admin.setEmail("boss@mail.ru");
-		admin.setPhone(9111111111L);
-		admin.setPassword("boss");
-		admin.setFirstName("Martin");
-		admin.setLastName("Jons");
-		admin.setSalary(200L);
-		admin.setPosition("Владелец");
-		admin.setCountShift(2L);
-		admin.setShiftSalary(1L);
-		admin.setAllShifts(test);
-
-
-		Set<Role> adminRoles = new HashSet<>();
-		adminRoles.add(roleBoss);
-		admin.setRoles(adminRoles);
-
-		Worker worker=new Worker();
-		worker.setFirstName("Max");
-		worker.setLastName("Smith");
-		worker.setPosition("Кальянщик");
-		worker.setShiftSalary(10L);
-		worker.setCountShift(2L);
-		worker.setSalary(20L);
-
-		workerRepository.saveAndFlush(worker);
-		workerRepository.saveAndFlush(admin);
-		bossRepository.saveAndFlush(admin);
-
-		Manager manager = new Manager();
-		manager.setLogin("manager");
-		manager.setEmail("manager@mail.ru");
-		manager.setPhone(9123456789L);
-		manager.setPassword("manager");
-		manager.setFirstName("Anna");
-		manager.setLastName("Jons");
-		manager.setSalary(100L);
-		manager.setPosition("Управляющий");
-		manager.setCountShift(2L);
-		manager.setShiftSalary(1L);
-		manager.setAllShifts(test2);
-
-
-		Set<Role> userRoles = new HashSet<>();
-		userRoles.add(roleUser);
-		manager.setRoles(userRoles);
-
-		workerRepository.saveAndFlush(manager);
-		managerRepository.saveAndFlush(manager);
-
 		Category category1 = new Category("Салаты");
 		Category category2 = new Category("Напитки");
 		Category category3 = new Category("Десерты");

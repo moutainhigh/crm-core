@@ -10,16 +10,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class BossServiceImpl implements BossService {
 
-		@Autowired
+	@Autowired
 	private BossRepository bossRepository;
 
 	@Override
-	public Boss getUserByLogin(String login) {
-		return bossRepository.getUserByLogin(login);
+	public Boss getUserByEmail(String email) {
+		return bossRepository.findByEmail(email);
 	}
 
 	@Override
 	public void save(Boss boss) {
-      bossRepository.saveAndFlush(boss);
+		bossRepository.saveAndFlush(boss);
 	}
 }
