@@ -48,13 +48,13 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Override
 	public List<Worker> findAllUsers() {
-		return workerRepository.findAll();
+		return workerRepository.getAllActiveWorker();
 	}
 
 	@Override
 	public List<Worker> getWorkers() {    // Рабочие не добавленные в открытую  смену
 
-		List<Worker> workers = workerRepository.findAll();
+		List<Worker> workers = workerRepository.getAllActiveWorker();
 		workers.removeAll(shiftRepository.getLast().getUsers());
 		return workers;
 	}

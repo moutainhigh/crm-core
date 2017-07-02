@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,6 +28,9 @@ public class WorkerController {
 
 	@Autowired
 	private ManagerService managerService;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@RequestMapping(value = {"/"}, method = RequestMethod.GET)
 	public String redirectToLoginPage() {
@@ -48,16 +52,18 @@ public class WorkerController {
 		String password = userDetails.getPassword();
 		String email = userDetails.getUsername();
 		Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
-		if (newPassword.equals(secondNewPassword) && oldPassword.equals(password)) {
+		if (newPassword.equals(secondNewPassword) && passwordEncoder.matches(oldPassword,password)) {
 			roles.forEach(role -> {
 				if (role.getAuthority().equals("BOSS")) {
 					Boss boss = bossService.getUserByEmail(email);
-					boss.setPassword(newPassword);
+					String hashedPassword=passwordEncoder.encode(newPassword);
+					boss.setPassword(hashedPassword);
 					bossService.save(boss);
 
 				} else if (role.getAuthority().equals("MANAGER")) {
 					Manager manager = managerService.getUserByEmail(email);
-					manager.setPassword(newPassword);
+					String hashedPassword=passwordEncoder.encode(newPassword);
+					manager.setPassword(hashedPassword);
 					managerService.save(manager);
 				}
 			});

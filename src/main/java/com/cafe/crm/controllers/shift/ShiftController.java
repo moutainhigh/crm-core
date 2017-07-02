@@ -36,7 +36,7 @@ public class ShiftController {
 		ModelAndView mv;
 		if (shiftService.getLast() == null || !shiftService.getLast().getOpen()) {
 			mv = new ModelAndView("shiftPage");
-			mv.addObject("list", workerService.findAll());
+			mv.addObject("list", workerService.getAllActiveWorker());
 			mv.addObject("date", dateTimeFormatter.format(date));
 		} else {
 			mv = new ModelAndView("editingShiftPage");
