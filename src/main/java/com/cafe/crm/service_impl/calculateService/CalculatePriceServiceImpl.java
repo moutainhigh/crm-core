@@ -1,7 +1,7 @@
 package com.cafe.crm.service_impl.calculateService;
 
-import com.cafe.crm.service_abstract.calculateService.CalculatePriceService;
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.service_abstract.calculateService.CalculatePriceService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

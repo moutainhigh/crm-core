@@ -5,6 +5,7 @@ import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 @Configuration
+@EnableAspectJAutoProxy
 public class CommonConfig {
 
 	private final AdvertisingProperties advertisingProperties;

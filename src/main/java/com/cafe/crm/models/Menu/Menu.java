@@ -22,6 +22,7 @@ public class Menu {
     private Set<Category> categories;
 
     public Menu() {
+
     }
 
     public Set<Category> getCategories() {

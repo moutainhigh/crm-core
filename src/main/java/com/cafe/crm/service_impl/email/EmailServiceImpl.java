@@ -3,8 +3,8 @@ package com.cafe.crm.service_impl.email;
 
 import com.cafe.crm.configs.property.AdvertisingProperties;
 import com.cafe.crm.models.client.Client;
-import com.cafe.crm.service_abstract.email.HtmlService;
 import com.cafe.crm.service_abstract.email.EmailService;
+import com.cafe.crm.service_abstract.email.HtmlService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;

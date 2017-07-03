@@ -15,22 +15,14 @@ public class InitProperties {
 
 	@PostConstruct
 	public void	init() {
-
-
-		Property property = new Property("Базовая скидка карты",5,true);
-		Property property1 = new Property("Бонус от реферала",10,true);
-		Property property2= new Property("Первичный бонус от реферала",15,true);
-		Property property3= new Property("Тестовая настройка",16,true);
-
-
-
-
-
+		Property property = new Property("Базовая скидка карты",5L,true);
+		Property property1 = new Property("Бонус от реферала",10L,true);
+		Property property2= new Property("Реферальный бонус",150L,true);
+		Property property3= new Property("Тестовая настройка",16L,true);
 
 		propertyService.save(property);
 		propertyService.save(property1);
 		propertyService.save(property2);
 		propertyService.save(property3);
-
 	}
 }

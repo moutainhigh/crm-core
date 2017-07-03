@@ -21,7 +21,7 @@ public class Property {
 	@NotEmpty
 	private String name;
 
-	private Integer value;
+	private Long value;
 
 	private Boolean enable;
 
@@ -36,7 +36,7 @@ public class Property {
 	public Property() {
 	}
 
-	public Property(String name, Integer value, Boolean enable) {
+	public Property(String name, Long value, Boolean enable) {
 		this.name = name;
 		this.value = value;
 		this.enable = enable;
@@ -46,12 +46,12 @@ public class Property {
 		this.enable = enable;
 	}
 
-	public Integer getValue() {
+	public Long getValue() {
 
 		return value;
 	}
 
-	public void setValue(Integer value) {
+	public void setValue(Long value) {
 		this.value = value;
 	}
 

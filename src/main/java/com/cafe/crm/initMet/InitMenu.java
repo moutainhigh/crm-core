@@ -3,11 +3,11 @@ package com.cafe.crm.initMet;
 
 import com.cafe.crm.dao.boss.BossRepository;
 import com.cafe.crm.dao.manager.ManagerRepository;
-import com.cafe.crm.dao.role.RoleRepository;
-import com.cafe.crm.dao.worker.WorkerRepository;
 import com.cafe.crm.dao.menu.CategoryRepository;
 import com.cafe.crm.dao.menu.MenuRepository;
 import com.cafe.crm.dao.menu.ProductRepository;
+import com.cafe.crm.dao.role.RoleRepository;
+import com.cafe.crm.dao.worker.WorkerRepository;
 import com.cafe.crm.models.Menu.Category;
 import com.cafe.crm.models.Menu.Menu;
 import com.cafe.crm.models.Menu.Product;
@@ -46,6 +46,7 @@ public class InitMenu {
 
 	@Autowired
 	private ManagerRepository managerRepository;
+
 
     @PostConstruct
 	public void init() {
