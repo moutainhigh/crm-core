@@ -80,7 +80,7 @@ function sendLogLevel() {
     var levelMap = { level: $('#chooseLogLevel').val()};
 
     if($('#chooseLogLevel').val() == 'INFO' || $('#chooseLogLevel').val() == 'ERROR'
-        || $('#chooseLogLevel').val() == 'DEBUG' || $('#chooseLogLevel').val() == 'TRACE') {
+        || $('#chooseLogLevel').val() == 'DEBUG' || $('#chooseLogLevel').val() == 'WARN') {
         $.ajax({
             type: "POST",
             url: "/boss/property/logLevel",

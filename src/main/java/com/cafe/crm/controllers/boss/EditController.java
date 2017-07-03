@@ -107,20 +107,26 @@ public class EditController {
 	@RequestMapping(value = "/property/logLevel", method = RequestMethod.POST)
 	public ResponseEntity<?> setLogLevel(@RequestParam(name = "level") String logLevel) {
 		log.info("Log level: " + logLevel);
-		if (logLevel.equalsIgnoreCase("ERROR")) {
-			log.setLevel(Level.ERROR);
-			hibLog.setLevel(Level.ERROR);
-		} else if(logLevel.equalsIgnoreCase("INFO")) {
-			log.setLevel(Level.INFO);
-			hibLog.setLevel(Level.INFO);
-		} else if(logLevel.equalsIgnoreCase("DEBUG")) {
-			log.setLevel(Level.DEBUG);
-			hibLog.setLevel(Level.DEBUG);
-		} else if(logLevel.equalsIgnoreCase("TRACE")) {
-			log.setLevel(Level.TRACE);
-			hibLog.setLevel(Level.TRACE);
-		} else {
-			log.error("Unknown log level: " + logLevel);
+		switch (logLevel) {
+			case ("ERROR"):
+				log.setLevel(Level.ERROR);
+				hibLog.setLevel(Level.ERROR);
+				break;
+			case ("INFO"):
+				log.setLevel(Level.INFO);
+				hibLog.setLevel(Level.INFO);
+				break;
+			case ("DEBUG"):
+				log.setLevel(Level.DEBUG);
+				hibLog.setLevel(Level.DEBUG);
+				break;
+			case ("WARN"):
+				log.setLevel(Level.WARN);
+				hibLog.setLevel(Level.WARN);
+				break;
+			default:
+				log.error("Unknown log level: " + logLevel);
+				break;
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
