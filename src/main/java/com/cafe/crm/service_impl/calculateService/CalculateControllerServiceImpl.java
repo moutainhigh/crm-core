@@ -153,11 +153,10 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
                 clientCard.setVisitDate(timeManager.getDate().toLocalDate());
                 cardService.save(clientCard);
             }
-            if (client.getCard() != null) {
-                Card card = client.getCard();
-                card.setBalance(card.getBalance() - client.getPayWithCard());
-                listCard.add(card);
-                sendBalanceInfoAfterDebiting(card.getBalance(), client.getPayWithCard(), card.getEmail());
+            if (clientCard != null) {
+                clientCard.setBalance(clientCard.getBalance() - client.getPayWithCard());
+                listCard.add(clientCard);
+                sendBalanceInfoAfterDebiting(clientCard.getBalance(), client.getPayWithCard(), clientCard.getEmail());
             }
         }
         cardService.saveAll(listCard);
