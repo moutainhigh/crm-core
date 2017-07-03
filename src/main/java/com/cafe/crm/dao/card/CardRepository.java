@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface CardRepository extends JpaRepository<Card, Long> {
 	@Query("SELECT u FROM Card u WHERE u.id =:id")
 	Card getCardById(@Param("id") Long id);
@@ -18,5 +20,9 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 	Card findByNameAndSurname(String name, String surname);
 
 	Card findBySurnameAndName(String surname, String name);
+
+	@Query("SELECT u FROM Card u WHERE u.surname =:name")
+	List<Card> findByListSurname(@Param("name") String name);
+
 }
 

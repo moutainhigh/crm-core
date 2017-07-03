@@ -47,6 +47,7 @@ public class InitMenu {
 	@Autowired
 	private ManagerRepository managerRepository;
 
+
     @PostConstruct
 	public void init() {
 

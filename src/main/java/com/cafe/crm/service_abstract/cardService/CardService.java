@@ -18,4 +18,7 @@ public interface CardService {
 
 	Card checkWhoInvitedMe(String searchParam);
 
+	Card findByPhone(String phone);
+
+	List<Card> findByListSurname(String name);
 }

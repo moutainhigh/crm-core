@@ -33,6 +33,15 @@ public class CardServiceImpl implements CardService {
 		return cardRepository.findOne(id);
 	}
 
+	public Card findByPhone(String phone) {
+		return cardRepository.findByPhoneNumber(phone);
+	}
+
+	@Override
+	public List<Card> findByListSurname(String name) {
+		return cardRepository.findByListSurname(name);
+	}
+
 	@Override
 	public Card checkWhoInvitedMe(String searchParam) {
 
@@ -55,7 +64,10 @@ public class CardServiceImpl implements CardService {
 				return card;
 			}
 		}
-
+		List<Card> list = cardRepository.findByListSurname(searchParam);
+		if(list.size() > 1){
+			return null;
+		}
 		card = cardRepository.findBySurname(searchParam);
 		if (card != null) {
 			return card;

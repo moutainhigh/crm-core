@@ -143,12 +143,16 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
             Client client = clientService.getOne(idCl);
             client.setState(false);
             listClient.add(client);
-            if (client.getCard().getWhoInvitedMe() != null && client.getCard().getVisitDate() == null) { // referral bonus
-                Card invitedCard = cardService.getOne(client.getCard().getWhoInvitedMe());
-                invitedCard.setBalance(invitedCard.getBalance() + propertyService.getOne(3L).getValue());
-                cardService.save(invitedCard);
+            Card clientCard = client.getCard();
+            if(clientCard != null) {               // referral bonus
+                if (clientCard.getWhoInvitedMe() != null && clientCard.getVisitDate() == null) {
+                    Card invitedCard = cardService.getOne(clientCard.getWhoInvitedMe());
+                    invitedCard.setBalance(invitedCard.getBalance() + propertyService.getOne(3L).getValue());
+                    cardService.save(invitedCard);
+                }
+                clientCard.setVisitDate(timeManager.getDate().toLocalDate());
+                cardService.save(clientCard);
             }
-            client.getCard().setVisitDate(timeManager.getDate().toLocalDate());
             if (client.getCard() != null) {
                 Card card = client.getCard();
                 card.setBalance(card.getBalance() - client.getPayWithCard());
