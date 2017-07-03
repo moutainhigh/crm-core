@@ -1,12 +1,12 @@
 package com.cafe.crm.service_impl.calculateService;
 
+import com.cafe.crm.models.client.LayerProduct;
 import com.cafe.crm.service_abstract.boardService.BoardService;
 import com.cafe.crm.service_abstract.calculateService.CalculateControllerService;
 import com.cafe.crm.service_abstract.calculateService.CalculatePriceService;
 import com.cafe.crm.service_abstract.calculateService.CalculateService;
 import com.cafe.crm.service_abstract.cardService.CardService;
 import com.cafe.crm.service_abstract.clientService.ClientService;
-import com.cafe.crm.service_abstract.menu_service.ProductService;
 import com.cafe.crm.models.client.Board;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.card.Card;
@@ -33,9 +33,6 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 	@Autowired
 	private CalculatePriceService calculatePriceService;
-
-	@Autowired
-	private ProductService productService;
 
 	public void createCalculate(Long id, Long number, String description) {
 		Board board = boardService.getOne(id);
@@ -78,14 +75,18 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		long startTime = System.currentTimeMillis();/// для измерения скорости работы расчетов под ajax
 
 		List<Client> clients = clientService.getAllOpen();
-		for (Client cl : clients) {
-			calculatePriceService.calculatePriceTime(cl);
-			calculatePriceService.addDiscountToAllPrice(cl);
-			calculatePriceService.round(cl);
+		for (Client client : clients) {
+			calculatePriceService.calculatePriceTime(client);
+			calculatePriceService.addDiscountOnPriceTime(client);
+			//calculatePriceService.calculateMenuPrice(client);
+			calculatePriceService.getAllPrice(client);
+			calculatePriceService.round(client);
 		}
 		clientService.saveAll(clients);
-		long timeSpent = System.currentTimeMillis() - startTime;///
-		System.out.println(timeSpent);
+		for (Client client : clients) {
+			client.setLayerProducts(null);//для перелачи json
+		}
+		System.out.println(System.currentTimeMillis() - startTime);
 		return clients;
 	}
 
@@ -93,20 +94,27 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		if (clientsId == null) {
 			return null;
 		}
-		List<Client> cl = new ArrayList<>();
-		for (Long idCl : clientsId) {
-			Client client = clientService.getOne(idCl);
+
+		List<Client> clients = new ArrayList<>();
+		for (Long clientId : clientsId) {
+			Client client = clientService.getOne(clientId);
 			calculatePriceService.payWithCardAndCache(client);
-			cl.add(client);
+			clients.add(client);
 		}
-		return cl;
+		clientService.saveAll(clients);
+		List<Client> listClients = new ArrayList<>();
+		for (Client client : clients) {
+			listClients.add(client);
+		}
+
+		return listClients;
 	}
 
 	public void closeClient(Long[] clientsId, Long calculateId) {
 		List<Client> listClient = new ArrayList<>();
 		List<Card> listCard = new ArrayList<>();
-		for (Long idCl : clientsId) {
-			Client client = clientService.getOne(idCl);
+		for (Long clientId : clientsId) {
+			Client client = clientService.getOne(clientId);
 			client.setState(false);
 			listClient.add(client);
 			if (client.getCard() != null) {
@@ -120,10 +128,11 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 		boolean flag = false;
 		Calculate calculate = calculateService.getOne(calculateId);
-		List<Client> cl = calculate.getClient();
-		for (Client client : cl) {
+		List<Client> clients = calculate.getClient();
+		for (Client client : clients) {
 			if (client.isState()) {
 				flag = true;
+				break;
 			}
 		}
 		if (!flag) {
@@ -145,6 +154,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 			for (Client cl : clients) {
 				if (cl.getCard() == card) {
 					flag = true;
+					break;
 				}
 			}
 			if (!flag) {

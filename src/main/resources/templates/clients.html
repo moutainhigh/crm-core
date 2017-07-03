@@ -111,7 +111,8 @@
                                               action="/manager/add-card-on-client">
                                             <input type="hidden" name="clientId" th:value="${client.id}"/>
                                             <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
-                                            <select th:onchange="'ajaxCardDiscount(\'' + ${client.id} + '\');'" class="form-control" name="cardId"
+                                            <select th:onchange="'ajaxCardDiscount(\'' + ${client.id} + '\');'"
+                                                    class="form-control" name="cardId"
                                                     style="width: 130px; margin: auto; font-size: 17px;font-weight:bold">
                                                 <option value="-1"
                                                         th:selected="${client.card} == null ? 'true' : 'false'">Нет
@@ -132,13 +133,12 @@
                             </td>
 
 
-                            <form th:id="'updateForm' + ${client.id}" action="/manager/update-fields-client"
-                                  method="post">
+                            <form th:id="'updateForm' + ${client.id}" method="post">
                                 <input type="hidden" name="clientId" th:value="${client.id}"/>
 
                                 <td>
                                     <input autocomplete="off" th:id="'one' + ${client.id}"
-                                           th:onblur="'sub(\'' + ${client.id} + '\');'" class="form-control"
+                                           th:onblur="'subAjax(\'' + ${client.id} + '\');'" class="form-control"
                                            style="width:150px;margin: auto;font-size: 17px"
                                            name="description" th:value="${client.description}" maxlength="30"/>
                                 </td>
@@ -148,20 +148,31 @@
 
                                 </td>
                                 <td>
-                                    <p th:id = "'dopDiscount' + ${client.id}" style="float: left;" th:text="${client.discountWithCard} + '% + '"> </p>
-                                    <select th:id="'two' + ${client.id}" autocomplete="off" th:onchange="'sub(\'' + ${client.id} + '\');'" class="form-control" name="discount"
+                                    <p th:id="'dopDiscount' + ${client.id}" style="float: left;"
+                                       th:text="${client.discountWithCard} + '% + '"></p>
+                                    <select th:id="'two' + ${client.id}" autocomplete="off"
+                                            th:onchange="'subAjax(\'' + ${client.id} + '\');'" class="form-control"
+                                            name="discount"
                                             style="width: 90px; margin: auto; font-size: 17px;font-weight:bold">
-                                        <option value="0" th:selected="${client.discount} == 0 ? 'true' : 'false' ">Нет</option>
-                                        <option value="15" th:selected="${client.discount} == 15 ? 'true' : 'false' ">15% &emsp; Пенсионерам/Студентам</option>
-                                        <option value="25" th:selected="${client.discount} == 25 ? 'true' : 'false' ">25% &emsp; Праздничная</option>
-                                        <option value="35" th:selected="${client.discount} == 35 ? 'true' : 'false' ">35% &emsp; Админская</option>
+                                        <option value="0" th:selected="${client.discount} == 0 ? 'true' : 'false' ">
+                                            Нет
+                                        </option>
+                                        <option value="15" th:selected="${client.discount} == 15 ? 'true' : 'false' ">
+                                            15% &emsp; Пенсионерам/Студентам
+                                        </option>
+                                        <option value="25" th:selected="${client.discount} == 25 ? 'true' : 'false' ">
+                                            25% &emsp; Праздничная
+                                        </option>
+                                        <option value="35" th:selected="${client.discount} == 35 ? 'true' : 'false' ">
+                                            35% &emsp; Админская
+                                        </option>
                                     </select>
 
                                 </td>
                                 <td>
 
                                     <input autocomplete="off" th:id="'three' + ${client.id}"
-                                           th:onblur="'sub(\'' + ${client.id} + '\');'"
+                                           th:onblur="'subAjax(\'' + ${client.id} + '\');'"
                                            class="form-control"
                                            style="width:85px;margin: auto;font-size: 20px"
                                            name="payWithCard" maxlength="7" th:value="${client.payWithCard}"/>
@@ -179,22 +190,28 @@
                             </tr>
                             </p>
                             </tbody>
-                        </table>
-                        <button style="float: left; margin-left: 700px" class="btn btn-primary">Заказ</button>
-                        <div th:replace="clientFragments/getCheckFragment :: checkModal"></div>
 
+                        </table>
+
+                        <button style="float: left;margin-left: 700px;" class="btn btn-primary"
+                                data-toggle="modal" th:href="'#menuModal' + ${calculate.id}"> Заказ
+                        </button>
+                        <div th:replace="clientFragments/getCheckFragment :: checkModal"></div>
+                        <div th:replace="clientFragments/menuFragment :: menuModal"></div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
+    <div th:replace="managerChangePassword :: managerChangePassword"></div>
 </div>
 
 <script type="text/javascript">
     ajax();
-    setInterval(ajax, 2000);
+    setInterval(ajax, 60000);
 
-    console.log(document.cookie);
+    //console.log(document.cookie);
     function cookiePanel(id) {
         if ($.cookie(id) == true.toString()) {
             $.cookie(id, "false");
@@ -212,9 +229,8 @@
 
             success: function (data) {
                 //<![CDATA[
-
-                    $('#dopDiscount' + id).html(data + '%' +  ' + ');
-
+                $('#dopDiscount' + id).html(data + '%' + ' + ');
+                setTimeout(ajax, 1000);
                 //]]>
             },
             error: function () {
@@ -222,7 +238,6 @@
             }
         });
     }
-
 
     function ajaxModal(id) {
 
@@ -238,16 +253,16 @@
                 } else {
                     var allpr = 0;
                     var payWithCard = 0;
-                    var str;
+                    var str = "";
+
                     for (var i = 0; i < data.length; i++) {
                         var hours = +data[i].passedTime.hour < 10 ? ('0' + data[i].passedTime.hour) : data[i].passedTime.hour;
                         var min = +data[i].passedTime.minute < 10 ? ('0' + data[i].passedTime.minute) : data[i].passedTime.minute;
                         var time = hours + ':' + min;
-                        if (data[i].card == null) {
-                            str = str + '<tr><td class="cent">' + 'Нет' + '</td><td class="cent">' + data[i].description + '</td><td class="cent">' + time + '</td><td class="cent">' + data[i].priceTime + '</td><td class="cent"><button style="height: 30px" class="btn btn-primary"><p style="font-size: 20px;margin-top: -5px;width: 70px">0р</p></button></td><td class="cent">' + ((+data[i].discount) + (+data[i].discountWithCard)) + '</td><td class="cent">' + data[i].payWithCard + '</td><td class="cent">' + data[i].cache + '</td></tr>';
-                        } else {
-                            str = str + '<tr><td class="cent">' + data[i].card.name + '</td><td class="cent">' + data[i].description + '</td><td class="cent">' + time + '</td><td class="cent">' + data[i].priceTime + '</td><td class="cent"><button style="height: 30px" class="btn btn-primary"><p style="font-size: 20px;margin-top: -5px;width: 70px">0р</p></button></td><td class="cent">' + ((+data[i].discount) + (+data[i].discountWithCard)) + '</td><td class="cent">' + data[i].payWithCard + '</td><td class="cent">' + data[i].cache + '</td></tr>';
-                        }
+                        var order = "";
+
+                        str += '<tr><td class="cent">' + ((data[i].card == null) ? 'Нет' : data[i].card.name) + '</td><td class="cent">' + data[i].description + '</td><td class="cent">' + time + '</td><td class="cent">' + data[i].priceTime + '</td><td class="cent"><div  class="dropdown"><button onclick="getLayerProductAjax(' + data[i].id + ')"   class="btn btn-primary" data-toggle="dropdown" style="width: 100px;font-size: 20px;height:30px;margin-right: 5px;margin-top: 5px;padding: 0px">' + data[i].priceMenu + 'р' + '</button><div id = "clientDropMenu' + data[i].id + '"  style="width: 250px;font-size: 20px" class="dropdown-menu dropdown-menu-right">' + order + '</div></div></div> </td><td class="cent">' + ((+data[i].discount) + (+data[i].discountWithCard)) + '</td><td class="cent">' + data[i].payWithCard + '</td><td class="cent">' + data[i].cache + '</td></tr>';
+
                         payWithCard += data[i].payWithCard;
                         allpr += data[i].cache;
                     }
@@ -263,8 +278,29 @@
         });
     }
 
-    function ajax() {
+    function getLayerProductAjax(clientId) {
+        $.ajax({
+            type: "POST",
+            url: "/manager/get-layer-products-on-client",
+            data: {clientId: clientId},
 
+            success: function (data) {
+                //<![CDATA[
+                var str = " ";
+                for (var i = 0; i < data.length; i++) {
+                    str += '<li>' + data[i].name + ' №' + data[i].id + ' (' + data[i].cost + 'р)' + '</li>';
+                }
+                $('#clientDropMenu' + clientId).html(str);
+                //]]>
+            },
+            error: function () {
+                console.log('getLayerProductAjax сломался? ');
+            }
+        });
+    }
+
+
+    function ajax() {
         $.ajax({
             type: "POST",
             url: "/manager/calculate-price",
@@ -272,11 +308,8 @@
                 //<![CDATA[
                 for (var i = 0; i < data.length; i++) {
                     $('#price' + data[i].id).html(data[i].allPrice);
-
-                    // $('#one' + data[i].id).val(data[i].description);
-                    //$('#two' + data[i].id).val(data[i].discount);
-                    // $('#three' + data[i].id).val(data[i].payWithCard);
                 }
+
                 //]]>
             },
             error: function () {
@@ -293,18 +326,137 @@
         }
     }
 
-    function sub(id) {
-        //<![CDATA[
-        var one = $('#one' + id).val();
-        var two = $('#two' + id).val();
-        var three = $('#three' + id).val();
-        if (!isNaN(+three)) {
-            if (three != "") {
-                $('#updateForm' + id).submit();
+    function subAjax(id) {
+        $.ajax({
+            type: "POST",
+            url: "/manager/update-fields-client",
+            data: $('#updateForm' + id).serialize(),
+            success: function (data) {
+                //<![CDATA[
+                $('#clientMenuDescription' + id).text(data);
+                setTimeout(ajax, 1000);
+                //]]>
+            },
+            error: function () {
+                console.log('subAjax сломался? ');
             }
-        }
-        //]]>
+        });
     }
+
+    function createLayerProductAjax(prodId, calcId) {
+        $('#productId' + calcId).val(prodId);
+        $.ajax({
+            type: "POST",
+            url: "/manager/create-layer-product",
+            data: $('#addProductOnClientForm' + calcId).serialize(),
+            success: function (data) {
+                //<![CDATA[
+                var arr = data.clients;
+                for (var i = 0; i < arr.length; i++) {
+                    $('#ajaxMenu' + arr[i].id + ' li:last').after('<li id = "pr' + data.id + '">' + data.name + ' №' + data.id + ' (' + data.cost + 'р)' + '</li>');
+                }
+                setTimeout(getOpenClientsOnCalculateAjax(calcId), 500);
+                //]]>
+            },
+            error: function () {
+                console.log('createLayerProductAjax сломался? ');
+            }
+        });
+    }
+
+
+    function addLayerProductOnClientAjax(layerProdId, calcId) {
+        $('#productId' + calcId).val(layerProdId);
+        $.ajax({
+            type: "POST",
+            url: "/manager/add-client-on-layer-product",
+            data: $('#addProductOnClientForm' + calcId).serialize(),
+            success: function (data) {
+                //<![CDATA[
+                var arr = data.clients;
+                for (var i = 0; i < arr.length; i++) {
+                    if (document.getElementById('ajaxMenu' + arr[i].id).querySelector("#pr" + data.id) == null) {
+                        $('#ajaxMenu' + arr[i].id + ' li:last').after('<li id = "pr' + data.id + '">' + data.name + ' №' + data.id + ' (' + data.cost + 'р)' + '</li>');
+                    }
+                }
+                setTimeout(getOpenClientsOnCalculateAjax(calcId), 500);
+                //]]>
+            },
+            error: function () {
+                console.log('addLayerProductOnClientAjax сломался? ');
+            }
+        });
+    }
+
+    function deleteLayerProductOnClientAjax(layerProdId, calcId) {
+        $('#productId' + calcId).val(layerProdId);
+        $.ajax({
+            type: "POST",
+            url: "/manager/delete-product-with-client",
+            data: $('#addProductOnClientForm' + calcId).serialize(),
+            success: function (data) {
+                //<![CDATA[
+                var arr = data.clients;
+                for (var i = 0; i < arr.length; i++) {
+                    var v = document.getElementById('ajaxMenu' + arr[i].id).querySelector("#pr" + data.id);
+                    if (v != null) {
+                        v.remove();
+                    }
+                }
+                getProductOnCalculateAjax(calcId);
+                setTimeout(getOpenClientsOnCalculateAjax(calcId), 500);
+                //]]>
+            },
+            error: function () {
+                console.log('deleteLayerProductOnClientAjax сломался? ');
+            }
+        });
+    }
+
+
+    function getProductOnCalculateAjax(calcId) {
+        $.ajax({
+            type: "POST",
+            url: "/manager/get-products-on-calculate",
+            data: {calculateId: calcId},
+            success: function (data) {
+                //<![CDATA[
+                var str;
+                if (data != "") {
+                    for (var i = 0; i < data.length; i++) {
+                        str += '<tr style="font-size: 20px;"><td>' + data[i].name + ' №' + data[i].id + '</td><td>' + data[i].description + '</td><td>' + data[i].cost + '</td><td><button onclick="addLayerProductOnClientAjax(' + data[i].id + ',' + calcId + ')" style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;"><img src="http://interset.org/fotosnews/image90_news_company.png" width="25px"height="25px"/></button><button onclick="deleteLayerProductOnClientAjax(' + data[i].id + ',' + calcId + ')" style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;"><img src="http://s1.iconbird.com/ico/2013/10/464/w512h5121380984608delete.png" width="20px"height="20px"/></button></td></tr>';
+                    }
+                } else {
+                    str = null;
+                }
+
+                $("#prodOnCalculate" + calcId).html(str);
+                //]]>
+            },
+            error: function () {
+                console.log('getProductOnCalculateAjax сломался? ');
+            }
+        });
+    }
+
+    function getOpenClientsOnCalculateAjax(calcId) {
+        $.ajax({
+            type: "POST",
+            url: "/manager/get-open-clients-on-calculate",
+            data: {calculateId: calcId},
+            success: function (data) {
+                //<![CDATA[
+                for (var i = 0; i < data.length; i++) {
+                    $('#priceMenu' + data[i].id).html(data[i].priceMenu);
+                }
+                //]]>
+            },
+            error: function () {
+                console.log('getOpenClients сломался? ');
+            }
+        });
+    }
+
 
 </script>
 

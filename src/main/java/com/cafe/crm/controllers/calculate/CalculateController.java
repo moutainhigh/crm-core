@@ -4,9 +4,9 @@ import com.cafe.crm.models.client.Client;
 import com.cafe.crm.service_abstract.boardService.BoardService;
 import com.cafe.crm.service_abstract.calculateService.CalculateControllerService;
 import com.cafe.crm.service_abstract.calculateService.CalculateService;
-import com.cafe.crm.service_abstract.cardService.CardService;
 import com.cafe.crm.service_abstract.clientService.ClientService;
 import com.cafe.crm.service_abstract.menu_service.MenuService;
+import com.cafe.crm.service_abstract.menu_service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,7 +37,7 @@ public class CalculateController {
 	private MenuService menuService;
 
 	@Autowired
-	private CardService cardService;
+	private ProductService productService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView manager() {
@@ -45,6 +45,7 @@ public class CalculateController {
 		modelAndView.addObject("listBoard", boardService.getAll());
 		modelAndView.addObject("listCalculate", calculateService.getAllOpen());
 		modelAndView.addObject("listMenu", menuService.getOne(1L));
+		modelAndView.addObject("listProduct", productService.findAll());
 		return modelAndView;
 	}
 
@@ -81,16 +82,17 @@ public class CalculateController {
 	}
 
 	@RequestMapping(value = {"/update-fields-client"}, method = RequestMethod.POST)
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void UpdateFieldsClient(@RequestParam("clientId") Long clientId,
-								   @RequestParam("discount") Double discount,
-								   @RequestParam("payWithCard") Double payWithCard,
-								   @RequestParam("description") String description) {
+	@ResponseBody
+	public String UpdateFieldsClient(@RequestParam("clientId") Long clientId,
+									 @RequestParam("discount") Double discount,
+									 @RequestParam("payWithCard") Double payWithCard,
+									 @RequestParam("description") String description) {
 		Client client = clientService.getOne(clientId);
 		client.setDiscount(discount.longValue());
 		client.setPayWithCard(payWithCard.longValue());
 		client.setDescription(description);
 		clientService.save(client);
+		return description;
 	}
 
 	@RequestMapping(value = {"/calculate-price"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

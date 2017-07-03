@@ -1,267 +1,288 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <script th:src="@{/js/filter.js}" ></script>
+    <script th:src="@{/js/filter.js}"></script>
 </head>
 
 <body>
 
 <div class="table" style="border-radius:5px;" th:fragment="workerList">
-<table class="table table-striped">
-    <tr>
-        <th> Имя </th>
-        <th> Фамилия </th>
-        <th> Должность </th>
-        <th> Оклад За смену </th>
-        <th> Количество Смен </th>
-        <th> Зарплата </th>
-        <th> Редактировать </th>
-        <th> Удалить </th>
-    </tr>
-    <tbody class="searchable" th:each="worker : ${workerList}">
-    <tr>
-        <td th:text="${worker.firstName}"></td>
-        <td th:text="${worker.lastName}"></td>
-        <td th:text="${worker.position}"></td>
-        <td th:text="${worker.shiftSalary}"></td>
-        <td th:text="${worker.countShift}"></td>
-        <td th:text="${worker.salary}"></td>
-        <td  class="col-lg-2" >
-            <a class="btn btn-primary btn-info" th:href="'#a'+${worker.id}" data-toggle="modal" >Редактировать</a>
-        </td>
+    <table class="table table-striped">
+        <tr>
+            <th> Имя</th>
+            <th> Фамилия</th>
+            <th> Должность</th>
+            <th> Оклад За смену</th>
+            <th> Количество Смен</th>
+            <th> Зарплата</th>
+            <th> Редактировать</th>
+            <th> Удалить</th>
+        </tr>
+        <tbody class="searchable" th:each="worker : ${workerList}">
+        <tr>
+            <td th:text="${worker.firstName}"></td>
+            <td th:text="${worker.lastName}"></td>
+            <td th:text="${worker.position}"></td>
+            <td th:text="${worker.shiftSalary}"></td>
+            <td th:text="${worker.countShift}"></td>
+            <td th:text="${worker.salary}"></td>
+            <td class="col-lg-2">
+                <a class="btn btn-primary btn-info" th:href="'#a'+${worker.id}" data-toggle="modal">Редактировать</a>
+            </td>
 
-        <td class="col-lg-2" >
-            <a class="btn btn-primary btn-danger" th:href="'#b'+${worker.id}" data-toggle="modal" >Удалить</a>
-        </td>
+            <td class="col-lg-2">
+                <a class="btn btn-primary btn-danger" th:href="'#b'+${worker.id}" data-toggle="modal">Удалить</a>
+            </td>
 
-        <div class="modal fade" th:id="'a'+${worker.id}">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2 class="form-signin-heading">Форма Редактирования Сотрудника</h2>
-                    </div>
-                    <div class="modal-body">
+            <div class="modal fade" th:id="'a'+${worker.id}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="form-signin-heading">Форма Редактирования Сотрудника</h2>
+                        </div>
+                        <div class="modal-body">
 
-                        <form class="form-signin" action="worker/editWorker" method="POST" >
+                            <form class="form-signin" action="worker/editWorker" method="POST">
 
-                            <input type="hidden" class="form-control" th:value="${worker.id}" name="id"/>
-
-
-                            <h4>Имя</h4>
-                            <input type="text" class="form-control" th:value="${worker.firstName}" name="firstName"/>
-                            <br></br>
+                                <input type="hidden" class="form-control" th:value="${worker.id}" name="id"/>
 
 
-                            <h4>Фамилия</h4>
-                            <input type="text" class="form-control" th:value="${worker.lastName}" name="lastName"/>
-                            <br></br>
+                                <h4>Имя</h4>
+                                <input type="text" class="form-control" th:value="${worker.firstName}"
+                                       name="firstName"/>
+                                <br></br>
 
 
-                            <div th:switch="${worker.position}">
-                                <div th:each="manager : ${managerList}">
-                                <div th:case="Управляющий">
-                                    <h4>Должность</h4>
-                                    <input type="text" class="form-control" th:value="${manager.position}" name="position"/>
+                                <h4>Фамилия</h4>
+                                <input type="text" class="form-control" th:value="${worker.lastName}" name="lastName"/>
+                                <br></br>
+
+
+                                <div th:switch="${worker.position}">
+                                    <div th:each="manager : ${managerList}">
+                                        <div th:case="Управляющий">
+                                            <h4>Должность</h4>
+                                            <input type="text" class="form-control" th:value="${manager.position}"
+                                                   name="position"/>
+                                            <br></br>
+
+                                            <h4>Логин</h4>
+                                            <input type="text" class="form-control" th:value="${manager.login}"
+                                                   name="login"/>
+                                            <br></br>
+
+                                            <h4>Пароль</h4>
+                                            <input type="text" class="form-control" th:value="${manager.password}"
+                                                   name="password"/>
+                                            <br></br>
+                                        </div>
+                                    </div>
+
+                                    <div th:each="boss : ${bossList}">
+                                        <div th:case="Владелец">
+                                            <h4>Должность</h4>
+                                            <input type="text" class="form-control" th:value="${boss.position}"
+                                                   name="position"/>
+                                            <br></br>
+
+                                            <h4>Логин</h4>
+                                            <input type="text" class="form-control" th:value="${boss.login}"
+                                                   name="login"/>
+                                            <br></br>
+
+                                            <h4>Пароль</h4>
+                                            <input type="text" class="form-control" th:value="${boss.password}"
+                                                   name="password"/>
+                                            <br></br>
+                                        </div>
+                                    </div>
+
+                                    <div th:case="Кальянщик">
+                                        <h4>Должность</h4>
+                                        <select class="form-control" name="position" th:value="${worker.position}">
+                                            <option value="Кальянщик">Кальянщик</option>
+                                            <option value="Официант">Официант</option>
+                                            <option value="Хостесс">Хостесс</option>
+                                        </select>
+                                        <br></br>
+                                    </div>
+
+                                    <div th:case="Хостесс">
+                                        <h4>Должность</h4>
+                                        <select class="form-control" name="position" th:value="${worker.position}">
+                                            <option value="Хостесс">Хостесс</option>
+                                            <option value="Кальянщик">Кальянщик</option>
+                                            <option value="Официант">Официант</option>
+                                        </select>
+                                        <br></br>
+                                    </div>
+                                    <div th:case="Официант">
+                                        <h4>Должность</h4>
+                                        <select class="form-control" name="position" th:value="${worker.position}">
+                                            <option value="Официант">Официант</option>
+                                            <option value="Хостесс">Хостесс</option>
+                                            <option value="Кальянщик">Кальянщик</option>
+                                        </select>
+                                        <br></br>
+                                    </div>
+
+                                    <h4>Оклад За Смену</h4>
+                                    <input type="text" class="form-control" th:value="${worker.shiftSalary}"
+                                           name="shiftSalary"/>
                                     <br></br>
 
-                                    <h4>Логин</h4>
-                                    <input type="text" class="form-control" th:value="${manager.login}" name="login"/>
+                                    <h4>Количество Смен</h4>
+                                    <input type="text" class="form-control" th:value="${worker.countShift}"
+                                           name="countShift"/>
                                     <br></br>
 
-                                    <h4>Пароль</h4>
-                                    <input type="text" class="form-control" th:value="${manager.password}" name="password"/>
+                                    <h4>Зарплата</h4>
+                                    <input type="text" class="form-control" th:value="${worker.salary}" name="salary"/>
+                                    <br></br>
+
+                                    <button type="submit" class="btn btn-lg btn-primary btn-block">Изменить Данные
+                                    </button>
                                     <br></br>
                                 </div>
-                                </div>
+                            </form>
 
-                                <div th:each="boss : ${bossList}">
-                                <div th:case="Владелец">
-                                    <h4>Должность</h4>
-                                    <input type="text" class="form-control" th:value="${boss.position}" name="position"/>
-                                    <br></br>
-
-                                    <h4>Логин</h4>
-                                    <input type="text" class="form-control" th:value="${boss.login}" name="login"/>
-                                    <br></br>
-
-                                    <h4>Пароль</h4>
-                                    <input type="text" class="form-control" th:value="${boss.password}" name="password"/>
-                                    <br></br>
-                                </div>
-                                </div>
-
-                                <div th:case="Кальянщик">
-                                    <h4>Должность</h4>
-                                    <select class="form-control" name="position" th:value="${worker.position}">
-                                        <option value="Кальянщик">Кальянщик</option>
-                                        <option value="Официант">Официант</option>
-                                        <option value="Хостесс">Хостесс</option>
-                                    </select>
-                                    <br></br>
-                                </div>
-
-                                <div th:case="Хостесс">
-                                    <h4>Должность</h4>
-                                    <select class="form-control"  name="position" th:value="${worker.position}">
-                                        <option value="Хостесс">Хостесс</option>
-                                        <option value="Кальянщик">Кальянщик</option>
-                                        <option value="Официант">Официант</option>
-                                    </select>
-                                    <br></br>
-                                </div>
-                                <div th:case="Официант">
-                                    <h4>Должность</h4>
-                                    <select class="form-control"  name="position" th:value="${worker.position}">
-                                        <option value="Официант">Официант</option>
-                                        <option value="Хостесс">Хостесс</option>
-                                        <option value="Кальянщик">Кальянщик</option>
-                                    </select>
-                                    <br></br>
-                                </div>
-
-                            <h4>Оклад За Смену</h4>
-                            <input type="text" class="form-control" th:value="${worker.shiftSalary}" name="shiftSalary"/>
-                            <br></br>
-
-                            <h4>Количество Смен</h4>
-                            <input type="text" class="form-control" th:value="${worker.countShift}" name="countShift"/>
-                            <br></br>
-
-                            <h4>Зарплата</h4>
-                            <input type="text" class="form-control" th:value="${worker.salary}" name="salary"/>
-                            <br></br>
-
-                            <button type="submit" class="btn btn-lg btn-primary btn-block">Изменить Данные</button>
-                            <br></br>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                    Close
+                                </button>
                             </div>
-                        </form>
-
-                        <div  class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">
-                                Close
-                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
 
-
-        <div class="modal fade" th:id="'b'+${worker.id}">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h2 class="form-signin-heading">Форма Удаления Сотрудника</h2>
-                    </div>
-                    <div class="modal-body">
-                <h3 style="color: crimson">Удалить сотрудника?</h3>
-                        <br></br>
-                        <form class="form-signin" th:action="'worker/deleteWorker/'+${worker.id}"  method="GET">
-
-                            <input type="hidden" class="form-control" readonly="readonly" th:value="${worker.id}" name="id"/>
-
-                            <h4>Имя</h4>
-                            <input type="text" class="form-control" th:value="${worker.firstName}" name="firstName"/>
+            <div class="modal fade" th:id="'b'+${worker.id}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="form-signin-heading">Форма Удаления Сотрудника</h2>
+                        </div>
+                        <div class="modal-body">
+                            <h3 style="color: crimson">Удалить сотрудника?</h3>
                             <br></br>
+                            <form class="form-signin" th:action="'worker/deleteWorker/'+${worker.id}" method="GET">
+
+                                <input type="hidden" class="form-control" readonly="readonly" th:value="${worker.id}"
+                                       name="id"/>
+
+                                <h4>Имя</h4>
+                                <input type="text" class="form-control" th:value="${worker.firstName}"
+                                       name="firstName"/>
+                                <br></br>
 
 
-                            <h4>Фамилия</h4>
-                            <input type="text" class="form-control" th:value="${worker.lastName}" name="lastName"/>
-                            <br></br>
-                            <div th:switch="${worker.position}">
-                                <div th:each="manager : ${managerList}">
-                                    <div th:case="Управляющий">
+                                <h4>Фамилия</h4>
+                                <input type="text" class="form-control" th:value="${worker.lastName}" name="lastName"/>
+                                <br></br>
+                                <div th:switch="${worker.position}">
+                                    <div th:each="manager : ${managerList}">
+                                        <div th:case="Управляющий">
+                                            <h4>Должность</h4>
+                                            <input type="text" class="form-control" th:value="${manager.position}"
+                                                   name="position"/>
+                                            <br></br>
+
+                                            <h4>Логин</h4>
+                                            <input type="text" class="form-control" th:value="${manager.login}"
+                                                   name="login"/>
+                                            <br></br>
+
+                                            <h4>Пароль</h4>
+                                            <input type="text" class="form-control" th:value="${manager.password}"
+                                                   name="password"/>
+                                            <br></br>
+                                        </div>
+                                    </div>
+
+                                    <div th:each="boss : ${bossList}">
+                                        <div th:case="Владелец">
+                                            <h4>Должность</h4>
+                                            <input type="text" class="form-control" th:value="${boss.position}"
+                                                   name="position"/>
+                                            <br></br>
+
+                                            <h4>Логин</h4>
+                                            <input type="text" class="form-control" th:value="${boss.login}"
+                                                   name="login"/>
+                                            <br></br>
+
+                                            <h4>Пароль</h4>
+                                            <input type="text" class="form-control" th:value="${boss.password}"
+                                                   name="password"/>
+                                            <br></br>
+                                        </div>
+                                    </div>
+
+                                    <div th:case="Кальянщик">
                                         <h4>Должность</h4>
-                                        <input type="text" class="form-control" th:value="${manager.position}" name="position"/>
-                                        <br></br>
-
-                                        <h4>Логин</h4>
-                                        <input type="text" class="form-control" th:value="${manager.login}" name="login"/>
-                                        <br></br>
-
-                                        <h4>Пароль</h4>
-                                        <input type="text" class="form-control" th:value="${manager.password}" name="password"/>
+                                        <select class="form-control" name="position" th:value="${worker.position}">
+                                            <option value="Кальянщик">Кальянщик</option>
+                                            <option value="Официант">Официант</option>
+                                            <option value="Хостесс">Хостесс</option>
+                                        </select>
                                         <br></br>
                                     </div>
-                                </div>
 
-                                <div th:each="boss : ${bossList}">
-                                    <div th:case="Владелец">
+                                    <div th:case="Хостесс">
                                         <h4>Должность</h4>
-                                        <input type="text" class="form-control" th:value="${boss.position}" name="position"/>
-                                        <br></br>
-
-                                        <h4>Логин</h4>
-                                        <input type="text" class="form-control" th:value="${boss.login}" name="login"/>
-                                        <br></br>
-
-                                        <h4>Пароль</h4>
-                                        <input type="text" class="form-control" th:value="${boss.password}" name="password"/>
+                                        <select class="form-control" name="position" th:value="${worker.position}">
+                                            <option value="Хостесс">Хостесс</option>
+                                            <option value="Кальянщик">Кальянщик</option>
+                                            <option value="Официант">Официант</option>
+                                        </select>
                                         <br></br>
                                     </div>
-                                </div>
+                                    <div th:case="Официант">
+                                        <h4>Должность</h4>
+                                        <select class="form-control" name="position" th:value="${worker.position}">
+                                            <option value="Официант">Официант</option>
+                                            <option value="Хостесс">Хостесс</option>
+                                            <option value="Кальянщик">Кальянщик</option>
+                                        </select>
+                                        <br></br>
+                                    </div>
 
-                                <div th:case="Кальянщик">
-                                    <h4>Должность</h4>
-                                    <select class="form-control" name="position" th:value="${worker.position}">
-                                        <option value="Кальянщик">Кальянщик</option>
-                                        <option value="Официант">Официант</option>
-                                        <option value="Хостесс">Хостесс</option>
-                                    </select>
+                                    <h4>Оклад За Смену</h4>
+                                    <input type="text" class="form-control" th:value="${worker.shiftSalary}"
+                                           name="shiftSalary"/>
                                     <br></br>
-                                </div>
 
-                                <div th:case="Хостесс">
-                                    <h4>Должность</h4>
-                                    <select class="form-control"  name="position" th:value="${worker.position}">
-                                        <option value="Хостесс">Хостесс</option>
-                                        <option value="Кальянщик">Кальянщик</option>
-                                        <option value="Официант">Официант</option>
-                                    </select>
+                                    <h4>Количество Смен</h4>
+                                    <input type="text" class="form-control" th:value="${worker.countShift}"
+                                           name="countShift"/>
                                     <br></br>
-                                </div>
-                                <div th:case="Официант">
-                                    <h4>Должность</h4>
-                                    <select class="form-control"  name="position" th:value="${worker.position}">
-                                        <option value="Официант">Официант</option>
-                                        <option value="Хостесс">Хостесс</option>
-                                        <option value="Кальянщик">Кальянщик</option>
-                                    </select>
+
+                                    <h4>Зарплата</h4>
+                                    <input type="text" class="form-control" th:value="${worker.salary}" name="salary"/>
                                     <br></br>
+
                                 </div>
-
-                                <h4>Оклад За Смену</h4>
-                                <input type="text" class="form-control" th:value="${worker.shiftSalary}" name="shiftSalary"/>
                                 <br></br>
-
-                                <h4>Количество Смен</h4>
-                                <input type="text" class="form-control" th:value="${worker.countShift}" name="countShift"/>
+                                <button type="submit" class="btn btn-lg btn-primary btn-block">Да</button>
                                 <br></br>
-
-                                <h4>Зарплата</h4>
-                                <input type="text" class="form-control" th:value="${worker.salary}" name="salary"/>
+                                <button type="button" class="btn btn-lg btn-primary btn-block" data-dismiss="modal">
+                                    Нет
+                                </button>
                                 <br></br>
+                            </form>
 
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                    Close
+                                </button>
                             </div>
-                            <br></br>
-                            <button type="submit" class="btn btn-lg btn-primary btn-block">Да</button>
-                            <br></br>
-                            <button type="button" class="btn btn-lg btn-primary btn-block" data-dismiss="modal">Нет</button>
-                            <br></br>
-                        </form>
-
-                        <div  class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">
-                                Close
-                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </tr>
-    </tbody>
-</table>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

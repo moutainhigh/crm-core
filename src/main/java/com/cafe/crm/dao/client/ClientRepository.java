@@ -10,4 +10,5 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 	@Query("SELECT c FROM Client c where c.state = true")
 	List<Client> getAllOpen();
 
+	List<Client> findByIdIn(long[] ids);
 }

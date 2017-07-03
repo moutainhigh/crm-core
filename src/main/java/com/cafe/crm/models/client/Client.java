@@ -1,11 +1,15 @@
 package com.cafe.crm.models.client;
 
 import com.cafe.crm.models.card.Card;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalTime;
+import java.util.List;
+
+// TODO: 30.06.2017 поменять на серверное время при мерже
 
 @Entity
 @Table(name = "client")
@@ -19,18 +23,18 @@ public class Client {
 
 	private LocalTime timeStart = LocalTime.now().withSecond(0).withNano(0);
 
-	private boolean state = true;
+	private boolean state = true;    // Open or Closed
 
 	@NotNull
 	private Long discount = 0L;
 
 	private Long discountWithCard = 0L;
 
-	private Double allPrice = 0D;
+	private Double allPrice = 0D;//initial amount
 
-	private Long cache = 0L;
+	private Long cache = 0L;// ready money
 
-	private LocalTime passedTime = LocalTime.of(0,0,0);
+	private LocalTime passedTime = LocalTime.of(0, 0, 0);
 
 	private Double priceMenu = 0D;
 
@@ -38,10 +42,25 @@ public class Client {
 
 	private Long payWithCard = 0L;
 
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JsonBackReference
+	@JoinTable(name = "client_layer_product",
+			joinColumns = {@JoinColumn(name = "client_id", referencedColumnName = "id")},
+			inverseJoinColumns = {@JoinColumn(name = "layer_product_id", referencedColumnName = "id")})
+	private List<LayerProduct> layerProducts;
+
 	@ManyToOne
 	private Card card;
 
 	public Client() {
+	}
+
+	public List<LayerProduct> getLayerProducts() {
+		return layerProducts;
+	}
+
+	public void setLayerProducts(List<LayerProduct> layerProducts) {
+		this.layerProducts = layerProducts;
 	}
 
 	public Long getDiscountWithCard() {

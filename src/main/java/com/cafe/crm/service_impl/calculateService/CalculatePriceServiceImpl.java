@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 
+// TODO: 30.06.2017  изменить время calculatePriceTime на серверное при мерже
 @Service
 public class CalculatePriceServiceImpl implements CalculatePriceService {
 
@@ -14,21 +15,27 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 		LocalTime timeNow = LocalTime.now().withSecond(0).withNano(0);
 		LocalTime timePassed = timeNow.minusHours(timeStart.getHour()).minusMinutes(timeStart.getMinute());
 		client.setPassedTime(timePassed);
-		long hour = (long) timePassed.getHour();
-		long min = (long) timePassed.getMinute();
 		double priceTime;
-		if (hour == 0) {
-			priceTime = 300.0;//(min * 10.0 / 6.0) * 3.0;
+		long passedHours = (long) timePassed.getHour();
+		long passedMinutes = (long) timePassed.getMinute();
+		double firstHour = 300; //  ставка за первый час
+		double secondHour = 200; // ставка за второй час
+		if (passedHours == 0) {
+			priceTime = firstHour;
 		} else {
-			priceTime = ((hour - 1.0) * 200.0) + (min * 10.0 / 6.0) * 2.0 + 300.0;
+			priceTime = firstHour + ((passedHours - 1.0) * secondHour) + (passedMinutes / 60.0) * secondHour;
 		}
 		client.setPriceTime(Math.round(priceTime * 100) / 100.00);
 	}
 
-	public void addDiscountToAllPrice(Client client) {
-		double allPrice = client.getPriceMenu() + client.getPriceTime();
-		allPrice -=  (allPrice * (client.getDiscount() + client.getDiscountWithCard())) / 100;
-		client.setAllPrice(allPrice);
+	public void addDiscountOnPriceTime(Client client) {
+		double priceTime = client.getPriceTime();
+		priceTime -= (priceTime * (client.getDiscount() + client.getDiscountWithCard())) / 100;
+		client.setPriceTime(priceTime);
+	}
+
+	public void getAllPrice(Client client) {
+		client.setAllPrice(client.getPriceMenu() + client.getPriceTime());
 	}
 
 	public void round(Client client) {
@@ -55,11 +62,10 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 	public void payWithCardAndCache(Client client) {
 		Long payWithCard = client.getPayWithCard();
 		Long allPrice = client.getAllPrice().longValue();
-
-
 		client.setPayWithCard(allPrice < client.getPayWithCard() ? allPrice : payWithCard);
-		client.setPayWithCard(client.getPayWithCard() < 0 ? 0 : client.getPayWithCard());
-		client.setPayWithCard(client.getCard() == null ? 0 : client.getPayWithCard());
+		if (client.getPayWithCard() < 0 || client.getCard() == null) {
+			client.setPayWithCard(0L);
+		}
 		client.setCache(allPrice - client.getPayWithCard());
 	}
 

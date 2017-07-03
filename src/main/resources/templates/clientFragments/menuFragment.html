@@ -1,80 +1,193 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" th:href="@{/st.css}" type="text/css"/>
-    <script th:src="@{/filter.js}"></script>
+
 </head>
 <body>
 <div th:fragment="menuModal">
-    <button style="float:left; margin-left: 20px" class="btn btn-default"
-            data-toggle="modal" th:href="'#menuModal' + ${calculate.id}"> Меню
-    </button>
+
     <div th:id="'menuModal' + ${calculate.id}" class="modal">
-        <div class="modal-dialog" style="width: 900px;margin-top: 50px">
-            <div class="modal-content" style="height: 600px">
+        <div class="modal-dialog" style="width: 1220px;margin-top: 50px">
+            <div class="modal-content" style="height: 655px">
                 <div class="modal-body">
 
-                    <div style="background: rgb(218,218,218);border-radius: 5px;float: left;height: 560px;">
-                        <input class="form-control" style="width:150px;" type="text"/>
+                    <div style=";float:left;background: rgb(240,240,240);width: 1185px;height: 45px;border-radius: 5px;margin-bottom: 15px;box-shadow: 0 0 2px 0.1px">
+                        <input class="form-control" style="width:140px;float: left;margin-top: 5px;margin-left: 5px"
+                               type="text"
+                               placeholder="Поиск категорий"/>
+                        <input class="form-control" style="width:250px;margin-left:150px;float: left;margin-top: 5px"
+                               type="text" placeholder="Поиск продуктов"/>
+                        <div style="float:left;margin-left: 140px;width: 500px;height: 5px;">
+                            <center style="font-size: 30px;padding: auto" th:text="${calculate.description}"></center>
+                        </div>
+                    </div>
+
+
+                    <div style="background: rgb(241,241,241);border-radius: 5px;float: left;height: 560px;width:150px;overflow: auto;box-shadow: 0 0 2px 0.1px ">
+
                         <center style="font-size: 25px;">
-                        <a style="color: black" data-toggle="tab">Всё</a>
-                        <p  th:each="categor : ${listMenu.categories}">
-                            <a style="color: black" th:id="'categor'+${categor.id}" data-toggle="tab" th:href="'#panel' + ${categor.id}"><p
-                                    th:text="${categor.name}"></p></a>
-                        </p>
+                            <a th:id="'all' + ${calculate.id}" data-toggle="tab" th:href="'#allPanel' + ${calculate.id}"
+                               style="color: black;">Всё</a>
+
+                            <a th:id="'ordered' + ${calculate.id}" data-toggle="tab"
+                               th:onclick="'getProductOnCalculateAjax(\'' + ${calculate.id} + '\');'"
+                               th:href="'#onCalculatePanel' + ${calculate.id}"
+                               style="color: black;">Заказанные</a>
+
+                            <p style="margin-top: 20px">
+                            <div th:each="categor : ${listMenu.categories}">
+                                <a style="color: black" th:id="'categor'+${categor.id}" data-toggle="tab"
+                                   th:href="'#panel' + ${categor.id}" th:text="${categor.name}"></a>
+                            </div>
+                            </p>
                         </center>
                     </div>
-                    <div style=" float: left;margin-left:15px;background: rgb(246,246,246);width: 500px;height: 560px; border-radius: 5px">
-                        <center><input class="form-control" style="width:250px;" type="text"/></center>
-                        <div class="tab-content">
-                            <p th:each="cat : ${listMenu.categories}">
-                                <div th:id="'panel' + ${cat.id}" class="tab-pane">
-                                    <table class="table">
-                                        <thead>
-                                        <tr style="font-size: 17px">
-                                            <th>Название</th>
-                                            <th>Описание</th>
-                                            <th>Цена</th>
-                                            <th>Добавить</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                            <p  th:each="prod : ${cat.products}">
-                            <tr style="font-size: 20px">
-                            <td><p th:text="${prod.name} "></p></td>
-                            <td><p th:text="${prod.description} "></p></td>
-                            <td><p th:text="${prod.cost} + 'р'"></p></td>
-                            <td>
-                                <button style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;">
-                                    <img src="http://www.suttonflooring.co/images/Icon-check.png" width="25px"
-                                         height="25px"/>
-                                </button>
-                            </td>
 
-                            </tr>
+
+                    <div style=" float: left;margin-left:15px;background: rgb(255,255,255);width: 500px;height: 560px; border-radius: 5px;overflow: auto;">
+
+                        <div class="tab-content">
+
+
+                            <div th:id="'allPanel' + ${calculate.id}" class="tab-pane active">
+                                <table class="table">
+                                    <thead>
+                                    <tr style="font-size: 17px">
+                                        <th>Название</th>
+                                        <th>Описание</th>
+                                        <th>Цена</th>
+                                        <th>Добавить</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    <div th:each="product : ${listProduct}">
+                                        <tr style="font-size: 20px">
+                                            <td>
+                                                <div th:text="${product.name} "></div>
+                                            </td>
+                                            <td>
+                                                <div th:text="${product.description} "></div>
+                                            </td>
+                                            <td>
+                                                <div th:text="${product.cost} + 'р'"></div>
+                                            </td>
+                                            <td>
+                                                <button  th:onclick="'createLayerProductAjax(\'' + ${product.id} + '\',\'' + ${calculate.id} + '\');'"
+                                                        style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;">
+                                                    <img src="http://www.suttonflooring.co/images/Icon-check.png"
+                                                         width="25px"
+                                                         height="25px"/>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </div>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                            <div th:id="'onCalculatePanel' + ${calculate.id}" class="tab-pane">
+                                <table class="table">
+                                    <thead>
+                                    <tr style="font-size: 17px">
+                                        <th>Название</th>
+                                        <th>Описание</th>
+                                        <th>Цена</th>
+                                        <th>Добавить</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody th:id="'prodOnCalculate' + ${calculate.id}">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p th:each="cat : ${listMenu.categories}">
+                            <div th:id="'panel' + ${cat.id}" class="tab-pane">
+
+                                <table class="table">
+                                    <thead>
+                                    <tr style="font-size: 17px">
+                                        <th>Название</th>
+                                        <th>Описание</th>
+                                        <th>Цена</th>
+                                        <th>Добавить</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <div th:each="prod : ${cat.products}">
+                                        <tr style="font-size: 20px">
+                                            <td>
+                                                <div th:text="${prod.name} "></div>
+                                            </td>
+                                            <td>
+                                                <div th:text="${prod.description} "></div>
+                                            </td>
+                                            <td>
+                                                <div th:text="${prod.cost} + 'р'"></div>
+                                            </td>
+                                            <td>
+                                                <button th:id="'butProd' + ${prod.id}"
+                                                        style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;"
+                                                        th:onclick="'createLayerProductAjax(\'' + ${prod.id} + '\',\'' + ${calculate.id} + '\');'">
+                                                    <img src="http://www.suttonflooring.co/images/Icon-check.png"
+                                                         width="25px"
+                                                         height="25px"/>
+                                                </button>
+
+                                            </td>
+                                        </tr>
+                                    </div>
+                                    </tbody>
+                                </table>
+                            </div>
                             </p>
-                            </tbody>
-                            </table>
 
                         </div>
-                        </p>
 
                     </div>
+                    <form th:id="'addProductOnClientForm' + ${calculate.id}">
+                        <input th:id="'productId' + ${calculate.id}" type="hidden" name="productId"/>
+                        <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
+                    </form>
+                    <div style="background: rgb(241,241,241);border-radius: 5px;float: left;height: 560px;margin-left: 15px;
+                font-size: 20px;width: 505px;overflow: auto;box-shadow: 0 0 2px 0.1px">
+                        <div th:each="clientMenu : ${calculate.client}">
+                            <div style="background: white; width: 360px;height: 40px;float: left;margin-left: 7px;border-radius: 5px;box-shadow: 0 0 2px 0.1px; margin-top: 15px">
+                                <input th:form="'addProductOnClientForm'+ ${calculate.id}"
+                                       style="float: left;width: 20px;height: 20px;color: white;margin-left: 5px;margin-top: 10px"
+                                       type="checkbox" class="form-control" name="clientsId"
+                                       th:value="${clientMenu.id}"/>
+                                <p th:id="'clientMenuDescription' + ${clientMenu.id}"
+                                   style="font-size: 22px;float: left; margin-left: 20px;margin-top: 4px "
+                                   th:text="${clientMenu.description}">
+                                </p>
 
-                </div>
-                <div style="background: rgb(218,218,218);border-radius: 5px;float: left;height: 560px;margin-left: 15px;font-size: 20px;width: 185px">
-                    <center>
-                        <p>Герман</p>
-                        <p>Меню на счете:</p>
-                    </center>
+
+                                <div th:id="'drop' + ${clientMenu.id}" style="float: right;" class="dropdown">
+                                    <button class="btn btn-primary" data-toggle="dropdown"
+                                            style="width: 100px;font-size: 20px;height:30px;margin-right: 5px;margin-top: 5px;padding: 0px">
+                                        Заказы <span class="caret"></span>
+                                    </button>
+                                    <div style="width: 250px;font-size: 20px" th:id="'ajaxMenu' + ${clientMenu.id}"
+                                         class="dropdown-menu dropdown-menu-right">
+                                        <li></li>
+                                        <div th:each="prodForDrop : ${clientMenu.layerProducts}">
+                                            <li th:id="'pr' + ${prodForDrop.id}" th:text="${prodForDrop.name}  + ' №' +${prodForDrop.id} + ' (' + ${prodForDrop.cost} + 'р)'"></li>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="background: white; width: 100px;height: 40px;float: left;margin-left: 7px;border-radius: 5px;box-shadow: 0 0 2px 0.1px; margin-top: 15px;font-size: 23px;padding: 0">
+                                <center th:id="'priceMenu' + ${clientMenu.id}" style="margin-top: 3.5px" th:text="${clientMenu.priceMenu} + 'р'"></center>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 </body>
 </html>
