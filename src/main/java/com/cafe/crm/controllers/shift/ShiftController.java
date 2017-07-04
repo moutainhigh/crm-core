@@ -2,6 +2,7 @@ package com.cafe.crm.controllers.shift;
 
 
 import com.cafe.crm.dao.worker.WorkerRepository;
+import com.cafe.crm.models.worker.Worker;
 import com.cafe.crm.service_abstract.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 
 @Controller
@@ -99,8 +103,28 @@ public class ShiftController {
 	}
 
 	@RequestMapping(value = "manager/shift/endOfShift", method = RequestMethod.GET)
-	public String endOfShift() {
+	public String closeShift(@RequestParam(name = "bonus") Long[] workerBonus,
+							 @RequestParam(name = "idWorker") Long[] idWorker) {
+
+		Map<Long, Long> workerIdBonus = new HashMap<>();
+		for (int i = 0; i < workerBonus.length; i++) {
+			for (int j = 0; j < idWorker.length; j++) {
+				workerIdBonus.put(idWorker[j], workerBonus[j]);
+			}
+		}
+		for (Map.Entry<Long, Long> entry : workerIdBonus.entrySet()) {
+			Worker worker = workerService.findOne(entry.getKey());
+			Long bonus = worker.getBonus();
+			bonus = bonus + entry.getValue();
+			worker.setBonus(bonus);
+			Long shiftSalary = worker.getShiftSalary();
+			Long salaryWorker = worker.getSalary();
+			salaryWorker = salaryWorker + shiftSalary;
+			worker.setSalary(salaryWorker);
+			workerService.saveAndFlush(worker);
+		}
 		shiftService.closeShift();
 		return "redirect:/login";
 	}
 }
+

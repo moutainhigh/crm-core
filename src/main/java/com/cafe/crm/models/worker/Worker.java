@@ -46,6 +46,9 @@ public class Worker implements Serializable {
 	@Column(name = "salary", nullable = true)
 	private Long salary;
 
+	@Column(name = "bonus", nullable = true)
+	private Long bonus = 0L;
+
 	@Column(name = "actionForm")
 	private String actionForm;
 

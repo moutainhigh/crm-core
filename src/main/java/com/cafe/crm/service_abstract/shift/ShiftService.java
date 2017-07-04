@@ -21,6 +21,9 @@ public interface ShiftService {
 	// Рабочие не добавленные в открытую  смену
 	List<Worker> getWorkers();
 
+	// Рабочие добавленные в открытую  смену
+	Set<Worker> getAllActiveWorkers();
+
 	void deleteWorkerFromShift(String name);
 
 	void addWorkerFromShift(String name);

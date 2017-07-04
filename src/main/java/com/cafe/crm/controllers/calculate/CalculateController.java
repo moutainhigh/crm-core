@@ -1,12 +1,14 @@
 package com.cafe.crm.controllers.calculate;
 
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.worker.Worker;
 import com.cafe.crm.service_abstract.boardService.BoardService;
 import com.cafe.crm.service_abstract.calculateService.CalculateControllerService;
 import com.cafe.crm.service_abstract.calculateService.CalculateService;
 import com.cafe.crm.service_abstract.cardService.CardService;
 import com.cafe.crm.service_abstract.clientService.ClientService;
 import com.cafe.crm.service_abstract.menu.MenuService;
+import com.cafe.crm.service_abstract.shift.ShiftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Set;
 
 
 @Controller
@@ -39,9 +42,14 @@ public class CalculateController {
 	@Autowired
 	private CardService cardService;
 
+	@Autowired
+	private ShiftService shiftService;
+
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView manager() {
+		Set<Worker> allActiveWorker = shiftService.getAllActiveWorkers();// добавленные воркеры на смену
 		ModelAndView modelAndView = new ModelAndView("clients");
+		modelAndView.addObject("allWorker", allActiveWorker);
 		modelAndView.addObject("listBoard", boardService.getAll());
 		modelAndView.addObject("listCalculate", calculateService.getAllOpen());
 		modelAndView.addObject("listMenu", menuService.getOne(1L));
@@ -55,7 +63,6 @@ public class CalculateController {
 		calculateControllerService.createCalculate(id, number.longValue(), description);
 		return "redirect:/manager";
 	}
-
 
 	@RequestMapping(value = {"/add-card-on-client"}, method = RequestMethod.POST)
 	@ResponseBody
