@@ -22,7 +22,7 @@ public interface ShiftService {
 	List<Worker> getWorkers();
 
 	// Рабочие добавленные в открытую  смену
-	Set<Worker> getActiveWorkers();
+	Set<Worker> getAllActiveWorkers();
 
 	void deleteWorkerFromShift(String name);
 

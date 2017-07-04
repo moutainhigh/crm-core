@@ -47,9 +47,9 @@ public class CalculateController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView manager() {
-		Set<Worker> allWorker=shiftService.getActiveWorkers();// добавленные воркеры на смену
+		Set<Worker> allActiveWorker = shiftService.getAllActiveWorkers();// добавленные воркеры на смену
 		ModelAndView modelAndView = new ModelAndView("clients");
-		modelAndView.addObject("allWorker", allWorker);
+		modelAndView.addObject("allWorker", allActiveWorker);
 		modelAndView.addObject("listBoard", boardService.getAll());
 		modelAndView.addObject("listCalculate", calculateService.getAllOpen());
 		modelAndView.addObject("listMenu", menuService.getOne(1L));
@@ -63,7 +63,6 @@ public class CalculateController {
 		calculateControllerService.createCalculate(id, number.longValue(), description);
 		return "redirect:/manager";
 	}
-
 
 	@RequestMapping(value = {"/add-card-on-client"}, method = RequestMethod.POST)
 	@ResponseBody

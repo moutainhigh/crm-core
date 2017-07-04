@@ -63,7 +63,7 @@ public class ShiftServiceImpl implements ShiftService {
 	}
 
 	@Override   // Рабочие добавленные в открытую  смену
-	public Set<Worker> getActiveWorkers() {
+	public Set<Worker> getAllActiveWorkers() {
 		return shiftRepository.getLast().getUsers();
 	}
 
