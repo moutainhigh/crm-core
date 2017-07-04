@@ -1,5 +1,6 @@
 package com.cafe.crm.controllers.calculate;
 
+import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.worker.Worker;
 import com.cafe.crm.service_abstract.boardService.BoardService;
@@ -48,11 +49,32 @@ public class CalculateController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView manager() {
 		Set<Worker> allActiveWorker = shiftService.getAllActiveWorkers();// добавленные воркеры на смену
+		List<Calculate> activeCalculate = calculateService.getAllOpen();//активные счета
+		List<Client> clients = shiftService.getLast().getClients();//клиенты на смене
+		Double shiftSalary = 0D;//касса без учета расходов
+		Long salaryWorker = 0L;//зп сотрудников
+		Double shiftSalaryWithoutWorker = 0D;//касса с учетом зп сотрудников
+		Long card = 0L;//оплата по картам
+		for (Client c : clients) {
+			shiftSalary = shiftSalary + c.getAllPrice();
+			card = card + c.getPayWithCard();
+		}
+		for (Worker worker : allActiveWorker) {
+			salaryWorker = salaryWorker + worker.getShiftSalary();
+		}
+		shiftSalaryWithoutWorker = shiftSalary - salaryWorker;
+
+		//TODO мониторинг баланса с банковской карты
 		ModelAndView modelAndView = new ModelAndView("clients");
 		modelAndView.addObject("allWorker", allActiveWorker);
-		modelAndView.addObject("listBoard", boardService.getAll());
-		modelAndView.addObject("listCalculate", calculateService.getAllOpen());
+		modelAndView.addObject("activeCalculate", activeCalculate);
+		modelAndView.addObject("clients", clients.size());
+		modelAndView.addObject("salary", shiftSalary);
+		modelAndView.addObject("salaryWithoutWorker", shiftSalaryWithoutWorker);
+		modelAndView.addObject("card", card);
 		modelAndView.addObject("listMenu", menuService.getOne(1L));
+		modelAndView.addObject("listCalculate", calculateService.getAllOpen());
+		modelAndView.addObject("listBoard", boardService.getAll());
 		return modelAndView;
 	}
 

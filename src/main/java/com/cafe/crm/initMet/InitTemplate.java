@@ -43,9 +43,14 @@ public class InitTemplate {
 		byte[] balanceAfterDebitingContext = Files.readAllBytes(Paths.get(resourceBalanceAfterDebiting.getFile().getPath()));
 		Template balanceAfterDebiting = new Template("balance-info-debiting", balanceAfterDebitingContext);
 
+		Resource resourceExampleCloseShift = resourceLoader.getResource("classpath:templates/closeShiftEmailShortage.html");
+		byte[] exampleCloseShiftAfterDebitingContext = Files.readAllBytes(Paths.get(resourceExampleCloseShift.getFile().getPath()));
+		Template exampleCloseShift = new Template("closeShiftEmailShortage", exampleCloseShiftAfterDebitingContext);
+
 		templateService.save(disable);
 		templateService.save(text);
 		templateService.save(image);
 		templateService.save(balanceAfterDebiting);
+		templateService.save(exampleCloseShift);
 	}
 }

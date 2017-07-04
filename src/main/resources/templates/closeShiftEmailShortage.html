@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<div th:each="boss:${allBoss}">
+<h2>Добрый день <span th:text="${boss.firstName+' '+boss.lastName}"></span>
+    </h2>
+</div>
+<h2 th:text="${message}"></h2>
+
+<h2>Сотрудники на смене:
+    <br></br>
+    <div th:each="worker:${workers}">
+        <br></br>
+    <span th:text="${worker.firstName+' '+worker.lastName+':'+'  '+worker.allPosition}"></span>
+        </div>
+</h2>
+<h2>Количество клиентов за смену: <span th:text="${clients}"></span></h2>
+<h2>Количество счетов за смену: <span th:text="${calculate}"></span></h2>
+<h2>прибыль за смену: <span th:text="${cashBox + ' ' + 'рублей'}"></span></h2>
+<h2>Недосдача: <span th:text="${shortage + ' ' + 'рублей'}"></span></h2>
+</body>
+</html>

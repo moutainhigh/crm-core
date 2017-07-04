@@ -1,8 +1,11 @@
 package com.cafe.crm.controllers.shift;
 
 
+import com.cafe.crm.dao.boss.BossRepository;
 import com.cafe.crm.dao.worker.WorkerRepository;
+import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Worker;
+import com.cafe.crm.service_abstract.email.EmailService;
 import com.cafe.crm.service_abstract.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 
 @Controller
@@ -31,6 +34,12 @@ public class ShiftController {
 
 	@Autowired
 	private TimeManager timeManager;
+
+	@Autowired
+	private EmailService emailService;
+
+	@Autowired
+	private BossRepository bossRepository;
 
 	@RequestMapping(value = "/manager/shift/", method = RequestMethod.GET)
 	public ModelAndView getAdminPage() {
@@ -104,7 +113,11 @@ public class ShiftController {
 
 	@RequestMapping(value = "manager/shift/endOfShift", method = RequestMethod.GET)
 	public String closeShift(@RequestParam(name = "bonus") Long[] workerBonus,
-							 @RequestParam(name = "idWorker") Long[] idWorker) {
+							 @RequestParam(name = "idWorker") Long[] idWorker,
+							 @RequestParam(name = "salaryShift") Double salaryShift,
+							 @RequestParam(name = "profitShift") Double profitShift,
+							 @RequestParam(name = "cache") Long cache,
+							 @RequestParam(name = "payWithCard") Long payWithCard) {
 
 		Map<Long, Long> workerIdBonusMap = new HashMap<>();
 		for (int i = 0; i < workerBonus.length; i++) {
@@ -122,6 +135,10 @@ public class ShiftController {
 			salaryWorker = salaryWorker + shiftSalary;
 			worker.setSalary(salaryWorker);
 			workerService.saveAndFlush(worker);
+		}
+		if ((cache + payWithCard) != salaryShift) {
+			List<Boss> bossList = bossRepository.getAllActiveBoss();
+			emailService.sendCloseShiftInfoFromText(salaryShift, profitShift, cache, payWithCard, bossList);
 		}
 		shiftService.closeShift();
 		return "redirect:/login";
