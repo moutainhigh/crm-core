@@ -93,6 +93,14 @@ public class Worker implements Serializable {
 		this.enabled = enabled;
 	}
 
+	public Long getBonus() {
+		return bonus;
+	}
+
+	public void setBonus(Long bonus) {
+		this.bonus = bonus;
+	}
+
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 	}

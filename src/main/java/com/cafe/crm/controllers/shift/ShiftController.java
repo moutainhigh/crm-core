@@ -106,13 +106,13 @@ public class ShiftController {
 	public String closeShift(@RequestParam(name = "bonus") Long[] workerBonus,
 							 @RequestParam(name = "idWorker") Long[] idWorker) {
 
-		Map<Long, Long> workerIdBonus = new HashMap<>();
+		Map<Long, Long> workerIdBonusMap = new HashMap<>();
 		for (int i = 0; i < workerBonus.length; i++) {
 			for (int j = 0; j < idWorker.length; j++) {
-				workerIdBonus.put(idWorker[j], workerBonus[j]);
+				workerIdBonusMap.put(idWorker[j], workerBonus[j]);
 			}
 		}
-		for (Map.Entry<Long, Long> entry : workerIdBonus.entrySet()) {
+		for (Map.Entry<Long, Long> entry : workerIdBonusMap.entrySet()) {
 			Worker worker = workerService.findOne(entry.getKey());
 			Long bonus = worker.getBonus();
 			bonus = bonus + entry.getValue();
