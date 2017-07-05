@@ -51,25 +51,25 @@ public class CalculateController {
 		Set<Worker> allActiveWorker = shiftService.getAllActiveWorkers();// добавленные воркеры на смену
 		List<Calculate> activeCalculate = calculateService.getAllOpen();//активные счета
 		List<Client> clients = shiftService.getLast().getClients();//клиенты на смене
-		Double shiftSalary = 0D;//касса без учета расходов
+		Double shiftProfit = 0D;//касса без учета расходов
 		Long salaryWorker = 0L;//зп сотрудников
 		Double shiftSalaryWithoutWorker = 0D;//касса с учетом зп сотрудников
 		Long card = 0L;//оплата по картам
 		for (Client c : clients) {
-			shiftSalary = shiftSalary + c.getAllPrice();
+			shiftProfit = shiftProfit + c.getAllPrice();
 			card = card + c.getPayWithCard();
 		}
 		for (Worker worker : allActiveWorker) {
 			salaryWorker = salaryWorker + worker.getShiftSalary();
 		}
-		shiftSalaryWithoutWorker = shiftSalary - salaryWorker;
+		shiftSalaryWithoutWorker = shiftProfit - salaryWorker;
 
 		//TODO мониторинг баланса с банковской карты
 		ModelAndView modelAndView = new ModelAndView("clients");
 		modelAndView.addObject("allWorker", allActiveWorker);
 		modelAndView.addObject("activeCalculate", activeCalculate);
 		modelAndView.addObject("clients", clients.size());
-		modelAndView.addObject("salary", shiftSalary);
+		modelAndView.addObject("salary", shiftProfit);
 		modelAndView.addObject("salaryWithoutWorker", shiftSalaryWithoutWorker);
 		modelAndView.addObject("card", card);
 		modelAndView.addObject("listMenu", menuService.getOne(1L));
