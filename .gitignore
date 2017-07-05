@@ -5,6 +5,7 @@
 
 log/c
 crm.cafe.log
+crm.cafe.cardBalance.log
 ## Directory-based project format:
 .idea/
 src/main/resources/hibernate.properties
