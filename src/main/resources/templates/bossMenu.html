@@ -17,11 +17,11 @@
         <div>
             <h3 align="center"><h1 th:align="center" style="color: #5bc0de;">Поиск</h1></h3>
             <input id="filter" style="margin-bottom: 10px" type="text" class="form-control"
-                   placeholder="Поиск по полям"></input>
+                   placeholder="Поиск по полям"/>
         </div>
         <div class="tabbable"> <!-- Only required for left/right tabs -->
             <ul class="nav nav-tabs">
-                <li ><a th:href="'#allProd' " data-toggle="tab">
+                <li><a th:href="'#allProd' " data-toggle="tab">
                     <h4 style="color: #5bc0de;"
                         text="Все продукты">Все продукты</h4></a></li>
                 <li style="color: #5bc0de;" th:each="cat : ${categories}"><a th:href="'#' +${cat.id}" data-toggle="tab">
@@ -36,7 +36,7 @@
             </div>
 
             <div class="tab-content">
-                <div  th:replace="tabFragmentForBossMenu :: BossTab ">
+                <div th:replace="tabFragmentForBossMenu :: BossTab ">
                 </div>
                 <div class="tab-pane " th:id="${categor.id}" th:each="categor:${categories}">
 
@@ -166,8 +166,7 @@
                                             <label>Название</label>
                                             <input required="" type="text" class="form-control" id="loginCat"
                                                    name="name"
-                                                   th:value="${categor.name}" autocomplete="off"
-                                            ></input>
+                                                   th:value="${categor.name}" autocomplete="off"/>
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-lg btn-primary btn-block" name="upd"
@@ -199,22 +198,21 @@
                                         <label>Название</label>
                                         <input required="" type="text" class="form-control" autocomplete="off"
                                                th:id="addName+${categor.id}"
-                                               name="name" placeholder="Название"
-                                        ></input>
+                                               name="name" placeholder="Название"/>
                                     </div>
                                     <div class="form-group">
                                         <label>Описание</label>
-                                        <input type="text" class="form-control" th:id="addDes+${categor.id}" autocomplete="off"
+                                        <input type="text" class="form-control" th:id="addDes+${categor.id}"
+                                               autocomplete="off"
                                                name="description"
-                                               placeholder="Описание"
-                                        ></input>
+                                               placeholder="Описание"/>
                                     </div>
                                     <div class="form-group">
                                         <label>Цена</label>
-                                        <input type="text" class="form-control" th:id="addCost+${categor.id}" autocomplete="off"
+                                        <input type="text" class="form-control" th:id="addCost+${categor.id}"
+                                               autocomplete="off"
                                                name="cost"
-                                               placeholder="Цена"
-                                        ></input>
+                                               placeholder="Цена"/>
                                     </div>
                                 </div>
                                 <button class="btn btn-lg btn-primary btn-block" name="add"
@@ -251,7 +249,8 @@
                                             ></input>
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-lg btn-primary btn-block" name="del" autocomplete="off"
+                                    <button type="submit" class="btn btn-lg btn-primary btn-block" name="del"
+                                            autocomplete="off"
                                             th:value="${categor.id}">
                                         Удалить
                                     </button>
@@ -279,7 +278,8 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label>Название</label>
-                                <input required="" type="text" class="form-control" id="loginProd2" name="name" autocomplete="off"
+                                <input required="" type="text" class="form-control" id="loginProd2" name="name"
+                                       autocomplete="off"
                                 ></input>
                             </div>
                         </div>

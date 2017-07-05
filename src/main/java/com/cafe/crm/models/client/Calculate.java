@@ -5,12 +5,11 @@ import com.cafe.crm.models.card.Card;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "calculation")
-public class Calculate implements Serializable{
+public class Calculate {
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -19,7 +18,7 @@ public class Calculate implements Serializable{
 	@Size(max = 30)
 	private String description;
 
-	private boolean state = true;
+	private boolean state = true; // Open or Closed
 
 	@OneToMany
 	private List<Client> client;

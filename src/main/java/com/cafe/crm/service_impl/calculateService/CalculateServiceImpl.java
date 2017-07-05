@@ -10,26 +10,30 @@ import java.util.List;
 
 @Service
 public class CalculateServiceImpl implements CalculateService {
-    @Autowired
-    private CalculateRepository calculateRepository;
+	@Autowired
+	private CalculateRepository calculateRepository;
 
-    public void save(Calculate calculate) {
-        calculateRepository.saveAndFlush(calculate);
-    }
+	public void save(Calculate calculate) {
+		calculateRepository.saveAndFlush(calculate);
+	}
 
-    public void delete(Calculate calculate) {
-        calculateRepository.delete(calculate);
-    }
+	public void delete(Calculate calculate) {
+		calculateRepository.delete(calculate);
+	}
 
-    public List<Calculate> getAll() {
-        return calculateRepository.findAll();
-    }
+	public List<Calculate> getAll() {
+		return calculateRepository.findAll();
+	}
 
-    public Calculate getOne(Long id) {
-        return calculateRepository.findOne(id);
-    }
+	public Calculate getOne(Long id) {
+		return calculateRepository.findOne(id);
+	}
 
-    public List<Calculate> getAllOpen() {
-        return calculateRepository.getAllOpen();
-    }
+	public List<Calculate> getAllOpen() {
+		return calculateRepository.getAllOpen();
+	}
+
+	public Calculate getAllOpenOnCalculate(Long calculateId) {
+		return calculateRepository.getAllOpenOnCalculate(calculateId);
+	}
 }

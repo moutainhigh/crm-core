@@ -1,4 +1,3 @@
-
 (function (factory) {
     var jQuery;
     if (typeof define === 'function' && define.amd) {
@@ -8,13 +7,14 @@
         // Node/CommonJS
         try {
             jQuery = require('jquery');
-        } catch(e) {}
+        } catch (e) {
+        }
         module.exports = factory(jQuery);
     } else {
         // Browser globals
         var _OldCookies = window.Cookies;
         var api = window.Cookies = factory(window.jQuery);
-        api.noConflict = function() {
+        api.noConflict = function () {
             window.Cookies = _OldCookies;
             return api;
         };
@@ -47,7 +47,8 @@
             // If we can't parse the cookie, ignore it, it's unusable.
             s = decodeURIComponent(s.replace(pluses, ' '));
             return api.json ? JSON.parse(s) : s;
-        } catch(e) {}
+        } catch (e) {
+        }
     }
 
     function read(s, converter) {
@@ -60,7 +61,7 @@
         var i = 0;
         var result = {};
         for (; i < arguments.length; i++) {
-            options = arguments[ i ];
+            options = arguments[i];
             for (key in options) {
                 result[key] = options[key];
             }
@@ -87,9 +88,9 @@
             return (document.cookie = [
                 encode(key), '=', stringifyCookieValue(value),
                 options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
-                options.path    ? '; path=' + options.path : '',
-                options.domain  ? '; domain=' + options.domain : '',
-                options.secure  ? '; secure' : ''
+                options.path ? '; path=' + options.path : '',
+                options.domain ? '; domain=' + options.domain : '',
+                options.secure ? '; secure' : ''
             ].join(''));
         }
 
@@ -128,11 +129,11 @@
 
     api.remove = function (key, options) {
         // Must not alter options, thus extending a fresh object...
-        api(key, '', extend(options, { expires: -1 }));
+        api(key, '', extend(options, {expires: -1}));
         return !api(key);
     };
 
-    if ( $ ) {
+    if ($) {
         $.cookie = api;
         $.removeCookie = api.remove;
     }

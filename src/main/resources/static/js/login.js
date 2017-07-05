@@ -26,7 +26,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $('#username, #password').on('click',function() {
+    $('#username, #password').on('click', function () {
         $("#incorrect, #wrong, #successful-logout").text("").removeClass("alert-danger");
 
     });
