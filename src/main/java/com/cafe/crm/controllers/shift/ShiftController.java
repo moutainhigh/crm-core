@@ -114,7 +114,7 @@ public class ShiftController {
 	@RequestMapping(value = "manager/shift/endOfShift", method = RequestMethod.GET)
 	public String closeShift(@RequestParam(name = "bonus") Long[] workerBonus,
 							 @RequestParam(name = "idWorker") Long[] idWorker,
-							 @RequestParam(name = "salaryShift") Double salaryShift,
+							 @RequestParam(name = "salaryShift") Double shiftProfit,
 							 @RequestParam(name = "profitShift") Double profitShift,
 							 @RequestParam(name = "cache") Long cache,
 							 @RequestParam(name = "payWithCard") Long payWithCard) {
@@ -136,9 +136,9 @@ public class ShiftController {
 			worker.setSalary(salaryWorker);
 			workerService.saveAndFlush(worker);
 		}
-		if ((cache + payWithCard) != salaryShift) {
+		if ((cache + payWithCard) > shiftProfit) {
 			List<Boss> bossList = bossRepository.getAllActiveBoss();
-			emailService.sendCloseShiftInfoFromText(salaryShift, profitShift, cache, payWithCard, bossList);
+			emailService.sendCloseShiftInfoFromText(shiftProfit, profitShift, cache, payWithCard, bossList);
 		}
 		shiftService.closeShift();
 		return "redirect:/login";

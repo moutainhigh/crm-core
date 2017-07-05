@@ -62,13 +62,3 @@ balance-info:
     mail:
       view: db:balance-info-debiting
       subject: Изменение баланса карты!
-
-closeShiftEmailShortage:
-          view: db:closeShiftEmailShortage
-          text: Касса не сошлась!
-          subject: Касса не сошлась!
-
-closeShiftEmailRentability:
-          view: db:closeShiftEmailRentability
-          text: Смена не рентабельна!
-          subject: Смена не рентабельна!
