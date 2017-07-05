@@ -1,14 +1,13 @@
 package com.cafe.crm.models.client;
 
-import com.cafe.crm.models.Menu.Product;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "layerProduct")
+@Table(name = "layer_product")
 public class LayerProduct {
 
 	@Id

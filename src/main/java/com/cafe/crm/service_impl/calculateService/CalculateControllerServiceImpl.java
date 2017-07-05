@@ -6,11 +6,15 @@ import com.cafe.crm.service_abstract.calculateService.CalculatePriceService;
 import com.cafe.crm.service_abstract.calculateService.CalculateService;
 import com.cafe.crm.service_abstract.cardService.CardService;
 import com.cafe.crm.service_abstract.clientService.ClientService;
-import com.cafe.crm.service_abstract.menu_service.ProductService;
 import com.cafe.crm.models.client.Board;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.service_abstract.email.EmailService;
+import com.cafe.crm.service_abstract.menu.ProductService;
+import com.cafe.crm.service_abstract.property.PropertyService;
+import com.cafe.crm.service_abstract.shift.ShiftService;
+import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -210,8 +210,6 @@
 <script type="text/javascript">
     ajax();
     setInterval(ajax, 60000);
-
-    //console.log(document.cookie);
     function cookiePanel(id) {
         if ($.cookie(id) == true.toString()) {
             $.cookie(id, "false");
@@ -326,6 +324,14 @@
         }
     }
 
+    function check1(id) {
+        if ($('#checked1' + id).is(':checked')) {
+            $(".class1" + id).prop("checked", true);
+        } else {
+            $(".class1" + id).prop("checked", false);
+        }
+    }
+
     function subAjax(id) {
         $.ajax({
             type: "POST",
@@ -356,6 +362,7 @@
                     $('#ajaxMenu' + arr[i].id + ' li:last').after('<li id = "pr' + data.id + '">' + data.name + ' №' + data.id + ' (' + data.cost + 'р)' + '</li>');
                 }
                 setTimeout(getOpenClientsOnCalculateAjax(calcId), 500);
+                setTimeout(ajax, 500);
                 //]]>
             },
             error: function () {
@@ -380,6 +387,7 @@
                     }
                 }
                 setTimeout(getOpenClientsOnCalculateAjax(calcId), 500);
+                setTimeout(ajax, 500);
                 //]]>
             },
             error: function () {
@@ -405,6 +413,7 @@
                 }
                 getProductOnCalculateAjax(calcId);
                 setTimeout(getOpenClientsOnCalculateAjax(calcId), 500);
+                setTimeout(ajax, 500);
                 //]]>
             },
             error: function () {
@@ -424,7 +433,7 @@
                 var str;
                 if (data != "") {
                     for (var i = 0; i < data.length; i++) {
-                        str += '<tr style="font-size: 20px;"><td>' + data[i].name + ' №' + data[i].id + '</td><td>' + data[i].description + '</td><td>' + data[i].cost + '</td><td><button onclick="addLayerProductOnClientAjax(' + data[i].id + ',' + calcId + ')" style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;"><img src="http://interset.org/fotosnews/image90_news_company.png" width="25px"height="25px"/></button><button onclick="deleteLayerProductOnClientAjax(' + data[i].id + ',' + calcId + ')" style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;"><img src="http://s1.iconbird.com/ico/2013/10/464/w512h5121380984608delete.png" width="20px"height="20px"/></button></td></tr>';
+                        str += '<tr style="font-size: 20px;"><td>' + data[i].name + ' №' + data[i].id + '</td><td>' + data[i].description + '</td><td>' + data[i].cost + '</td><td><button onclick="addLayerProductOnClientAjax(' + data[i].id + ',' + calcId + ')" style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;"><img src="http://yliyasokolova.ru/wp-content/uploads/2017/04/galochka-300x231.png" width="25px"height="25px"/></button><button onclick="deleteLayerProductOnClientAjax(' + data[i].id + ',' + calcId + ')" style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;"><img src="http://s1.iconbird.com/ico/2013/10/464/w512h5121380984608delete.png" width="20px"height="20px"/></button></td></tr>';
                     }
                 } else {
                     str = null;
@@ -456,8 +465,34 @@
             }
         });
     }
+    //2 снизу это скрипты поиска по продуктам/категориям
+    $(document).ready(function () {
+        $("#search").keyup(function () {
+            _this = this;
 
+            $.each($("#mycateg a"), function () {
+                if ($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
+        });
+    });
 
+    $(document).ready(function () {
+        $("#searchPr").keyup(function () {
+            _this = this;
+
+            $.each($(".mytable tbody tr"), function () {
+                if ($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
+        });
+    });
 </script>
 
 </body>

@@ -8,7 +8,7 @@ import com.cafe.crm.service_abstract.calculateService.CalculateService;
 import com.cafe.crm.service_abstract.calculateService.MenuCalculateControllerService;
 import com.cafe.crm.service_abstract.clientService.ClientService;
 import com.cafe.crm.service_abstract.layerProductService.LayerProductService;
-import com.cafe.crm.service_abstract.menu_service.ProductService;
+import com.cafe.crm.service_abstract.menu.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -90,7 +90,7 @@ public class MenuCalculateControllerServiceImpl implements MenuCalculateControll
 		for (Client client : clients) {
 			client.setPriceMenu(0D);
 			for (LayerProduct layerProduct : client.getLayerProducts()) {
-				client.setPriceMenu(client.getPriceMenu() + layerProduct.getCost() / layerProduct.getClients().size());
+				client.setPriceMenu(Math.round((client.getPriceMenu() + layerProduct.getCost() / layerProduct.getClients().size()) * 100) / 100.00);
 			}
 		}
 		clientService.saveAll(clients);

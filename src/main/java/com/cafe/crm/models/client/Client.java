@@ -2,6 +2,7 @@ package com.cafe.crm.models.client;
 
 import com.cafe.crm.models.card.Card;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

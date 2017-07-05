@@ -4,7 +4,7 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/world?serverTimezone=Europe/Moscow
     username: root
-    password: rockstargood
+    password: root
   jpa:
     generate-ddl: true
     hibernate:
@@ -62,3 +62,8 @@ balance-info:
     mail:
       view: db:balance-info-debiting
       subject: Изменение баланса карты!
+
+closeShiftEmailShortage:
+           view: db:closeShiftEmailShortage
+           text: Касса не сошлась!
+           subject: Касса не сошлась!
