@@ -3,6 +3,7 @@ package com.cafe.crm.service_impl.email;
 
 import com.cafe.crm.configs.property.AdvertisingProperties;
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.service_abstract.email.EmailService;
 import com.cafe.crm.service_abstract.email.HtmlService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,80 +19,89 @@ import java.util.Collection;
 @Service
 public class EmailServiceImpl implements EmailService {
 
-    private final HtmlService htmlService;
+	private final HtmlService htmlService;
 
-    private final AdvertisingProperties properties;
+	private final AdvertisingProperties properties;
 
-    private final JavaMailSender javaMailSender;
+	private final JavaMailSender javaMailSender;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Value("${balance-info.debiting.mail.view}")
-    private String debitingView;
+	@Value("${balance-info.debiting.mail.view}")
+	private String debitingView;
 
-    @Value("${balance-info.debiting.mail.subject}")
-    private String debitingSubject;
+	@Value("${balance-info.debiting.mail.subject}")
+	private String debitingSubject;
 
-    @Autowired
-    public EmailServiceImpl(JavaMailSender javaMailSender, AdvertisingProperties properties, HtmlService htmlService, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.javaMailSender = javaMailSender;
-        this.properties = properties;
-        this.htmlService = htmlService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
+	@Value("${closeShiftEmailShortage.view}")
+	private String closeShiftView;
 
-    public void sendAdvertisingFromImage(String imageUrl, String subject, String urlToLink, Collection<? extends Client> clients) {
-        MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[clients.size()];
-        int messageNum = 0;
-        for (Client client : clients) {
-            String email = client.getEmail();
-            if (email == null) {
-                continue;
-            }
-            mimeMessages[messageNum++] = mimeMessage -> {
-                MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-                messageHelper.setFrom(properties.getMail().getSender());
-                messageHelper.setTo(email);
-                messageHelper.setSubject(subject);
-                Long id = client.getId();
-                String token = bCryptPasswordEncoder.encode(email);
-                String view = properties.getMail().getImageView();
-                String html = htmlService.getAdvertisingFromImage(imageUrl, view, urlToLink, id, token);
-                messageHelper.setText(html, true);
-            };
-        }
-        if (messageNum == 0) {
-            return;
-        }
-        javaMailSender.send(mimeMessages);
-    }
+	@Value("${closeShiftEmailShortage.text}")
+	private String closeShiftText;
 
-    @Override
-    public void sendAdvertisingFromText(String text, String subject, Collection<? extends Client> clients) {
-        MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[clients.size()];
-        int messageNum = 0;
-        for (Client client : clients) {
-            String email = client.getEmail();
-            if (email == null) {
-                continue;
-            }
-            mimeMessages[messageNum++] = mimeMessage -> {
-                MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-                messageHelper.setFrom(properties.getMail().getSender());
-                messageHelper.setTo(email);
-                messageHelper.setSubject(subject);
-                Long id = client.getId();
-                String token = bCryptPasswordEncoder.encode(email);
-                String view = properties.getMail().getTextView();
-                String html = htmlService.getAdvertisingFromText(text, view, id, token);
-                messageHelper.setText(html, true);
-            };
-        }
-        if (messageNum == 0) {
-            return;
-        }
-        javaMailSender.send(mimeMessages);
-    }
+	@Value("${closeShiftEmailShortage.subject}")
+	private String closeShiftSubject;
+
+	@Autowired
+	public EmailServiceImpl(JavaMailSender javaMailSender, AdvertisingProperties properties, HtmlService htmlService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+		this.javaMailSender = javaMailSender;
+		this.properties = properties;
+		this.htmlService = htmlService;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+	}
+
+	public void sendAdvertisingFromImage(String imageUrl, String subject, String urlToLink, Collection<? extends Client> clients) {
+		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[clients.size()];
+		int messageNum = 0;
+		for (Client client : clients) {
+			String email = client.getEmail();
+			if (email == null) {
+				continue;
+			}
+			mimeMessages[messageNum++] = mimeMessage -> {
+				MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+				messageHelper.setFrom(properties.getMail().getSender());
+				messageHelper.setTo(email);
+				messageHelper.setSubject(subject);
+				Long id = client.getId();
+				String token = bCryptPasswordEncoder.encode(email);
+				String view = properties.getMail().getImageView();
+				String html = htmlService.getAdvertisingFromImage(imageUrl, view, urlToLink, id, token);
+				messageHelper.setText(html, true);
+			};
+		}
+		if (messageNum == 0) {
+			return;
+		}
+		javaMailSender.send(mimeMessages);
+	}
+
+	@Override
+	public void sendAdvertisingFromText(String text, String subject, Collection<? extends Client> clients) {
+		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[clients.size()];
+		int messageNum = 0;
+		for (Client client : clients) {
+			String email = client.getEmail();
+			if (email == null) {
+				continue;
+			}
+			mimeMessages[messageNum++] = mimeMessage -> {
+				MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+				messageHelper.setFrom(properties.getMail().getSender());
+				messageHelper.setTo(email);
+				messageHelper.setSubject(subject);
+				Long id = client.getId();
+				String token = bCryptPasswordEncoder.encode(email);
+				String view = properties.getMail().getTextView();
+				String html = htmlService.getAdvertisingFromText(text, view, id, token);
+				messageHelper.setText(html, true);
+			};
+		}
+		if (messageNum == 0) {
+			return;
+		}
+		javaMailSender.send(mimeMessages);
+	}
 
 	@Override
 	public void sendDispatchStatusNotification(Client client) {
@@ -131,5 +141,30 @@ public class EmailServiceImpl implements EmailService {
 			messageHelper.setText(html, true);
 		};
 		javaMailSender.send(message);
+	}
+
+	@Override
+	public void sendCloseShiftInfoFromText(Double salaryShift, Double profitShift, Long cache, Long payWithCard, Collection<? extends Boss> boss) {
+		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[boss.size()];
+		int messageNum = 0;
+		for (Boss bosses : boss) {
+			String email = bosses.getEmail();
+			if (email == null) {
+				continue;
+			}
+			mimeMessages[messageNum++] = mimeMessage -> {
+				MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+				messageHelper.setFrom(properties.getMail().getSender());
+				messageHelper.setTo(email);
+				messageHelper.setSubject(closeShiftSubject);
+				String html = htmlService.getCloseShiftFromText(closeShiftText, salaryShift, profitShift, cache, payWithCard,
+						closeShiftView);
+				messageHelper.setText(html, true);
+			};
+		}
+		if (messageNum == 0) {
+			return;
+		}
+		javaMailSender.send(mimeMessages);
 	}
 }

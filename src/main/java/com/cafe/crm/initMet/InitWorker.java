@@ -87,7 +87,7 @@ public class InitWorker {
 		manager.setFirstName("Anna");
 		manager.setLastName("Jons");
 		manager.setEmail("manager@mail.ru");
-		manager.setPhone(9123456789L);
+		manager.setPhone(9233456789L);
 		manager.setAllPosition(adminPosList);
 		manager.setShiftSalary(1000L);
 		manager.setCountShift(2L);
@@ -106,7 +106,7 @@ public class InitWorker {
 		boss.setPassword(hashedBossPassword);
 		boss.setFirstName("Martin");
 		boss.setLastName("Set");
-		boss.setEmail("boss@mail.ru");
+		boss.setEmail("zaytsev.dmitry9228@gmail.com");
 		boss.setPhone(9123456789L);
 		boss.setAllPosition(bossPosList);
 		boss.setShiftSalary(1000L);

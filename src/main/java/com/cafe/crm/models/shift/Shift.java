@@ -1,10 +1,12 @@
 package com.cafe.crm.models.shift;
 
 
+import com.cafe.crm.models.client.Calculate;
+import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.worker.Worker;
-
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 
@@ -26,6 +28,12 @@ public class Shift {
 	@Column(name = "isOpen") // shift is open ?
 			Boolean isOpen;
 
+	@OneToMany
+	private Set<Calculate> allCalculate;
+
+	@OneToMany
+	private List<Client> clients;
+
 	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Worker.class)
 	@JoinTable(name = "permissions_allShifts",
 			joinColumns = {@JoinColumn(name = "shift_id")},
@@ -46,7 +54,6 @@ public class Shift {
 		return names;
 	}
 
-
 	public Shift(LocalDate dateShift, Integer checkValue, Set<Worker> users) {
 		this.dateShift = dateShift;
 		this.checkValue = checkValue;
@@ -58,6 +65,22 @@ public class Shift {
 	}
 
 	public Shift() {
+	}
+
+	public Set<Calculate> getAllCalculate() {
+		return allCalculate;
+	}
+
+	public void setAllCalculate(Set<Calculate> allCalculate) {
+		this.allCalculate = allCalculate;
+	}
+
+	public List<Client> getClients() {
+		return clients;
+	}
+
+	public void setClients(List<Client> clients) {
+		this.clients = clients;
 	}
 
 	public Long getId() {
