@@ -77,12 +77,16 @@
                         <tr>
                             <th>#</th>
                             <th>Имя</th>
+                            <th>Фамилия</th>
+                            <th>Должность</th>
                             <th>Добавить сотрудника</th>
                         </tr>
                         <tbody class="searchable" th:each="user:${list}">
                         <tr>
                             <td><p th:text="${user.id}"></p></td>
                             <td><p th:text="${user.firstName}"></p></td>
+                            <td><p th:text="${user.lastName}"></p></td>
+                            <td><p th:text="${user.allPosition}"></p></td>
                             <td><input type="checkbox" style="width:20px;height:20px;" name="box" th:value="${user.id}"/></td>
                         </tr>
                         </tbody>
