@@ -65,7 +65,7 @@ public class CalculateController {
 		shiftSalaryWithoutWorker = shiftProfit - salaryWorker;
 
 		//TODO мониторинг баланса с банковской карты
-		ModelAndView modelAndView = new ModelAndView("clients");
+		ModelAndView modelAndView = new ModelAndView("/client/clients");
 		modelAndView.addObject("allWorker", allActiveWorker);
 		modelAndView.addObject("activeCalculate", activeCalculate);
 		modelAndView.addObject("clients", clients.size());
