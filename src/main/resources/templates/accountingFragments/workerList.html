@@ -81,6 +81,8 @@
                                             <br></br>
                                         </div>
                                     </div>
+                                    <input type="hidden" class="form-control"  th:value="${worker.password}" name="password"/>
+                                    <br></br>
                                     <div class="row">
                                         <div class="col-md-6 ">
                                             <h4>Оклад за смену</h4>
@@ -216,6 +218,8 @@
                                                    name="countShift"/>
                                             <br></br>
                                         </div>
+                                        <input type="hidden" class="form-control"  th:value="${worker.password}" name="password"/>
+                                        <br></br>
                                     </div>
                                     <h4>Зарплата</h4>
                                     <input type="text" class="form-control" th:value="${worker.salary}" name="salary"/>
