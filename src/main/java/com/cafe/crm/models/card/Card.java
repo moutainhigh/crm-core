@@ -25,12 +25,13 @@ public class Card {
 	private String name;
 
 	@Basic(fetch = FetchType.LAZY)
-	@Column(name="photo")@Lob
+	@Column(name = "photo")
+	@Lob
 	private byte[] photo = new byte[1];
 
 	private String email;
 
-    @Range(min=0,max=100)
+	@Range(min = 0, max = 100)
 	private Long discount = 0L;
 
 	private Long balance = 0L;
@@ -43,7 +44,7 @@ public class Card {
 
 	private String keyNameQrCode;
 
-    private String surname;
+	private String surname;
 
 	private String accessKey;
 
@@ -68,6 +69,7 @@ public class Card {
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
+
 	public Boolean getActivatedCard() {
 		return activatedCard;
 	}

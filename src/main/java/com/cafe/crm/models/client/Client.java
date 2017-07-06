@@ -10,7 +10,6 @@ import javax.validation.constraints.Size;
 import java.time.LocalTime;
 import java.util.List;
 
-// TODO: 30.06.2017 поменять на серверное время при мерже
 
 @Entity
 @Table(name = "client")

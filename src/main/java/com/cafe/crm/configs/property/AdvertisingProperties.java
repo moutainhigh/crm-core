@@ -7,103 +7,103 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("advertising")
 public class AdvertisingProperties {
 
-    private Mail mail;
-    private Cloud cloud;
+	private Mail mail;
+	private Cloud cloud;
 
-    public static class Mail {
-        private String sender;
-        private String imageView;
-        private String textView;
-        private String disableView;
-        private String disableSubject;
+	public Mail getMail() {
+		return mail;
+	}
 
-        public String getSender() {
-            return sender;
-        }
+	public void setMail(Mail mail) {
+		this.mail = mail;
+	}
 
-        public void setSender(String name) {
-            this.sender = name;
-        }
+	public Cloud getCloud() {
+		return cloud;
+	}
 
-        public String getImageView() {
-            return imageView;
-        }
+	public void setCloud(Cloud cloud) {
+		this.cloud = cloud;
+	}
 
-        public void setImageView(String imageView) {
-            this.imageView = imageView;
-        }
+	public static class Mail {
+		private String sender;
+		private String imageView;
+		private String textView;
+		private String disableView;
+		private String disableSubject;
 
-        public String getTextView() {
-            return textView;
-        }
+		public String getSender() {
+			return sender;
+		}
 
-        public void setTextView(String textView) {
-            this.textView = textView;
-        }
+		public void setSender(String name) {
+			this.sender = name;
+		}
 
-        public String getDisableView() {
-            return disableView;
-        }
+		public String getImageView() {
+			return imageView;
+		}
 
-        public void setDisableView(String disableView) {
-            this.disableView = disableView;
-        }
+		public void setImageView(String imageView) {
+			this.imageView = imageView;
+		}
 
-        public String getDisableSubject() {
-            return disableSubject;
-        }
+		public String getTextView() {
+			return textView;
+		}
 
-        public void setDisableSubject(String disableSubject) {
-            this.disableSubject = disableSubject;
-        }
+		public void setTextView(String textView) {
+			this.textView = textView;
+		}
 
-    }
+		public String getDisableView() {
+			return disableView;
+		}
 
-    public static class Cloud {
-        private String name;
-        private String key;
-        private String secret;
+		public void setDisableView(String disableView) {
+			this.disableView = disableView;
+		}
 
-        public String getName() {
-            return name;
-        }
+		public String getDisableSubject() {
+			return disableSubject;
+		}
 
-        public void setName(String name) {
-            this.name = name;
-        }
+		public void setDisableSubject(String disableSubject) {
+			this.disableSubject = disableSubject;
+		}
 
-        public String getKey() {
-            return key;
-        }
+	}
 
-        public void setKey(String key) {
-            this.key = key;
-        }
+	public static class Cloud {
+		private String name;
+		private String key;
+		private String secret;
 
-        public String getSecret() {
-            return secret;
-        }
+		public String getName() {
+			return name;
+		}
 
-        public void setSecret(String secret) {
-            this.secret = secret;
-        }
-    }
+		public void setName(String name) {
+			this.name = name;
+		}
 
-    public Mail getMail() {
-        return mail;
-    }
+		public String getKey() {
+			return key;
+		}
 
-    public void setMail(Mail mail) {
-        this.mail = mail;
-    }
+		public void setKey(String key) {
+			this.key = key;
+		}
 
-    public Cloud getCloud() {
-        return cloud;
-    }
+		public String getSecret() {
+			return secret;
+		}
 
-    public void setCloud(Cloud cloud) {
-        this.cloud = cloud;
-    }
+		public void setSecret(String secret) {
+			this.secret = secret;
+		}
+	}
 
 
 }

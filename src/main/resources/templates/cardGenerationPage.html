@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -8,18 +8,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" th:href="@{/st.css}" type="text/css"/>
-
-
-    <script>
-        function toggleIcon(e) {
-            $(e.target)
-                .prev('.panel-heading')
-                .find(".more-less")
-                .toggleClass('glyphicon-plus glyphicon-minus');
-        }
-        $('.panel-group').on('hidden.bs.collapse', toggleIcon);
-        $('.panel-group').on('shown.bs.collapse', toggleIcon);
-    </script>
 </head>
 <body>
 <div th:replace="bossnavbar :: bossNavbar">
@@ -195,45 +183,11 @@
             <img th:src="${url}"/>
         </div>
     </form>
-    <div th:replace="propertiesForm :: PropertyForm">
-    </div>
     <div th:replace="bossChangePassword :: BossChangePassword">
     </div>
     <div th:replace="media/advertisingDispatch :: advertising"></div>
 </div>
-
-
-<script>
-    $(document).ready(function () {
-        if ($('#ch:checked').length) {
-            $('#sr').attr('readonly', true); // On Load, should it be read only?
-        }
-
-        $('#ch').change(function () {
-            if ($('#ch:checked').length) {
-                $('#sr').attr('readonly', true); //If checked - Read only
-            } else {
-                $('#sr').attr('readonly', false);//Not Checked - Normal
-            }
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function () {
-        if ($('#ch2:checked').length) {
-            $('#sr2').attr('readonly', true); // On Load, should it be read only?
-        }
-
-        $('#ch2').change(function () {
-            if ($('#ch2:checked').length) {
-                $('#sr2').attr('readonly', true); //If checked - Read only
-            } else {
-                $('#sr2').attr('readonly', false);//Not Checked - Normal
-            }
-        });
-    });
-</script>
+<script th:src="@{/js/card/generationPage.js}"></script>
 <script th:src="@{/js/mail.js}"></script>
 </body>
 </html>

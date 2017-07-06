@@ -1,12 +1,12 @@
 package com.cafe.crm.controllers.card;
 
 import com.cafe.crm.models.card.Card;
-import com.cafe.crm.service_abstract.boardService.BoardService;
-import com.cafe.crm.service_abstract.calculateService.CalculateControllerService;
-import com.cafe.crm.service_abstract.calculateService.CalculateService;
-import com.cafe.crm.service_abstract.cardService.CardControllerService;
-import com.cafe.crm.service_abstract.cardService.CardService;
-import com.cafe.crm.service_abstract.property.PropertyService;
+import com.cafe.crm.services.interfaces.board.BoardService;
+import com.cafe.crm.services.interfaces.calculate.CalculateControllerService;
+import com.cafe.crm.services.interfaces.calculate.CalculateService;
+import com.cafe.crm.services.interfaces.card.CardControllerService;
+import com.cafe.crm.services.interfaces.card.CardService;
+import com.cafe.crm.services.interfaces.property.PropertyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

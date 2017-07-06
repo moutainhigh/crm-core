@@ -24,41 +24,55 @@
                             <div class="row">
                                 <div class="col-md-4 ">
                                     <h4>ФИО сотрудника</h4>
-                                    <input type="text" th:id="${allWorker.id}" style="margin-top: -4px" readonly="readonly" class="form-control" th:value="${allWorker.firstName+' '+allWorker.lastName}"/>
+                                    <input type="text" th:id="${allWorker.id}" style="margin-top: -4px"
+                                           readonly="readonly" class="form-control"
+                                           th:value="${allWorker.firstName+' '+allWorker.lastName}"/>
                                     <br></br>
                                 </div>
                                 <div class="col-md-4" style="margin-top: -5px">
                                     <div class="question">
                                         <h4>Оклад
-                                            <i style="float: right;margin-left: 10px;margin-top: -4px;font-size: 25px" class="fa fa-check" aria-hidden="true"></i>
-                                            <input th:id="'id'+${allWorker.id}" th:onclick="'test(\'' + ${allWorker.id} + '\');'" style="width: 20px;height: 20px;float: right;margin-bottom: 10px;margin-top: 0px" class="coupon_question"  type="checkbox"  autocomplete="off" value=""/>
-                                            <input  style="width: 20px;height: 20px;float: right;margin-bottom: 10px;margin-top: 0px"  th:value="${allWorker.id}" name="idWorker" type="hidden"  autocomplete="off" value=""/>
+                                            <i style="float: right;margin-left: 10px;margin-top: -4px;font-size: 25px"
+                                               class="fa fa-check" aria-hidden="true"></i>
+                                            <input th:id="'id'+${allWorker.id}"
+                                                   th:onclick="'test(\'' + ${allWorker.id} + '\');'"
+                                                   style="width: 20px;height: 20px;float: right;margin-bottom: 10px;margin-top: 0px"
+                                                   class="coupon_question" type="checkbox" autocomplete="off" value=""/>
+                                            <input style="width: 20px;height: 20px;float: right;margin-bottom: 10px;margin-top: 0px"
+                                                   th:value="${allWorker.id}" name="idWorker" type="hidden"
+                                                   autocomplete="off" value=""/>
                                         </h4>
-                                        <input type="text" readonly="readonly" class="form-control" th:value="${allWorker.shiftSalary}" name="salary"/>
+                                        <input type="text" readonly="readonly" class="form-control"
+                                               th:value="${allWorker.shiftSalary}" name="salary"/>
                                     </div>
                                     <br></br>
 
-                                    <div class="answer" >
-                                        <input th:id="'1'+${allWorker.id}" th:href="${allWorker.id}"  value="0" type="hidden" class="form-control"  placeholder="Введите бонус"  autofocus=""  name="bonus"/>
+                                    <div class="answer">
+                                        <input th:id="'1'+${allWorker.id}" th:href="${allWorker.id}" value="0"
+                                               type="hidden" class="form-control" placeholder="Введите бонус"
+                                               autofocus="" name="bonus"/>
                                     </div>
                                     <br></br>
                                 </div>
                                 <div class="col-md-4 ">
                                     <h4>Должности</h4>
-                                    <input type="text" style="margin-top: -4px" readonly="readonly" class="form-control" th:value="${allWorker.allPosition}" />
+                                    <input type="text" style="margin-top: -4px" readonly="readonly" class="form-control"
+                                           th:value="${allWorker.allPosition}"/>
                                     <br></br>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 ">
                             <h4>Количество клиентов за смену: </h4>
-                            <input type="text" style="margin-top: -4px" readonly="readonly" class="form-control" th:value="${clients}" />
+                            <input type="text" style="margin-top: -4px" readonly="readonly" class="form-control"
+                                   th:value="${clients}"/>
                             <br></br>
                         </div>
 
                         <div class="col-md-6 ">
                             <h4>Общая выручка: </h4>
-                            <input type="text" style="margin-top: -4px" readonly="readonly" class="form-control" th:value="${salary}" />
+                            <input type="text" style="margin-top: -4px" readonly="readonly" class="form-control"
+                                   th:value="${salary}"/>
                             <br></br>
                             <br></br>
                         </div>
@@ -68,18 +82,20 @@
                             <h1>Сверка бюджета</h1>
                             <div class="col-md-6" style="margin-left: 220px;">
                                 <h4>Касса: </h4>
-                                <input type="text" style="margin-top: -4px" readonly="readonly" id="salaryShift" name="salaryShift" class="form-control" th:value="${salary}" />
+                                <input type="text" style="margin-top: -4px" readonly="readonly" id="salaryShift"
+                                       name="salaryShift" class="form-control" th:value="${salary}"/>
                                 <br></br>
                             </div>
 
                             <div class="col-md-6" style="margin-left: 220px;">
                                 <h4>Прибыль с вычетом зарплаты сотрудников: </h4>
-                                <input type="text" style="margin-top: -4px" readonly="readonly"  name="profitShift"  class="form-control" th:value="${salaryWithoutWorker}" />
+                                <input type="text" style="margin-top: -4px" readonly="readonly" name="profitShift"
+                                       class="form-control" th:value="${salaryWithoutWorker}"/>
                                 <br></br>
                             </div>
 
                             <div class="col-md-6" style="margin-left: 220px;">
-                                <div id="errorBlock"  style="color: red;font-size: 25px"></div>
+                                <div id="errorBlock" style="color: red;font-size: 25px"></div>
                             </div>
 
                             <div class="col-md-6" style="margin-left: 220px;">
@@ -88,17 +104,24 @@
 
                             <div class="col-md-3" style="margin-left: 220px;">
                                 <h4>Наличные: </h4>
-                                <input type="text" style="margin-top: -4px"  class="form-control" id="cache" name="cache" value="0" placeholder="Наличные" />
+                                <input type="text" style="margin-top: -4px" class="form-control" id="cache" name="cache"
+                                       value="0" placeholder="Наличные"/>
                                 <br></br>
                             </div>
                             <div class="col-md-3">
                                 <h4>Деньги с карты: </h4>
-                                <input type="text" style="margin-top: -4px"  class="form-control" id="payWithCard"  readonly="readonly" name="payWithCard" th:value="${card}" placeholder="Деньги с карты" />
+                                <input type="text" style="margin-top: -4px" class="form-control" id="payWithCard"
+                                       readonly="readonly" name="payWithCard" th:value="${card}"
+                                       placeholder="Деньги с карты"/>
                             </div>
                             <br></br>
-                            <button type="button" id="budget" onclick="test2()" class="btn btn-lg btn-primary btn-block">Сверка бюджета</button>
+                            <button type="button" id="budget" onclick="test2()"
+                                    class="btn btn-lg btn-primary btn-block">Сверка бюджета
+                            </button>
 
-                            <button style="visibility: hidden" id="closeShiftButton" class="btn btn-lg btn-primary btn-block" type="submit">Закрыть смену</button>
+                            <button style="visibility: hidden" id="closeShiftButton"
+                                    class="btn btn-lg btn-primary btn-block" type="submit">Закрыть смену
+                            </button>
                         </div>
 
 
@@ -112,42 +135,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
                 </div>
-                <script type="text/javascript">
-                    function test(id){
-                        if ($('#1'+ id).attr('type')=='hidden'){
-                            $('#1'+ id).attr('type','text');
-                        }else {
-                            $('#1'+ id).attr('type','hidden');
-                        }
-                    }
-                </script>
-
-
-                <script>
-                    function test2(){
-                        var salaryShift = parseFloat($("#salaryShift").val());
-                        var cache = parseFloat($("#cache").val());
-                        var payWithCard = parseFloat($("#payWithCard").val());
-                        var test2=cache+payWithCard;
-
-                         if (test2!=salaryShift){
-                            $("#cache").css('border', 'red 3px solid');
-                            $("#payWithCard").css('border', 'red 3px solid');
-                            $('#errorBlock').html('Сверка бюджета не прошла!');
-                            $("#closeShiftButton").css('visibility','visible');
-                        } else {
-                            $('#errorBlock').css('visibility','hidden');
-                            $("#cache").css('border', 'green 3px solid');
-                            $("#payWithCard").css('border', 'green 3px solid');
-                            $("#closeShiftButton").css('visibility','visible');
-                            $("#budget").css('visibility','hidden');
-                            $('#goodBlock').html('Сверка бюджета прошла успешно!');
-                        }
-                    }
-                </script>
-
-
-
             </div>
         </div>
     </div>

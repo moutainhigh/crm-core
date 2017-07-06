@@ -134,11 +134,11 @@ $(document).ready(function () {
     }(jQuery));
 });
 $(document).ready(function () {
-        $("#myTab a").click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        });
+    $("#myTab a").click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
     });
+});
 $('.super').click(function () {
     var pageName = $(this).data('page');
     // ajax-запрос

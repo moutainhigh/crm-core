@@ -1,15 +1,11 @@
 package com.cafe.crm.controllers.boss;
 
-import com.cafe.crm.models.property.PropertyWrapper;
 import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;
 import com.cafe.crm.models.worker.Position;
 import com.cafe.crm.models.worker.Worker;
-import com.cafe.crm.service_abstract.position.PositionService;
-import com.cafe.crm.service_abstract.property.PropertyService;
-import com.cafe.crm.service_abstract.worker.WorkerService;
-import com.cafe.crm.service_impl.position.PositionServiceImpl;
-import com.cafe.crm.service_impl.worker.WorkerServiceImpl;
+import com.cafe.crm.services.interfaces.position.PositionService;
+import com.cafe.crm.services.interfaces.worker.WorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +20,10 @@ import java.util.List;
 @Controller
 public class AccountingController {
 
-	@ModelAttribute(value = "wrapper")
-	public PropertyWrapper addClass() {
-		PropertyWrapper PropertyWrapper = new PropertyWrapper();
-		PropertyWrapper.setProperties(propertyService.findAll());
-		return PropertyWrapper;
-	}
+	@Autowired
+	private WorkerService workerService;
+	@Autowired
+	private PositionService positionService;
 
 	@ModelAttribute(value = "worker")
 	public Worker newEntityWorker() {
@@ -50,16 +44,6 @@ public class AccountingController {
 	public Position newEntityPosition() {
 		return new Position();
 	}
-
-
-	@Autowired
-	private PropertyService propertyService;
-
-	@Autowired
-	private WorkerService workerService;
-
-	@Autowired
-	private PositionService positionService;
 
 	@RequestMapping(value = {"/worker"}, method = RequestMethod.GET)
 	public ModelAndView getAllWorker(ModelAndView model) {

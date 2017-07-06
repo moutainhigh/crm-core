@@ -16,17 +16,19 @@
                     <button class="close" type="button" data-dismiss="modal">×</button>
                     <h4 class="modal-title">Добавление счета</h4>
                 </div>
-                <div class="modal-body" >
-                   <h4> Описание</h4>
+                <div class="modal-body">
+                    <h4> Описание</h4>
                     <form id="formMod" action="/manager/add-calculate" method="post">
-                        <input autocomplete="off" style="font-size: 20px" class="form-control" type="text" name="description" maxlength="30" required=""/>
+                        <input autocomplete="off" style="font-size: 20px" class="form-control" type="text"
+                               name="description" maxlength="30" required=""/>
                         <h4 style="margin-right: 50px; float: left">Кол-во человек</h4>
                         <h4>Стол</h4>
 
-                        <input autocomplete="off" style="width: 90px;margin-right: 60px; float: left;font-size: 20px" class="form-control" type="text"
+                        <input autocomplete="off" style="width: 90px;margin-right: 60px; float: left;font-size: 20px"
+                               class="form-control" type="text"
                                name="number" list="data" maxlength="2" required=""/>
                     </form>
-                    <datalist  id="data">
+                    <datalist id="data">
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -47,6 +49,7 @@
             </div>
         </div>
     </div>
+    <script th:src="@{/js/shift/close.js}"></script>
 </div>
 </body>
 </html>

@@ -97,12 +97,12 @@
                     <div th:object="${wrapper}">
                         <table class="table" style="background: white;border-radius: 10px">
                             <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Параметр</th>
-                                    <th>Значение</th>
-                                    <th>Активация</th>
-                                </tr>
+                            <tr>
+                                <th>#</th>
+                                <th>Параметр</th>
+                                <th>Значение</th>
+                                <th>Активация</th>
+                            </tr>
                             </thead>
                             <tbody class="searchable" th:each="property, stat : *{properties}">
                             <tr>
@@ -183,12 +183,12 @@
 
                                                     <input required="" type="hidden" class="form-control"
                                                            th:value="${board.id}" name="id"
-                                                            ></input>
+                                                    ></input>
                                                     <h4><label>Название</label></h4>
                                                     <input type="text" class="form-control"
                                                            name="name"
                                                            th:value="${board.name}" required=""
-                                                            ></input>
+                                                    ></input>
                                                 </div>
 
                                             </div>
@@ -225,12 +225,12 @@
 
                                                     <input required="" type="hidden" class="form-control"
                                                            name="id"
-                                                            ></input>
+                                                    ></input>
                                                     <h4><label>Название</label></h4>
                                                     <input type="text" class="form-control"
                                                            name="name"
                                                            required=""
-                                                            ></input>
+                                                    ></input>
                                                 </div>
 
                                             </div>
@@ -252,11 +252,11 @@
                             </tbody>
                         </table>
                     </div>
-                        <div align="center">
-                            <button type="button" class="btn btn-lg btn-primary"
-                                    data-toggle="modal" data-target="#newBoard">Создать новый стол
-                            </button>
-                        </div>
+                    <div align="center">
+                        <button type="button" class="btn btn-lg btn-primary"
+                                data-toggle="modal" data-target="#newBoard">Создать новый стол
+                        </button>
+                    </div>
                 </div>
                 <div class="tab-pane" id="passwordChange">
                     <div class="container" style="min-width: 50%">
@@ -264,7 +264,7 @@
 
                         <div class="row">
                             <div class="col-md-5 col-md-offset-3">
-                                <h1> </h1>
+                                <h1></h1>
                                 <div class="form-group">
                                     <div class="form-group" style="border-radius: 10px; background-color: white">
                                         <label class="col-md-offset-4" style="font-size: large">Старый пароль</label>
@@ -329,8 +329,8 @@
                                         </div>
                                     </div>
                                     <div align="center">
-                                    <input type="submit" name="submit" value="Сохранить" onclick="sendLogLevel()"
-                                           class="tn btn-lg btn-primary"></input>
+                                        <input type="submit" name="submit" value="Сохранить" onclick="sendLogLevel()"
+                                               class="tn btn-lg btn-primary"></input>
                                     </div>
                                 </form>
 
@@ -343,8 +343,9 @@
     </div>
     <!--/.container -->
 </header>
-<script type="text/javascript" src="/js/createPassword.js"></script>
-<script type="text/javascript" src="/js/base.js"></script>
+<script th:src="@{/js/boss/changePasword.js}"></script>
+<script th:src="@{/js/createPassword.js}"></script>
+<script th:src="@{/js/mail.js}"></script>
 
 </body>
 

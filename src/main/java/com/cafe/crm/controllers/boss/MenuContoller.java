@@ -2,11 +2,9 @@ package com.cafe.crm.controllers.boss;
 
 import com.cafe.crm.models.Menu.Category;
 import com.cafe.crm.models.Menu.Product;
-import com.cafe.crm.models.property.PropertyWrapper;
-import com.cafe.crm.service_abstract.menu.CategoriesService;
-import com.cafe.crm.service_abstract.menu.MenuService;
-import com.cafe.crm.service_abstract.menu.ProductService;
-import com.cafe.crm.service_abstract.property.PropertyService;
+import com.cafe.crm.services.interfaces.menu.CategoriesService;
+import com.cafe.crm.services.interfaces.menu.MenuService;
+import com.cafe.crm.services.interfaces.menu.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,17 +30,6 @@ public class MenuContoller {
 
 	@Autowired
 	private ProductService productService;
-
-	@Autowired
-	private PropertyService propertyService;
-
-
-	@ModelAttribute(value = "wrapper")
-	public PropertyWrapper addClass() {
-		PropertyWrapper PropertyWrapper = new PropertyWrapper();
-		PropertyWrapper.setProperties(propertyService.findAll());
-		return PropertyWrapper;
-	}
 
 	@ModelAttribute(value = "product")
 	public Product newProduct() {
@@ -73,7 +60,7 @@ public class MenuContoller {
 	public String updCategory(@RequestParam(name = "upd") Long id,
 							  @RequestParam(name = "name") String name) {
 		Category category = categoriesService.getOne(id);
-		if(category!=null) {
+		if (category != null) {
 			category.setName(name);
 			categoriesService.saveAndFlush(category);
 		}
@@ -97,7 +84,7 @@ public class MenuContoller {
 								   @RequestParam("cost") Double cost
 	) {
 		Category category = categoriesService.getOne(idCat);
-		if(category!=null) {
+		if (category != null) {
 			Product product = new Product();
 			product.setCategory(category);
 			product.setName(name);
@@ -107,8 +94,7 @@ public class MenuContoller {
 			category.getProducts().add(product);
 			categoriesService.saveAndFlush(category);
 			return new ResponseEntity<>(product.getId(), HttpStatus.OK);
-		}
-		else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 	}
 

@@ -7,9 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.List;
 
 @Component
@@ -29,19 +27,31 @@ public class TimeManager {
 	public TimeManager() {
 	}
 
-	public LocalDateTime getDate() {
+	public LocalDate getDate() {
+		return getDateTime0().toLocalDate();
+	}
+
+	public LocalDateTime getDateTime() {
+		return getDateTime0();
+	}
+
+	public LocalTime getTime() {
+		return getDateTime0().toLocalTime();
+	}
+
+	// TODO: 06.07.2017 Придумать название
+	private LocalDateTime getDateTime0() {
 		timeClient.setDefaultTimeout(500);
-			for (String server : servers) {
-				try {
-					inetAddress = InetAddress.getByName(server);
-					timeInfo = timeClient.getTime(inetAddress);
-					long returnTime = timeInfo.getReturnTime();
-					date = Instant.ofEpochMilli(returnTime).atZone(ZoneId.systemDefault()).toLocalDateTime();
-					return date;
-				} catch (IOException e) {
-					continue;
-				}
+		for (String server : servers) {
+			try {
+				inetAddress = InetAddress.getByName(server);
+				timeInfo = timeClient.getTime(inetAddress);
+				long returnTime = timeInfo.getReturnTime();
+				date = Instant.ofEpochMilli(returnTime).atZone(ZoneId.systemDefault()).toLocalDateTime();
+				return date;
+			} catch (IOException ignored) {
 			}
+		}
 		date = LocalDateTime.now();
 		return date;
 	}

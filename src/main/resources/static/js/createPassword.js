@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).ready(function () {
 
 //minimum 8 characters
     var bad = /(?=.{8,}).*/;
@@ -77,9 +77,9 @@ function testB() {
 };
 
 function sendLogLevel() {
-    var levelMap = { level: $('#chooseLogLevel').val()};
+    var levelMap = {level: $('#chooseLogLevel').val()};
 
-    if($('#chooseLogLevel').val() == 'INFO' || $('#chooseLogLevel').val() == 'ERROR'
+    if ($('#chooseLogLevel').val() == 'INFO' || $('#chooseLogLevel').val() == 'ERROR'
         || $('#chooseLogLevel').val() == 'DEBUG' || $('#chooseLogLevel').val() == 'WARN') {
         $.ajax({
             type: "POST",
@@ -94,7 +94,7 @@ function sendLogLevel() {
         });
 
     } else {
-         var json = '<h4 style="color:red">Неизвестный уровень логгирования</h4>';
+        var json = '<h4 style="color:red">Неизвестный уровень логгирования</h4>';
         $('.modal-title').html(json);
     }
 }

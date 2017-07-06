@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -28,6 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 	@Bean
 	public CustomAuthenticationSuccessHandler getHandler() {
 		return new CustomAuthenticationSuccessHandler();
@@ -38,14 +40,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new AuthenticationService();
 	}
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(authenticationService).passwordEncoder(passwordEncoder());
+		auth.userDetailsService(authenticationService).passwordEncoder(bCryptPasswordEncoder);
 	}
 
 	@Override
@@ -56,8 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http
 				.authorizeRequests()
-				.antMatchers("/manager/**").hasAuthority("MANAGER")
-				.antMatchers("/boss/**", "/worker").hasAuthority("BOSS")
+				.antMatchers("/manager/**").hasAnyAuthority("MANAGER", "BOSS")
+				.antMatchers("/boss/**", "/worker/**").hasAuthority("BOSS")
 				.and()
 				.formLogin()
 				.loginPage("/login")

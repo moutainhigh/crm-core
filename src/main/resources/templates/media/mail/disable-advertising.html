@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8"/>
     <title>Title</title>
@@ -7,6 +7,7 @@
 <body>
 <p>Реклама была успешно отключена.</p>
 <p>В случае если в дальнешем захотите получать рекламную рассылку, то передите по этой ссылке :</p>
-<a th:href="'http://' + ${siteAddress} + '/advertising/toggle?number=' + ${number} + '&amp;token=' + ${token}">Если больше не хотите получать рекламу, нажмите на это сообщение</a>
+<a th:href="'http://' + ${siteAddress} + '/advertising/toggle?number=' + ${number} + '&amp;token=' + ${token}">Если
+    больше не хотите получать рекламу, нажмите на это сообщение</a>
 </body>
 </html>

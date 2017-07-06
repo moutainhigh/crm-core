@@ -10,10 +10,9 @@
     color: #5bc0de;
 }
 
-thead, tfoot  {
+thead, tfoot {
     background-color: #5bc0de;
 }
-
 
 th > .btn-default {
     color: #fff !important;

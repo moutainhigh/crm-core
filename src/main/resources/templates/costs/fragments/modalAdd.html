@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
     <title>Title</title>
@@ -10,7 +10,8 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Добавление нового товара</h4>
                 </div>
                 <div class="modal-body">
@@ -18,31 +19,37 @@
                     <div class="form-group">
                         <label for="addName" class="col-md-offset-1 col-sm-2 control-label">Название</label>
                         <div class="col-md-6">
-                                <input type="text" class="form-control" aria-label="Название" placeholder="Название товара" required="required" th:name="name" id="addName"/>
+                            <input type="text" class="form-control" aria-label="Название" placeholder="Название товара"
+                                   required="required" th:name="name" id="addName"/>
                         </div><!-- /.col-lg-6 -->
                     </div>
                     <div class="form-group">
                         <label for="addCategory" class="col-md-offset-1 col-sm-2 control-label">Категория</label>
                         <div class="col-md-6">
-                            <input type="text" class="form-control" aria-label="Категория" placeholder="Категория товара" required="required" id="addCategory" th:name="category.name"/>
+                            <input type="text" class="form-control" aria-label="Категория"
+                                   placeholder="Категория товара" required="required" id="addCategory"
+                                   th:name="category.name"/>
                         </div><!-- /.col-lg-6 -->
                     </div>
                     <div class="form-group">
                         <label for="addPrice" class="col-md-offset-1 col-sm-2 control-label">Цена</label>
                         <div class="col-md-6">
-                            <input type="number" step="0.01" class="form-control" id="addPrice" placeholder="Цена" required="required" th:name="price"/>
+                            <input type="number" step="0.01" class="form-control" id="addPrice" placeholder="Цена"
+                                   required="required" th:name="price"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="addAmount" class="col-md-offset-1 col-sm-2 control-label">Количество</label>
                         <div class="col-md-6">
-                            <input type="number" step="0.01" class="form-control" id="addAmount" placeholder="Количество" required="required" th:name="quantity"/>
+                            <input type="number" step="0.01" class="form-control" id="addAmount"
+                                   placeholder="Количество" required="required" th:name="quantity"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="addDate" class="col-md-offset-1 col-sm-2 control-label">Дата</label>
                         <div class="col-md-6">
-                            <input type="date" class="form-control" id="addDate" placeholder="Дата" required="required" th:name="date" th:value="${#temporals.format(today, 'yyyy-MM-dd')}"/>
+                            <input type="date" class="form-control" id="addDate" placeholder="Дата" required="required"
+                                   th:name="date" th:value="${#temporals.format(today, 'yyyy-MM-dd')}"/>
                         </div>
                     </div>
                 </div>

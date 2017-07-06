@@ -1,58 +1,73 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8"/>
     <title>Title</title>
 </head>
 <body>
 <table class="table table-striped" id="sortedTable" th:fragment="goodsTable">
-        <thead>
-            <tr>
-                <th>№</th>
-                <th>Название</th>
-                <th>Категория</th>
-                <th>Цена</th>
-                <th>Количетсво</th>
-                <th>Сумма</th>
-                <th>Дата</th>
-                <th>Редактировать</th>
-                <th><button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#modalSubmitDeleteAll">Удалить все</button></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="goods : ${goodsList}" th:id="'goods' + ${goods.id}">
-                <td th:text="${goods.id}" class="id">1</td>
-                <td th:text="${goods.name}" class="name">Масло</td>
-                <td th:text="${goods.category.name}" class="category">Продукты</td>
-                <td th:text="${goods.price} % 1 == 0
+    <thead>
+    <tr>
+        <th>№</th>
+        <th>Название</th>
+        <th>Категория</th>
+        <th>Цена</th>
+        <th>Количетсво</th>
+        <th>Сумма</th>
+        <th>Дата</th>
+        <th>Редактировать</th>
+        <th>
+            <button type="button" class="btn btn-default btn-xs" data-toggle="modal"
+                    data-target="#modalSubmitDeleteAll">Удалить все
+            </button>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="goods : ${goodsList}" th:id="'goods' + ${goods.id}">
+        <td th:text="${goods.id}" class="id">1</td>
+        <td th:text="${goods.name}" class="name">Масло</td>
+        <td th:text="${goods.category.name}" class="category">Продукты</td>
+        <td th:text="${goods.price} % 1 == 0
                  ? ${#numbers.formatDecimal(goods.price, 0, 0)}
-                 : ${#numbers.formatDecimal(goods.price, 0, 2)}" class="price">120</td>
-                <td th:text="${goods.quantity} % 1 == 0
+                 : ${#numbers.formatDecimal(goods.price, 0, 2)}" class="price">120
+        </td>
+        <td th:text="${goods.quantity} % 1 == 0
                  ? ${#numbers.formatDecimal(goods.quantity, 0, 0)}
-                 : ${#numbers.formatDecimal(goods.quantity, 0, 2)}" class="quantity">10</td>
-                <td th:text="${goods.price * goods.quantity} % 1 == 0
+                 : ${#numbers.formatDecimal(goods.quantity, 0, 2)}" class="quantity">10
+        </td>
+        <td th:text="${goods.price * goods.quantity} % 1 == 0
                  ? ${#numbers.formatDecimal((goods.price * goods.quantity), 0, 0)}
-                 : ${#numbers.formatDecimal((goods.price * goods.quantity), 0, 2)}" class="sum">1200</td>
-                <td th:text="${#temporals.format(goods.date, 'dd-MM-yyyy')}" class="date">20.20.2000</td>
-                <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalEditGoods" th:onclick="'javascript:populateGoodsEditModal(\'' + ${goods.id} + '\');'">Редактировать</button></td>
-                <td><button type="button" class="btn btn-danger" th:onclick="'javascript:removeGoods(\'' + ${goods.id} + '\');'">Удалить</button></td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><b>Общая сумма :</b></td>
-                <td ><b th:text="${totalPrice} % 1 == 0
+                 : ${#numbers.formatDecimal((goods.price * goods.quantity), 0, 2)}" class="sum">1200
+        </td>
+        <td th:text="${#temporals.format(goods.date, 'dd-MM-yyyy')}" class="date">20.20.2000</td>
+        <td>
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalEditGoods"
+                    th:onclick="'javascript:populateGoodsEditModal(\'' + ${goods.id} + '\');'">Редактировать
+            </button>
+        </td>
+        <td>
+            <button type="button" class="btn btn-danger"
+                    th:onclick="'javascript:removeGoods(\'' + ${goods.id} + '\');'">Удалить
+            </button>
+        </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><b>Общая сумма :</b></td>
+        <td><b th:text="${totalPrice} % 1 == 0
                   ? ${#numbers.formatDecimal(totalPrice, 0, 0)}
                   : ${#numbers.formatDecimal(totalPrice, 0, 2)}" id="totalPrice"></b></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </tfoot>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    </tfoot>
 </table>
 </body>
 </html>

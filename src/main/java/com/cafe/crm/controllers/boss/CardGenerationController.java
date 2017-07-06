@@ -2,15 +2,12 @@ package com.cafe.crm.controllers.boss;
 
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.cafe.crm.dao.card.CardRepository;
 import com.cafe.crm.models.card.Card;
-import com.cafe.crm.models.property.PropertyWrapper;
-import com.cafe.crm.service_abstract.property.PropertyService;
-import com.cafe.crm.service_impl.amazonServiceImpl.AmazonServiceImpl;
-import com.cafe.crm.service_impl.qrServiceImpl.QrServiceImpl;
+import com.cafe.crm.repositories.card.CardRepository;
+import com.cafe.crm.services.impl.amazon.AmazonServiceImpl;
+import com.cafe.crm.services.impl.qr.QrServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,15 +28,6 @@ public class CardGenerationController {
 	private AmazonServiceImpl amazonService;
 	@Autowired
 	private CardRepository cardRepository;
-	@Autowired
-	private PropertyService propertyService;
-
-	@ModelAttribute(value = "wrapper")
-	public PropertyWrapper addClass() {
-		PropertyWrapper PropertyWrapper = new PropertyWrapper();
-		PropertyWrapper.setProperties(propertyService.findAll());
-		return PropertyWrapper;
-	}
 
 	@RequestMapping(value = "/cardGenerationPage", method = RequestMethod.GET)
 	public String cardGenerationPage() throws IOException {

@@ -1,9 +1,9 @@
 package com.cafe.crm.configs;
 
 
-import com.cafe.crm.exception.advertising.AdvertisingTemplateNotFoundException;
+import com.cafe.crm.exceptions.advertising.AdvertisingTemplateNotFoundException;
 import com.cafe.crm.models.template.Template;
-import com.cafe.crm.service_abstract.template.TemplateService;
+import com.cafe.crm.services.interfaces.template.TemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.thymeleaf.TemplateProcessingParameters;
 import org.thymeleaf.resourceresolver.IResourceResolver;

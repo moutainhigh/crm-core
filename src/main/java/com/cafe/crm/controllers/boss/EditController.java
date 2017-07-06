@@ -5,9 +5,9 @@ import ch.qos.logback.classic.Logger;
 import com.cafe.crm.models.client.Board;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.property.PropertyWrapper;
-import com.cafe.crm.service_abstract.boardService.BoardService;
-import com.cafe.crm.service_abstract.calculateService.CalculateService;
-import com.cafe.crm.service_abstract.property.PropertyService;
+import com.cafe.crm.services.interfaces.board.BoardService;
+import com.cafe.crm.services.interfaces.calculate.CalculateService;
+import com.cafe.crm.services.interfaces.property.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -89,12 +88,11 @@ public class EditController {
 		String referer = request.getHeader("Referer");
 		List<Calculate> calc = calculateService.getAllOpen();
 		for (Calculate calculate : calc) {
-			if(calculate.getBoard().getId().equals(id)){
+			if (calculate.getBoard().getId().equals(id)) {
 				return "redirect:" + referer;
 			}
 		}
 		boardService.deleteById(id);
-
 
 
 		return "redirect:" + referer;

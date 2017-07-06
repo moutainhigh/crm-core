@@ -7,7 +7,6 @@
     <script th:src="@{/js/jquery-3.2.0.min.js}"></script>
     <script th:src="@{/static/js/bootstrap.min.js}"></script>
     <link rel="stylesheet" th:href="@{/st.css}" type="text/css"/>
-    <script th:src="@{/filter.js}"></script>
 
 </head>
 <body>
@@ -37,15 +36,17 @@
             </div>
             <div class="panel-body">
                 <form class="form-horizontal">
-                    <div class="form-group " >
-                        <label for="inputEmail" class="col-xs-2 control-label col-xs-4 col-md-offset-3">Дата начала смены</label>
+                    <div class="form-group ">
+                        <label for="inputEmail" class="col-xs-2 control-label col-xs-4 col-md-offset-3">Дата начала
+                            смены</label>
                         <div class="col-xs-2  col-md-offset-1">
                             <input type="email" readonly="true" class="form-control" id="inputEmail"
                                    th:placeholder="${date}"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="inputEmail" class="col-xs-2 control-label  col-xs-4 col-md-offset-3" >Начало смены</label>
+                        <label for="inputEmail" class="col-xs-2 control-label  col-xs-4 col-md-offset-3">Начало
+                            смены</label>
                         <div class="col-xs-4 col-md-offset-1">
                             <a id="ins" class="btn btn-primary btn-info" style="width: 160px" th:href="'#add'"
                                data-toggle="modal">Начать смену</a>
@@ -87,7 +88,8 @@
                             <td><p th:text="${user.firstName}"></p></td>
                             <td><p th:text="${user.lastName}"></p></td>
                             <td><p th:text="${user.allPosition}"></p></td>
-                            <td><input type="checkbox" style="width:20px;height:20px;" name="box" th:value="${user.id}"/></td>
+                            <td><input type="checkbox" style="width:20px;height:20px;" name="box"
+                                       th:value="${user.id}"/></td>
                         </tr>
                         </tbody>
                     </table>
@@ -104,26 +106,9 @@
         </div>
     </div>
 </form>
-<div th:replace="managerChangePassword :: managerChangePassword">
-</div>
-<script>
-    $(document).ready(function () {
-
-        (function ($) {
-
-            $('#filter').keyup(function () {
-
-                var rex = new RegExp($(this).val(), 'i');
-                $('.searchable tr').hide();
-                $('.searchable tr').filter(function () {
-                    return rex.test($(this).text());
-                }).show();
-
-            })
-
-        }(jQuery));
-    });
-</script>
+<div th:replace="managerChangePassword :: managerChangePassword"></div>
+<script th:src="@{js/shift/page.js}"></script>
+<script th:src="@{js/filter.js}"></script>
 </body>
 
 </html>

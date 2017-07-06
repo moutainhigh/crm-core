@@ -4,6 +4,7 @@ package com.cafe.crm.models.shift;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.worker.Worker;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -14,20 +15,16 @@ import java.util.Set;
 @Table(name = "Shift")
 public class Shift {
 
+	@Column(name = "isOpen") // shift is open ?
+			Boolean isOpen;
 	@Id
 	@GeneratedValue
 	@Column(name = "id")
 	private Long id;
-
 	@Column(name = "dateShift")
 	private LocalDate dateShift;
-
 	@Column(name = "checkValue")
 	private Integer checkValue;// after change on set<>
-
-	@Column(name = "isOpen") // shift is open ?
-			Boolean isOpen;
-
 	@OneToMany
 	private Set<Calculate> allCalculate;
 
@@ -40,8 +37,21 @@ public class Shift {
 			inverseJoinColumns = {@JoinColumn(name = "worker_id")})
 	private Set<Worker> users;
 
+	public Shift(LocalDate dateShift, Integer checkValue, Set<Worker> users) {
+		this.dateShift = dateShift;
+		this.checkValue = checkValue;
+		this.users = users;
+	}
+
+	public Shift() {
+	}
+
 	public Set<Worker> getUsers() {
 		return users;
+	}
+
+	public void setUsers(Set<Worker> users) {
+		this.users = users;
 	}
 
 	public String getUsersNames() {   // return only names of workers of shift
@@ -52,19 +62,6 @@ public class Shift {
 
 		}
 		return names;
-	}
-
-	public Shift(LocalDate dateShift, Integer checkValue, Set<Worker> users) {
-		this.dateShift = dateShift;
-		this.checkValue = checkValue;
-		this.users = users;
-	}
-
-	public void setUsers(Set<Worker> users) {
-		this.users = users;
-	}
-
-	public Shift() {
 	}
 
 	public Set<Calculate> getAllCalculate() {

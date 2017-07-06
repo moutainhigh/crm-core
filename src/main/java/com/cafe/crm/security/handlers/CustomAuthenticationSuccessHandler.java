@@ -19,54 +19,46 @@ import java.util.Collection;
 @Service
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
+	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        handle(request, response, authentication);
-        clearAuthenticationAttributes(request);
-    }
+	@Override
+	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+		handle(request, response, authentication);
+		clearAuthenticationAttributes(request);
+	}
 
-    protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-        String targetUrl = determineTargetUrl(authentication);
+	protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+		String targetUrl = determineTargetUrl(authentication);
 
-        if (response.isCommitted()) {
-            return;
-        }
-        redirectStrategy.sendRedirect(request, response, targetUrl);
-    }
+		if (response.isCommitted()) {
+			return;
+		}
+		redirectStrategy.sendRedirect(request, response, targetUrl);
+	}
 
-    protected String determineTargetUrl(Authentication authentication) {
+	protected String determineTargetUrl(Authentication authentication) {
 
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
-        if (authorities.contains(new Role("BOSS"))) {
-            return "/boss/menu";
+		if (authorities.contains(new Role("BOSS"))) {
+			return "/boss/menu";
 
-        } else if (authorities.contains(new Role("MANAGER"))) {
+		} else if (authorities.contains(new Role("MANAGER"))) {
 
-            return "/manager/shift/";
+			return "/manager/shift/";
 
-        } else {
+		} else {
 
-            throw new IllegalStateException();
-        }
-    }
+			throw new IllegalStateException();
+		}
+	}
 
-    protected void clearAuthenticationAttributes(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
+	protected void clearAuthenticationAttributes(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
 
-        if (session == null) {
-            return;
-        }
-        session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-    }
-
-    public void setRedirectStrategy(RedirectStrategy redirectStrategy) {
-        this.redirectStrategy = redirectStrategy;
-    }
-
-    protected RedirectStrategy getRedirectStrategy() {
-        return redirectStrategy;
-    }
+		if (session == null) {
+			return;
+		}
+		session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+	}
 }

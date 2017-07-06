@@ -2,8 +2,8 @@ package com.cafe.crm.controllers.cost;
 
 import com.cafe.crm.models.goods.Goods;
 import com.cafe.crm.models.goods.GoodsCategory;
-import com.cafe.crm.service_abstract.goods.GoodsCategoryService;
-import com.cafe.crm.service_abstract.goods.GoodsService;
+import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
+import com.cafe.crm.services.interfaces.goods.GoodsService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +37,7 @@ public class CostsController {
 
 	@RequestMapping(value = "/costs", method = RequestMethod.GET)
 	public String showCostsPage(Model model) {
-		LocalDate today = timeManager.getDate().toLocalDate();
+		LocalDate today = timeManager.getDate();
 		List<Goods> goodsList = goodsService.findByDateBetween(today, today.plusYears(100));
 		Double totalPrice = getTotalPrice(goodsList);
 
@@ -59,7 +59,7 @@ public class CostsController {
 											  @RequestParam(name = "goodsName") String goodsName,
 											  @RequestParam(name = "categoryName") String categoryName,
 											  Model model) {
-		LocalDate today = timeManager.getDate().toLocalDate();
+		LocalDate today = timeManager.getDate();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 		List<Goods> goodsList = getGoodses(goodsName, categoryName, fromDate, toDate, formatter);
@@ -89,7 +89,7 @@ public class CostsController {
 		goodsName = (goodsName == null) ? null : goodsName.trim();
 		categoryName = (categoryName == null) ? null : categoryName.trim();
 
-		LocalDate today = timeManager.getDate().toLocalDate();
+		LocalDate today = timeManager.getDate();
 		LocalDate from = (fromDate == null || fromDate.isEmpty())
 				? today.minusYears(100) : LocalDate.parse(fromDate, formatter);
 		LocalDate to = (toDate == null || toDate.isEmpty())

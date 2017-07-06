@@ -22,14 +22,6 @@ public class Manager extends Worker implements UserDetails {
 			inverseJoinColumns = {@JoinColumn(name = "role_id")})
 	private Set<Role> roles;
 
-	public Set<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<Role> roles) {
-		this.roles = roles;
-	}
-
 	public Manager() {
 		super();
 	}
@@ -46,6 +38,14 @@ public class Manager extends Worker implements UserDetails {
 		this.roles = roles;
 	}
 
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return roles;
@@ -53,6 +53,10 @@ public class Manager extends Worker implements UserDetails {
 
 	public String getPassword() {
 		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	@Override
@@ -78,10 +82,6 @@ public class Manager extends Worker implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return getEnabled();
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	@Override

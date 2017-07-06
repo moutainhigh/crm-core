@@ -2,14 +2,18 @@ package com.cafe.crm.controllers.calculate;
 
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.LayerProduct;
-import com.cafe.crm.service_abstract.calculateService.CalculateService;
-import com.cafe.crm.service_abstract.calculateService.MenuCalculateControllerService;
-import com.cafe.crm.service_abstract.clientService.ClientService;
+import com.cafe.crm.services.interfaces.calculate.CalculateService;
+import com.cafe.crm.services.interfaces.calculate.MenuCalculateControllerService;
+import com.cafe.crm.services.interfaces.client.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/manager")

@@ -7,7 +7,6 @@
     <script th:src="@{/js/jquery-3.2.0.min.js}"></script>
     <script th:src="@{/static/js/bootstrap.min.js}"></script>
     <link rel="stylesheet" th:href="@{/st.css}" type="text/css"/>
-    <script th:src="@{/filter.js}"></script>
 </head>
 <body>
 <div th:replace="bossnavbar :: bossNavbar">
@@ -51,33 +50,13 @@
     </div>
 </div>
 
-<div th:replace="propertiesForm :: PropertyForm">
-</div>
 <div th:replace="bossChangePassword :: BossChangePassword">
 </div>
 <div th:replace="media/advertisingDispatch :: advertising"></div>
-<script>
-    $(document).ready(function () {
-        (function ($) {
-            $('#filter').keyup(function () {
 
-                var rex = new RegExp($(this).val(), 'i');
-                $('.searchable tr').hide();
-                $('.searchable tr').filter(function () {
-                    return rex.test($(this).text());
-                }).show();
-            })
-        }(jQuery));
-    });
-</script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#myTab a").click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        });
-    });
-</script>
+
+<script th:src="@{/js/filter.js}"></script>
+<script th:src="@{/js/card/statistic.js}"></script>
 <script th:src="@{/js/mail.js}"></script>
 </body>
 </html>

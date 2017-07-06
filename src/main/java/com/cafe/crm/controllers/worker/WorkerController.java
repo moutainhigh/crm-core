@@ -2,8 +2,8 @@ package com.cafe.crm.controllers.worker;
 
 import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;
-import com.cafe.crm.service_abstract.worker.BossService;
-import com.cafe.crm.service_abstract.worker.ManagerService;
+import com.cafe.crm.services.interfaces.worker.BossService;
+import com.cafe.crm.services.interfaces.worker.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,17 +51,17 @@ public class WorkerController {
 		String password = userDetails.getPassword();
 		String email = userDetails.getUsername();
 		Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
-		if (newPassword.equals(secondNewPassword) && passwordEncoder.matches(oldPassword,password)) {
+		if (newPassword.equals(secondNewPassword) && passwordEncoder.matches(oldPassword, password)) {
 			roles.forEach(role -> {
 				if (role.getAuthority().equals("BOSS")) {
 					Boss boss = bossService.getUserByEmail(email);
-					String hashedPassword=passwordEncoder.encode(newPassword);
+					String hashedPassword = passwordEncoder.encode(newPassword);
 					boss.setPassword(hashedPassword);
 					bossService.save(boss);
 
 				} else if (role.getAuthority().equals("MANAGER")) {
 					Manager manager = managerService.getUserByEmail(email);
-					String hashedPassword=passwordEncoder.encode(newPassword);
+					String hashedPassword = passwordEncoder.encode(newPassword);
 					manager.setPassword(hashedPassword);
 					managerService.save(manager);
 				}

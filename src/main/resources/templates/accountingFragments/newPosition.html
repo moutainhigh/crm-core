@@ -9,7 +9,8 @@
 <div class="wrapper" th:fragment="newPosition">
     <form action="" method="POST" class="form-signin">
         <button type="button" class="btn btn-lg btn-primary btn-block"
-                data-toggle="modal" data-target="#myModalPosition">Добавить Новую Должность</button>
+                data-toggle="modal" data-target="#myModalPosition">Добавить Новую Должность
+        </button>
     </form>
     <!-- Modal -->
     <div id="myModalPosition" class="modal fade" role="dialog">
@@ -24,9 +25,12 @@
                     <form action="#" th:action="@{/worker/addPosition}" th:object="${position}"
                           method="POST" class="form-signin">
                         <h2 class="form-signin-heading">Заполните Поля</h2>
-                        <input type="text" class="form-control" th:field="*{jobName}"  placeholder="Введите название должности" required="" autofocus="" />
+                        <input type="text" class="form-control" th:field="*{jobName}"
+                               placeholder="Введите название должности" required="" autofocus=""/>
                         <br></br>
-                        <button class="btn btn-lg btn-primary btn-block" type="submit">Добавить Должность В Базу Данных</button>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Добавить Должность В Базу
+                            Данных
+                        </button>
                     </form>
                 </div>
                 <div class="modal-footer">

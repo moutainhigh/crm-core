@@ -3,13 +3,15 @@
     height: 50px;
 }
 
-.icon i{
+.icon i {
     margin: 10px 0 0 5px;
     padding-left: 5px;
 }
+
 .icon a {
     color: blue;
 }
+
 .icon a:hover {
     opacity: 0.5;
 }

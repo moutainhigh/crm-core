@@ -5,8 +5,10 @@
 <body>
 <div th:fragment="clientModal">
     <button data-toggle="modal"
-            th:href="'#clientModal' + ${calculate.id}" style="float: left;background: rgba(249,246,255,0);border: none;margin-top: -5px">
-        <img width="34px" height="33px" src="http://download.seaicons.com/icons/icons8/windows-8/512/Users-Add-User-icon.png"/>
+            th:href="'#clientModal' + ${calculate.id}"
+            style="float: left;background: rgba(249,246,255,0);border: none;margin-top: -5px">
+        <img width="34px" height="33px"
+             src="http://download.seaicons.com/icons/icons8/windows-8/512/Users-Add-User-icon.png"/>
     </button>
 
     <div th:id="'clientModal' + ${calculate.id}" class="modal fade">
@@ -21,7 +23,8 @@
                     <form th:id="'formMod1' + ${calculate.id}" action="/manager/add-client"
                           method="post">
 
-                        <input autocomplete="off" style="font-size: 20px" class="form-control" type="text" name="description" maxlength="30" />
+                        <input autocomplete="off" style="font-size: 20px" class="form-control" type="text"
+                               name="description" maxlength="30"/>
 
                         <input type="hidden" name="calculateId"
                                th:value="${calculate.id}"/>

@@ -101,12 +101,12 @@ public class Worker implements Serializable {
 		this.bonus = bonus;
 	}
 
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
-
 	public Boolean getEnabled() {
 		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	public String getActionForm() {

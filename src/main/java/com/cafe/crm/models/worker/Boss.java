@@ -54,6 +54,10 @@ public class Boss extends Worker implements UserDetails {
 		return password;
 	}
 
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	@Override
 	public String getUsername() {
 		return getEmail();
@@ -73,7 +77,6 @@ public class Boss extends Worker implements UserDetails {
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
-
 
 	@Override
 	public boolean equals(Object o) {
@@ -96,10 +99,6 @@ public class Boss extends Worker implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return getEnabled();
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 }

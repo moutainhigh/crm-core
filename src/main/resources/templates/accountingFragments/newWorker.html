@@ -11,7 +11,8 @@
 
     <form action="" method="POST" class="form-signin">
         <button type="button" class="btn btn-lg btn-primary btn-block"
-                data-toggle="modal" data-target="#myModalWorker">Добавить Нового Сотрудника</button>
+                data-toggle="modal" data-target="#myModalWorker">Добавить Нового Сотрудника
+        </button>
     </form>
     <!-- Modal -->
     <div id="myModalWorker" class="modal fade" role="dialog">
@@ -27,67 +28,84 @@
                           method="POST" class="form-signin">
                         <h2 class="form-signin-heading">Заполните Поля</h2>
 
-                        <input type="text" class="form-control" th:field="*{firstName}"  placeholder="Имя" required="" autofocus="" />
+                        <input type="text" class="form-control" th:field="*{firstName}" placeholder="Имя" required=""
+                               autofocus=""/>
                         <br></br>
-                        <input type="text" class="form-control"   th:field="*{lastName}" placeholder="Фамилия" required=""/>
+                        <input type="text" class="form-control" th:field="*{lastName}" placeholder="Фамилия"
+                               required=""/>
                         <br></br>
-                        <input type="text" class="form-control"   th:field="*{email}" placeholder="Email" required=""/>
+                        <input type="text" class="form-control" th:field="*{email}" placeholder="Email" required=""/>
                         <br></br>
-                        <input type="text" class="form-control"   th:field="*{phone}" placeholder="Номер телефона" required=""/>
+                        <input type="text" class="form-control" th:field="*{phone}" placeholder="Номер телефона"
+                               required=""/>
                         <br></br>
-                        <input type="text" class="form-control" th:field="*{shiftSalary}" name="shiftSalary" placeholder="Оклад За смену" required=""/>
+                        <input type="text" class="form-control" th:field="*{shiftSalary}" name="shiftSalary"
+                               placeholder="Оклад За смену" required=""/>
                         <br></br>
 
 
+                        <div th:each="position : ${positionList}" style="margin-left: 25%">
 
-                        <div  th:each="position : ${positionList}" style="margin-left: 25%">
-
-                            <div class="question" th:if="${position.jobName} == 'Администратор'" >
-                                <input id="pos2" class="coupon_question" style="width: 30px;height: 30px; margin-right: 20px" type="checkbox" th:value="${position.id}" name="adminPositionId" autocomplete="off" value=""/>
-                                <label for="pos2"><h3 style="color: black;font-size: 30px" th:text="${position.jobName}"></h3></label>
+                            <div class="question" th:if="${position.jobName} == 'Администратор'">
+                                <input id="pos2" class="coupon_question"
+                                       style="width: 30px;height: 30px; margin-right: 20px" type="checkbox"
+                                       th:value="${position.id}" name="adminPositionId" autocomplete="off" value=""/>
+                                <label for="pos2"><h3 style="color: black;font-size: 30px"
+                                                      th:text="${position.jobName}"></h3></label>
                             </div>
 
 
-                            <div class="question" th:if="${position.jobName} == 'Владелец'" >
-                                <input id="pos6" class="coupon_questionBoss" style="width: 30px;height: 30px; margin-right: 20px" type="checkbox" th:value="${position.id}" name="bossPositionId" autocomplete="off" value=""/>
-                                <label for="pos6"><h3 style="color: black;font-size: 30px" th:text="${position.jobName}"></h3></label>
+                            <div class="question" th:if="${position.jobName} == 'Владелец'">
+                                <input id="pos6" class="coupon_questionBoss"
+                                       style="width: 30px;height: 30px; margin-right: 20px" type="checkbox"
+                                       th:value="${position.id}" name="bossPositionId" autocomplete="off" value=""/>
+                                <label for="pos6"><h3 style="color: black;font-size: 30px"
+                                                      th:text="${position.jobName}"></h3></label>
                             </div>
 
-                            <div  th:if="${position.jobName} != 'Администратор' AND ${position.jobName} != 'Владелец'">
-                                <input id="pos5" style="width: 30px;height: 30px; margin-right: 20px" type="checkbox" th:value="${position.id}" name="allPosition" autocomplete="off" value=""/>
-                                <label for="pos5"><h3 style="color: black;font-size: 30px" th:text="${position.jobName}"></h3></label>
+                            <div th:if="${position.jobName} != 'Администратор' AND ${position.jobName} != 'Владелец'">
+                                <input id="pos5" style="width: 30px;height: 30px; margin-right: 20px" type="checkbox"
+                                       th:value="${position.id}" name="allPosition" autocomplete="off" value=""/>
+                                <label for="pos5"><h3 style="color: black;font-size: 30px"
+                                                      th:text="${position.jobName}"></h3></label>
                             </div>
                         </div>
 
                         <div id="errorBlock"></div>
 
-                        <div class="answer" >
+                        <div class="answer">
                             <h3 style="color: black;" align="center">Введите пароль</h3>
-                            <input type="password" class="form-control" id="pass" placeholder="Пароль для доступа в систему"  autofocus="" name="passwordWorkerToAdmin"/>
+                            <input type="password" class="form-control" id="pass"
+                                   placeholder="Пароль для доступа в систему" autofocus=""
+                                   name="passwordWorkerToAdmin"/>
                         </div>
 
-                        <div class="answer" >
+                        <div class="answer">
                             <h3 style="color: black;" align="center">Подтвердите пароль</h3>
-                            <input type="password" class="form-control" id="repPass" placeholder="Подтвердите пароль"  autofocus="" name="submitNewPasswordAdmin"/>
+                            <input type="password" class="form-control" id="repPass" placeholder="Подтвердите пароль"
+                                   autofocus="" name="submitNewPasswordAdmin"/>
                         </div>
 
-                        <div class="answerBoss" >
+                        <div class="answerBoss">
                             <h3 style="color: black;" align="center">Введите пароль</h3>
-                            <input type="password" class="form-control" id="pass2" placeholder="Пароль для доступа в систему"  autofocus="" name="passwordWorkerToBoss"/>
+                            <input type="password" class="form-control" id="pass2"
+                                   placeholder="Пароль для доступа в систему" autofocus="" name="passwordWorkerToBoss"/>
                         </div>
 
-                        <div class="answerBoss" >
+                        <div class="answerBoss">
                             <h3 style="color: black;" align="center">Подтвердите пароль</h3>
-                            <input type="password" class="form-control" id="repPass2" placeholder="Пароль для доступа в систему"  autofocus="" name="submitNewPasswordBoss"/>
+                            <input type="password" class="form-control" id="repPass2"
+                                   placeholder="Пароль для доступа в систему" autofocus=""
+                                   name="submitNewPasswordBoss"/>
                         </div>
 
                         <br></br>
 
 
-
-
                         <br></br>
-                        <button class="btn btn-lg btn-primary btn-block"  type="submit">Добавить Сотрудника В Базу Данных</button>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Добавить Сотрудника В Базу
+                            Данных
+                        </button>
                     </form>
 
                 </div>
@@ -96,8 +114,8 @@
                 </div>
 
                 <script>
-                    $(document).ready(function() {
-                        $('#repPass').change(function() {
+                    $(document).ready(function () {
+                        $('#repPass').change(function () {
                             var pass = $("#pass").val();
                             var pass_rep = $("#repPass").val();
                             if (pass != pass_rep) {
@@ -112,8 +130,8 @@
 
 
                 <script>
-                    $(document).ready(function() {
-                        $('#repPass2').change(function() {
+                    $(document).ready(function () {
+                        $('#repPass2').change(function () {
                             var pass = $("#pass2").val();
                             var pass_rep = $("#repPass2").val();
                             if (pass != pass_rep) {
@@ -127,15 +145,10 @@
                 </script>
 
 
-
-
-
-
-
                 <script type="text/javascript">
                     $(".answer").hide();
-                    $(".coupon_question").click(function() {
-                        if($(this).is(":checked")) {
+                    $(".coupon_question").click(function () {
+                        if ($(this).is(":checked")) {
                             $(".answer").show();
                         } else {
                             $(".answer").hide();
@@ -145,8 +158,8 @@
 
                 <script type="text/javascript">
                     $(".answer2").hide();
-                    $(".coupon_question2").click(function() {
-                        if($(this).is(":checked")) {
+                    $(".coupon_question2").click(function () {
+                        if ($(this).is(":checked")) {
                             $(".answer2").show();
                         } else {
                             $(".answer2").hide();
@@ -156,8 +169,8 @@
 
                 <script type="text/javascript">
                     $(".answer3").hide();
-                    $(".coupon_question3").click(function() {
-                        if($(this).is(":checked")) {
+                    $(".coupon_question3").click(function () {
+                        if ($(this).is(":checked")) {
                             $(".answer3").show();
                         } else {
                             $(".answer3").hide();
@@ -167,8 +180,8 @@
 
                 <script type="text/javascript">
                     $(".answer4").hide();
-                    $(".coupon_question4").click(function() {
-                        if($(this).is(":checked")) {
+                    $(".coupon_question4").click(function () {
+                        if ($(this).is(":checked")) {
                             $(".answer4").show();
                         } else {
                             $(".answer4").hide();
@@ -178,8 +191,8 @@
 
                 <script type="text/javascript">
                     $(".answerBoss").hide();
-                    $(".coupon_questionBoss").click(function() {
-                        if($(this).is(":checked")) {
+                    $(".coupon_questionBoss").click(function () {
+                        if ($(this).is(":checked")) {
                             $(".answerBoss").show();
                         } else {
                             $(".answerBoss").hide();
@@ -191,7 +204,6 @@
         </div>
     </div>
 </div>
-
 
 
 </body>

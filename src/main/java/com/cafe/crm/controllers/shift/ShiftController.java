@@ -1,12 +1,12 @@
 package com.cafe.crm.controllers.shift;
 
 
-import com.cafe.crm.dao.boss.BossRepository;
-import com.cafe.crm.dao.worker.WorkerRepository;
 import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Worker;
-import com.cafe.crm.service_abstract.email.EmailService;
-import com.cafe.crm.service_abstract.shift.ShiftService;
+import com.cafe.crm.repositories.boss.BossRepository;
+import com.cafe.crm.repositories.worker.WorkerRepository;
+import com.cafe.crm.services.interfaces.email.EmailService;
+import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,7 +45,7 @@ public class ShiftController {
 	public ModelAndView getAdminPage() {
 
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("d.MM.YYYY");
-		LocalDateTime date = timeManager.getDate();
+		LocalDateTime date = timeManager.getDateTime();
 		ModelAndView mv;
 		if (shiftService.getLast() == null || !shiftService.getLast().getOpen()) {
 			mv = new ModelAndView("shiftPage");
