@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalTime;
 
 @Component
 public class InitClient {
@@ -65,6 +66,8 @@ public class InitClient {
 
 		Client client1 = new Client();
 		client1.setEmail("cafe.crm.test@gmail.com");
+		client1.setTimeStart(LocalTime.now());
+		client1.setState(false);
 		clientService.save(client1);
 
 	}

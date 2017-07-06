@@ -26,7 +26,7 @@ public class Client {
 	@Size(max = 30)
 	private String description = "";
 
-	private LocalTime timeStart = LocalTime.now().withSecond(0).withNano(0);
+	private LocalTime timeStart;
 
 	private boolean state = true;    // Open or Closed
 
@@ -39,7 +39,7 @@ public class Client {
 
 	private Long cache = 0L;// ready money
 
-	private LocalTime passedTime = LocalTime.of(0, 0, 0);
+	private LocalTime passedTime;
 
 	private Double priceMenu = 0D;
 

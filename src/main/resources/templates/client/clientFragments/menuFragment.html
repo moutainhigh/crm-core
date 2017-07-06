@@ -15,10 +15,10 @@
                         <input id="search" class="form-control"
                                style="width:140px;float: left;margin-top: 5px;margin-left: 5px"
                                type="text"
-                               placeholder="Поиск категорий"/>
+                               placeholder="Поиск категорий" autocomplete="off"/>
                         <input id="searchPr" class="form-control"
                                style="width:250px;margin-left:150px;float: left;margin-top: 5px"
-                               type="text" placeholder="Поиск продуктов"/>
+                               type="text" placeholder="Поиск продуктов" autocomplete="off"/>
 
 
                         <input th:id="'checked1' + ${calculate.id}" type="checkbox"
@@ -38,18 +38,16 @@
                         <center id="mycateg" style="font-size: 25px;">
                             <a th:id="'all' + ${calculate.id}" data-toggle="tab" th:href="'#allPanel' + ${calculate.id}"
                                style="color: black;">Всё</a>
-
+                            <br/>
                             <a th:id="'ordered' + ${calculate.id}" data-toggle="tab"
                                th:onclick="'getProductOnCalculateAjax(\'' + ${calculate.id} + '\');'"
                                th:href="'#onCalculatePanel' + ${calculate.id}"
-                               style="color: black;">Заказанные</a>
+                               style="color: black;">Заказы</a>
 
-                            <p style="margin-top: 20px">
                             <div th:each="categor : ${listMenu.categories}">
                                 <a style="color: black" th:id="'categor'+${categor.id}" data-toggle="tab"
                                    th:href="'#panel' + ${categor.id}" th:text="${categor.name}"></a>
                             </div>
-                            </p>
                         </center>
                     </div>
 
@@ -85,9 +83,8 @@
                                             <td>
                                                 <button th:onclick="'createLayerProductAjax(\'' + ${product.id} + '\',\'' + ${calculate.id} + '\');'"
                                                         style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;">
-                                                    <img src="http://www.suttonflooring.co/images/Icon-check.png"
-                                                         width="25px"
-                                                         height="25px"/>
+                                                    <i class="fa fa-check" aria-hidden="true"
+                                                       style="font-size: 30px"></i>
                                                 </button>
                                             </td>
                                         </tr>
@@ -141,9 +138,8 @@
                                                 <button th:id="'butProd' + ${prod.id}"
                                                         style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;"
                                                         th:onclick="'createLayerProductAjax(\'' + ${prod.id} + '\',\'' + ${calculate.id} + '\');'">
-                                                    <img src="http://www.suttonflooring.co/images/Icon-check.png"
-                                                         width="25px"
-                                                         height="25px"/>
+                                                    <i class="fa fa-check" aria-hidden="true"
+                                                       style="font-size: 30px"></i>
                                                 </button>
 
                                             </td>
