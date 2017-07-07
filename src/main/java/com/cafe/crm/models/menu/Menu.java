@@ -1,4 +1,4 @@
-package com.cafe.crm.models.Menu;
+package com.cafe.crm.models.menu;
 
 import javax.persistence.*;
 import java.util.Set;

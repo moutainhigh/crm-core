@@ -1,6 +1,6 @@
 package com.cafe.crm.services.impl.calculate;
 
-import com.cafe.crm.models.Menu.Product;
+import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.LayerProduct;

@@ -1,6 +1,6 @@
 package com.cafe.crm.services.interfaces.menu;
 
-import com.cafe.crm.models.Menu.Product;
+import com.cafe.crm.models.menu.Product;
 
 import java.util.List;
 

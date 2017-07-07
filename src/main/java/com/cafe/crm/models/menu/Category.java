@@ -1,4 +1,4 @@
-package com.cafe.crm.models.Menu;
+package com.cafe.crm.models.menu;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;

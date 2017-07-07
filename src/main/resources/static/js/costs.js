@@ -24,7 +24,7 @@ $(document).ready(function () {
         source: function (request, response) {
             $.ajax({
                 type: 'GET',
-                url: '/costs/search/category?name=' + request.term,
+                url: '/manager/costs/search/category?name=' + request.term,
                 success: function (data) {
                     response(data.length === 0 ? [] : data);
                 }
@@ -40,7 +40,7 @@ $(document).ready(function () {
         source: function (request, response) {
             $.ajax({
                 type: 'GET',
-                url: '/costs/search/goods?name=' + request.term,
+                url: '/manager/costs/search/goods?name=' + request.term,
                 success: function (data) {
                     response(data.length === 0 ? [] : data);
                 }
@@ -63,7 +63,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#formAddGoods').submit(function (e) {
         e.preventDefault();
-        var url = '/costs/add';
+        var url = '/manager/costs/add';
         var formData = $('#formAddGoods').serialize();
 
         $.ajax({
@@ -89,7 +89,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#formEditGoods').submit(function (e) {
         e.preventDefault();
-        var url = '/costs/edit';
+        var url = '/manager/costs/edit';
         var formData = $('#formEditGoods').serialize();
 
         $.ajax({
@@ -131,7 +131,7 @@ $(document).ready(function () {
             idArray.push(data[0]);
         }
 
-        var url = '/costs/delete/all';
+        var url = '/manager/costs/delete/all';
         data = JSON.stringify(idArray);
         var request = $.post(url, {ids: data}, function (data) {
             var successMessage = '<h4 style="color:green;" align="center">' + data + '</h4>';
@@ -144,7 +144,7 @@ $(document).ready(function () {
 });
 
 function removeGoods(id) {
-    var url = '/costs/delete';
+    var url = '/manager/costs/delete';
 
     var request = $.post(url, {goodsId: id}, function () {
         location.reload();

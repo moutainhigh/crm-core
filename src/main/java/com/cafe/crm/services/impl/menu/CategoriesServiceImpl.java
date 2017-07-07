@@ -1,6 +1,6 @@
 package com.cafe.crm.services.impl.menu;
 
-import com.cafe.crm.models.Menu.Category;
+import com.cafe.crm.models.menu.Category;
 import com.cafe.crm.repositories.menu.CategoryRepository;
 import com.cafe.crm.services.interfaces.menu.CategoriesService;
 import org.springframework.beans.factory.annotation.Autowired;

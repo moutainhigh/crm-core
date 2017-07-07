@@ -4,7 +4,7 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/world?serverTimezone=Europe/Moscow
     username: root
-    password: rockstargood
+    password: root
   jpa:
     generate-ddl: true
     hibernate:

@@ -1,7 +1,7 @@
 package com.cafe.crm.controllers.boss;
 
-import com.cafe.crm.models.Menu.Category;
-import com.cafe.crm.models.Menu.Product;
+import com.cafe.crm.models.menu.Category;
+import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.services.interfaces.menu.CategoriesService;
 import com.cafe.crm.services.interfaces.menu.MenuService;
 import com.cafe.crm.services.interfaces.menu.ProductService;

@@ -1,13 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="/css/createPassword.css"/>
-    <link rel="stylesheet" th:href="@{/st.css}" type="text/css"/>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script th:src="@{/filter.js}"></script>
+    <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
+    <link rel="stylesheet" th:href="@{/css/createPassword.css}"/>
 </head>
 <body>
 
@@ -343,9 +338,10 @@
     </div>
     <!--/.container -->
 </header>
-<script th:src="@{/js/boss/changePasword.js}"></script>
+<script th:src="@{/js/boss/changePassword.js}"></script>
 <script th:src="@{/js/createPassword.js}"></script>
 <script th:src="@{/js/mail.js}"></script>
+<script th:src="@{/js/filter.js}"></script>
 
 </body>
 

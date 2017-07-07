@@ -1,6 +1,6 @@
 package com.cafe.crm.repositories.menu;
 
-import com.cafe.crm.models.Menu.Category;
+import com.cafe.crm.models.menu.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

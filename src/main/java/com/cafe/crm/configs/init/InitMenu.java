@@ -1,9 +1,9 @@
 package com.cafe.crm.configs.init;
 
 
-import com.cafe.crm.models.Menu.Category;
-import com.cafe.crm.models.Menu.Menu;
-import com.cafe.crm.models.Menu.Product;
+import com.cafe.crm.models.menu.Category;
+import com.cafe.crm.models.menu.Menu;
+import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.repositories.menu.CategoryRepository;
 import com.cafe.crm.repositories.menu.MenuRepository;
 import com.cafe.crm.repositories.menu.ProductRepository;

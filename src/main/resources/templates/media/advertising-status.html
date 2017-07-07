@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Рассылка рекламы</title>
-    <link rel="stylesheet" th:href="@{/css/mail.css}" href="../../static/css/advertising.css" type="text/css"/>
-    <link rel="stylesheet" th:href="@{/st.css}" type="text/css"/>
     <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
+    <link rel="stylesheet" th:href="@{/css/mail.css}" href="../../static/css/advertising.css" type="text/css"/>
 </head>
 <body>
 <div class="ad-status" th:if="${message}">
