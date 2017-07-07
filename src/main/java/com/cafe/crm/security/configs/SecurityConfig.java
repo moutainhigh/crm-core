@@ -54,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 				.authorizeRequests()
 				.antMatchers("/manager/**").hasAnyAuthority("MANAGER", "BOSS")
-				.antMatchers("/boss/**", "/worker/**").hasAuthority("BOSS")
+				.antMatchers("/boss/**", "/worker/**", "/advertising/**").hasAuthority("BOSS")
 				.and()
 				.formLogin()
 				.loginPage("/login")
