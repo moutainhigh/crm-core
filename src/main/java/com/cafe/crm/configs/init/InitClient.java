@@ -65,7 +65,6 @@ public class InitClient {
 		cardService.save(card1);
 
 		Client client1 = new Client();
-		client1.setEmail("cafe.crm.test@gmail.com");
 		client1.setTimeStart(LocalTime.now());
 		client1.setState(false);
 		clientService.save(client1);

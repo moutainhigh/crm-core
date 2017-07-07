@@ -43,6 +43,11 @@ public class CardServiceImpl implements CardService {
 	}
 
 	@Override
+	public List<Card> findByEmailNotNullAndAdvertisingIsTrue() {
+		return cardRepository.findByEmailNotNullAndAdvertisingIsTrue();
+	}
+
+	@Override
 	public Card checkWhoInvitedMe(String searchParam) {
 
 		Card card = cardRepository.findByPhoneNumber(searchParam);

@@ -2,7 +2,7 @@ package com.cafe.crm.services.impl.email;
 
 
 import com.cafe.crm.configs.property.AdvertisingProperties;
-import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.services.interfaces.email.EmailService;
 import com.cafe.crm.services.interfaces.email.HtmlService;
@@ -51,11 +51,11 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	public void sendAdvertisingFromImage(String imageUrl, String subject, String urlToLink, Collection<? extends Client> clients) {
-		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[clients.size()];
+	public void sendAdvertisingFromImage(String imageUrl, String subject, String urlToLink, Collection<? extends Card> cards) {
+		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[cards.size()];
 		int messageNum = 0;
-		for (Client client : clients) {
-			String email = client.getEmail();
+		for (Card card : cards) {
+			String email = card.getEmail();
 			if (email == null) {
 				continue;
 			}
@@ -64,7 +64,7 @@ public class EmailServiceImpl implements EmailService {
 				messageHelper.setFrom(properties.getMail().getSender());
 				messageHelper.setTo(email);
 				messageHelper.setSubject(subject);
-				Long id = client.getId();
+				Long id = card.getId();
 				String token = bCryptPasswordEncoder.encode(email);
 				String view = properties.getMail().getImageView();
 				String html = htmlService.getAdvertisingFromImage(imageUrl, view, urlToLink, id, token);
@@ -78,11 +78,11 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	public void sendAdvertisingFromText(String text, String subject, Collection<? extends Client> clients) {
-		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[clients.size()];
+	public void sendAdvertisingFromText(String text, String subject, Collection<? extends Card> cards) {
+		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[cards.size()];
 		int messageNum = 0;
-		for (Client client : clients) {
-			String email = client.getEmail();
+		for (Card card : cards) {
+			String email = card.getEmail();
 			if (email == null) {
 				continue;
 			}
@@ -91,7 +91,7 @@ public class EmailServiceImpl implements EmailService {
 				messageHelper.setFrom(properties.getMail().getSender());
 				messageHelper.setTo(email);
 				messageHelper.setSubject(subject);
-				Long id = client.getId();
+				Long id = card.getId();
 				String token = bCryptPasswordEncoder.encode(email);
 				String view = properties.getMail().getTextView();
 				String html = htmlService.getAdvertisingFromText(text, view, id, token);
@@ -105,11 +105,11 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	public void sendDispatchStatusNotification(Client client) {
-		if (client == null) {
+	public void sendDispatchStatusNotification(Card card) {
+		if (card == null) {
 			return;
 		}
-		String email = client.getEmail();
+		String email = card.getEmail();
 		if (email == null) {
 			return;
 		}
@@ -118,7 +118,7 @@ public class EmailServiceImpl implements EmailService {
 			messageHelper.setFrom(properties.getMail().getSender());
 			messageHelper.setTo(email);
 			messageHelper.setSubject(properties.getMail().getDisableSubject());
-			Long id = client.getId();
+			Long id = card.getId();
 			String token = bCryptPasswordEncoder.encode(email);
 			String view = properties.getMail().getDisableView();
 			String html = htmlService.getAdvertisingForDisable(view, id, token);

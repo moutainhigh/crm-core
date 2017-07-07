@@ -18,11 +18,6 @@ public class Client {
 	@GeneratedValue
 	private Long id;
 
-	@Email
-	private String email;
-
-	private boolean advertising = true;
-
 	@Size(max = 30)
 	private String description = "";
 
@@ -170,22 +165,6 @@ public class Client {
 
 	public void setTimeStart(LocalTime timeStart) {
 		this.timeStart = timeStart;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public boolean isAdvertising() {
-		return advertising;
-	}
-
-	public void setAdvertising(boolean advertising) {
-		this.advertising = advertising;
 	}
 
 	@Override

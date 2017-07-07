@@ -1,5 +1,6 @@
 package com.cafe.crm.models.card;
 
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -29,7 +30,10 @@ public class Card {
 	@Lob
 	private byte[] photo = new byte[1];
 
+	@Email
 	private String email;
+
+	private boolean advertising = true;
 
 	@Range(min = 0, max = 100)
 	private Long discount = 0L;
@@ -212,6 +216,14 @@ public class Card {
 
 	public void setLink(String link) {
 		this.link = link;
+	}
+
+	public boolean isAdvertising() {
+		return advertising;
+	}
+
+	public void setAdvertising(boolean advertising) {
+		this.advertising = advertising;
 	}
 
 	@Override
