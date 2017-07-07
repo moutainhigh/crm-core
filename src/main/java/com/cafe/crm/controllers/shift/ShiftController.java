@@ -48,11 +48,11 @@ public class ShiftController {
 		LocalDateTime date = timeManager.getDateTime();
 		ModelAndView mv;
 		if (shiftService.getLast() == null || !shiftService.getLast().getOpen()) {
-			mv = new ModelAndView("shiftPage");
+			mv = new ModelAndView("shift/shiftPage");
 			mv.addObject("list", workerService.getAllActiveWorker());
 			mv.addObject("date", dateTimeFormatter.format(date));
 		} else {
-			mv = new ModelAndView("editingShiftPage");
+			mv = new ModelAndView("shift/editingShiftPage");
 		}
 		return mv;
 	}
@@ -85,7 +85,7 @@ public class ShiftController {
 	// get all workers of shift
 	@RequestMapping(value = "/manager/shift/edit", method = RequestMethod.GET)
 	public ModelAndView editPage() {
-		ModelAndView mv = new ModelAndView("editingShiftPage");
+		ModelAndView mv = new ModelAndView("shift/editingShiftPage");
 		mv.addObject("workersOfShift", shiftService.getLast().getUsers());
 		mv.addObject("allWorkers", shiftService.getWorkers());
 		return mv;
@@ -95,7 +95,7 @@ public class ShiftController {
 	@RequestMapping(value = "/manager/shift/delWorker", method = RequestMethod.POST)
 	public ModelAndView deleteWorkerFromShift(@RequestParam(name = "delWorker") String name) {
 		shiftService.deleteWorkerFromShift(name);
-		ModelAndView mv = new ModelAndView("editingShiftPage");
+		ModelAndView mv = new ModelAndView("shift/editingShiftPage");
 		mv.addObject("workersOfShift", shiftService.getLast().getUsers());
 		mv.addObject("allWorkers", shiftService.getWorkers());
 		return mv;
@@ -105,7 +105,7 @@ public class ShiftController {
 	@RequestMapping(value = "/manager/shift/addWorker", method = RequestMethod.POST)
 	public ModelAndView addWorkerFromShift(@RequestParam(name = "addWorker") String name) {
 		shiftService.addWorkerFromShift(name);
-		ModelAndView mv = new ModelAndView("editingShiftPage");
+		ModelAndView mv = new ModelAndView("shift/editingShiftPage");
 		mv.addObject("workersOfShift", shiftService.getLast().getUsers());
 		mv.addObject("allWorkers", shiftService.getWorkers());
 		return mv;

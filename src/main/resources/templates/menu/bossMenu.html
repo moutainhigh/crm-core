@@ -35,7 +35,7 @@
             </div>
 
             <div class="tab-content">
-                <div th:replace="tabFragmentForBossMenu :: BossTab "></div>
+                <div th:replace="menu/fragments/tabFragmentForBossMenu :: BossTab "></div>
                 <div class="tab-pane " th:id="${categor.id}" th:each="categor:${categories}">
 
                     <div class="btn-group">

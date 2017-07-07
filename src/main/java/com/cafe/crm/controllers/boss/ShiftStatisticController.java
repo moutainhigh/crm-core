@@ -22,12 +22,12 @@ public class ShiftStatisticController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String getAdminPage() {
-		return "shiftStatistics";
+		return "shift/shiftStatistics";
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
 	public ModelAndView search(@Param("start") String start, @Param("end") String end) {
-		ModelAndView mv = new ModelAndView("shiftStatistics");
+		ModelAndView mv = new ModelAndView("shift/shiftStatistics");
 		Set<Shift> dates = shiftService.findByDates(LocalDate.parse(start), LocalDate.parse(end));
 		mv.addObject("shifts", dates);
 		return mv;
@@ -37,7 +37,7 @@ public class ShiftStatisticController {
 	public ModelAndView searchLastWeek() {
 		LocalDate start = LocalDate.now();
 		LocalDate end = start.minusDays(7);
-		ModelAndView mv = new ModelAndView("shiftStatistics");
+		ModelAndView mv = new ModelAndView("shift/shiftStatistics");
 		Set<Shift> dates = shiftService.findByDates(end, start);
 		mv.addObject("shifts", dates);
 		return mv;
@@ -47,7 +47,7 @@ public class ShiftStatisticController {
 	public ModelAndView searchMonth() {
 		LocalDate start = LocalDate.now();
 		LocalDate end = start.minusMonths(1);
-		ModelAndView mv = new ModelAndView("shiftStatistics");
+		ModelAndView mv = new ModelAndView("shift/shiftStatistics");
 		Set<Shift> dates = shiftService.findByDates(end, start);
 		mv.addObject("shifts", dates);
 		return mv;
@@ -55,7 +55,7 @@ public class ShiftStatisticController {
 
 	@RequestMapping(value = "/search/allShifts", method = RequestMethod.GET)
 	public ModelAndView searchLastMonth() {
-		ModelAndView mv = new ModelAndView("shiftStatistics");
+		ModelAndView mv = new ModelAndView("shift/shiftStatistics");
 		List<Shift> dates = shiftService.findAll();
 		mv.addObject("shifts", dates);
 		return mv;
@@ -65,7 +65,7 @@ public class ShiftStatisticController {
 	public ModelAndView searchThreeMonth() {
 		LocalDate start = LocalDate.now();
 		LocalDate end = start.minusMonths(2);
-		ModelAndView mv = new ModelAndView("shiftStatistics");
+		ModelAndView mv = new ModelAndView("shift/shiftStatistics");
 		Set<Shift> dates = shiftService.findByDates(end, start);
 		mv.addObject("shifts", dates);
 		return mv;
@@ -75,7 +75,7 @@ public class ShiftStatisticController {
 	public ModelAndView searchHalfYear() {
 		LocalDate start = LocalDate.now();
 		LocalDate end = start.minusMonths(6);
-		ModelAndView mv = new ModelAndView("shiftStatistics");
+		ModelAndView mv = new ModelAndView("shift/shiftStatistics");
 		Set<Shift> dates = shiftService.findByDates(end, start);
 		mv.addObject("shifts", dates);
 		return mv;

@@ -20,7 +20,7 @@ import java.util.Set;
 
 @Controller
 @RequestMapping("/boss/menu")
-public class MenuContoller {
+public class MenuController {
 
 	@Autowired
 	private MenuService menuService;
@@ -39,7 +39,7 @@ public class MenuContoller {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getAdminPage() {
-		ModelAndView mv = new ModelAndView("bossMenu");
+		ModelAndView mv = new ModelAndView("menu/bossMenu");
 		mv.addObject("menu", menuService.getOne(1L));
 		mv.addObject("categories", categoriesService.findAll());
 		mv.addObject("products", productService.findAll());
