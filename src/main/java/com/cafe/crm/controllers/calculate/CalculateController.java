@@ -161,7 +161,6 @@ public class CalculateController {
 		} else {
 			calculate.setRoundState(true);
 		}
-		calculate.setDescription("WORK PLs");
 		calculateService.save(calculate);
 	}
 
