@@ -42,7 +42,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 
 	@Override
 	public void getAllPrice(Client client) {
-		client.setAllPrice(client.getPriceMenu() + client.getPriceTime());
+		client.setAllPrice(Math.round((client.getPriceMenu() + client.getPriceTime()) * 100) / 100.00);
 	}
 
 	@Override
@@ -69,13 +69,13 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 
 	@Override
 	public void payWithCardAndCache(Client client) {
-		Long payWithCard = client.getPayWithCard();
-		Long allPrice = client.getAllPrice().longValue();
+		Double payWithCard = client.getPayWithCard();
+		Double allPrice = client.getAllPrice();
 		client.setPayWithCard(allPrice < client.getPayWithCard() ? allPrice : payWithCard);
 		if (client.getPayWithCard() < 0 || client.getCard() == null) {
-			client.setPayWithCard(0L);
+			client.setPayWithCard(0D);
 		}
-		client.setCache(allPrice - client.getPayWithCard());
+		client.setCache(allPrice - (double)client.getPayWithCard());
 	}
 
 }
