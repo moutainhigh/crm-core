@@ -21,6 +21,4 @@ public interface ClientService {
 
 	List<Client> findByIdIn(long[] ids);
 
-	List<Client> findByEmailNotNullAndAdvertisingIsTrue();
-
 }

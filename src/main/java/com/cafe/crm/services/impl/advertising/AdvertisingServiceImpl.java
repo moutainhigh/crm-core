@@ -4,10 +4,10 @@ import com.cafe.crm.exceptions.advertising.AdvertisingClientIdIncorrectException
 import com.cafe.crm.exceptions.advertising.AdvertisingFileNotImageException;
 import com.cafe.crm.exceptions.advertising.AdvertisingTokenNotMatchException;
 import com.cafe.crm.exceptions.advertising.AdvertisingUrlIncorrectException;
-import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.card.Card;
 import com.cafe.crm.services.interfaces.advertising.AdvertisingService;
 import com.cafe.crm.services.interfaces.advertising.CloudService;
-import com.cafe.crm.services.interfaces.client.ClientService;
+import com.cafe.crm.services.interfaces.card.CardService;
 import com.cafe.crm.services.interfaces.email.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,13 +30,13 @@ public class AdvertisingServiceImpl implements AdvertisingService {
 
 	private final EmailService emailService;
 
-	private final ClientService clientService;
+	private final CardService cardService;
 
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Autowired
-	public AdvertisingServiceImpl(ClientService clientService, BCryptPasswordEncoder bCryptPasswordEncoder, EmailService emailService, CloudService cloudService) {
-		this.clientService = clientService;
+	public AdvertisingServiceImpl(CardService cardService, BCryptPasswordEncoder bCryptPasswordEncoder, EmailService emailService, CloudService cloudService) {
+		this.cardService = cardService;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 		this.emailService = emailService;
 		this.cloudService = cloudService;
@@ -46,8 +46,8 @@ public class AdvertisingServiceImpl implements AdvertisingService {
 	@Override
 	public void sendAdvertisingFromImageUrl(String imageUrl, String subject, String urlToLink) {
 		checkForUrl(imageUrl);
-		List<Client> clients = clientService.findByEmailNotNullAndAdvertisingIsTrue();
-		emailService.sendAdvertisingFromImage(imageUrl, subject, urlToLink, clients);
+		List<Card> cards = cardService.findByEmailNotNullAndAdvertisingIsTrue();
+		emailService.sendAdvertisingFromImage(imageUrl, subject, urlToLink, cards);
 	}
 
 	@Transactional(readOnly = true)
@@ -55,50 +55,50 @@ public class AdvertisingServiceImpl implements AdvertisingService {
 	public void sendAdvertisingFromImageFile(MultipartFile imageFile, String subject, String urlToLink) {
 		checkForImage(imageFile);
 		String imageUrl = cloudService.uploadAndGetUrl(imageFile);
-		List<Client> clients = clientService.findByEmailNotNullAndAdvertisingIsTrue();
-		emailService.sendAdvertisingFromImage(imageUrl, subject, urlToLink, clients);
+		List<Card> cards = cardService.findByEmailNotNullAndAdvertisingIsTrue();
+		emailService.sendAdvertisingFromImage(imageUrl, subject, urlToLink, cards);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
 	public void sendAdvertisingFromText(String text, String subject) {
-		List<Client> clients = clientService.findByEmailNotNullAndAdvertisingIsTrue();
-		emailService.sendAdvertisingFromText(text, subject, clients);
+		List<Card> cards = cardService.findByEmailNotNullAndAdvertisingIsTrue();
+		emailService.sendAdvertisingFromText(text, subject, cards);
 	}
 
 	@Override
 	public boolean toggleAdvertisingDispatchStatus(String id, String token) {
-		Long clientId = parseClientId(id);
-		Client client = clientService.getOne(clientId);
-		checkForMatch(client, token);
-		boolean isEnable = client.isAdvertising();
-		changeAdvertisingStatus(client, isEnable);
-		clientService.save(client);
+		Long cardId = parseCardId(id);
+		Card card = cardService.getOne(cardId);
+		checkForMatch(card, token);
+		boolean isEnable = card.isAdvertising();
+		changeAdvertisingStatus(card, isEnable);
+		cardService.save(card);
 		return !isEnable;
 	}
 
-	private void changeAdvertisingStatus(Client client, boolean isEnable) {
-		client.setAdvertising(!isEnable);
+	private void changeAdvertisingStatus(Card card, boolean isEnable) {
+		card.setAdvertising(!isEnable);
 		if (!isEnable) {
 			return;
 		}
-		emailService.sendDispatchStatusNotification(client);
+		emailService.sendDispatchStatusNotification(card);
 	}
 
-	private void checkForMatch(Client client, String encodedString) {
-		if (client == null || !bCryptPasswordEncoder.matches(client.getEmail(), encodedString)) {
+	private void checkForMatch(Card card, String encodedString) {
+		if (card == null || !bCryptPasswordEncoder.matches(card.getEmail(), encodedString)) {
 			throw new AdvertisingTokenNotMatchException("Переданная информация не действительна.");
 		}
 	}
 
-	private Long parseClientId(String id) {
-		Long clientId;
+	private Long parseCardId(String id) {
+		Long cardId;
 		try {
-			clientId = Long.valueOf(id);
+			cardId = Long.valueOf(id);
 		} catch (NumberFormatException e) {
 			throw new AdvertisingClientIdIncorrectException("Переданная информация не действительна.");
 		}
-		return clientId;
+		return cardId;
 	}
 
 	private void checkForImage(MultipartFile file) {

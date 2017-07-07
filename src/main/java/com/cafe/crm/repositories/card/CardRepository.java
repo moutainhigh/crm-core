@@ -25,5 +25,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 	@Query("SELECT u FROM Card u WHERE u.surname =:name")
 	List<Card> findByListSurname(@Param("name") String name);
 
+	List<Card> findByEmailNotNullAndAdvertisingIsTrue();
+
 }
 

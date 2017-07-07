@@ -23,4 +23,5 @@ public interface CardService {
 
 	List<Card> findByListSurname(String name);
 
+	List<Card> findByEmailNotNullAndAdvertisingIsTrue();
 }

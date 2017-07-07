@@ -49,8 +49,4 @@ public class ClientServiceImpl implements ClientService {
 		return clientRepository.findByIdIn(ids);
 	}
 
-	@Override
-	public List<Client> findByEmailNotNullAndAdvertisingIsTrue() {
-		return clientRepository.findByEmailNotNullAndAdvertisingIsTrue();
-	}
 }

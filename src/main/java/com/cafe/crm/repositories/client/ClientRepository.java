@@ -13,6 +13,4 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
 	List<Client> findByIdIn(long[] ids);
 
-	List<Client> findByEmailNotNullAndAdvertisingIsTrue();
-
 }

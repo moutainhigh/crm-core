@@ -1,18 +1,18 @@
 package com.cafe.crm.services.interfaces.email;
 
 
-import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.worker.Boss;
 
 import java.util.Collection;
 
 public interface EmailService {
 
-	void sendAdvertisingFromImage(String imageUrl, String subject, String urlToLink, Collection<? extends Client> clients);
+	void sendAdvertisingFromImage(String imageUrl, String subject, String urlToLink, Collection<? extends Card> cards);
 
-	void sendAdvertisingFromText(String text, String subject, Collection<? extends Client> clients);
+	void sendAdvertisingFromText(String text, String subject, Collection<? extends Card> cards);
 
-	void sendDispatchStatusNotification(Client client);
+	void sendDispatchStatusNotification(Card card);
 
 	void sendBalanceInfoAfterDebiting(Long newBalance, Long debited, String email);
 
