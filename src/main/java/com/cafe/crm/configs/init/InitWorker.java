@@ -104,7 +104,7 @@ public class InitWorker {
 		boss.setPassword(hashedBossPassword);
 		boss.setFirstName("Martin");
 		boss.setLastName("Set");
-		boss.setEmail("boss@gmail.com");
+		boss.setEmail("boss@mail.ru");
 		boss.setPhone(9123456789L);
 		boss.setAllPosition(bossPosList);
 		boss.setShiftSalary(1000L);
