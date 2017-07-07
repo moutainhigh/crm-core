@@ -89,7 +89,9 @@
                 <div class="tab-pane active" id="discounts">
                     <h1 th:align="center" style="color: #5bc0de;">Скидки</h1>
 
-                    <div th:object="${wrapper}">
+                    <form role="form" method="post" th:id="myForm" th:object="${wrapper}" th:action="@{/boss/property/edit}"
+                          style="margin: 10px auto; width: 50%"
+                          modelAttribute="properties">
                         <table class="table" style="background: white;border-radius: 10px">
                             <thead>
                             <tr>
@@ -123,10 +125,11 @@
                             </tr>
                             </tbody>
                         </table>
-                    </div>
-                    <div align="center">
-                        <button type="submit" class="btn btn-lg btn-primary" id="send" name="upd">Сохранить</button>
-                    </div>
+
+                        <div align="center">
+                            <button type="submit" class="btn btn-lg btn-primary" id="send" name="upd">Сохранить</button>
+                        </div>
+                    </form>
                 </div>
                 <div class="tab-pane" id="tables">
                     <div class="row">
@@ -256,7 +259,6 @@
                 <div class="tab-pane" id="passwordChange">
                     <div class="container" style="min-width: 50%">
                         <br/>
-
                         <div class="row">
                             <div class="col-md-5 col-md-offset-3">
                                 <h1></h1>
@@ -287,7 +289,7 @@
                                     </div>
                                 </div>
                                 <div align="center">
-                                    <input type="submit" name="submit" id="submit" value="Сохранить" onclick="testB()"
+                                    <input type="submit" name="submit" id="submit" value="Сохранить" onclick="changeBossPassword()"
                                            class="tn btn-lg btn-primary"></input>
                                 </div>
                             </div>
@@ -339,7 +341,7 @@
     <!--/.container -->
 </header>
 <script th:src="@{/js/boss/changePassword.js}"></script>
-<script th:src="@{/js/createPassword.js}"></script>
+<script th:src="@{/js/boss/menu.js}"></script>
 <script th:src="@{/js/mail.js}"></script>
 <script th:src="@{/js/filter.js}"></script>
 
