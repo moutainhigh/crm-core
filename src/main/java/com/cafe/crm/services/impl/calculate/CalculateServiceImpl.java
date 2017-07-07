@@ -16,7 +16,7 @@ public class CalculateServiceImpl implements CalculateService {
 
 	@Override
 	public void save(Calculate calculate) {
-		calculateRepository.saveAndFlush(calculate);
+		calculateRepository.save(calculate);
 	}
 
 	@Override

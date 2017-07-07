@@ -14,7 +14,7 @@ public interface EmailService {
 
 	void sendDispatchStatusNotification(Card card);
 
-	void sendBalanceInfoAfterDebiting(Long newBalance, Long debited, String email);
+	void sendBalanceInfoAfterDebiting(Double newBalance, Double debited, String email);
 
 	void sendCloseShiftInfoFromText(Double salaryShift, Double profitShift, Long cache, Long payWithCard, Collection<? extends Boss> boss);
 

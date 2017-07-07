@@ -23,24 +23,24 @@ public class Client {
 
 	private LocalTime timeStart;
 
-	private boolean state = true;    // Open or Closed
+	private boolean state = true;// Open or Closed
 
 	@NotNull
 	private Long discount = 0L;
-
+	@NotNull
 	private Long discountWithCard = 0L;
 
 	private Double allPrice = 0D;//initial amount
 
-	private Long cache = 0L;// ready money
+	private Double cache = 0D;// ready money
 
 	private LocalTime passedTime;
 
 	private Double priceMenu = 0D;
 
 	private Double priceTime = 0D;
-
-	private Long payWithCard = 0L;
+	@NotNull
+	private Double payWithCard = 0D;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JsonBackReference
@@ -54,6 +54,7 @@ public class Client {
 
 	public Client() {
 	}
+
 
 	public List<LayerProduct> getLayerProducts() {
 		return layerProducts;
@@ -79,11 +80,11 @@ public class Client {
 		this.card = card;
 	}
 
-	public Long getCache() {
+	public Double getCache() {
 		return cache;
 	}
 
-	public void setCache(Long cache) {
+	public void setCache(Double cache) {
 		this.cache = cache;
 	}
 
@@ -135,11 +136,11 @@ public class Client {
 		this.priceTime = priceTime;
 	}
 
-	public Long getPayWithCard() {
+	public Double getPayWithCard() {
 		return payWithCard;
 	}
 
-	public void setPayWithCard(Long payWithCard) {
+	public void setPayWithCard(Double payWithCard) {
 		this.payWithCard = payWithCard;
 	}
 

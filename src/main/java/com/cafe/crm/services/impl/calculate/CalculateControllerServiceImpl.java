@@ -120,18 +120,39 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	@Override
 	public List<Client> calculatePrice() {
 		long startTime = System.currentTimeMillis();/// для измерения скорости работы расчетов под ajax
-
-		List<Client> clients = clientService.getAllOpen();
-		for (Client client : clients) {
-			calculatePriceService.calculatePriceTime(client);
-			calculatePriceService.addDiscountOnPriceTime(client);
-			calculatePriceService.getAllPrice(client);
-			calculatePriceService.round(client);
+		List<Calculate> calculates = calculateService.getAllOpen();
+		List<Client> clients = new ArrayList<>();
+		for (Calculate calculate : calculates ) {
+				for (Client client :calculate.getClient()) {
+					calculatePriceService.calculatePriceTime(client);
+					calculatePriceService.addDiscountOnPriceTime(client);
+					calculatePriceService.getAllPrice(client);
+					if (calculate.isRoundState()) {
+						calculatePriceService.round(client);
+					}
+					clients.add(client);
+				}
 		}
 		clientService.saveAll(clients);
-		for (Client client : clients) {
-			client.setLayerProducts(null);//для перелачи json
-		}
+		System.out.println(System.currentTimeMillis() - startTime);
+		return clients;
+	}
+
+	@Override
+	public List<Client> calculatePrice(Long calculateId) {
+		long startTime = System.currentTimeMillis();/// для измерения скорости работы расчетов под ajax
+		Calculate calculate = calculateService.getAllOpenOnCalculate(calculateId);
+		List<Client> clients = calculate.getClient();
+			for (Client client : clients) {
+				calculatePriceService.calculatePriceTime(client);
+				calculatePriceService.addDiscountOnPriceTime(client);
+				calculatePriceService.getAllPrice(client);
+				if (calculate.isRoundState()) {
+					calculatePriceService.round(client);
+				}
+			}
+		System.out.println(calculate.getDescription());
+		clientService.saveAll(clients);
 		System.out.println(System.currentTimeMillis() - startTime);
 		return clients;
 	}
@@ -225,7 +246,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		return client.getDiscountWithCard();
 	}
 
-	private void sendBalanceInfoAfterDebiting(Long balance, Long distinction, String email) {
+	private void sendBalanceInfoAfterDebiting(Double balance, Double distinction, String email) {
 		if (email != null) {
 			emailService.sendBalanceInfoAfterDebiting(balance, distinction, email);
 		}

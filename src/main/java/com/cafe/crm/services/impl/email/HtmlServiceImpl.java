@@ -67,7 +67,7 @@ public class HtmlServiceImpl implements HtmlService {
 	}
 
 	@Override
-	public String getBalanceInfoAfterDebiting(Long newBalance, Long debited, String view) {
+	public String getBalanceInfoAfterDebiting(Double newBalance, Double debited, String view) {
 		Context context = new Context();
 		context.setVariable("newBalance", newBalance);
 		context.setVariable("debited", debited);

@@ -54,7 +54,7 @@ public class CalculateController {
 		Double shiftProfit = 0D;//касса без учета расходов
 		Long salaryWorker = 0L;//зп сотрудников
 		Double shiftSalaryWithoutWorker = 0D;//касса с учетом зп сотрудников
-		Long card = 0L;//оплата по картам
+		Double card = 0D;//оплата по картам
 		for (Client c : clients) {
 			shiftProfit = shiftProfit + c.getAllPrice();
 			card = card + c.getPayWithCard();
@@ -116,21 +116,30 @@ public class CalculateController {
 									 @RequestParam("discount") Double discount,
 									 @RequestParam("payWithCard") Double payWithCard,
 									 @RequestParam("description") String description) {
+
 		Client client = clientService.getOne(clientId);
 		client.setDiscount(discount.longValue());
-		client.setPayWithCard(payWithCard.longValue());
+		client.setPayWithCard(payWithCard);
 		client.setDescription(description);
 		clientService.save(client);
 		return description;
 	}
 
-	@RequestMapping(value = {"/calculate-price"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = {"/calculate-price"}, method = RequestMethod.POST)
 	@ResponseBody
 	public List<Client> calculatePrice() {
 		return calculateControllerService.calculatePrice();
 	}
 
-	@RequestMapping(value = {"/output-clients"}, method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = {"/calculate-price-on-calculate"}, method = RequestMethod.POST)
+	@ResponseBody
+	public List<Client> calculatePriceOnCalculate(@RequestParam("calculateId") Long calculateId) {
+		return calculateControllerService.calculatePrice(calculateId);
+	}
+
+
+
+	@RequestMapping(value = {"/output-clients"}, method = RequestMethod.POST)
 	@ResponseBody
 	public List<Client> outputClients(@RequestParam(name = "clientsId", required = false) Long[] clientsId) {
 		return calculateControllerService.outputClients(clientsId);
@@ -141,6 +150,19 @@ public class CalculateController {
 							  @RequestParam("calculateId") Long calculateId) {
 		calculateControllerService.closeClient(clientsId, calculateId);
 		return "redirect:/manager";
+	}
+
+	@RequestMapping(value = {"/change-round-state"}, method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void changeRoundState(@RequestParam("calculateId") Long calculateId) {
+		Calculate calculate = calculateService.getAllOpenOnCalculate(calculateId);
+		if (calculate.isRoundState()) {
+			calculate.setRoundState(false);
+		} else {
+			calculate.setRoundState(true);
+		}
+		calculate.setDescription("WORK PLs");
+		calculateService.save(calculate);
 	}
 
 }

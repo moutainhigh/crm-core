@@ -20,6 +20,8 @@ public class Calculate {
 
 	private boolean state = true; // Open or Closed
 
+	private boolean roundState = true;
+
 	@OneToMany
 	private List<Client> client;
 
@@ -29,7 +31,16 @@ public class Calculate {
 	@ManyToMany
 	private List<Card> cards;
 
+
 	public Calculate() {
+	}
+
+	public boolean isRoundState() {
+		return roundState;
+	}
+
+	public void setRoundState(boolean roundState) {
+		this.roundState = roundState;
 	}
 
 	public List<Card> getCards() {

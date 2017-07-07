@@ -16,6 +16,8 @@ public interface CalculateControllerService {
 
 	List<Client> calculatePrice();
 
+	List<Client> calculatePrice(Long calculateId);
+
 	List<Client> outputClients(Long[] clientsId);
 
 	void closeClient(Long[] clientsId, Long calculateId);
