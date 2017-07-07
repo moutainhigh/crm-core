@@ -117,7 +117,7 @@
                                               action="/manager/add-card-on-client">
                                             <input type="hidden" name="clientId" th:value="${client.id}"/>
                                             <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
-                                            <select th:onchange="'ajaxCardDiscount(\'' + ${client.id} + '\');'"
+                                            <select th:onchange="'ajaxCardDiscount(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'"
                                                     class="form-control" name="cardId"
                                                     style="width: 130px; margin: auto; font-size: 17px;font-weight:bold">
                                                 <option value="-1"
@@ -144,7 +144,7 @@
 
                                 <td>
                                     <input autocomplete="off" th:id="'one' + ${client.id}"
-                                           th:onblur="'subAjax(\'' + ${client.id} + '\');'" class="form-control"
+                                           th:onblur="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'" class="form-control"
                                            style="width:150px;margin: auto;font-size: 17px"
                                            name="description" th:value="${client.description}" maxlength="30"/>
                                 </td>
@@ -157,7 +157,7 @@
                                     <p th:id="'dopDiscount' + ${client.id}" style="float: left;"
                                        th:text="${client.discountWithCard} + '% + '"></p>
                                     <select th:id="'two' + ${client.id}" autocomplete="off"
-                                            th:onchange="'subAjax(\'' + ${client.id} + '\');'" class="form-control"
+                                            th:onchange="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'" class="form-control"
                                             name="discount"
                                             style="width: 90px; margin: auto; font-size: 17px;font-weight:bold">
                                         <option value="0" th:selected="${client.discount} == 0 ? 'true' : 'false' ">
@@ -178,7 +178,7 @@
                                 <td>
 
                                     <input autocomplete="off" th:id="'three' + ${client.id}"
-                                           th:onblur="'subAjax(\'' + ${client.id} + '\');'"
+                                           th:onblur="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'"
                                            class="form-control"
                                            style="width:85px;margin: auto;font-size: 20px"
                                            name="payWithCard" maxlength="7" th:value="${client.payWithCard}"/>
@@ -224,7 +224,7 @@
         }
     }
 
-    function ajaxCardDiscount(id) {
+    function ajaxCardDiscount(id, calcId) {
 
         $.ajax({
             type: "POST",
@@ -234,7 +234,7 @@
             success: function (data) {
                 //<![CDATA[
                 $('#dopDiscount' + id).html(data + '%' + ' + ');
-                setTimeout(ajax, 1000);
+                setTimeout(function () {ajaxForCalculate(calcId)}, 500);
                 //]]>
             },
             error: function () {
@@ -355,7 +355,7 @@
         }
     }
 
-    function subAjax(id) {
+    function subAjax(id,calcId) {
         $.ajax({
             type: "POST",
             url: "/manager/update-fields-client",
@@ -363,7 +363,7 @@
             success: function (data) {
                 //<![CDATA[
                 $('#clientMenuDescription' + id).text(data);
-                setTimeout(ajaxForCalculate(id), 400);
+                setTimeout(function () {ajaxForCalculate(calcId)}, 500);
                 //]]>
             },
             error: function () {
@@ -384,9 +384,9 @@
                 for (var i = 0; i < arr.length; i++) {
                     $('#ajaxMenu' + arr[i].id + ' li:last').after('<li id = "pr' + data.id + '">' + data.name + ' №' + data.id + ' (' + data.cost + 'р)' + '</li>');
                 }
-                setTimeout(getOpenClientsOnCalculateAjax(calcId), 500);
+                setTimeout(function () {getOpenClientsOnCalculateAjax(calcId)}, 500);
                 prog(calcId);
-                setTimeout(ajaxForCalculate(calcId), 400);
+                setTimeout(function () {ajaxForCalculate(calcId)}, 500);
                 //]]>
             },
             error: function () {
@@ -410,9 +410,9 @@
                         $('#ajaxMenu' + arr[i].id + ' li:last').after('<li id = "pr' + data.id + '">' + data.name + ' №' + data.id + ' (' + data.cost + 'р)' + '</li>');
                     }
                 }
-                setTimeout(getOpenClientsOnCalculateAjax(calcId), 500);
+                setTimeout(function () {getOpenClientsOnCalculateAjax(calcId)}, 500);
                 prog(calcId);
-                setTimeout(ajaxForCalculate(calcId), 400);
+                setTimeout(function () {ajaxForCalculate(calcId)}, 500);
 
                 //]]>
             },
@@ -438,9 +438,9 @@
                     }
                 }
                 getProductOnCalculateAjax(calcId);
-                setTimeout(getOpenClientsOnCalculateAjax(calcId), 500);
+                setTimeout(function () {getOpenClientsOnCalculateAjax(calcId)}, 500);
                 prog(calcId);
-                setTimeout(ajaxForCalculate(calcId), 400);
+                setTimeout(function () {ajaxForCalculate(calcId)}, 500);
 
                 //]]>
             },

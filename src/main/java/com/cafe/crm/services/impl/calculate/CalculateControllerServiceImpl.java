@@ -52,6 +52,9 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 	@Override
 	public void createCalculate(Long id, Long number, String description) {
+		if (number > 20) {
+			return;
+		}
 		Board board = boardService.getOne(id);
 		Calculate calculate = new Calculate();
 		List<Client> list = new ArrayList<>();
@@ -71,7 +74,9 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 	@Override
 	public void createCalculateWithCard(Long id, Long number, String description, Long idCard) {
-
+		if (number > 20) {
+			return;
+		}
 		Card card = cardService.getOne(idCard);
 		List<Card> cards = new ArrayList<>();
 		cards.add(card);
@@ -122,16 +127,16 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		long startTime = System.currentTimeMillis();/// для измерения скорости работы расчетов под ajax
 		List<Calculate> calculates = calculateService.getAllOpen();
 		List<Client> clients = new ArrayList<>();
-		for (Calculate calculate : calculates ) {
-				for (Client client :calculate.getClient()) {
-					calculatePriceService.calculatePriceTime(client);
-					calculatePriceService.addDiscountOnPriceTime(client);
-					calculatePriceService.getAllPrice(client);
-					if (calculate.isRoundState()) {
-						calculatePriceService.round(client);
-					}
-					clients.add(client);
+		for (Calculate calculate : calculates) {
+			for (Client client : calculate.getClient()) {
+				calculatePriceService.calculatePriceTime(client);
+				calculatePriceService.addDiscountOnPriceTime(client);
+				calculatePriceService.getAllPrice(client);
+				if (calculate.isRoundState()) {
+					calculatePriceService.round(client);
 				}
+				clients.add(client);
+			}
 		}
 		clientService.saveAll(clients);
 		System.out.println(System.currentTimeMillis() - startTime);
@@ -143,15 +148,14 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		long startTime = System.currentTimeMillis();/// для измерения скорости работы расчетов под ajax
 		Calculate calculate = calculateService.getAllOpenOnCalculate(calculateId);
 		List<Client> clients = calculate.getClient();
-			for (Client client : clients) {
-				calculatePriceService.calculatePriceTime(client);
-				calculatePriceService.addDiscountOnPriceTime(client);
-				calculatePriceService.getAllPrice(client);
-				if (calculate.isRoundState()) {
-					calculatePriceService.round(client);
-				}
+		for (Client client : clients) {
+			calculatePriceService.calculatePriceTime(client);
+			calculatePriceService.addDiscountOnPriceTime(client);
+			calculatePriceService.getAllPrice(client);
+			if (calculate.isRoundState()) {
+				calculatePriceService.round(client);
 			}
-		System.out.println(calculate.getDescription());
+		}
 		clientService.saveAll(clients);
 		System.out.println(System.currentTimeMillis() - startTime);
 		return clients;
@@ -180,6 +184,9 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 	@Override
 	public void closeClient(Long[] clientsId, Long calculateId) {
+		if (clientsId == null) {
+			return;
+		}
 		List<Client> listClient = new ArrayList<>();
 		List<Card> listCard = new ArrayList<>();
 		for (Long clientId : clientsId) {
