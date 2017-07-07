@@ -21,14 +21,14 @@ public class Property {
 	@NotEmpty
 	private String name;
 
-	private Long value;
+	private Double value;
 
 	private Boolean enable;
 
 	public Property() {
 	}
 
-	public Property(String name, Long value, Boolean enable) {
+	public Property(String name, Double value, Boolean enable) {
 		this.name = name;
 		this.value = value;
 		this.enable = enable;
@@ -46,12 +46,12 @@ public class Property {
 		enable = enabled;
 	}
 
-	public Long getValue() {
+	public Double getValue() {
 
 		return value;
 	}
 
-	public void setValue(Long value) {
+	public void setValue(Double value) {
 		this.value = value;
 	}
 

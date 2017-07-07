@@ -129,7 +129,7 @@ public class EmailServiceImpl implements EmailService {
 
 	// TODO: 25.06.2017 Сделать возможность добалять чек в письмо
 	@Override
-	public void sendBalanceInfoAfterDebiting(Long newBalance, Long debited, String email) {
+	public void sendBalanceInfoAfterDebiting(Double newBalance, Double debited, String email) {
 		if (email == null) {
 			return;
 		}

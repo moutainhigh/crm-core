@@ -45,7 +45,7 @@ public class InitClient {
 
 		Card card = new Card();
 		card.setName("Данила");
-		card.setBalance(5000L);
+		card.setBalance(5000D);
 		card.setDiscount(10L);
 		card.setSurname("Питерский");
 
@@ -57,7 +57,7 @@ public class InitClient {
 		Card card1 = new Card();
 		card1.setName("Кот");
 		card1.setSurname("Барсик");
-		card1.setBalance(0L);
+		card1.setBalance(0D);
 		card1.setDiscount(15L);
 
 

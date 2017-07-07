@@ -24,14 +24,14 @@
 
             <!--head panel -->
             <div class="panel panel-primary">
-                <div class="panel-heading" style="height: 44px">
+                <div class="panel-heading" style="height: 44px; padding: 0">
                     <div class="panel-title">
                         <form style="float: left" method="post" action="/manager/refresh-board"
                               th:id="'formRef'+${calculate.id}">
                             <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
 
                             <select onchange="submit();"
-                                    style="width:130px; float: left; height: 34px;font-size:18px;margin-top: -5px;margin-left: -10px "
+                                    style="width:130px; float: left; height: 34px;font-size:18px;margin-top: 5px;margin-left: 6px "
                                     class="form-control" th:form="'formRef'+${calculate.id}" name="boardId">
 
                                 <p th:each="b : ${listBoard}">
@@ -54,10 +54,20 @@
                         <button th:id="'head1' + ${calculate.id}"
                                 th:onclick="'cookiePanel(\'' +'accord'+ ${calculate.id} + '\');'"
                                 style="float: left; width: 560px; word-wrap: break-word; font-size: 20px; height: 33px;
-                                 text-align: center; background: rgba(255,0,0,0);border: none;margin-top: -5px"
+                                 text-align: center; background: rgba(255,0,0,0);border: none;margin-top: 5px"
                                 data-toggle="collapse" th:href="'#accord' + ${calculate.id}"
                                 th:text="${calculate.description}">
                         </button>
+                        <form th:id="'formRoundState' + ${calculate.id}" action="/manager/change-round-state" method="post">
+
+                            <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
+                        </form>
+
+                        <button style="float: left;margin-left: 40px;margin-top: 1px;background: rgba(255,0,0,0);border: none" th:id="'rek' + ${calculate.id}"
+                         th:onclick="'roundState(\'' + ${calculate.id} + '\',\'' + ${calculate.roundState} + '\');'">
+                            <i th:id="'roundState' + ${calculate.id}" class="fa fa-money" aria-hidden="true" th:style="${calculate.roundState} ? 'font-size: 40px;color:white;' : 'font-size: 40px;color:black;' "></i>
+                        </button>
+
                     </div>
                 </div>
                 <!-- -->
@@ -191,7 +201,7 @@
 
                         </table>
 
-                        <button style="float: left;margin-left: 700px;" class="btn btn-primary"
+                        <button style="float: left;margin-left: 710px;" class="btn btn-primary"
                                 data-toggle="modal" th:href="'#menuModal' + ${calculate.id}"> Заказ
                         </button>
                         <div th:replace="client/clientFragments/getCheckFragment :: checkModal"></div>
@@ -295,6 +305,23 @@
         });
     }
 
+    function ajaxForCalculate(calcId) {
+        $.ajax({
+            type: "POST",
+            url: "/manager/calculate-price-on-calculate",
+            data: {calculateId : calcId},
+            success: function (data) {
+                //<![CDATA[
+                for (var i = 0; i < data.length; i++) {
+                    $('#price' + data[i].id).html(data[i].allPrice);
+                }
+                //]]>
+            },
+            error: function () {
+                console.log('ajaxForCalculate сломался? ');
+            }
+        });
+    }
 
     function ajax() {
         $.ajax({
@@ -338,7 +365,7 @@
             success: function (data) {
                 //<![CDATA[
                 $('#clientMenuDescription' + id).text(data);
-                setTimeout(ajax, 1000);
+                setTimeout(ajaxForCalculate(id), 400);
                 //]]>
             },
             error: function () {
@@ -360,7 +387,8 @@
                     $('#ajaxMenu' + arr[i].id + ' li:last').after('<li id = "pr' + data.id + '">' + data.name + ' №' + data.id + ' (' + data.cost + 'р)' + '</li>');
                 }
                 setTimeout(getOpenClientsOnCalculateAjax(calcId), 500);
-                setTimeout(ajax, 500);
+                prog(calcId);
+                setTimeout(ajaxForCalculate(calcId), 400);
                 //]]>
             },
             error: function () {
@@ -385,7 +413,9 @@
                     }
                 }
                 setTimeout(getOpenClientsOnCalculateAjax(calcId), 500);
-                setTimeout(ajax, 500);
+                prog(calcId);
+                setTimeout(ajaxForCalculate(calcId), 400);
+
                 //]]>
             },
             error: function () {
@@ -411,7 +441,9 @@
                 }
                 getProductOnCalculateAjax(calcId);
                 setTimeout(getOpenClientsOnCalculateAjax(calcId), 500);
-                setTimeout(ajax, 500);
+                prog(calcId);
+                setTimeout(ajaxForCalculate(calcId), 400);
+
                 //]]>
             },
             error: function () {
@@ -491,6 +523,32 @@
             });
         });
     });
+
+    function prog(calcId) {
+       var myTime = setInterval(
+            function () {
+            if (+$('#progress' + calcId).val() != 100) {
+                $('#progress' + calcId).val(+$('#progress' + calcId).val() + 7);
+            } else {
+                $('#progress' + calcId).val(0);
+                clearInterval(myTime);
+                myTime = 0;
+            }
+        }, 10);
+    }
+
+    function roundState(calcId, state) {
+        if (state == 'true') {
+            $('#roundState' + calcId).attr('style',  'font-size: 40px;color:black;');
+            $('#rek' + calcId).attr('onclick',  'roundState(' + '"' + calcId + '"' + ',' +'"'+ false +'"'+')');
+        } else {
+            $('#roundState' + calcId).attr('style',  'font-size: 40px;color:white;');
+            $('#rek' + calcId).attr('onclick',  'roundState(' + '"' + calcId + '"' + ',' +'"'+ true +'"'+')')
+        }
+        $('#formRoundState' + calcId).submit();
+        setTimeout(function () {ajaxForCalculate(calcId)}, 500);
+        }
+
 </script>
 
 </body>

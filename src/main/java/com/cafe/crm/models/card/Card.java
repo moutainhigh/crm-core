@@ -34,9 +34,9 @@ public class Card {
 	@Range(min = 0, max = 100)
 	private Long discount = 0L;
 
-	private Long balance = 0L;
+	private Double balance = 0D;
 
-	private Long spend = 0L;
+	private Double spend = 0D;
 
 	private LocalDate visitDate;
 
@@ -150,19 +150,19 @@ public class Card {
 		this.discount = discount;
 	}
 
-	public Long getBalance() {
+	public Double getBalance() {
 		return balance;
 	}
 
-	public void setBalance(Long balance) {
+	public void setBalance(Double balance) {
 		this.balance = balance;
 	}
 
-	public Long getSpend() {
+	public Double getSpend() {
 		return spend;
 	}
 
-	public void setSpend(Long spend) {
+	public void setSpend(Double spend) {
 		this.spend = spend;
 	}
 

@@ -132,7 +132,7 @@ public class CardProfileController {
 									HttpServletRequest request) {
 		Card card = cardService.getOne(idCard);
 		if (card != null) {
-			Long balance = card.getBalance();
+			Double balance = card.getBalance();
 			card.setBalance(balance + money);
 			cardService.save(card);
 			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
