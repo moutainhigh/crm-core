@@ -18,6 +18,9 @@ public class Board {
 	@Size(min = 1, max = 30)
 	private String name;
 
+	@NotNull
+	private Boolean isOpen;
+
 	public Board() {
 	}
 
@@ -35,6 +38,14 @@ public class Board {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Boolean getIsOpen() {
+		return isOpen;
+	}
+
+	public void setIsOpen(Boolean isOpen) {
+		this.isOpen = isOpen;
 	}
 
 	@Override
