@@ -44,16 +44,12 @@ function changeBossPassword() {
             url: "/boss/changePassword",
             data: formData,
             success: function (result) {
-                /*$('.form-group').html('Смена пароля прошла успешно.');*/
                 $("#successModal").modal('show')
-                $('#major').hide();
-                $("#save").hide()
+                window.location.href = "/login"
             },
             error: function (e) {
-                /*var json = '<h4 style="color:red">Действующий пароль введён неверно</h4>';*/
                 $("#errorModal").modal('show')
-                /*$('.modal-title').html(json);*/
-                $('#old').val('').attr("placeholder", "");
+                $('#old').val('');
             }
         });
     } else {

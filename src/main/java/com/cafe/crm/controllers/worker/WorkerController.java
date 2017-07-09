@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Collection;
 
 @Controller
@@ -46,8 +48,9 @@ public class WorkerController {
 	@ResponseBody
 	public ResponseEntity<?> changePassword(@RequestParam(name = "old") String oldPassword,
 											@RequestParam(name = "new") String newPassword,
-											@RequestParam(name = "secondNew") String secondNewPassword, Authentication auth) {
+											@RequestParam(name = "secondNew") String secondNewPassword, Authentication auth, HttpServletRequest request) {
 		UserDetails userDetails = (UserDetails) auth.getPrincipal();
+		HttpSession session = request.getSession();
 		String password = userDetails.getPassword();
 		String email = userDetails.getUsername();
 		Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
@@ -66,6 +69,7 @@ public class WorkerController {
 					managerService.save(manager);
 				}
 			});
+			session.invalidate();
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
