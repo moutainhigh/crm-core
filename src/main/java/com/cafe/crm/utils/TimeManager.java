@@ -47,7 +47,7 @@ public class TimeManager {
 			try {
 				inetAddress = InetAddress.getByName(server);
 				timeInfo = timeClient.getTime(inetAddress);
-				long returnTime = timeInfo.getReturnTime();
+				long returnTime = timeInfo.getMessage().getTransmitTimeStamp().getTime();
 				date = Instant.ofEpochMilli(returnTime).atZone(ZoneId.systemDefault()).toLocalDateTime();
 				return date;
 			} catch (IOException ignored) {
