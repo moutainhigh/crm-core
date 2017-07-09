@@ -61,9 +61,9 @@
                             <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
                         </form>
 
-                        <button style="float: left;margin-left: 40px;margin-top: 1px;background: rgba(255,0,0,0);border: none" th:id="'rek' + ${calculate.id}"
+                        <button  class="btn btn-primary" style="float: left;margin-left: 10px;margin-top: 5px;border: none;padding: 3px" th:id="'rek' + ${calculate.id}"
                          th:onclick="'roundState(\'' + ${calculate.id} + '\',\'' + ${calculate.roundState} + '\');'">
-                            <i th:id="'roundState' + ${calculate.id}" class="fa fa-money" aria-hidden="true" th:style="${calculate.roundState} ? 'font-size: 40px;color:white;' : 'font-size: 40px;color:black;' "></i>
+                            <p style="margin: 0;font-size: 20px" th:text="${calculate.roundState} ? 'Округлено' : 'Не округлено'"></p>
                         </button>
 
                     </div>
@@ -100,7 +100,7 @@
                                 </th>
 
                                 <form th:id="'formTest' + ${calculate.id}"
-                                      method="post">
+                                      method="post" action="/manager/delete-clients">
                                     <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
                                 </form>
                             </tr>
@@ -198,8 +198,24 @@
                             </tbody>
 
                         </table>
+                        <button style="float: left;margin-left: 23px" class="btn btn-primary" data-toggle="modal" th:href="'#deleteModal' + ${calculate.id}">
+                            Удалить
+                        </button>
+                        <div th:id="'deleteModal' + ${calculate.id}" class="modal fade">
+                            <div class="modal-dialog " style="width: 250px;margin-top: 150px" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                       <p style="font-size: 20px">Вы желаете удалить клиента/тов ?</p>
+                                        <button th:form="'formTest' + ${calculate.id}" class="btn btn-danger">Да</button>
+                                        <button class="btn btn-danger" type="button" data-dismiss="modal">Нет</button>
 
-                        <button style="float: left;margin-left: 710px;" class="btn btn-primary"
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <button style="float: left;margin-left: 610px;" class="btn btn-primary"
                                 data-toggle="modal" th:href="'#menuModal' + ${calculate.id}"> Заказ
                         </button>
                         <div th:replace="client/clientFragments/getCheckFragment :: checkModal"></div>
@@ -537,15 +553,16 @@
 
     function roundState(calcId, state) {
         if (state == 'true') {
-            $('#roundState' + calcId).attr('style',  'font-size: 40px;color:black;');
+            $('#rek' + calcId).html('<p style="margin: 0;font-size: 20px">Не округлено</p>');
             $('#rek' + calcId).attr('onclick',  'roundState(' + '"' + calcId + '"' + ',' +'"'+ false +'"'+')');
         } else {
-            $('#roundState' + calcId).attr('style',  'font-size: 40px;color:white;');
+            $('#rek' + calcId).html('<p style="margin: 0;font-size: 20px">Округлено</p>');
             $('#rek' + calcId).attr('onclick',  'roundState(' + '"' + calcId + '"' + ',' +'"'+ true +'"'+')')
         }
         $('#formRoundState' + calcId).submit();
         setTimeout(function () {ajaxForCalculate(calcId)}, 500);
         }
+
 
 </script>
 

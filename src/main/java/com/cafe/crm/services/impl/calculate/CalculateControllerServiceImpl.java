@@ -133,7 +133,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 				calculatePriceService.addDiscountOnPriceTime(client);
 				calculatePriceService.getAllPrice(client);
 				if (calculate.isRoundState()) {
-					calculatePriceService.round(client);
+					calculatePriceService.round(client, calculate.isRoundState());
 				}
 				clients.add(client);
 			}
@@ -153,7 +153,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 			calculatePriceService.addDiscountOnPriceTime(client);
 			calculatePriceService.getAllPrice(client);
 			if (calculate.isRoundState()) {
-				calculatePriceService.round(client);
+				calculatePriceService.round(client, calculate.isRoundState());
 			}
 		}
 		clientService.saveAll(clients);
@@ -183,16 +183,14 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	}
 
 	@Override
-	public void closeClient(Long[] clientsId, Long calculateId) {
+	public void closeClient(long[] clientsId, Long calculateId) {
 		if (clientsId == null) {
 			return;
 		}
-		List<Client> listClient = new ArrayList<>();
+		List<Client> listClient = clientService.findByIdIn(clientsId);
 		List<Card> listCard = new ArrayList<>();
-		for (Long clientId : clientsId) {
-			Client client = clientService.getOne(clientId);
+		for (Client client : listClient) {
 			client.setState(false);
-			listClient.add(client);
 			Card clientCard = client.getCard();
 			if (clientCard != null) {               // referral bonus
 				if (clientCard.getWhoInvitedMe() != null && clientCard.getVisitDate() == null) {
@@ -216,7 +214,30 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		Calculate calculate = calculateService.getOne(calculateId);
 		List<Client> clients = calculate.getClient();
 		for (Client client : clients) {
-			if (client.isState()) {
+			if (client.isState() && !client.isDeleteState()) {
+				flag = true;
+				break;
+			}
+		}
+		if (!flag) {
+			calculate.setState(false);
+			calculateService.save(calculate);
+		}
+	}
+
+	@Override
+	public void deleteClients(long[] clientsId, Long calculateId) {
+		List<Client> clients = clientService.findByIdIn(clientsId);
+		for (Client client : clients) {
+			client.setDeleteState(true);
+			client.setState(false);
+		}
+		clientService.saveAll(clients);
+		boolean flag = false;
+		Calculate calculate = calculateService.getOne(calculateId);
+		List<Client> clients1 = calculate.getClient();
+		for (Client client : clients1) {
+			if (client.isState() && !client.isDeleteState()) {
 				flag = true;
 				break;
 			}

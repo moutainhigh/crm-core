@@ -23,6 +23,8 @@ public class Client {
 
 	private boolean state = true;// Open or Closed
 
+	private boolean deleteState = false;// Open or Closed
+
 	@NotNull
 	private Long discount = 0L;
 	@NotNull
@@ -53,6 +55,13 @@ public class Client {
 	public Client() {
 	}
 
+	public boolean isDeleteState() {
+		return deleteState;
+	}
+
+	public void setDeleteState(boolean deleteState) {
+		this.deleteState = deleteState;
+	}
 
 	public List<LayerProduct> getLayerProducts() {
 		return layerProducts;

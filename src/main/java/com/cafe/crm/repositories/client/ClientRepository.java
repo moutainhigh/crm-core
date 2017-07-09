@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
-	@Query("SELECT c FROM Client c where c.state = true")
+	@Query("SELECT c FROM Client c where c.state = true AND c.deleteState = false")
 	List<Client> getAllOpen();
 
 	List<Client> findByIdIn(long[] ids);

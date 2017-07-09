@@ -20,8 +20,10 @@ public interface CalculateControllerService {
 
 	List<Client> outputClients(Long[] clientsId);
 
-	void closeClient(Long[] clientsId, Long calculateId);
+	void closeClient(long[] clientsId, Long calculateId);
 
 	Long addCardOnClient(Long calculateId, Long clientId, Long cardId);
+
+	 void deleteClients(long[] clientsId, Long calculateId);
 
 }

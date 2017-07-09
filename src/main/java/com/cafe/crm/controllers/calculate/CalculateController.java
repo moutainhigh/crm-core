@@ -116,7 +116,6 @@ public class CalculateController {
 									 @RequestParam("discount") Double discount,
 									 @RequestParam("payWithCard") Double payWithCard,
 									 @RequestParam("description") String description) {
-
 		Client client = clientService.getOne(clientId);
 		client.setDiscount(discount.longValue());
 		client.setPayWithCard(payWithCard);
@@ -137,7 +136,12 @@ public class CalculateController {
 		return calculateControllerService.calculatePrice(calculateId);
 	}
 
-
+	@RequestMapping(value = {"/delete-clients"}, method = RequestMethod.POST)
+	public String deleteClients(@RequestParam(name = "clientsId", required = false) long[] clientsId,
+								@RequestParam("calculateId") Long calculateId) {
+	calculateControllerService.deleteClients(clientsId, calculateId);
+		return "redirect:/manager";
+	}
 
 	@RequestMapping(value = {"/output-clients"}, method = RequestMethod.POST)
 	@ResponseBody
@@ -146,7 +150,7 @@ public class CalculateController {
 	}
 
 	@RequestMapping(value = {"/close-client"}, method = RequestMethod.POST)
-	public String closeClient(@RequestParam(name = "clientsId", required = false) Long[] clientsId,
+	public String closeClient(@RequestParam(name = "clientsId", required = false) long[] clientsId,
 							  @RequestParam("calculateId") Long calculateId) {
 		calculateControllerService.closeClient(clientsId, calculateId);
 		return "redirect:/manager";
