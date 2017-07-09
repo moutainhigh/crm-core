@@ -16,3 +16,11 @@ $(document).ready(function () {
         $(this).tab('show');
     });
 });
+
+$(document).ready(function () {
+    $(".clickable-row").click(function() {
+        window.location = '/boss/card/statistic/' + $(this).data('id');
+    });
+});
+
+

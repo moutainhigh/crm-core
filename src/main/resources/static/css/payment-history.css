@@ -1,0 +1,10 @@
+.table-name {
+    color: #5bc0de;
+}
+.table > thead > tr > th {
+    text-align: center;
+}
+
+.table > tbody > tr > td {
+    text-align: center;
+}

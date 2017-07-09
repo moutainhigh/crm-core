@@ -16,7 +16,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 
 	@Override
 	public void calculatePriceTime(Client client) {
-		LocalTime timeStart = client.getTimeStart();
+		LocalTime timeStart = client.getTimeStart().toLocalTime().withSecond(0).withNano(0);
 		LocalTime timeNow = timeManager.getTime().withSecond(0).withNano(0);
 		LocalTime timePassed = timeNow.minusHours(timeStart.getHour()).minusMinutes(timeStart.getMinute());
 		client.setPassedTime(timePassed);

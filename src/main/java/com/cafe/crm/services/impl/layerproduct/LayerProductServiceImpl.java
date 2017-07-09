@@ -2,7 +2,7 @@ package com.cafe.crm.services.impl.layerproduct;
 
 
 import com.cafe.crm.models.client.LayerProduct;
-import com.cafe.crm.repositories.layerProduct.LayerProductRepository;
+import com.cafe.crm.repositories.layerproduct.LayerProductRepository;
 import com.cafe.crm.services.interfaces.layerproduct.LayerProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

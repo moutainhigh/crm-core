@@ -49,4 +49,9 @@ public class ClientServiceImpl implements ClientService {
 		return clientRepository.findByIdIn(ids);
 	}
 
+	@Override
+	public List<Client> findByCardId(Long cardId) {
+		return clientRepository.findByCardId(cardId);
+	}
+
 }

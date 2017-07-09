@@ -15,4 +15,6 @@ public interface CalculateRepository extends JpaRepository<Calculate, Long> {
 
 	@Query("SELECT DISTINCT c FROM Calculate c JOIN FETCH c.client cc WHERE c.id =:id AND cc.state = true AND cc.deleteState = false")
 	Calculate getAllOpenOnCalculate(@Param("id") Long calculateId);
+
+	Calculate findByClientId(Long clientId);
 }

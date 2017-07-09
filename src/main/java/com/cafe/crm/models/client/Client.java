@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class Client {
 	@Size(max = 30)
 	private String description = "";
 
-	private LocalTime timeStart;
+	private LocalDateTime timeStart;
 
 	private boolean state = true;// Open or Closed
 
@@ -27,6 +28,7 @@ public class Client {
 
 	@NotNull
 	private Long discount = 0L;
+
 	@NotNull
 	private Long discountWithCard = 0L;
 
@@ -167,11 +169,11 @@ public class Client {
 		this.description = description;
 	}
 
-	public LocalTime getTimeStart() {
+	public LocalDateTime getTimeStart() {
 		return timeStart;
 	}
 
-	public void setTimeStart(LocalTime timeStart) {
+	public void setTimeStart(LocalDateTime timeStart) {
 		this.timeStart = timeStart;
 	}
 

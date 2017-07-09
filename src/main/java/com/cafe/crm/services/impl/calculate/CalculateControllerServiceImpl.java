@@ -60,7 +60,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		List<Client> list = new ArrayList<>();
 		for (int i = 0; i < number; i++) {
 			Client client = new Client();
-			client.setTimeStart(timeManager.getTime().withSecond(0).withNano(0));
+			client.setTimeStart(timeManager.getDateTime());
 			list.add(client);
 		}
 		clientService.saveAll(list);
@@ -86,7 +86,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		List<Client> list = new ArrayList<>();
 		for (int i = 0; i < number; i++) {
 			Client client = new Client();
-			client.setTimeStart(timeManager.getTime().withSecond(0).withNano(0));
+			client.setTimeStart(timeManager.getDateTime());
 			list.add(client);
 		}
 		clientService.saveAll(list);
@@ -111,7 +111,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		List<Client> list = new ArrayList<>();
 		for (int i = 0; i < number; i++) {
 			Client client = new Client();
-			client.setTimeStart(timeManager.getTime().withSecond(0).withNano(0));
+			client.setTimeStart(timeManager.getDateTime());
 			client.setDescription(description);
 			list.add(client);
 		}

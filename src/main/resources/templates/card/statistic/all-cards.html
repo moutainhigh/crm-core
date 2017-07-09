@@ -32,13 +32,12 @@
 
             </tr>
             <tbody class="searchable" th:each="shift,iter:${cards}">
-            <tr>
+            <tr class='clickable-row' th:attr="data-id=${shift.id}">
                 <td><p th:text="${shift.id}"></p></td>
                 <td><p th:text="${shift.name}"></p></td>
                 <td><p th:text="${shift.balance}"></p></td>
                 <td><p th:text="${shift.discount}"></p></td>
                 <td><p th:text="${shift.visitDate}"></p></td>
-
             </tr>
             </tbody>
         </table>

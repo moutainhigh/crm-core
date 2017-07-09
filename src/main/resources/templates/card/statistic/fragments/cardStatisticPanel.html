@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<div class="panel panel-default" th:fragment="panel">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading"><strong>Персональные данные</strong></div>
+                        <ul class="list-group">
+                            <strong>
+                                <li class="list-group-item" th:text="'ID - ' + ${card.id}">ID - 4</li>
+
+                                <li class="list-group-item" th:text="'Имя - ' + ${card.name}">Имя - Гречка</li>
+                                <li class="list-group-item" th:text="'Фамилия - ' + ${card.surname}">Фамилия - Чебурек
+                                </li>
+                                <li class="list-group-item" th:if="${card.activatedCard}"
+                                    th:text="'Активация - выполнена'">Актавация - выполнена
+                                </li>
+                                <li class="list-group-item" th:unless="${card.activatedCard}"
+                                    th:text="'Активация - не выполнена'">Актавация - выполнена
+                                </li>
+                            </strong>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading"><strong>Состояние счета</strong></div>
+                        <ul class="list-group">
+                            <strong>
+                                <li class="list-group-item" th:text="'Баланс = ' + ${card.balance} + ' р.'">Баланс -
+                                    5000р.
+                                </li>
+                                <li class="list-group-item" th:text="'Скидка - ' + ${card.discount} + '%'">Скидка -
+                                    10%
+                                </li>
+                                <li class="list-group-item" th:text="'Общая сумма платежей - ' + ${totalPaid} + ' р.'"></li>
+                                <li class="list-group-item" th:if="${card.visitDate}" th:text="'Дата последнего визита - ' + ${card.visitDate}"></li>
+                                <li class="list-group-item" th:unless="${card.visitDate}" th:text="'Посещений с этой картой не было'"></li>
+                            </strong>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading"><strong>Контактная информация</strong></div>
+                        <ul class="list-group">
+                            <strong>
+                                <li class="list-group-item" th:if="${card.email}" th:text="'Email - ' + ${card.email}">
+                                    Email - example@mail.com
+                                </li>
+                                <li class="list-group-item" th:unless="${card.email}" th:text="'Email - не указан'">
+                                    Email - example@mail.com
+                                </li>
+                                <li class="list-group-item" th:text="'Телефон - ' + ${card.phoneNumber}">Телефон -
+                                    9123456789
+                                </li>
+                            </strong>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="col-md-12">
+                    <img th:src="@{'/boss/card/image/'+${card.id}}" alt="Аватар" class="img-thumbnail pull-right"
+                         style="height: auto;"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="card/statistic/fragments/paymentTable :: table" th:remove="tag"></div>
+</div>
+
+</body>
+</html>

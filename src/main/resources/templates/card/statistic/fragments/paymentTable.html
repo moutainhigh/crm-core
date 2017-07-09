@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<table id="paymentTable" class="table table-striped" th:fragment="table">
+    <thead>
+        <tr>
+            <th>Номер счета</th>
+            <th>Описание счета</th>
+            <th>Описание клиента</th>
+            <th>Сумма к оплате</th>
+            <th>Стоимость меню</th>
+            <th>Стоимость времени</th>
+            <th>Скидка заведения + Скидка карты</th>
+            <th>Сумма оплаченная картой</th>
+            <th>Дата и время открытия счета</th>
+            <th>Проведенное время</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="paymentHistory : ${listOfPaymentHistory}">
+            <td th:text="${paymentHistory.calculateId}"></td>
+            <td th:text="${paymentHistory.calculateDescription}"></td>
+            <td th:text="${paymentHistory.clientDescription}"></td>
+            <td th:text="${paymentHistory.totalPrice} + ' р.'"></td>
+            <td th:text="${paymentHistory.menuPrice} + ' р.'"></td>
+            <td th:text="${paymentHistory.timePrice} + ' р.'"></td>
+            <td th:text="${paymentHistory.cafeDiscount} + '% + ' + ${paymentHistory.cardDiscount} + '%'"></td>
+            <td th:text="${paymentHistory.payWithCard} + ' р.'"></td>
+            <td th:text="${paymentHistory.dateStart.toLocalDate()} + ' ' + ${paymentHistory.dateStart.toLocalTime().withSecond(0).withNano(0)}"></td>
+            <td th:text="${paymentHistory.spentTime}"></td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +39,7 @@ public class CostsController {
 
 	@RequestMapping(value = "/costs", method = RequestMethod.GET)
 	public String showCostsPage(Model model) {
-		LocalDate today = timeManager.getDate();
+		LocalDate today = getShiftDate();
 		List<Goods> goodsList = goodsService.findByDateBetween(today, today.plusYears(100));
 		Double totalPrice = getTotalPrice(goodsList);
 
@@ -60,7 +61,7 @@ public class CostsController {
 											  @RequestParam(name = "goodsName") String goodsName,
 											  @RequestParam(name = "categoryName") String categoryName,
 											  Model model) {
-		LocalDate today = timeManager.getDate();
+		LocalDate today = getShiftDate();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 		List<Goods> goodsList = getGoodses(goodsName, categoryName, fromDate, toDate, formatter);
@@ -79,6 +80,15 @@ public class CostsController {
 		model.addAttribute("toDate", to);
 
 		return "costs/costs";
+	}
+
+	private LocalDate getShiftDate() {
+		LocalTime now = timeManager.getTime();
+		if (now.isAfter(LocalTime.MIDNIGHT) && now.isBefore(LocalTime.NOON)) {
+			return timeManager.getDate().minusDays(1);
+		}
+
+		return timeManager.getDate();
 	}
 
 	private Double getTotalPrice(List<Goods> goodsList) {

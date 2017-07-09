@@ -149,7 +149,7 @@
                                            name="description" th:value="${client.description}" maxlength="30"/>
                                 </td>
                                 <td style="text-align: center">
-                                    <p th:text="${client.timeStart}"></p></td>
+                                    <p th:text="${client.timeStart.toLocalTime().withSecond(0).withNano(0)}"></p></td>
                                 <td style="text-align: center">
 
                                 </td>

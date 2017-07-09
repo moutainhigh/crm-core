@@ -14,7 +14,7 @@
                 </button>
             </div>
             <div class="row col-md-11">
-                <form id="formSearch" method="post" th:action="@{/costs}">
+                <form id="formSearch" method="post" th:action="@{/manager/costs}">
                     <div class="col-md-3 col-md-offset-1">
                         <input type="text" class="form-control" aria-label="Название" placeholder="Все товары"
                                th:value="${goodsName} ? ${goodsName} : '' " th:name="goodsName" id="searchGoods"/>

@@ -18,4 +18,5 @@ public interface CalculateService {
 
 	Calculate getAllOpenOnCalculate(Long calculateId);
 
+	Calculate findByClientId(Long clientId);
 }

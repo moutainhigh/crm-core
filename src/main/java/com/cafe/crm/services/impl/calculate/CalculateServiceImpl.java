@@ -44,4 +44,9 @@ public class CalculateServiceImpl implements CalculateService {
 		return calculateRepository.getAllOpenOnCalculate(calculateId);
 	}
 
+	@Override
+	public Calculate findByClientId(Long clientId) {
+		return calculateRepository.findByClientId(clientId);
+	}
+
 }
