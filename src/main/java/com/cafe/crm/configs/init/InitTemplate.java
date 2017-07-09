@@ -39,9 +39,13 @@ public class InitTemplate {
 		byte[] imageContext = Files.readAllBytes(Paths.get(resourceImage.getFile().getPath()));
 		Template image = new Template("image-advertising", imageContext);
 
-		Resource resourceBalanceAfterDebiting = resourceLoader.getResource("classpath:templates/balance-info-debiting.html");
-		byte[] balanceAfterDebitingContext = Files.readAllBytes(Paths.get(resourceBalanceAfterDebiting.getFile().getPath()));
-		Template balanceAfterDebiting = new Template("balance-info-debiting", balanceAfterDebitingContext);
+		Resource resourceBalanceAfterDeduction = resourceLoader.getResource("classpath:templates/balance/balance-info-deduction.html");
+		byte[] balanceAfterDeductionContext = Files.readAllBytes(Paths.get(resourceBalanceAfterDeduction.getFile().getPath()));
+		Template balanceAfterDeduction = new Template("balance-info-deduction", balanceAfterDeductionContext);
+
+		Resource resourceBalanceAfterRefill = resourceLoader.getResource("classpath:templates/balance/balance-info-refill.html");
+		byte[] balanceAfterRefillContext = Files.readAllBytes(Paths.get(resourceBalanceAfterRefill.getFile().getPath()));
+		Template balanceAfterRefill = new Template("balance-info-refill", balanceAfterRefillContext);
 
 		Resource resourceExampleCloseShift = resourceLoader.getResource("classpath:templates/closeShiftEmailShortage.html");
 		byte[] exampleCloseShiftAfterDebitingContext = Files.readAllBytes(Paths.get(resourceExampleCloseShift.getFile().getPath()));
@@ -50,7 +54,8 @@ public class InitTemplate {
 		templateService.save(disable);
 		templateService.save(text);
 		templateService.save(image);
-		templateService.save(balanceAfterDebiting);
+		templateService.save(balanceAfterDeduction);
+		templateService.save(balanceAfterRefill);
 		templateService.save(exampleCloseShift);
 	}
 }

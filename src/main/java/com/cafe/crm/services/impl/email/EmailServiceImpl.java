@@ -2,6 +2,7 @@ package com.cafe.crm.services.impl.email;
 
 
 import com.cafe.crm.configs.property.AdvertisingProperties;
+import com.cafe.crm.configs.property.BalanceInfoProperties;
 import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.services.interfaces.email.EmailService;
@@ -27,11 +28,7 @@ public class EmailServiceImpl implements EmailService {
 
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	@Value("${balance-info.debiting.mail.view}")
-	private String debitingView;
-
-	@Value("${balance-info.debiting.mail.subject}")
-	private String debitingSubject;
+	private final BalanceInfoProperties balanceInfoProperties;
 
 	@Value("${closeShiftEmailShortage.view}")
 	private String closeShiftView;
@@ -43,11 +40,12 @@ public class EmailServiceImpl implements EmailService {
 	private String closeShiftSubject;
 
 	@Autowired
-	public EmailServiceImpl(JavaMailSender javaMailSender, AdvertisingProperties properties, HtmlService htmlService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+	public EmailServiceImpl(JavaMailSender javaMailSender, AdvertisingProperties properties, HtmlService htmlService, BCryptPasswordEncoder bCryptPasswordEncoder, BalanceInfoProperties balanceInfoProperties) {
 		this.javaMailSender = javaMailSender;
 		this.properties = properties;
 		this.htmlService = htmlService;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+		this.balanceInfoProperties = balanceInfoProperties;
 	}
 
 	@Override
@@ -129,7 +127,7 @@ public class EmailServiceImpl implements EmailService {
 
 	// TODO: 25.06.2017 Сделать возможность добалять чек в письмо
 	@Override
-	public void sendBalanceInfoAfterDebiting(Double newBalance, Double debited, String email) {
+	public void sendBalanceInfoAfterDeduction(Double newBalance, Double deductionAmount, String email) {
 		if (email == null) {
 			return;
 		}
@@ -137,8 +135,24 @@ public class EmailServiceImpl implements EmailService {
 			MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
 			messageHelper.setFrom(properties.getMail().getSender());
 			messageHelper.setTo(email);
-			messageHelper.setSubject(debitingSubject);
-			String html = htmlService.getBalanceInfoAfterDebiting(newBalance, debited, debitingView);
+			messageHelper.setSubject(balanceInfoProperties.getDeduction().getSubject());
+			String html = htmlService.getBalanceInfoAfterDeduction(newBalance, deductionAmount, balanceInfoProperties.getDeduction().getView());
+			messageHelper.setText(html, true);
+		};
+		javaMailSender.send(message);
+	}
+
+	@Override
+	public void sendBalanceInfoAfterRefill(Double newBalance, Double refillAmount, String email) {
+		if (email == null) {
+			return;
+		}
+		MimeMessagePreparator message = mimeMessage -> {
+			MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+			messageHelper.setFrom(properties.getMail().getSender());
+			messageHelper.setTo(email);
+			messageHelper.setSubject(balanceInfoProperties.getRefill().getSubject());
+			String html = htmlService.getBalanceInfoAfterRefill(newBalance, refillAmount, balanceInfoProperties.getRefill().getView());
 			messageHelper.setText(html, true);
 		};
 		javaMailSender.send(message);

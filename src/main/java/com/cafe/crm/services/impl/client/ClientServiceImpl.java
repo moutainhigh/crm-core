@@ -1,5 +1,6 @@
 package com.cafe.crm.services.impl.client;
 
+import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.repositories.client.ClientRepository;
 import com.cafe.crm.services.interfaces.client.ClientService;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ClientServiceImpl implements ClientService {
@@ -52,6 +54,11 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public List<Client> findByCardId(Long cardId) {
 		return clientRepository.findByCardId(cardId);
+	}
+
+	@Override
+	public Set<Card> findCardByClientIdIn(long[] clientsIds) {
+		return clientRepository.findCardByClientIdIn(clientsIds);
 	}
 
 }

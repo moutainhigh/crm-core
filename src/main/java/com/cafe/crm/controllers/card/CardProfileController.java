@@ -6,6 +6,7 @@ import com.cafe.crm.services.interfaces.calculate.CalculateControllerService;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.card.CardControllerService;
 import com.cafe.crm.services.interfaces.card.CardService;
+import com.cafe.crm.services.interfaces.email.EmailService;
 import com.cafe.crm.services.interfaces.property.PropertyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,9 @@ public class CardProfileController {
 
 	@Autowired
 	private PropertyService propertyService;
+
+	@Autowired
+	private EmailService emailService;
 
 	@RequestMapping(value = {"/card/{id}"}, method = RequestMethod.GET)
 	public ModelAndView getCard(@PathVariable Long id) {
@@ -137,6 +141,9 @@ public class CardProfileController {
 			cardService.save(card);
 			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			logger.info("Administrator " + userDetails.getUsername() + "  has credited " + money + " to the card # " + idCard);
+			if (card.getEmail() != null) {
+				emailService.sendBalanceInfoAfterRefill(balance + money, Double.valueOf(money), card.getEmail());
+			}
 		}
 
 		String referrer = request.getHeader("Referer");

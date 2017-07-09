@@ -9,7 +9,9 @@ public interface HtmlService {
 
 	String getAdvertisingForDisable(String view, Long id, String token);
 
-	String getBalanceInfoAfterDebiting(Double newBalance, Double debited, String view);
+	String getBalanceInfoAfterDeduction(Double newBalance, Double deductionAmount, String view);
+
+	String getBalanceInfoAfterRefill(Double newBalance, Double refillAmount, String view);
 
 	String getCloseShiftFromText(String Text, Double salaryShift, Double profitShift, Long cache, Long payWithCard, String view);
 
