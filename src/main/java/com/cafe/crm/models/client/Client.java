@@ -17,6 +17,7 @@ public class Client {
 	private Long id;
 
 	@Size(max = 30)
+	@NotNull
 	private String description = "";
 
 	private LocalTime timeStart;

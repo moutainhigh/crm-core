@@ -4,6 +4,7 @@ package com.cafe.crm.models.client;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -15,7 +16,7 @@ public class LayerProduct {
 	private Long id;
 
 	private String name;
-
+	@NotNull
 	private String description;
 
 	private Double cost;
