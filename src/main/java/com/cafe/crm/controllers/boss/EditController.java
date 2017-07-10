@@ -2,9 +2,12 @@ package com.cafe.crm.controllers.boss;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import com.cafe.crm.configs.property.AdvertisingCustomSettings;
+import com.cafe.crm.models.advertising.AdvertisingSettings;
 import com.cafe.crm.models.client.Board;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.property.PropertyWrapper;
+import com.cafe.crm.services.interfaces.advertising.AdvertisingSettingsService;
 import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.property.PropertyService;
@@ -12,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -33,12 +37,28 @@ public class EditController {
 	private CalculateService calculateService;
 
 	@Autowired
+	AdvertisingSettingsService advertisingSettingsService;
+
+	@Autowired
+	AdvertisingCustomSettings customSettings;
+
+	@Autowired
 	@Qualifier(value = "logger")
 	private Logger log;
 
 	@Autowired
 	@Qualifier(value = "hibLogger")
 	private Logger hibLog;
+
+	@ModelAttribute(name = "advertSettings")
+	public JavaMailSenderImpl senderSettings() {
+		return (JavaMailSenderImpl) customSettings.getCustomSettings();
+	}
+
+	@ModelAttribute(name = "listSMTPSettings")
+	public List<AdvertisingSettings> listSettings() {
+		return advertisingSettingsService.getAll();
+	}
 
 	@ModelAttribute(name = "logLevel")
 	public String logLevel() {
@@ -84,18 +104,19 @@ public class EditController {
 	}
 
 	@RequestMapping(value = "/board/delete/{id}", method = RequestMethod.POST)
-	public String deleteBoard(@PathVariable("id") Long id, HttpServletRequest request) {
+	@ResponseBody
+	public Long deleteBoard(@PathVariable("id") Long id, HttpServletRequest request) {
 		String referer = request.getHeader("Referer");
 		List<Calculate> calc = calculateService.getAllOpen();
 		for (Calculate calculate : calc) {
 			if (calculate.getBoard().getId().equals(id)) {
-				return "redirect:" + referer;
+				return -1L;//Этот стол открыт
+			} else {
+				boardService.deleteById(id);
+				calculate.getBoard().setIsOpen(false);
 			}
 		}
-		boardService.deleteById(id);
-
-
-		return "redirect:" + referer;
+		return id;
 	}
 
 	@RequestMapping(value = "/board/new", method = RequestMethod.POST)
@@ -132,4 +153,25 @@ public class EditController {
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+
+	@RequestMapping(value = "/property/advertising-settings", method = RequestMethod.POST)
+	public String setAdvertisingCustomSettings(
+			@RequestParam(name = "settingsName")String settingsName,
+			@RequestParam(name = "password")String password,
+			@RequestParam(name = "email")String email,
+			HttpServletRequest request) {
+
+		String referer = request.getHeader("Referer");
+
+		AdvertisingSettings newSettings = new AdvertisingSettings(settingsName, email, password, "smtp.gmail.com");
+
+		advertisingSettingsService.save(newSettings);
+
+		JavaMailSenderImpl senderImpl = (JavaMailSenderImpl) customSettings.getCustomSettings();
+		senderImpl.setUsername(email);
+		senderImpl.setPassword(password);
+
+		return "redirect:" + referer;
+	}
+
 }

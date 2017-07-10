@@ -327,7 +327,6 @@ function sendLogLevel() {
                 $('.form-group').html('Уровень логирования задан.');
             },
             error: function (e) {
-                var json = '<h4 style="color:aqua">Действующий пароль введён неверно</h4>';
             }
         });
 
@@ -336,4 +335,3 @@ function sendLogLevel() {
         $('.modal-title').html(json);
     }
 }
-

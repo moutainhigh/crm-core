@@ -1,6 +1,7 @@
 package com.cafe.crm.services.impl.email;
 
 
+import com.cafe.crm.configs.property.AdvertisingCustomSettings;
 import com.cafe.crm.configs.property.AdvertisingProperties;
 import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.worker.Boss;
@@ -43,8 +44,8 @@ public class EmailServiceImpl implements EmailService {
 	private String closeShiftSubject;
 
 	@Autowired
-	public EmailServiceImpl(JavaMailSender javaMailSender, AdvertisingProperties properties, HtmlService htmlService, BCryptPasswordEncoder bCryptPasswordEncoder) {
-		this.javaMailSender = javaMailSender;
+	public EmailServiceImpl(AdvertisingCustomSettings javaMailSender, AdvertisingProperties properties, HtmlService htmlService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+		this.javaMailSender = javaMailSender.getCustomSettings();
 		this.properties = properties;
 		this.htmlService = htmlService;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;

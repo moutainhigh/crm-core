@@ -296,7 +296,68 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="smtp"></div>
+                <div class="tab-pane" id="smtpSettings">
+                    <div class="col-md-5 col-md-offset-3" style="margin-top: 3%">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h4>Текущие настройки</h4>
+                            </div>
+                            <div class="panel-body">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>Текущий провайдер рассылки</td>
+                                            <td th:switch="${advertSettings.host}">
+                                                <p th:case="smtp.gmail.com" style="margin: 0">GMAIL</p>
+                                                <p th:case="smtp.mail.ru" style="margin: 0">MAIL</p>
+                                                <p th:case="smtp.yandex.ru" style="margin: 0">YANDEX</p>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>EMAIL</td>
+                                            <td th:text="${advertSettings.username}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h4>Задайте новые настройки</h4>
+                        </div>
+                        <div class="panel-body">
+                            <center>
+                            <form role="form" method="post" action="/boss/property/advertising-settings">
+                                <div class="form-group" style="margin: 0%">
+                                    <h4>Название настроек</h4>
+                                    <input type="text" class="form-control" id="settingsName" name="settingsName" placeholder="Название настроек"/>
+                                </div>
+                                <div>
+                                    <h4>Выберете провайдера</h4>
+                                    <select class="form-control">
+                                        <option th:value="smtp.gmail.com">GMAIL</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin: 0%">
+                                    <h4>Email</h4>
+                                    <input type="email" class="form-control" id="settingsEmail" name="email" placeholder="Email"/>
+                                </div>
+                                <div class="form-group">
+                                    <h4>Пароль</h4>
+                                    <input class="form-control" type="password" id="settingsPassword" name="password" placeholder="Ваш пароль"/>
+                                </div>
+                                <button id="saveSomeShit" type="submit" name="upd"
+                                        class="btn btn-lg btn-primary">Создать
+                                </button>
+                            </form>
+                            </center>
+
+                        </div>
+                    </div>
+                </div>
+                </div>
                 <div class="tab-pane" id="loggerSettings">
                     <div class="container" style="min-width: 50%">
                         <br/>
