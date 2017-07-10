@@ -2,53 +2,57 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
+    <div th:replace="bossnavbar :: bossNavbar"></div>
+    <div th:replace="settingPages/navSetting :: navSetting"></div>
+    <div th:replace="media/advertisingDispatch :: advertising"></div>
+    <script th:src="@{/js/mail.js}"></script>
 </head>
 <body>
-<div class="container" style="margin-top:50px">
-    <div th:replace="bossnavbar :: bossNavbar">
-    </div><!--/.navbar -->
-    <div class="row">
-        <h3 align="center"><h1 th:align="center" style="color: #5bc0de;">Редактирование столов</h1></h3>
-    </div>
-    <div class="row">
-        <hr/>
-        <div>
-            <h3 align="center"><h1 th:align="center" style="color: #5bc0de;">Поиск</h1></h3>
-            <input id="filter" style="margin-bottom: 10px" type="text" class="form-control"
-                   placeholder="Поиск по полям"></input>
-        </div>
-    </div>
-    <div class="row">
-        <button type="button" class="btn btn-lg btn-primary btn-block"
+
+<div class="container" style="padding-top: 50px">
+        <h1 th:align="center" style="color: #5bc0de;">Редактирование столов</h1>
+    <div align="center" style="margin-top: 20px;margin-bottom: 20px">
+        <button type="button" class="btn btn-lg btn-primary"
                 data-toggle="modal" data-target="#newBoard">Создать новый стол
         </button>
-        <br/>
-        <table data-page-length='25' class="table table-striped table-bordered table-hover">
+    </div>
+        <table data-page-length='25' class="table" style="background: white;border-radius: 5px;box-shadow: 0 0 2px 1px;">
+            <thead>
             <tr>
-                <th><p th:align="center">Номер</p></th>
-                <th><p th:align="center">Название</p></th>
-                <th><p th:align="center">Редактировать</p></th>
-                <th><p th:align="center">Удалить</p></th>
+                <th><p align="center">Название</p></th>
+                <th><p align="center">Редактировать</p></th>
+                <th><p align="center">Удалить</p></th>
             </tr>
+            </thead>
             <tbody class="searchable" th:each="board,iter:${boards}">
-            <tr th:id="'boardTR' + ${board.id}">
-                <td><p th:align="center" th:text="${iter.count}"></p></td>
+
+            <tr th:id="'boardTR' + ${board.id}" style="font-size: 20px">
                 <td><p th:align="center" th:text="${board.name}"></p></td>
-                <td class="col-lg-2"><a id="createBoard" class="btn btn-primary btn-info"
-                                        th:href="'#editBoard'+${board.id}"
-                                        data-toggle="modal">Редактировать </a></td>
+
                 <td class="col-lg-2">
-                    <form method="post" th:action="'/boss/board/delete/'+${board.id}">
+                    <center>
+                    <a id="createBoard" class="btn btn-primary btn-info"
+                                        th:href="'#editBoard'+${board.id}"
+                                        data-toggle="modal">Редактировать </a>
+                        </center>
+                </td>
+                <td class="col-lg-2" >
+                    <center>
+                    <form method="post" th:action="'/boss/settings/board-setting/delete/'+${board.id}">
                         <button type="submit"
                                 class="btn btn-primary btn-danger" name="del">
                             Удалить
                         </button>
                     </form>
+            </center>
                 </td>
+
             </tr>
-            <form role="form" method="post" action="/boss/board/edit"
+
+            <form role="form" method="post" action="/boss/settings/board-setting/edit"
                   style="margin: 10px auto; width: 50%; paddng-bottom:40px;">
-                <div th:object="${board}" align="center" class="modal fade" th:id="'editBoard'+${board.id}"
+                <div th:object="${board}" align="center" class="modal fade"
+                     th:id="'editBoard'+${board.id}"
                      tabindex="-1"
                      role="dialog" aria-labelledby="myModalLabel">
                     <div class="modal-dialog" role="document">
@@ -61,15 +65,15 @@
                             </div>
                             <div class="modal-body">
                                 <div class="form-group">
+
                                     <input required="" type="hidden" class="form-control"
-                                           th:value="${board.id}" name="id"
-                                    ></input>
+                                           th:value="${board.id}" name="id"/>
                                     <h4><label>Название</label></h4>
                                     <input type="text" class="form-control"
                                            name="name"
-                                           th:value="${board.name}" required=""
-                                    ></input>
+                                           th:value="${board.name}" required=""/>
                                 </div>
+
                             </div>
                             <button id="super" type="submit" name="upd"
                                     class="btn btn-lg btn-primary btn-block">Сохранить
@@ -84,8 +88,10 @@
                         </div>
                     </div>
                 </div>
+
             </form>
-            <form role="form" method="post" action="/boss/board/new"
+            </tbody>
+            <form role="form" method="post" action="/boss/settings/board-setting/new"
                   style="margin: 10px auto; width: 50%; paddng-bottom:40px;">
                 <div th:object="${board}" align="center" class="modal fade" th:id="'newBoard'"
                      tabindex="-1"
@@ -102,14 +108,13 @@
                                 <div class="form-group">
 
                                     <input required="" type="hidden" class="form-control"
-                                           name="id"
-                                    ></input>
+                                           name="id"/>
                                     <h4><label>Название</label></h4>
                                     <input type="text" class="form-control"
                                            name="name"
-                                           required=""
-                                    ></input>
+                                           required=""/>
                                 </div>
+
                             </div>
                             <button id="superr" type="submit" name="upd"
                                     class="btn btn-lg btn-primary btn-block">Создать
@@ -124,16 +129,10 @@
                         </div>
                     </div>
                 </div>
+
             </form>
-            </tbody>
         </table>
-    </div>
 </div>
-
-<div th:replace="fragments/bossChangePassword :: BossChangePassword">
-
-</div>
-
 
 </body>
 </html>

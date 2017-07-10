@@ -1,7 +1,7 @@
 package com.cafe.crm.configs.init;
 
 import com.cafe.crm.models.card.Card;
-import com.cafe.crm.models.client.Board;
+import com.cafe.crm.models.board.Board;
 import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.card.CardService;
 import org.springframework.beans.factory.annotation.Autowired;

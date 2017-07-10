@@ -1,7 +1,7 @@
 package com.cafe.crm.services.impl.calculate;
 
 import com.cafe.crm.models.card.Card;
-import com.cafe.crm.models.client.Board;
+import com.cafe.crm.models.board.Board;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.services.interfaces.board.BoardService;

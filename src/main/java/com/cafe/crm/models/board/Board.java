@@ -1,4 +1,4 @@
-package com.cafe.crm.models.client;
+package com.cafe.crm.models.board;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +18,18 @@ public class Board {
 	@Size(min = 1, max = 30)
 	private String name;
 
+	@NotNull
+	private Boolean isOpen = true;
+
 	public Board() {
+	}
+
+	public Boolean getIsOpen() {
+		return isOpen;
+	}
+
+	public void setIsOpen(Boolean isOpen) {
+		this.isOpen = isOpen;
 	}
 
 	public Long getId() {

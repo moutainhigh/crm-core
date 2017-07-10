@@ -49,8 +49,7 @@ public class MenuController {
 
 	@RequestMapping(value = {"/deleteProduct"}, method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> deleteProduct(ModelAndView modelAndView,
-										   @RequestParam(value = "del", required = false) Long id) throws IOException {
+	public ResponseEntity<?> deleteProduct(@RequestParam(value = "del", required = false) Long id) throws IOException {
 
 		productService.delete(id);
 		return new ResponseEntity<>(HttpStatus.OK);

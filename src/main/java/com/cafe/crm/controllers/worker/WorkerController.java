@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collection;
 
@@ -41,6 +42,12 @@ public class WorkerController {
 		return "login";
 	}
 
+
+	@RequestMapping(value = "/boss/settings/change-password", method = RequestMethod.GET)
+	public ModelAndView discountSetting() {
+		ModelAndView modelAndView = new ModelAndView("settingPages/changePasswordPage");
+		return modelAndView;
+	}
 
 	@RequestMapping(path = {"/manager/changePassword", "/boss/changePassword"}, method = RequestMethod.POST)
 	@ResponseBody
