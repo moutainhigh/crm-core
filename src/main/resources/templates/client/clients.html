@@ -156,23 +156,17 @@
                                 <td>
                                     <p th:id="'dopDiscount' + ${client.id}" style="float: left;"
                                        th:text="${client.discountWithCard} + '% + '"></p>
-                                    <select th:id="'two' + ${client.id}" autocomplete="off"
-                                            th:onchange="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'" class="form-control"
-                                            name="discount"
-                                            style="width: 90px; margin: auto; font-size: 17px;font-weight:bold">
-                                        <option value="0" th:selected="${client.discount} == 0 ? 'true' : 'false' ">
-                                            Нет
-                                        </option>
-                                        <option value="15" th:selected="${client.discount} == 15 ? 'true' : 'false' ">
-                                            15% &emsp; Пенсионерам/Студентам
-                                        </option>
-                                        <option value="25" th:selected="${client.discount} == 25 ? 'true' : 'false' ">
-                                            25% &emsp; Праздничная
-                                        </option>
-                                        <option value="35" th:selected="${client.discount} == 35 ? 'true' : 'false' ">
-                                            35% &emsp; Админская
-                                        </option>
-                                    </select>
+
+
+                                        <select th:id="'two' + ${client.id}" autocomplete="off"
+                                                th:onchange="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'" class="form-control"
+                                                name="discountId"
+                                                style="width: 90px; margin: auto; font-size: 17px;font-weight:bold">
+                                            <option value="-1" th:selected="${client.discount} == null ? 'true' : 'false' ">Нет</option>
+                                            <p th:each="d : ${listDiscounts}">
+                                                <option th:value="${d.id}" th:text="${d.discount} + ' % - ' +${d.description}" th:selected ="(${client.discountObj} == ${d}) ? 'true' : 'false'" ></option>
+                                            </p>
+                                        </select>
 
                                 </td>
                                 <td>

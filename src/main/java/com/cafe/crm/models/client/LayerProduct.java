@@ -14,11 +14,11 @@ public class LayerProduct {
 	@Id
 	@GeneratedValue
 	private Long id;
-
+	@NotNull
 	private String name;
 	@NotNull
 	private String description;
-
+	@NotNull
 	private Double cost;
 
 	@ManyToMany(fetch = FetchType.LAZY)

@@ -2,11 +2,13 @@ package com.cafe.crm.controllers.calculate;
 
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.discount.Discount;
 import com.cafe.crm.models.worker.Worker;
 import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.calculate.CalculateControllerService;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.client.ClientService;
+import com.cafe.crm.services.interfaces.discount.DiscountService;
 import com.cafe.crm.services.interfaces.menu.MenuService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
@@ -46,6 +48,9 @@ public class CalculateController {
 	@Autowired
 	private ShiftService shiftService;
 
+	@Autowired
+	private DiscountService discountService;
+
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView manager() {
 		Set<Worker> allActiveWorker = shiftService.getAllActiveWorkers();// добавленные воркеры на смену
@@ -76,6 +81,7 @@ public class CalculateController {
 		modelAndView.addObject("listProduct", productService.findAll());
 		modelAndView.addObject("listCalculate", calculateService.getAllOpen());
 		modelAndView.addObject("listBoard", boardService.getAllOpen());
+		modelAndView.addObject("listDiscounts", discountService.getAllOpen());
 		return modelAndView;
 	}
 
@@ -113,11 +119,18 @@ public class CalculateController {
 	@RequestMapping(value = {"/update-fields-client"}, method = RequestMethod.POST)
 	@ResponseBody
 	public String UpdateFieldsClient(@RequestParam("clientId") Long clientId,
-									 @RequestParam("discount") Double discount,
+									 @RequestParam("discountId") Long discountId,
 									 @RequestParam("payWithCard") Double payWithCard,
 									 @RequestParam("description") String description) {
 		Client client = clientService.getOne(clientId);
-		client.setDiscount(discount.longValue());
+		if (discountId == -1) {
+			client.setDiscount(0L);
+			client.setDiscountObj(null);
+		} else {
+			Discount discount = discountService.getOne(discountId);
+			client.setDiscount(discount.getDiscount());
+			client.setDiscountObj(discount);
+		}
 		client.setPayWithCard(payWithCard);
 		client.setDescription(description);
 		clientService.save(client);

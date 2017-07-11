@@ -10,7 +10,6 @@ import java.net.InetAddress;
 import java.time.*;
 import java.util.List;
 
-// TODO: 09.07.2017 TimeManager Подает время с пк
 @Component
 public class TimeManager {
 

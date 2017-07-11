@@ -8,6 +8,137 @@
     <script th:src="@{/js/mail.js}"></script>
 </head>
 <body>
-hi
+
+<div class="container" style="padding-top: 50px;width: 950px">
+    <h1 th:align="center" style="color: #5bc0de;">Управление скидками</h1>
+    <div align="center" style="margin-top: 20px;margin-bottom: 20px">
+        <button type="button" class="btn btn-lg btn-primary"
+                data-toggle="modal" data-target="#newDiscount">Создать новую скидку
+        </button>
+    </div>
+    <table data-page-length='25' class="table" style="background: white;border-radius: 5px;box-shadow: 0 0 2px 1px;">
+        <thead>
+        <tr>
+            <th><p align="center">Описание</p></th>
+            <th><p align="center">Скидка</p></th>
+            <th><p align="center">Редактировать</p></th>
+            <th><p align="center">Удалить</p></th>
+        </tr>
+        </thead>
+        <tbody class="searchable" th:each="discount : ${discounts}">
+
+        <tr th:id="'discountTR' + ${discount.id}" style="font-size: 20px">
+            <td><p th:align="center" th:text="${discount.description}"></p></td>
+            <td><p th:align="center" th:text="${discount.discount}"></p></td>
+            <td class="col-lg-2">
+                <center>
+                    <a id="createBoard" class="btn btn-primary btn-info"
+                       th:href="'#editDiscount'+${discount.id}"
+                       data-toggle="modal">Редактировать </a>
+                </center>
+            </td>
+            <td class="col-lg-2" >
+                <center>
+                    <form method="post" action="/boss/settings/discount-setting/delete">
+                        <input type="hidden" name = "id" th:value="${discount.id}"/>
+                        <button type="submit"
+                                class="btn btn-primary btn-danger" name="del">Удалить
+                        </button>
+                    </form>
+                </center>
+            </td>
+
+        </tr>
+
+        <form role="form" method="post" action="/boss/settings/discount-setting/edit"
+              style="margin: 10px auto; width: 50%; paddng-bottom:40px;">
+            <div th:object="${discount}" align="center" class="modal fade"
+                 th:id="'editDiscount'+${discount.id}"
+                 tabindex="-1"
+                 role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Редактирование </h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+
+                                <input required="" type="hidden" class="form-control"
+                                       th:value="${discount.id}" name="id"/>
+                                <h4><label>Название</label></h4>
+                                <input type="text" class="form-control"
+                                       name="description"
+                                       th:value="${discount.description}" required=""/>
+                               <input type="hidden" class="form-control"
+                                       name="discount"
+                                       th:value="${discount.discount}" required=""/>
+                            </div>
+
+                        </div>
+                        <button id="super" type="submit" name="upd"
+                                class="btn btn-lg btn-primary btn-block">Сохранить
+                        </button>
+
+                        <div class="modal-footer">
+                            <button id="clsoe" type="button" name="upd" class="btn btn-default"
+                                    data-dismiss="modal">
+                                Отмена
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+        </tbody>
+        <form role="form" method="post" style="margin: 10px auto; width: 50%; padding-bottom:40px;" action="/boss/settings/discount-setting/new">
+            <div th:object="${discount}" align="center" class="modal fade" th:id="'newDiscount'"
+                 tabindex="-1"
+                 role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Новый стол</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+
+                                <h4><label>Название</label></h4>
+                                <input type="text" class="form-control"
+                                       name="description"
+                                       required=""/>
+                                <h4><label>Скидка</label></h4>
+                                <input style="width:150px;" type="text" class="form-control"
+                                       name="discount"
+                                       required=""/>
+                            </div>
+
+                        </div>
+                        <button id="superr" type="submit" name="upd"
+                                class="btn btn-lg btn-primary btn-block">Создать
+                        </button>
+
+                        <div class="modal-footer">
+                            <button id="close" type="button" name="upd" class="btn btn-default"
+                                    data-dismiss="modal">
+                                Отмена
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </table>
+    <p><cite>Для правильного ведения статистики, рекомендовано не менять описание одной скидки, на описание другой. </cite></p>
+</div>
+
 </body>
 </html>

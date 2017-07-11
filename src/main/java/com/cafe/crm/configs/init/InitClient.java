@@ -2,8 +2,10 @@ package com.cafe.crm.configs.init;
 
 import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.board.Board;
+import com.cafe.crm.models.discount.Discount;
 import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.card.CardService;
+import com.cafe.crm.services.interfaces.discount.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +19,9 @@ public class InitClient {
 
 	@Autowired
 	private CardService cardService;
+
+	@Autowired
+	private DiscountService discountService;
 
 	@PostConstruct
 	public void init() {
@@ -53,6 +58,21 @@ public class InitClient {
 		card1.setDiscount(15L);
 		card1.setPhoneNumber("81111111111");
 		cardService.save(card1);
+
+		Discount discount = new Discount();
+		discount.setDescription("Акция: 'приди с другом'");
+		discount.setDiscount(10L);
+		discountService.save(discount);
+
+		Discount discount1 = new Discount();
+		discount1.setDescription("Акция: 'днем дешевле'");
+		discount1.setDiscount(25L);
+		discountService.save(discount1);
+
+		Discount discount2 = new Discount();
+		discount2.setDescription("Админская скидка");
+		discount2.setDiscount(35L);
+		discountService.save(discount2);
 
 	}
 }

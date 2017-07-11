@@ -1,8 +1,11 @@
 package com.cafe.crm.models.client;
 
 import com.cafe.crm.models.card.Card;
+import com.cafe.crm.models.discount.Discount;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalTime;
@@ -27,7 +30,9 @@ public class Client {
 	private boolean deleteState = false;// Open or Closed
 
 	@NotNull
-	private Long discount = 0L;
+	@Max(100)
+	private Long discount = 0L;//связанный обьект отдает скидку в это поле
+	@Max(100)
 	@NotNull
 	private Long discountWithCard = 0L;
 
@@ -53,7 +58,18 @@ public class Client {
 	@ManyToOne
 	private Card card;
 
+	@ManyToOne
+	private Discount discountObj;
+
 	public Client() {
+	}
+
+	public Discount getDiscountObj() {
+		return discountObj;
+	}
+
+	public void setDiscountObj(Discount discountObj) {
+		this.discountObj = discountObj;
 	}
 
 	public boolean isDeleteState() {
