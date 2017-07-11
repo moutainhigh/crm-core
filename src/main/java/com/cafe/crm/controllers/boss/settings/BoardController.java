@@ -57,15 +57,4 @@ public class BoardController {
 		return "redirect:" + referrer;
 	}
 
-	@RequestMapping(value = "/edit", method = RequestMethod.POST)
-	public String editBoard(Board board, HttpServletRequest request) {
-		Board br = boardService.getOne(board.getId());
-		if (br != null) {
-			boardService.save(board);
-		}
-		String referrer = request.getHeader("Referer");
-		return "redirect:" + referrer;
-	}
-
-
 }

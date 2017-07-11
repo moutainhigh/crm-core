@@ -20,7 +20,6 @@
             <thead>
             <tr>
                 <th><p align="center">Название</p></th>
-                <th><p align="center">Редактировать</p></th>
                 <th><p align="center">Удалить</p></th>
             </tr>
             </thead>
@@ -29,13 +28,6 @@
             <tr th:id="'boardTR' + ${board.id}" style="font-size: 20px">
                 <td><p th:align="center" th:text="${board.name}"></p></td>
 
-                <td class="col-lg-2">
-                    <center>
-                    <a id="createBoard" class="btn btn-primary btn-info"
-                                        th:href="'#editBoard'+${board.id}"
-                                        data-toggle="modal">Редактировать </a>
-                        </center>
-                </td>
                 <td class="col-lg-2" >
                     <center>
                     <form method="post" th:action="'/boss/settings/board-setting/delete/'+${board.id}">
@@ -49,47 +41,6 @@
 
             </tr>
 
-            <form role="form" method="post" action="/boss/settings/board-setting/edit"
-                  style="margin: 10px auto; width: 50%; paddng-bottom:40px;">
-                <div th:object="${board}" align="center" class="modal fade"
-                     th:id="'editBoard'+${board.id}"
-                     tabindex="-1"
-                     role="dialog" aria-labelledby="myModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal"
-                                        aria-label="Close"><span
-                                        aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myModalLabel">Редактирование </h4>
-                            </div>
-                            <div class="modal-body">
-                                <div class="form-group">
-
-                                    <input required="" type="hidden" class="form-control"
-                                           th:value="${board.id}" name="id"/>
-                                    <h4><label>Название</label></h4>
-                                    <input type="text" class="form-control"
-                                           name="name"
-                                           th:value="${board.name}" required=""/>
-                                </div>
-
-                            </div>
-                            <button id="super" type="submit" name="upd"
-                                    class="btn btn-lg btn-primary btn-block">Сохранить
-                            </button>
-
-                            <div class="modal-footer">
-                                <button id="clsoe" type="button" name="upd" class="btn btn-default"
-                                        data-dismiss="modal">
-                                    Отмена
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </form>
             </tbody>
             <form role="form" method="post" action="/boss/settings/board-setting/new"
                   style="margin: 10px auto; width: 50%; paddng-bottom:40px;">
@@ -132,7 +83,6 @@
 
             </form>
         </table>
-    <p><cite>Для правильного ведения статистики, рекомендовано не менять имя одного стола, на имя другого. </cite></p>
 </div>
 
 </body>

@@ -1,5 +1,6 @@
 package com.cafe.crm.services.impl.calculate;
 
+import ch.qos.logback.classic.Logger;
 import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.board.Board;
 import com.cafe.crm.models.client.Calculate;
@@ -15,6 +16,7 @@ import com.cafe.crm.services.interfaces.property.PropertyService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -49,6 +51,10 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 	@Autowired
 	private ShiftService shiftService;
+
+	@Autowired
+	@Qualifier(value = "logger")
+	private Logger logger;
 
 	@Override
 	public void createCalculate(Long id, Long number, String description) {
@@ -162,24 +168,17 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	}
 
 	@Override
-	public List<Client> outputClients(Long[] clientsId) {
+	public List<Client> outputClients(long[] clientsId) {
 		if (clientsId == null) {
 			return null;
 		}
 
-		List<Client> clients = new ArrayList<>();
-		for (Long clientId : clientsId) {
-			Client client = clientService.getOne(clientId);
+		List<Client> clients = clientService.findByIdIn(clientsId);
+		for (Client client : clients) {
 			calculatePriceService.payWithCardAndCache(client);
-			clients.add(client);
 		}
 		clientService.saveAll(clients);
-		List<Client> listClients = new ArrayList<>();
-		for (Client client : clients) {
-			listClients.add(client);
-		}
-
-		return listClients;
+		return clients;
 	}
 
 	@Override
@@ -231,6 +230,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		for (Client client : clients) {
 			client.setDeleteState(true);
 			client.setState(false);
+			logger.info("Удаление клиента c описанием:" + client.getDescription() + "и id: " + client.getId());
 		}
 		clientService.saveAll(clients);
 		boolean flag = false;

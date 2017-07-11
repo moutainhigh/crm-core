@@ -158,7 +158,7 @@ public class CalculateController {
 
 	@RequestMapping(value = {"/output-clients"}, method = RequestMethod.POST)
 	@ResponseBody
-	public List<Client> outputClients(@RequestParam(name = "clientsId", required = false) Long[] clientsId) {
+	public List<Client> outputClients(@RequestParam(name = "clientsId", required = false) long[] clientsId) {
 		return calculateControllerService.outputClients(clientsId);
 	}
 

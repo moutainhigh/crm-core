@@ -37,12 +37,6 @@ public class DiscountController {
 		return "redirect:" + request.getHeader("Referer");
 	}
 
-	@RequestMapping(value = "/edit", method = RequestMethod.POST)
-	public String editDiscount(HttpServletRequest request, Discount discount) {
-		discountService.save(discount);
-		return "redirect:" + request.getHeader("Referer");
-	}
-
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public String deleteDiscount(@RequestParam("id") Long id, HttpServletRequest request) {
 		String referrer = request.getHeader("Referer");
