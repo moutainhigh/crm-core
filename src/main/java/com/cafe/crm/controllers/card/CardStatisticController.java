@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Controller
@@ -49,14 +49,15 @@ public class CardStatisticController {
 	}
 
 	@RequestMapping(value = "/card/statistic/{id}", method = RequestMethod.GET)
-	public String showCardStatisitic(@PathVariable(name = "id") Long cardId, Model model) {
+	public String showCardStatistic(@PathVariable(name = "id") Long cardId, Model model) {
 		Card card = cardService.getOne(cardId);
 		List<Client> clients = clientService.findByCardId(cardId);
-		double totalPaid = clients.stream()
-				.mapToDouble(Client::getPayWithCard).sum();
-		List<PaymentHistory> listOfPaymentHistory = clients.stream()
-				.map(this::convertToPaymentHistory)
-				.collect(Collectors.toList());
+		double totalPaid = 0d;
+		List<PaymentHistory> listOfPaymentHistory = new ArrayList<>();
+		for (Client client : clients) {
+			totalPaid += client.getPayWithCard();
+			listOfPaymentHistory.add(convertToPaymentHistory(client));
+		}
 
 		model.addAttribute("card", card);
 		model.addAttribute("totalPaid", totalPaid);
