@@ -191,7 +191,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		}
 		List<Client> listClient = clientService.findByIdIn(clientsId);
 		List<Card> listCard = new ArrayList<>();
-		HashMap<Long, Double> balanceBeforeDeduction = new HashMap<>();
+		Map<Long, Double> balanceBeforeDeduction = new HashMap<>();
 		clientService.findCardByClientIdIn(clientsId)
 			.forEach(card -> balanceBeforeDeduction.put(card.getId(), card.getBalance()));
 		for (Client client : listClient) {
@@ -281,7 +281,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	}
 
 	private void sendBalanceInfoAfterDeduction(List<Client> clients, Map<Long, Double> mapOfBalanceBeforeDeduction) {
-		HashMap<Long, Client> uniqueClientsForCard = new HashMap<>();
+		Map<Long, Client> uniqueClientsForCard = new HashMap<>();
 		clients
 			.stream()
 			.filter(client -> client.getCard().getEmail() != null && client.getPayWithCard() > 0.0d)
