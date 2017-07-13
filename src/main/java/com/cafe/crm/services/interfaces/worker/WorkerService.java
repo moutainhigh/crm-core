@@ -21,7 +21,7 @@ public interface WorkerService {
 
 	void addBoss(Boss boss);
 
-	void editWorker(Worker worker, Long adminId, Long bossId, String password);
+	void editWorker(Worker worker, Long adminId, Long bossId, String password, String submitPassword);
 
 	void editManager(Manager manager, Long adminId, Long bossId);
 
@@ -36,5 +36,7 @@ public interface WorkerService {
 	void castWorkerToBoss(Worker worker, String password, Long bossPositionId);
 
 	void castManagerToBoss(Manager manager, Long bossPositionId);
+
+	String parsePhoneNumber(String phoneNumber);
 
 }

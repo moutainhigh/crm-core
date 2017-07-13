@@ -89,39 +89,52 @@ public class WorkerServiceImpl implements WorkerService {
 	}
 
 	@Override
-	public void editWorker(Worker worker, Long adminId, Long bossId, String password) {
-		String hashedPassword = passwordEncoder.encode(password);
+	public void editWorker(Worker worker, Long adminId, Long bossId, String password, String submitPassword) {
 		List<Position> active = worker.getAllPosition();
 		if (adminId == null && bossId == null) {
 			workerRepository.saveAndFlush(worker);
-		} else if (adminId != null && bossId == null) {
-			Set<Role> rolesAdmin = new HashSet<>();
-			rolesAdmin.add(roleRepository.getRoleByName("MANAGER"));
-			active.add(positionRepository.findOne(adminId));
-			worker.setAllPosition(active);
-			Manager manager = new Manager(worker.getFirstName(), worker.getLastName(), worker.getEmail(), worker.getPhone(),
-					worker.getAllPosition(), worker.getShiftSalary(), worker.getCountShift(), worker.getSalary(), hashedPassword,
-					rolesAdmin, "admin", true);
-			worker.setEnabled(false);
-			managerRepository.saveAndFlush(manager);
-			workerRepository.saveAndFlush(worker);
-		} else if (adminId == null && bossId != null) {
-			Set<Role> rolesBoss = new HashSet<>();
-			rolesBoss.add(roleRepository.getRoleByName("BOSS"));
-			active.add(positionRepository.findOne(bossId));
-			worker.setAllPosition(active);
-			Boss boss = new Boss(worker.getFirstName(), worker.getLastName(), worker.getEmail(), worker.getPhone(),
-					worker.getAllPosition(), worker.getShiftSalary(), worker.getCountShift(), worker.getSalary(), hashedPassword,
-					rolesBoss, "boss", true);
-			worker.setEnabled(false);
-			bossRepository.saveAndFlush(boss);
-			workerRepository.saveAndFlush(worker);
+		} else if (password.equals(submitPassword)) {
+			if (adminId != null && bossId == null) {
+				Set<Role> rolesAdmin = new HashSet<>();
+				rolesAdmin.add(roleRepository.getRoleByName("MANAGER"));
+				active.add(positionRepository.findOne(adminId));
+				worker.setAllPosition(active);
+				Manager manager = new Manager(worker.getFirstName(), worker.getLastName(), worker.getEmail(), worker.getPhone(),
+						worker.getAllPosition(), worker.getShiftSalary(), worker.getSalary(),
+						worker.getPhone(), rolesAdmin, "admin", true);
+				worker.setEnabled(false);
+				managerRepository.saveAndFlush(manager);
+				workerRepository.saveAndFlush(worker);
+			} else if (adminId == null && bossId != null) {
+				Set<Role> rolesBoss = new HashSet<>();
+				rolesBoss.add(roleRepository.getRoleByName("BOSS"));
+				active.add(positionRepository.findOne(bossId));
+				worker.setAllPosition(active);
+				Boss boss = new Boss(worker.getFirstName(), worker.getLastName(), worker.getEmail(), worker.getPhone(),
+						worker.getAllPosition(), worker.getShiftSalary(), worker.getSalary(),
+						worker.getPhone(), rolesBoss, "boss", true);
+				worker.setEnabled(false);
+				bossRepository.saveAndFlush(boss);
+				workerRepository.saveAndFlush(worker);
+			}
+			if (adminId != null && bossId != null) {
+				Set<Role> rolesBoss = new HashSet<>();
+				rolesBoss.add(roleRepository.getRoleByName("BOSS"));
+				active.add(positionRepository.findOne(bossId));
+				active.add(positionRepository.findOne(adminId));
+				worker.setAllPosition(active);
+				Boss boss = new Boss(worker.getFirstName(), worker.getLastName(), worker.getEmail(), worker.getPhone(),
+						worker.getAllPosition(), worker.getShiftSalary(), worker.getSalary(),
+						worker.getPhone(), rolesBoss, "boss", true);
+				worker.setEnabled(false);
+				bossRepository.saveAndFlush(boss);
+				workerRepository.saveAndFlush(worker);
+			}
 		}
 	}
 
 	@Override
 	public void editManager(Manager manager, Long adminId, Long bossId) {
-		String hashedPassword = passwordEncoder.encode(manager.getPassword());
 		if (adminId != null && bossId != null) {
 			Set<Role> rolesBoss = new HashSet<>();
 			rolesBoss.add(roleRepository.getRoleByName("BOSS"));
@@ -130,9 +143,8 @@ public class WorkerServiceImpl implements WorkerService {
 			active.add(positionRepository.findOne(bossId));
 			manager.setAllPosition(active);
 			Boss boss = new Boss(manager.getFirstName(), manager.getLastName(), manager.getEmail(), manager.getPhone(),
-					manager.getAllPosition(), manager.getShiftSalary(), manager.getCountShift(), manager.getSalary(),
-					hashedPassword,
-					rolesBoss, "boss", true);
+					manager.getAllPosition(), manager.getShiftSalary(), manager.getSalary(),
+					manager.getPhone(), rolesBoss, "boss", true);
 			manager.setEnabled(false);
 			bossRepository.saveAndFlush(boss);
 			managerRepository.saveAndFlush(manager);
@@ -148,15 +160,14 @@ public class WorkerServiceImpl implements WorkerService {
 			active.add(positionRepository.findOne(bossId));
 			manager.setAllPosition(active);
 			Boss boss = new Boss(manager.getFirstName(), manager.getLastName(), manager.getEmail(), manager.getPhone(),
-					manager.getAllPosition(), manager.getShiftSalary(), manager.getCountShift(), manager.getSalary(),
-					hashedPassword,
-					rolesBoss, "boss", true);
+					manager.getAllPosition(), manager.getShiftSalary(), manager.getSalary(),
+					manager.getPhone(), rolesBoss, "boss", true);
 			manager.setEnabled(false);
 			bossRepository.saveAndFlush(boss);
 			managerRepository.saveAndFlush(manager);
 		} else {
 			Worker worker = new Worker(manager.getFirstName(), manager.getLastName(), manager.getEmail(), manager.getPhone(),
-					manager.getAllPosition(), manager.getShiftSalary(), manager.getCountShift(), manager.getSalary(),
+					manager.getAllPosition(), manager.getShiftSalary(), manager.getSalary(),
 					"worker", true);
 			manager.setEnabled(false);
 			managerRepository.saveAndFlush(manager);
@@ -167,12 +178,11 @@ public class WorkerServiceImpl implements WorkerService {
 
 	@Override
 	public void editBoss(Boss boss, Long bossId, Long adminId) {
-		String hashedPassword = passwordEncoder.encode(boss.getPassword());
 		List<Position> active = boss.getAllPosition();
 		boss.setAllPosition(active);
 		if (bossId == null && adminId == null) {
 			Worker worker = new Worker(boss.getFirstName(), boss.getLastName(), boss.getEmail(), boss.getPhone(),
-					boss.getAllPosition(), boss.getShiftSalary(), boss.getCountShift(), boss.getSalary(),
+					boss.getAllPosition(), boss.getShiftSalary(), boss.getSalary(),
 					"worker", true);
 			boss.setEnabled(false);
 			workerRepository.saveAndFlush(worker);
@@ -180,8 +190,9 @@ public class WorkerServiceImpl implements WorkerService {
 		} else if (bossId == null) {
 			Set<Role> rolesAdmin = new HashSet<>();
 			rolesAdmin.add(roleRepository.getRoleByName("MANAGER"));
+			active.add(positionRepository.findOne(adminId));
 			Manager manager = new Manager(boss.getFirstName(), boss.getLastName(), boss.getEmail(), boss.getPhone(),
-					boss.getAllPosition(), boss.getShiftSalary(), boss.getCountShift(), boss.getSalary(), hashedPassword,
+					boss.getAllPosition(), boss.getShiftSalary(), boss.getSalary(), boss.getPhone(),
 					rolesAdmin, "admin", true);
 			boss.setEnabled(false);
 			managerRepository.saveAndFlush(manager);
@@ -212,7 +223,7 @@ public class WorkerServiceImpl implements WorkerService {
 		active.add(positionRepository.findOne(adminPositionId));
 		worker.setAllPosition(active);
 		Manager manager = new Manager(worker.getFirstName(), worker.getLastName(), worker.getEmail(), worker.getPhone(),
-				worker.getAllPosition(), worker.getShiftSalary(), worker.getCountShift(), worker.getSalary(), hashedPassword,
+				worker.getAllPosition(), worker.getShiftSalary(), worker.getSalary(), hashedPassword,
 				rolesAdmin, "admin", true);
 		worker.setEnabled(false);
 		managerRepository.saveAndFlush(manager);
@@ -228,8 +239,8 @@ public class WorkerServiceImpl implements WorkerService {
 		active.add(positionRepository.findOne(bossPositionId));
 		worker.setAllPosition(active);
 		Boss boss = new Boss(worker.getFirstName(), worker.getLastName(), worker.getEmail(), worker.getPhone(),
-				worker.getAllPosition(), worker.getShiftSalary(), worker.getCountShift(), worker.getSalary(), hashedPassword,
-				rolesBoss, "Boss", true);
+				worker.getAllPosition(), worker.getShiftSalary(), worker.getSalary(), hashedPassword,
+				rolesBoss, "boss", true);
 		worker.setEnabled(false);
 		bossRepository.saveAndFlush(boss);
 		workerRepository.saveAndFlush(worker);
@@ -237,15 +248,14 @@ public class WorkerServiceImpl implements WorkerService {
 
 	@Override
 	public void castManagerToBoss(Manager manager, Long bossPositionId) {
-		String hashedPassword = passwordEncoder.encode(manager.getPassword());
 		Set<Role> rolesBoss = new HashSet<>();
 		rolesBoss.add(roleRepository.getRoleByName("BOSS"));
 		List<Position> active = manager.getAllPosition();
 		active.add(positionRepository.findOne(bossPositionId));
 		manager.setAllPosition(active);
 		Boss boss = new Boss(manager.getFirstName(), manager.getLastName(), manager.getEmail(), manager.getPhone(),
-				manager.getAllPosition(), manager.getShiftSalary(), manager.getCountShift(), manager.getSalary(),
-				hashedPassword, rolesBoss, "boss", true);
+				manager.getAllPosition(), manager.getShiftSalary(), manager.getSalary(),
+				manager.getPhone(), rolesBoss, "boss", true);
 		boss.setEnabled(true);
 		manager.setEnabled(false);
 		bossRepository.saveAndFlush(boss);
@@ -256,6 +266,13 @@ public class WorkerServiceImpl implements WorkerService {
 	@Override
 	public Worker findWorkerById(Long id) {
 		return workerRepository.findOne(id);
+	}
+
+	public String parsePhoneNumber(String phoneNumber) {
+		String result = phoneNumber.replaceAll("[^0-9]+", "");
+		int startIndex = result.length() > 10 ? result.length() - 10 : 0;
+		int endIndex = result.length();
+		return result.substring(startIndex, endIndex);
 	}
 
 }

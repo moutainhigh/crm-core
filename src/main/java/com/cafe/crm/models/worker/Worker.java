@@ -29,7 +29,7 @@ public class Worker implements Serializable {
 
 	// Must be exactly 10 digits
 	@Column(name = "phone")
-	private Long phone;
+	private String phone;
 
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private List<Position> allPosition;
@@ -40,11 +40,8 @@ public class Worker implements Serializable {
 	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Shift.class)
 	private Set<Shift> allShifts;
 
-	@Column(name = "countShift", nullable = true)
-	private Long countShift;
-
 	@Column(name = "salary", nullable = true)
-	private Long salary;
+	private Long salary = 0L;
 
 	@Column(name = "bonus", nullable = true)
 	private Long bonus = 0L;
@@ -79,15 +76,14 @@ public class Worker implements Serializable {
 		this.shiftSalary = shiftSalary;
 	}
 
-	public Worker(String firstName, String lastName, String email, Long phone, List<Position> allPosition,
-				  Long shiftSalary, Long countShift, Long salary, String actionForm, Boolean enabled) {
+	public Worker(String firstName, String lastName, String email, String phone, List<Position> allPosition,
+				  Long shiftSalary, Long salary, String actionForm, Boolean enabled) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.phone = phone;
 		this.allPosition = allPosition;
 		this.shiftSalary = shiftSalary;
-		this.countShift = countShift;
 		this.salary = salary;
 		this.actionForm = actionForm;
 		this.enabled = enabled;
@@ -165,14 +161,6 @@ public class Worker implements Serializable {
 		this.allShifts = allShifts;
 	}
 
-	public Long getCountShift() {
-		return countShift;
-	}
-
-	public void setCountShift(Long countShift) {
-		this.countShift = countShift;
-	}
-
 	public Long getSalary() {
 		return salary;
 	}
@@ -189,11 +177,11 @@ public class Worker implements Serializable {
 		this.email = email;
 	}
 
-	public Long getPhone() {
+	public String getPhone() {
 		return phone;
 	}
 
-	public void setPhone(Long phone) {
+	public void setPhone(String phone) {
 		this.phone = phone;
 	}
 
