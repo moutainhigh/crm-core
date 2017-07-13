@@ -45,6 +45,8 @@ public class ShiftController {
 	@Autowired
 	private BossRepository bossRepository;
 
+		
+        @Transactional
 	@RequestMapping(value = "/manager/shift/", method = RequestMethod.GET)
 	public String getAdminPage(Model model) {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("d.MM.YYYY");
@@ -65,7 +67,8 @@ public class ShiftController {
 			return "shift/shiftPage";
 		}
 	}
-
+        
+	@Transactional
 	@RequestMapping(value = "/manager/shift/begin", method = RequestMethod.POST)
 	public String beginShift(@RequestParam(name = "box", required = false) int[] box,
 							 @RequestParam(name = "cashBox", required = false) Double cashBox) {
