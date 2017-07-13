@@ -1,55 +1,62 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
-    <div th:replace="bossnavbar :: bossNavbar"></div>
-    <div th:replace="settingPages/navSetting :: navSetting"></div>
-    <div th:replace="media/advertisingDispatch :: advertising"></div>
-    <script th:src="@{/js/mail.js}"></script>
-</head>
+    <html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
+        <div th:replace="bossnavbar :: bossNavbar"></div>
+        <div th:replace="settingPages/navSetting :: navSetting"></div>
+        <div th:replace="media/advertisingDispatch :: advertising"></div>
+        <script th:src="@{/js/mail.js}"></script>
+    </head>
 <body>
 <div class="container" style="padding-top: 50px">
-<h1 th:align="center" style="color: #5bc0de;margin-bottom: 85px;">Базовые настройки</h1>
-<form role="form" method="post" th:id="myForm" th:object="${wrapper}" action="/boss/settings/general-setting/edit"
-      style="margin: 10px auto; width: 50%; " modelAttribute="properties">
-    <table class="table" style="background: white;border-radius: 5px;box-shadow: 0 0 2px 1px;">
-        <thead>
-        <tr>
-            <th>№</th>
-            <th>Название параметра</th>
-            <th>Значение</th>
-            <th>Активация</th>
-        </tr>
-        </thead>
-        <tbody class="searchable" th:each="property, stat : *{properties}">
-        <tr>
-            <input type="hidden" th:field="*{properties[__${stat.index}__].id}"/>
-            <input type="hidden" th:field="*{properties[__${stat.index}__].name}"/>
+    <h1 th:align="center" style="color: #5bc0de;margin-bottom: 85px;">Базовые настройки</h1>
+    <form role="form" method="post" th:id="myForm" th:object="${wrapper}" action="/boss/settings/general-setting/edit"
+          style="margin: 10px auto; width: 50%; " modelAttribute="properties">
+        <table class="table" style="background: white;border-radius: 5px;box-shadow: 0 0 2px 1px;">
+            <thead>
+            <tr >
+                <th style="text-align:  center;">№</th>
+                <th  style="text-align:  center;">Название параметра</th>
+                <th  style="text-align:  center;">Значение</th>
+                <th  style="text-align:  center;">ед.изм</th>
+                <th  style="text-align:  center;">Активация</th>
+            </tr>
+            </thead>
+            <tbody class="searchable" th:each="property, stat : *{properties}">
+            <tr style="font-size: 20px">
+                <input type="hidden" th:field="*{properties[__${stat.index}__].id}"/>
+                <input type="hidden" th:field="*{properties[__${stat.index}__].name}"/>
+                <input type="hidden" th:field="*{properties[__${stat.index}__].unit}"/>
+                <td th:align="center" th:text="*{properties[__${stat.index}__].id}"></td>
+                <td th:align="center" th:text="*{properties[__${stat.index}__].name}"></td>
 
-            <td th:text="*{properties[__${stat.index}__].id}"></td>
-            <td th:text="*{properties[__${stat.index}__].name}"></td>
 
-            <td>
-                <input th:class="form2" type="number" required="" class="form-control" name="value"
-                       th:field="*{properties[__${stat.index}__].value}" pattern="\d+"
-                       title="только цифры" min="0"/>
-            </td>
+                <td th:align="center">
+                    <input style="width: 100px" type="number" required="" class="form-control form2" name="value"
+                           th:field="*{properties[__${stat.index}__].value}" pattern="\d+"
+                           title="только цифры" min="0"/>
+                </td>
+                <td th:align="center"  style="font-size: 20px" th:text="*{properties[__${stat.index}__].unit}"></td>
 
-            <td>
-                <input type="checkbox" data-toggle="toggle" data-on="Вкл" data-off="Выкл"
-                       th:checked="${property.getEnable()}"
-                       style="width:20px;height:20px;" th:id="'check_'+${property.getId()}"
-                       name="enable"
-                       th:field="*{properties[__${stat.index}__].enable}"/>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+                <td>
+                   <div th:align="center" th:if="${property.getEnable()} != null">
+                        <input type="checkbox" data-toggle="toggle" data-on="Вкл" data-off="Выкл"
+                               th:checked="${property.getEnable()}"
+                               style="width:20px;height:20px;" th:id="'check_'+${property.getId()}"
+                               name="enable"
+                               th:field="*{properties[__${stat.index}__].enable}"/>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
-    <div align="center">
-        <button type="submit" class="btn btn-lg btn-primary" id="send" name="upd">Сохранить</button>
-    </div>
-</form>
+        <div align="center">
+            <button type="submit" class="btn btn-lg btn-primary" id="send" name="upd">Сохранить</button>
+        </div>
+    </form>
 </div>
 </body>
 </html>
+
+

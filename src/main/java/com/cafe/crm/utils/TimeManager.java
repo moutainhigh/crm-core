@@ -24,7 +24,13 @@ public class TimeManager {
 
 	private TimeInfo timeInfo;
 
+	private boolean isServerDateTime;
+
 	public TimeManager() {
+	}
+
+	public boolean getIsServerDateTime() {
+		return isServerDateTime;
 	}
 
 	public LocalDate getDate() {
@@ -48,10 +54,12 @@ public class TimeManager {
 				timeInfo = timeClient.getTime(inetAddress);
 				long returnTime = timeInfo.getMessage().getTransmitTimeStamp().getTime();
 				date = Instant.ofEpochMilli(returnTime).atZone(ZoneId.systemDefault()).toLocalDateTime();
+				isServerDateTime = true;
 				return date;
 			} catch (IOException ignored) {
 			}
 		}
+		isServerDateTime = false;
 		date = LocalDateTime.now();
 		return date;
 	}
