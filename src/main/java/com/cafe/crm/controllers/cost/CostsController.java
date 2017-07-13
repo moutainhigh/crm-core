@@ -70,7 +70,7 @@ public class CostsController {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 		List<Goods> goodsList = getGoodses(goodsName, categoryName, fromDate, toDate, formatter);
-		Double totalPrice = getTotalPrice(goodsList);
+		double totalPrice = getTotalPrice(goodsList);
 
 		LocalDate from = (fromDate == null || fromDate.isEmpty()) ? null : LocalDate.parse(fromDate, formatter);
 		LocalDate to = (toDate == null || toDate.isEmpty()) ? null : LocalDate.parse(toDate, formatter);
@@ -97,9 +97,12 @@ public class CostsController {
 		return timeManager.getDate();
 	}
 
-	private Double getTotalPrice(List<Goods> goodsList) {
-		return goodsList
-				.stream().mapToDouble(goods -> goods.getPrice() * goods.getQuantity()).sum();
+	private double getTotalPrice(List<Goods> goodsList) {
+		double totalPrice = 0d;
+		for (Goods goods : goodsList) {
+			totalPrice += goods.getPrice() * goods.getQuantity();
+		}
+		return totalPrice;
 	}
 
 	private List<Goods> getGoodses(String goodsName, String categoryName, String fromDate, String toDate, DateTimeFormatter formatter) {
