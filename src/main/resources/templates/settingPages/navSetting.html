@@ -3,7 +3,12 @@
 <head>
 </head>
 <body>
-<div th:fragment="navSetting" style="font-size: 25px;margin-top:150px;float: left;">
+<div th:fragment="navSetting" style="font-size: 25px;margin-top:50px;float: left;">
+    <div style="color: black;margin-bottom: 50px;margin-left: 20px">
+        <h2 id="state">Загрузка....</h2>
+        <h2 id="date">Загрузка....</h2>
+        <h2 id="time">Загрузка....</h2>
+    </div>
     <ul>
         <li><a href="/boss/settings/general-setting">Базовые настройки</a></li>
         <li><a href="/boss/settings/board-setting">Управление столами</a></li>
@@ -12,10 +17,35 @@
         <li><a href="/boss/settings/logger-setting">Логгирование</a></li>
     </ul>
     <style>
-       li, a, ul :hover {
-           color: black;
-       }
+        li, a, ul :hover {
+            color: black;
+        }
     </style>
+
+    <script>
+        getServerTimeDateAjax();
+        function getServerTimeDateAjax() {
+            $.ajax({
+                type: "POST",
+                url: "/boss/settings/general-setting/get-server-time-date",
+                success: function (data) {
+                    //<![CDATA[
+                    var date = (data[0].dayOfMonth < 10 ? '0' + data[0].dayOfMonth : data[0].dayOfMonth)// потому что при парсе в дату это ***** прибавляет месяц
+                        + '-' + (data[0].monthValue < 10 ? '0' + data[0].monthValue : data[0].monthValue) + '-' + data[0].year;
+                    var time = new Date(data[0].year, data[0].monthValue, data[0].dayOfMonth,
+                        data[0].hour, data[0].minute, data[0].second, 0);
+                    $("#state").html('Время: ' + (data[1] ? 'сервер' : 'локальное'));
+                    $("#date").html(date);
+                    $("#time").html(time.toLocaleTimeString());
+                    //]]>
+                },
+                error: function () {
+                    console.log('getServerTimeDate сломался?');
+                }
+            });
+        }
+
+    </script>
 </div>
 </body>
 </html>

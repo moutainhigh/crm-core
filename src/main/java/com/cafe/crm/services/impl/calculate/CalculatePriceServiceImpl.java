@@ -2,6 +2,7 @@ package com.cafe.crm.services.impl.calculate;
 
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.services.interfaces.calculate.CalculatePriceService;
+import com.cafe.crm.services.interfaces.property.PropertyService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,9 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 	@Autowired
 	private TimeManager timeManager;
 
+	@Autowired
+	private PropertyService propertyService;
+
 	@Override
 	public void calculatePriceTime(Client client) {
 		LocalTime timeStart = client.getTimeStart();
@@ -23,8 +27,8 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 		double priceTime;
 		long passedHours = (long) timePassed.getHour();
 		long passedMinutes = (long) timePassed.getMinute();
-		double firstHour = 300; //  ставка за первый час
-		double secondHour = 200; // ставка за второй час
+		double firstHour = propertyService.getOne(1L).getValue(); //  ставка за первый час
+		double secondHour = propertyService.getOne(2L).getValue(); // ставка за второй час
 		if (passedHours == 0) {
 			priceTime = firstHour;
 		} else {

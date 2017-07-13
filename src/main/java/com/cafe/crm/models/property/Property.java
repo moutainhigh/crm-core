@@ -20,18 +20,29 @@ public class Property {
 	@NotNull
 	@NotEmpty
 	private String name;
-
+	@NotNull
 	private Double value;
+	@NotNull
+	private String unit;
 
 	private Boolean enable;
 
 	public Property() {
 	}
 
-	public Property(String name, Double value, Boolean enable) {
+	public Property(String name, Double value, String unit, Boolean enable) {
 		this.name = name;
 		this.value = value;
+		this.unit = unit;
 		this.enable = enable;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	public Boolean getEnable() {
