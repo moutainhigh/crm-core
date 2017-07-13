@@ -29,10 +29,10 @@ public class Boss extends Worker implements UserDetails {
 		super(actionForm);
 	}
 
-	public Boss(String firstName, String lastName, String email, Long phone, List<Position> allPosition,
-				Long shiftSalary, Long countShift, Long salary, String password, Set<Role> roles, String actionForm,
+	public Boss(String firstName, String lastName, String email, String phone, List<Position> allPosition,
+				Long shiftSalary, Long salary, String password, Set<Role> roles, String actionForm,
 				Boolean enabled) {
-		super(firstName, lastName, email, phone, allPosition, shiftSalary, countShift, salary, actionForm, enabled);
+		super(firstName, lastName, email, phone, allPosition, shiftSalary, salary, actionForm, enabled);
 		this.password = password;
 		this.roles = roles;
 	}

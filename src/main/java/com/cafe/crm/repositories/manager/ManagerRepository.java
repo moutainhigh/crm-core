@@ -11,7 +11,7 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
 
 	Manager findByEmail(String email);
 
-	Manager findByPhone(Long phone);
+	Manager findByPhone(String phone);
 
 	@Query("SELECT c FROM Manager c where c.enabled = true")
 	List<Manager> getAllActiveManager();

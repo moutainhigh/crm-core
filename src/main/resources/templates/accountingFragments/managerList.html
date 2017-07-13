@@ -69,37 +69,26 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 ">
-                                        <h4>Email</h4>
-                                        <input type="text" class="form-control" th:value="${manager.email}"
+                                        <h4>Email <span id="editValidEmailManager2"></span></h4>
+                                        <input type="text" class="form-control" id="editEmailManager2" th:value="${manager.email}"
                                                name="email"/>
                                         <br></br>
                                     </div>
                                     <div class="col-md-6 ">
-                                        <h4>Номер телефона</h4>
-                                        <input type="text" class="form-control" th:value="${manager.phone}"
+                                        <h4>Номер телефона <span id="editValidPhoneManager2"></span></h4>
+                                        <input type="text" class="form-control"  id="editPhoneManager2" th:value="${manager.phone}"
                                                name="phone"/>
                                         <br></br>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 ">
-                                        <h4>Оклад за смену</h4>
-                                        <input type="text" class="form-control" th:value="${manager.shiftSalary}"
+
+                                        <h4>Оклад за смену <span id="editValidShiftSalaryManager"></span></h4>
+                                        <input type="number" class="form-control" id="editShiftSalaryManager" th:value="${manager.shiftSalary}"
                                                name="shiftSalary"/>
                                         <br></br>
-                                    </div>
-                                    <div class="col-md-6 ">
-                                        <h4>Количество смен</h4>
-                                        <input type="text" class="form-control" th:value="${manager.countShift}"
-                                               name="countShift"/>
-                                        <br></br>
-                                    </div>
+
                                     <input type="hidden" class="form-control"  th:value="${manager.password}" name="password"/>
                                     <br></br>
-                                </div>
-                                <h4>Зарплата</h4>
-                                <input type="text" class="form-control" th:value="${manager.salary}" name="salary"/>
-                                <br></br>
 
 
                                 <h3 style="color: black" align="center">Активные должности &nbsp;&nbsp;&nbsp; <i
@@ -112,7 +101,7 @@
                                         <input id="pos21" style="width: 30px;height: 30px; margin-right: 20px"
                                                type="checkbox" th:value="${position.id}" th:checked="checked"
                                                name="adminPositionId" autocomplete="off" value=""/>
-                                        <label for="pos21"><h3 style="color: black;font-size: 30px"
+                                        <label for="pos21"><h3 style="color: black;font-size: 20px"
                                                                th:text="${position.jobName}"></h3></label>
                                     </div>
 
@@ -121,7 +110,7 @@
                                                style="width: 30px;height: 30px; margin-right: 20px" type="checkbox"
                                                th:checked="checked" th:value="${position.id}" name="allPosition"
                                                autocomplete="off" value=""/>
-                                        <label for="pos30"><h3 style="color: black;font-size: 30px"
+                                        <label for="pos30"><h3 style="color: black;font-size: 20px"
                                                                th:text="${position.jobName}"></h3></label>
                                     </div>
                                 </div>
@@ -137,7 +126,7 @@
                                                style="width: 30px;height: 30px; margin-right: 20px" type="checkbox"
                                                th:value="${allPosManager.id}" name="bossPositionId" autocomplete="off"
                                                value=""/>
-                                        <label for="pos60"><h3 style="color: black;font-size: 30px"
+                                        <label for="pos60"><h3 style="color: black;font-size: 20px"
                                                                th:text="${allPosManager.jobName}"></h3></label>
                                     </div>
 
@@ -145,13 +134,13 @@
                                         <input id="pos5" style="width: 30px;height: 30px; margin-right: 20px"
                                                type="checkbox" th:value="${allPosManager.id}" name="allPosition"
                                                autocomplete="off" value=""/>
-                                        <label for="pos5"><h3 style="color: black;font-size: 30px"
+                                        <label for="pos5"><h3 style="color: black;font-size: 20px"
                                                               th:text="${allPosManager.jobName}"></h3></label>
                                     </div>
                                 </div>
 
                                 <br></br>
-                                <button type="submit" class="btn btn-lg btn-primary btn-block">Изменить Данные</button>
+                                <button type="submit"  class="btn btn-lg btn-primary btn-block">Изменить Данные</button>
                                 <br></br>
                             </form>
                             <div class="modal-footer">
@@ -180,29 +169,19 @@
                                        name="id"/>
 
                                 <h4>Имя</h4>
-                                <input type="text" class="form-control" th:value="${manager.firstName}"
-                                       name="firstName"/>
+                                <span readonly="" class="form-control" th:text="${manager.firstName}"></span>
                                 <br></br>
 
 
                                 <h4>Фамилия</h4>
-                                <input type="text" class="form-control" th:value="${manager.lastName}" name="lastName"/>
+                                <span readonly="" class="form-control" th:text="${manager.lastName}" ></span>
                                 <br></br>
 
                                 <h4>Должность</h4>
-                                <input type="text" readonly="readonly" class="form-control"
-                                       th:value="${manager.allPosition}" name="position"/>
-                                <br></br>
-                                <h4>Login</h4>
-                                <input type="text" class="form-control" th:value="${manager.email}" name="email"/>
+                                <span readonly="readonly" class="form-control"
+                                      th:text="${manager.allPosition}" ></span>
                                 <br></br>
 
-                                <br></br>
-
-                                <h4>Оклад За Смену</h4>
-                                <input type="text" class="form-control" th:value="${manager.shiftSalary}"
-                                       name="shiftSalary"/>
-                                <br></br>
 
                                 <button type="submit" class="btn btn-lg btn-primary btn-block">Да</button>
                                 <br></br>

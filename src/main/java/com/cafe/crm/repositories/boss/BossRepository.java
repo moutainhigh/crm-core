@@ -11,7 +11,7 @@ public interface BossRepository extends JpaRepository<Boss, Long> {
 
 	Boss findByEmail(String email);
 
-	Boss findByPhone(Long phone);
+	Boss findByPhone(String phone);
 
 	@Query("SELECT c FROM Boss c where c.enabled = true")
 	List<Boss> getAllActiveBoss();
