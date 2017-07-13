@@ -11,7 +11,7 @@ public interface CalculatePriceService {
 
 	void getAllPrice(Client client);
 
-	void round(Client client);
+	void round(Client client, boolean stateRound);
 
 	void addDiscountOnPriceTime(Client client);
 

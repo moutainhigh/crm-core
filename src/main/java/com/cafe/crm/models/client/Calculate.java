@@ -1,5 +1,6 @@
 package com.cafe.crm.models.client;
 
+import com.cafe.crm.models.board.Board;
 import com.cafe.crm.models.card.Card;
 
 import javax.persistence.*;

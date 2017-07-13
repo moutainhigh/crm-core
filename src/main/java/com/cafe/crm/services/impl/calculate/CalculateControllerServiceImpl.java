@@ -1,7 +1,8 @@
 package com.cafe.crm.services.impl.calculate;
 
+import ch.qos.logback.classic.Logger;
 import com.cafe.crm.models.card.Card;
-import com.cafe.crm.models.client.Board;
+import com.cafe.crm.models.board.Board;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.services.interfaces.board.BoardService;
@@ -15,6 +16,7 @@ import com.cafe.crm.services.interfaces.property.PropertyService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -50,8 +52,15 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	@Autowired
 	private ShiftService shiftService;
 
+	@Autowired
+	@Qualifier(value = "logger")
+	private Logger logger;
+
 	@Override
 	public void createCalculate(Long id, Long number, String description) {
+		if (number > 20) {
+			return;
+		}
 		Board board = boardService.getOne(id);
 		Calculate calculate = new Calculate();
 		List<Client> list = new ArrayList<>();
@@ -71,7 +80,9 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 	@Override
 	public void createCalculateWithCard(Long id, Long number, String description, Long idCard) {
-
+		if (number > 20) {
+			return;
+		}
 		Card card = cardService.getOne(idCard);
 		List<Card> cards = new ArrayList<>();
 		cards.add(card);
@@ -122,16 +133,16 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		long startTime = System.currentTimeMillis();/// для измерения скорости работы расчетов под ajax
 		List<Calculate> calculates = calculateService.getAllOpen();
 		List<Client> clients = new ArrayList<>();
-		for (Calculate calculate : calculates ) {
-				for (Client client :calculate.getClient()) {
-					calculatePriceService.calculatePriceTime(client);
-					calculatePriceService.addDiscountOnPriceTime(client);
-					calculatePriceService.getAllPrice(client);
-					if (calculate.isRoundState()) {
-						calculatePriceService.round(client);
-					}
-					clients.add(client);
+		for (Calculate calculate : calculates) {
+			for (Client client : calculate.getClient()) {
+				calculatePriceService.calculatePriceTime(client);
+				calculatePriceService.addDiscountOnPriceTime(client);
+				calculatePriceService.getAllPrice(client);
+				if (calculate.isRoundState()) {
+					calculatePriceService.round(client, calculate.isRoundState());
 				}
+				clients.add(client);
+			}
 		}
 		clientService.saveAll(clients);
 		System.out.println(System.currentTimeMillis() - startTime);
@@ -143,49 +154,42 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		long startTime = System.currentTimeMillis();/// для измерения скорости работы расчетов под ajax
 		Calculate calculate = calculateService.getAllOpenOnCalculate(calculateId);
 		List<Client> clients = calculate.getClient();
-			for (Client client : clients) {
-				calculatePriceService.calculatePriceTime(client);
-				calculatePriceService.addDiscountOnPriceTime(client);
-				calculatePriceService.getAllPrice(client);
-				if (calculate.isRoundState()) {
-					calculatePriceService.round(client);
-				}
+		for (Client client : clients) {
+			calculatePriceService.calculatePriceTime(client);
+			calculatePriceService.addDiscountOnPriceTime(client);
+			calculatePriceService.getAllPrice(client);
+			if (calculate.isRoundState()) {
+				calculatePriceService.round(client, calculate.isRoundState());
 			}
-		System.out.println(calculate.getDescription());
+		}
 		clientService.saveAll(clients);
 		System.out.println(System.currentTimeMillis() - startTime);
 		return clients;
 	}
 
 	@Override
-	public List<Client> outputClients(Long[] clientsId) {
+	public List<Client> outputClients(long[] clientsId) {
 		if (clientsId == null) {
 			return null;
 		}
 
-		List<Client> clients = new ArrayList<>();
-		for (Long clientId : clientsId) {
-			Client client = clientService.getOne(clientId);
+		List<Client> clients = clientService.findByIdIn(clientsId);
+		for (Client client : clients) {
 			calculatePriceService.payWithCardAndCache(client);
-			clients.add(client);
 		}
 		clientService.saveAll(clients);
-		List<Client> listClients = new ArrayList<>();
-		for (Client client : clients) {
-			listClients.add(client);
-		}
-
-		return listClients;
+		return clients;
 	}
 
 	@Override
-	public void closeClient(Long[] clientsId, Long calculateId) {
-		List<Client> listClient = new ArrayList<>();
+	public void closeClient(long[] clientsId, Long calculateId) {
+		if (clientsId == null) {
+			return;
+		}
+		List<Client> listClient = clientService.findByIdIn(clientsId);
 		List<Card> listCard = new ArrayList<>();
-		for (Long clientId : clientsId) {
-			Client client = clientService.getOne(clientId);
+		for (Client client : listClient) {
 			client.setState(false);
-			listClient.add(client);
 			Card clientCard = client.getCard();
 			if (clientCard != null) {               // referral bonus
 				if (clientCard.getWhoInvitedMe() != null && clientCard.getVisitDate() == null) {
@@ -209,7 +213,31 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		Calculate calculate = calculateService.getOne(calculateId);
 		List<Client> clients = calculate.getClient();
 		for (Client client : clients) {
-			if (client.isState()) {
+			if (client.isState() && !client.isDeleteState()) {
+				flag = true;
+				break;
+			}
+		}
+		if (!flag) {
+			calculate.setState(false);
+			calculateService.save(calculate);
+		}
+	}
+
+	@Override
+	public void deleteClients(long[] clientsId, Long calculateId) {
+		List<Client> clients = clientService.findByIdIn(clientsId);
+		for (Client client : clients) {
+			client.setDeleteState(true);
+			client.setState(false);
+			logger.info("Удаление клиента c описанием:" + client.getDescription() + "и id: " + client.getId());
+		}
+		clientService.saveAll(clients);
+		boolean flag = false;
+		Calculate calculate = calculateService.getOne(calculateId);
+		List<Client> clients1 = calculate.getClient();
+		for (Client client : clients1) {
+			if (client.isState() && !client.isDeleteState()) {
 				flag = true;
 				break;
 			}

@@ -315,26 +315,7 @@ $('.super').click(function () {
     });
 });
 
-function sendLogLevel() {
-    var levelMap = {level: $('#chooseLogLevel').val()};
-    if ($('#chooseLogLevel').val() == 'INFO' || $('#chooseLogLevel').val() == 'ERROR'
-        || $('#chooseLogLevel').val() == 'DEBUG' || $('#chooseLogLevel').val() == 'WARN') {
-        $.ajax({
-            type: "POST",
-            url: "/boss/property/logLevel",
-            data: levelMap,
-            success: function (result) {
-                $('.form-group').html('Уровень логирования задан.');
-            },
-            error: function (e) {
-            }
-        });
 
-    } else {
-        var json = '<h4 style="color:red">Неизвестный уровень логгирования</h4>';
-        $('.modal-title').html(json);
-    }
-}
 
 function applySMTPSettings(id) {
     var formData = {

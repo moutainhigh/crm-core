@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<div th:fragment="navSetting" style="font-size: 25px;margin-top:150px;float: left;">
+    <ul>
+        <li><a href="/boss/settings/general-setting">Базовые настройки</a></li>
+        <li><a href="/boss/settings/board-setting">Управление столами</a></li>
+        <li><a href="/boss/settings/discount-setting">Управление скидками</a></li>
+        <li><a href="/boss/settings/change-password">Смена пароля</a></li>
+        <li><a href="/boss/settings/logger-setting">Логгирование</a></li>
+    </ul>
+    <style>
+       li, a, ul :hover {
+           color: black;
+       }
+    </style>
+</div>
+</body>
+</html>

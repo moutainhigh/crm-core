@@ -1,6 +1,6 @@
 package com.cafe.crm.services.impl.board;
 
-import com.cafe.crm.models.client.Board;
+import com.cafe.crm.models.board.Board;
 import com.cafe.crm.repositories.board.BoardRepository;
 import com.cafe.crm.services.interfaces.board.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,4 +39,8 @@ public class BoardServiceImpl implements BoardService {
 		boardRepository.delete(id);
 	}
 
+	@Override
+	public List<Board> getAllOpen() {
+		return boardRepository.getAllOpen();
+	}
 }

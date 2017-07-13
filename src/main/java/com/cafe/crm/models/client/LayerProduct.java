@@ -4,6 +4,7 @@ package com.cafe.crm.models.client;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -13,11 +14,11 @@ public class LayerProduct {
 	@Id
 	@GeneratedValue
 	private Long id;
-
+	@NotNull
 	private String name;
-
+	@NotNull
 	private String description;
-
+	@NotNull
 	private Double cost;
 
 	@ManyToMany(fetch = FetchType.LAZY)

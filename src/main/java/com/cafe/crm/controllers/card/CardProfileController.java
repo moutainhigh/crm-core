@@ -131,7 +131,7 @@ public class CardProfileController {
 									@RequestParam("money") Long money,
 									HttpServletRequest request) {
 		Card card = cardService.getOne(idCard);
-		if (card != null) {
+		if (card != null && money >= 0) {
 			Double balance = card.getBalance();
 			card.setBalance(balance + money);
 			cardService.save(card);

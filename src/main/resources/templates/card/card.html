@@ -4,7 +4,7 @@
     <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
 </head>
 <body>
-<div class="container" style="width: 250px; box-shadow: 0 0 3px 0; border-radius: 10px" th:each="card : ${card}">
+<div class="container" style="width: 250px; box-shadow: 0 0 3px 0; border-radius: 10px;background: white" th:each="card : ${card}">
 
     <div th:if="${card.activatedCard}">
         <center>
