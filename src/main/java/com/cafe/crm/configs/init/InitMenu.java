@@ -2,11 +2,13 @@ package com.cafe.crm.configs.init;
 
 
 import com.cafe.crm.models.menu.Category;
+import com.cafe.crm.models.menu.Ingredients;
 import com.cafe.crm.models.menu.Menu;
 import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.repositories.menu.CategoryRepository;
 import com.cafe.crm.repositories.menu.MenuRepository;
 import com.cafe.crm.repositories.menu.ProductRepository;
+import com.cafe.crm.services.interfaces.menu.IngredientsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,8 +28,39 @@ public class InitMenu {
 	@Autowired
 	private ProductRepository productRepository;
 
+	@Autowired
+	private IngredientsService ingredientsService;
+
 	@PostConstruct
 	public void init() {
+
+
+		Ingredients ingredients1 = new Ingredients();
+		Ingredients ingredients2 = new Ingredients();
+		Ingredients ingredients3 = new Ingredients();
+		Ingredients ingredients4 = new Ingredients();
+
+		ingredients1.setName("Сметана");
+		ingredients1.setDimension("граммы");
+		ingredients1.setAmount(300);
+
+		ingredients2.setName("Вишня");
+		ingredients2.setDimension("кг");
+		ingredients2.setAmount(3);
+
+		ingredients3.setName("Зелень");
+		ingredients3.setDimension("кг");
+		ingredients3.setAmount(5);
+
+		ingredients4.setName("Молоко");
+		ingredients4.setDimension("литры");
+		ingredients4.setAmount(15);
+
+		ingredientsService.save(ingredients1);
+		ingredientsService.save(ingredients2);
+		ingredientsService.save(ingredients3);
+		ingredientsService.save(ingredients4);
+
 		Category category1 = new Category("Салаты");
 		Category category2 = new Category("Напитки");
 		Category category3 = new Category("Десерты");

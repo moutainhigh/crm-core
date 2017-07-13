@@ -1,8 +1,8 @@
 package com.cafe.crm.controllers.boss;
 
-import com.cafe.crm.models.menu.Category;
-import com.cafe.crm.models.menu.Product;
+import com.cafe.crm.models.menu.*;
 import com.cafe.crm.services.interfaces.menu.CategoriesService;
+import com.cafe.crm.services.interfaces.menu.IngredientsService;
 import com.cafe.crm.services.interfaces.menu.MenuService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 @Controller
@@ -31,11 +31,18 @@ public class MenuController {
 	@Autowired
 	private ProductService productService;
 
+	@Autowired
+	private IngredientsService ingredientsService;
+
 	@ModelAttribute(value = "product")
 	public Product newProduct() {
 		return new Product();
 	}
 
+	@ModelAttribute(value = "ingredients")
+	public List<Ingredients> getAll() {
+		return ingredientsService.getAll();
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getAdminPage() {
@@ -49,8 +56,7 @@ public class MenuController {
 
 	@RequestMapping(value = {"/deleteProduct"}, method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> deleteProduct(ModelAndView modelAndView,
-										   @RequestParam(value = "del", required = false) Long id) throws IOException {
+	public ResponseEntity<?> deleteProduct(@RequestParam(value = "del", required = false) Long id) throws IOException {
 
 		productService.delete(id);
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -76,20 +82,19 @@ public class MenuController {
 		return new ResponseEntity<>(product, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/addAjax", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/addAjax", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> ajax2(@RequestParam("idCat") Long idCat,
-								   @RequestParam("name") String name,
-								   @RequestParam("description") String des,
-								   @RequestParam("cost") Double cost
-	) {
-		Category category = categoriesService.getOne(idCat);
+	public ResponseEntity<?> createProd(@RequestBody final WrapperOfProduct wrapper) {
+
+		Category category = categoriesService.getOne(wrapper.getIdCat());
+		Map<Ingredients, Integer> recipe = ingredientsService.createRecipe(wrapper);
 		if (category != null) {
 			Product product = new Product();
 			product.setCategory(category);
-			product.setName(name);
-			product.setCost(cost);
-			product.setDescription(des);
+			product.setName(wrapper.getName());
+			product.setCost(wrapper.getCost());
+			product.setDescription(wrapper.getDescription());
+			product.setRecipe(recipe);
 			productService.saveAndFlush(product);
 			category.getProducts().add(product);
 			categoriesService.saveAndFlush(category);
@@ -117,13 +122,55 @@ public class MenuController {
 		return "redirect:/boss/menu";
 	}
 
-	@RequestMapping(value = "/updProd", method = RequestMethod.POST)
+	@RequestMapping(value = "/updProd", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public Product ajax(@RequestBody Product product) {
-		product.setCategory(productService.findOne(product.getId()).getCategory());
-		productService.saveAndFlush(product);
-		product.setCategory(null);
+	public WrapperOfEditProduct updProd(@RequestBody WrapperOfEditProduct wrapper) {
 
-		return product;
+		Product product = productService.findOne(wrapper.getId());
+		if (product != null) {
+			product.setName(wrapper.getName());
+			product.setCost(wrapper.getCost());
+			product.setDescription(wrapper.getDescription());
+
+			productService.saveAndFlush(product);
+		}
+
+		return wrapper;
+	}
+
+	@RequestMapping(value = "/get/recipe/", method = RequestMethod.GET)
+	public ModelAndView getIngredientsForEdit(@RequestParam("id") Long idProduct) {
+
+		ModelAndView modelAndView = new ModelAndView("menu/editRecipe");
+		modelAndView.addObject("recipe", productService.findOne(idProduct).getRecipe());
+		modelAndView.addObject("ingredients", ingredientsService.getAll());
+		modelAndView.addObject("product", productService.findOne(idProduct));
+
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/edit/recipe", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> editRecipe(@RequestBody WrapperOfProduct wrapper) {
+		Product product = productService.findOne(wrapper.getIdCat()); // id product
+		Map<Ingredients, Integer> recipe = ingredientsService.createRecipe(wrapper);
+
+		if (product != null) {
+			product.setRecipe(recipe);
+			productService.saveAndFlush(product);
+		}
+
+		return new ResponseEntity<>(1L, HttpStatus.OK);
+	}
+
+	@DeleteMapping(value = "/delete/recipe/{id}")
+	public String deleteRecipe(@PathVariable(name = "id") Long id, HttpServletRequest request) {
+		Product product = productService.findOne(id);
+		if (product != null) {
+			product.getRecipe().clear();
+			productService.saveAndFlush(product);
+		}
+		String referrer = request.getHeader("Referer");
+		return "redirect:" + referrer;
 	}
 }
