@@ -11,6 +11,7 @@ public interface HtmlService {
 
 	String getBalanceInfoAfterDebiting(Double newBalance, Double debited, String view);
 
-	String getCloseShiftFromText(String Text, Double salaryShift, Double profitShift, Long cache, Long payWithCard, String view);
+	String getCloseShiftFromText(String Text, Double cashBox, Double cache, Double bankKart, Double payWithCard,
+								 Double allPrice, String view, Double shortage);
 
 }

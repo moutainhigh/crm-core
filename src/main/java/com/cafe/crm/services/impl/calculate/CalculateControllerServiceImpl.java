@@ -100,6 +100,8 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		calculate.setDescription(description);
 		calculate.setBoard(board);
 		calculate.setClient(list);
+		shiftService.getLast().getAllCalculate().add(calculate);
+		shiftService.getLast().getClients().addAll(list);
 		calculateService.save(calculate);
 	}
 
@@ -125,6 +127,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		List<Client> list1 = calculate.getClient();
 		list1.addAll(list);
 		calculate.setClient(list1);
+		shiftService.getLast().getClients().addAll(list);
 		calculateService.save(calculate);
 	}
 

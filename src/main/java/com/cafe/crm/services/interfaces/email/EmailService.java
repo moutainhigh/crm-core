@@ -16,6 +16,7 @@ public interface EmailService {
 
 	void sendBalanceInfoAfterDebiting(Double newBalance, Double debited, String email);
 
-	void sendCloseShiftInfoFromText(Double salaryShift, Double profitShift, Long cache, Long payWithCard, Collection<? extends Boss> boss);
+	void sendCloseShiftInfoFromText(Double cashBox, Double cache, Double bankKart, Double payWithCard,
+									Double allPrice, Collection<? extends Boss> boss, Double shortage);
 
 }

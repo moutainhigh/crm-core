@@ -4,6 +4,7 @@ import com.cafe.crm.models.goods.Goods;
 import com.cafe.crm.models.goods.GoodsCategory;
 import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
 import com.cafe.crm.services.interfaces.goods.GoodsService;
+import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +20,13 @@ public class InitGoods {
 
 	private final GoodsCategoryService goodsCategoryService;
 
+	private final TimeManager timeManager;
+
 	@Autowired
-	public InitGoods(GoodsCategoryService goodsCategoryService, GoodsService goodsService) {
+	public InitGoods(GoodsCategoryService goodsCategoryService, GoodsService goodsService , TimeManager timeManager) {
 		this.goodsCategoryService = goodsCategoryService;
 		this.goodsService = goodsService;
+		this.timeManager = timeManager;
 	}
 
 	@Transactional
@@ -32,10 +36,12 @@ public class InitGoods {
 		GoodsCategory category2 = new GoodsCategory("Спиртные напитки");
 		GoodsCategory category3 = new GoodsCategory("Безалкогольные напитки");
 		GoodsCategory category4 = new GoodsCategory("Бытовые продукты");
+		GoodsCategory category5 = new GoodsCategory("Зарплата сотрудников");
 		goodsCategoryService.save(category1);
 		goodsCategoryService.save(category2);
 		goodsCategoryService.save(category3);
 		goodsCategoryService.save(category4);
+		goodsCategoryService.save(category5);
 
 		ZoneId zoneId = ZoneId.of("Europe/Moscow");
 

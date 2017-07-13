@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>Открытие смены</title>
     <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
 </head>
 <body>
-
 <div class="container" style="margin-top:50px">
 
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -87,6 +87,16 @@
                         </tr>
                         </tbody>
                     </table>
+                    <div th:if="${shiftCashBox}==null">
+                        <h3>Введите количество денег в кассе</h3>
+                        <input type="text" class="form-control" value=""  placeholder="Введите количество денег в кассе" required="" autofocus=""
+                               name="cashBox" />
+                    </div>
+
+                    <div th:if="${shiftCashBox}!=null">
+                        <h3>Количество денег в кассе</h3>
+                        <span th:text="${shiftCashBox}"></span>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-danger btn-lg" name="upd">
                     Начать смену
@@ -101,6 +111,7 @@
     </div>
 </form>
 <div th:replace="fragments/managerChangePassword :: managerChangePassword"></div>
+<div th:replace="closeShift :: closeShift"></div>
 <script th:src="@{/js/shift/page.js}"></script>
 <script th:src="@{/js/filter.js}"></script>
 </body>

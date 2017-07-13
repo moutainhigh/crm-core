@@ -1,29 +1,27 @@
-function test(id) {
-    if ($('#1' + id).attr('type') == 'hidden') {
-        $('#1' + id).attr('type', 'text');
-    } else {
-        $('#1' + id).attr('type', 'hidden');
+function test(id){
+    if ($('#1'+ id).attr('type')=='hidden'){
+        $('#1'+ id).attr('type','text');
+    }else {
+        $('#1'+ id).attr('type','hidden');
     }
 }
 
 
-function test2() {
-    var salaryShift = parseFloat($("#salaryShift").val());
+//<![CDATA[
+function test2(){
+    var cashBox = parseFloat($("#totalCashBox").val());
     var cache = parseFloat($("#cache").val());
     var payWithCard = parseFloat($("#payWithCard").val());
-    var test2 = cache + payWithCard;
-
-    if (test2 != salaryShift) {
+    var bankKart = parseFloat($("#bankKart").val());
+    var budget = cache + payWithCard + bankKart;
+    if (budget < cashBox){
         $("#cache").css('border', 'red 3px solid');
-        $("#payWithCard").css('border', 'red 3px solid');
+        $("#bankKart").css('border', 'red 3px solid');
         $('#errorBlock').html('Сверка бюджета не прошла!');
-        $("#closeShiftButton").css('visibility', 'visible');
-    } else {
-        $('#errorBlock').css('visibility', 'hidden');
-        $("#cache").css('border', 'green 3px solid');
-        $("#payWithCard").css('border', 'green 3px solid');
-        $("#closeShiftButton").css('visibility', 'visible');
-        $("#budget").css('visibility', 'hidden');
-        $('#goodBlock').html('Сверка бюджета прошла успешно!');
+        $("#closeShiftButtonShortage").css('visibility','visible');
+        $("#budget").css('visibility','hidden');
+    } else if (budget >= cashBox) {
+        $('#budget').attr('type','submit');
     }
 }
+//]]>
