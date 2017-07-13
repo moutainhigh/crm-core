@@ -18,8 +18,9 @@ public class AdvertisingCustomSettings {
 	@Autowired
 	private JavaMailSender javaMailSender;
 
-	public JavaMailSender getCustomSettings() {
-		return javaMailSender;
+
+	public JavaMailSenderImpl getCustomSettings() {
+		return (JavaMailSenderImpl) javaMailSender;
 	}
 
 }

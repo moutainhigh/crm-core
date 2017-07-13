@@ -52,7 +52,7 @@ public class EditController {
 
 	@ModelAttribute(name = "advertSettings")
 	public JavaMailSenderImpl senderSettings() {
-		return (JavaMailSenderImpl) customSettings.getCustomSettings();
+		return customSettings.getCustomSettings();
 	}
 
 	@ModelAttribute(name = "listSMTPSettings")
@@ -167,7 +167,7 @@ public class EditController {
 
 		advertisingSettingsService.save(newSettings);
 
-		JavaMailSenderImpl senderImpl = (JavaMailSenderImpl) customSettings.getCustomSettings();
+		JavaMailSenderImpl senderImpl = customSettings.getCustomSettings();
 		senderImpl.setUsername(email);
 		senderImpl.setPassword(password);
 
