@@ -2,7 +2,10 @@
 
 
 <head>
+    <title>Учет сотрудников</title>
     <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/css/bootstrapValidator.min.css"/>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"> </script>
 </head>
 
 <body>
@@ -69,7 +72,7 @@
 
 <div th:replace="fragments/bossChangePassword :: BossChangePassword"></div>
 <div th:replace="media/advertisingDispatch :: advertising"></div>
-
+<script th:src="@{/js/boss/accounting.js}"></script>
 <script th:src="@{/js/filter.js}"></script>
 <script th:src="@{/js/mail.js}"></script>
 </body>

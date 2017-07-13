@@ -40,7 +40,7 @@ public class AuthenticationService implements UserDetailsService {
 		return (user != null) ? user : managerRepository.findByEmail(username);
 	}
 
-	private UserDetails loadByPhone(Long phone) {
+	private UserDetails loadByPhone(String phone) {
 		UserDetails user = bossRepository.findByPhone(phone);
 		return (user != null) ? user : managerRepository.findByPhone(phone);
 	}
@@ -50,10 +50,10 @@ public class AuthenticationService implements UserDetailsService {
 		return matcher.find();
 	}
 
-	private Long parsePhoneNumber(String phoneNumber) {
+	private String parsePhoneNumber(String phoneNumber) {
 		String result = phoneNumber.replaceAll("[^0-9]+", "");
 		int startIndex = result.length() > 10 ? result.length() - 10 : 0;
 		int endIndex = result.length();
-		return Long.valueOf(result.substring(startIndex, endIndex));
+		return result.substring(startIndex, endIndex);
 	}
 }
