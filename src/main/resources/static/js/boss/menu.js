@@ -315,25 +315,55 @@ $('.super').click(function () {
     });
 });
 
-function sendLogLevel() {
-    var levelMap = {level: $('#chooseLogLevel').val()};
-    if ($('#chooseLogLevel').val() == 'INFO' || $('#chooseLogLevel').val() == 'ERROR'
-        || $('#chooseLogLevel').val() == 'DEBUG' || $('#chooseLogLevel').val() == 'WARN') {
-        $.ajax({
-            type: "POST",
-            url: "/boss/property/logLevel",
-            data: levelMap,
-            success: function (result) {
-                $('.form-group').html('Уровень логирования задан.');
-            },
-            error: function (e) {
-                var json = '<h4 style="color:aqua">Действующий пароль введён неверно</h4>';
-            }
-        });
-
-    } else {
-        var json = '<h4 style="color:red">Неизвестный уровень логгирования</h4>';
-        $('.modal-title').html(json);
+function newSMTPSettings() {
+    var formData = {
+        settingsName: $("#settingsName").val(),
+        password: $("#settingsPassword").val(),
+        email: $("#settingsEmail").val()
     }
+    $.ajax({
+        type: "POST",
+        url: "/boss/settings/advert-setting/new",
+        data: formData,
+        success: function (result) {
+            $("#successModal").modal('show')
+            alert("Получилось!")
+        },
+        error: function (e) {
+            $("#errorModal").modal('show')
+            alert("Ошибка")
+        }
+    });
 }
 
+function applySMTPSettings(id) {
+    var formData = {
+        settingsId: id,
+    }
+    $.ajax({
+        type: "POST",
+        url: "/boss/settings/advert-setting/existing-settings",
+        data: formData,
+        success: function (result) {
+            var successMessage = '<h4 style="color:green;" align="center">' + result + '</h4>';
+            $('.messageAd').html(successMessage).show();
+            window.setTimeout(function () {
+                location.reload()
+            }, 1000);
+        },
+        error: function (e) {
+            var errorMessage = '<h4 style="color:red;" align="center">' + e.responseText + '</h4>';
+            $('.messageAd').html(errorMessage).show();
+        }
+    });
+}
+
+function removeSettings(id) {
+    var url = '/boss/settings/advert-setting/del-settings';
+
+    var request = $.post(url, {settingsId: id},
+        window.setTimeout(function () {
+            location.reload()
+        }, 100)
+    )
+}

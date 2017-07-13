@@ -29,7 +29,13 @@ public class Shift {
 	private Set<Calculate> allCalculate;
 
 	@OneToMany
-	private List<Client> clients;
+	private Set<Client> clients;
+
+	@Column(name = "cashBox")
+	private Double cashBox = 0D;
+
+	@Column(name = "profit")
+	private Double profit = 0D;
 
 	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Worker.class)
 	@JoinTable(name = "permissions_allShifts",
@@ -37,9 +43,8 @@ public class Shift {
 			inverseJoinColumns = {@JoinColumn(name = "worker_id")})
 	private Set<Worker> users;
 
-	public Shift(LocalDate dateShift, Integer checkValue, Set<Worker> users) {
+	public Shift(LocalDate dateShift, Set<Worker> users) {
 		this.dateShift = dateShift;
-		this.checkValue = checkValue;
 		this.users = users;
 	}
 
@@ -64,6 +69,22 @@ public class Shift {
 		return names;
 	}
 
+	public Double getCashBox() {
+		return cashBox;
+	}
+
+	public void setCashBox(Double cashBox) {
+		this.cashBox = cashBox;
+	}
+
+	public Double getProfit() {
+		return profit;
+	}
+
+	public void setProfit(Double profit) {
+		this.profit = profit;
+	}
+
 	public Set<Calculate> getAllCalculate() {
 		return allCalculate;
 	}
@@ -72,11 +93,11 @@ public class Shift {
 		this.allCalculate = allCalculate;
 	}
 
-	public List<Client> getClients() {
+	public Set<Client> getClients() {
 		return clients;
 	}
 
-	public void setClients(List<Client> clients) {
+	public void setClients(Set<Client> clients) {
 		this.clients = clients;
 	}
 

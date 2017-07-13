@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<table class="table table-striped" id="sortedTable" th:fragment="debtsTable">
+    <thead>
+    <tr>
+        <th>№</th>
+        <th>Должник</th>
+        <th>Сумма долга</th>
+        <th>Дата взятия долга</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="debts : ${debtsList}" th:id="'debts' + ${debts.id}">
+        <td th:text="${debts.id}" class="id">1</td>
+        <td th:text="${debts.debtor}" class="name">Вася</td>
+        <td th:text="${debts.debtAmount}" class="price">3000</td>
+        <td th:text="${#temporals.format(debts.date, 'dd-MM-yyyy')}" class="date">20.20.2000</td>
+        <td>
+            <button type="button" class="btn btn-danger" th:onclick="'removeDebt(\'' + ${debts.id} + '\');'">Удалить</button>
+        </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td></td>
+        <td></td>
+        <td><b>Общая сумма :</b></td>
+        <td><b th:text="${totalDebtAmount}" id="totalPrice"></b></td>
+        <td></td>
+
+    </tr>
+    </tfoot>
+</table>
+</body>
+</html>

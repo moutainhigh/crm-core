@@ -1,6 +1,7 @@
 package com.cafe.crm.services.impl.email;
 
 
+import com.cafe.crm.configs.property.AdvertisingCustomSettings;
 import com.cafe.crm.configs.property.AdvertisingProperties;
 import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.worker.Boss;
@@ -43,8 +44,8 @@ public class EmailServiceImpl implements EmailService {
 	private String closeShiftSubject;
 
 	@Autowired
-	public EmailServiceImpl(JavaMailSender javaMailSender, AdvertisingProperties properties, HtmlService htmlService, BCryptPasswordEncoder bCryptPasswordEncoder) {
-		this.javaMailSender = javaMailSender;
+	public EmailServiceImpl(AdvertisingCustomSettings javaMailSender, AdvertisingProperties properties, HtmlService htmlService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+		this.javaMailSender = javaMailSender.getCustomSettings();
 		this.properties = properties;
 		this.htmlService = htmlService;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -145,7 +146,8 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	public void sendCloseShiftInfoFromText(Double salaryShift, Double profitShift, Long cache, Long payWithCard, Collection<? extends Boss> boss) {
+	public void sendCloseShiftInfoFromText(Double cashBox, Double cache, Double bankKart, Double payWithCard,
+										   Double allPrice, Collection<? extends Boss> boss, Double shortage) {
 		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[boss.size()];
 		int messageNum = 0;
 		for (Boss bosses : boss) {
@@ -158,8 +160,8 @@ public class EmailServiceImpl implements EmailService {
 				messageHelper.setFrom(properties.getMail().getSender());
 				messageHelper.setTo(email);
 				messageHelper.setSubject(closeShiftSubject);
-				String html = htmlService.getCloseShiftFromText(closeShiftText, salaryShift, profitShift, cache, payWithCard,
-						closeShiftView);
+				String html = htmlService.getCloseShiftFromText(closeShiftText, cashBox, cache, bankKart, payWithCard,
+						allPrice, closeShiftView, shortage);
 				messageHelper.setText(html, true);
 			};
 		}

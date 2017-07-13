@@ -9,8 +9,7 @@
         text-align: center;
     } </style>
 
-    <button th:onclick="'ajaxModal(\'' + ${calculate.id} + '\');'" style="float: right" class="btn btn-danger"
-            data-toggle="modal" th:href="'#checkModal' + ${calculate.id}">
+    <button th:onclick="'ajaxModal(\'' + ${calculate.id} + '\');'" style="float: right" class="btn btn-danger" >
         Рассчитать
     </button>
     <br/><br/>
@@ -51,7 +50,7 @@
                     <p style="text-align:center;font-size: 30px;float: left" th:id="'all' + ${calculate.id}"></p>
 
                     <button type="submit" th:form="'formTest' + ${calculate.id}" formaction="/manager/close-client"
-                            style="font-size:20px;float: left;" class="btn btn-danger">Рассчитано
+                            style="font-size:20px;float: right;" class="btn btn-danger">Рассчитано
                     </button>
                 </div>
             </div>

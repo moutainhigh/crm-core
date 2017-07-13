@@ -75,7 +75,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 		Double payWithCard = client.getPayWithCard();
 		Double allPrice = client.getAllPrice();
 		client.setPayWithCard(allPrice < client.getPayWithCard() ? allPrice : payWithCard);
-		if (client.getPayWithCard() < 0 || client.getCard() == null) {
+		if (client.getCard() == null) {
 			client.setPayWithCard(0D);
 		}
 		client.setCache(allPrice - (double)client.getPayWithCard());

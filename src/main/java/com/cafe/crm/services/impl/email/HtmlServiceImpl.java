@@ -75,20 +75,21 @@ public class HtmlServiceImpl implements HtmlService {
 	}
 
 	@Override
-	public String getCloseShiftFromText(String text, Double salaryShift, Double profitShift, Long cache, Long payWithCard, String view) {
+	public String getCloseShiftFromText(String text, Double cashBox, Double cache, Double bankKart, Double payWithCard,
+										Double allPrice, String view, Double shortage) {
 		Set<Worker> allWorker = shiftService.getAllActiveWorkers();
 		Set<Calculate> calculate = shiftService.getLast().getAllCalculate();
-		List<Client> clients = shiftService.getLast().getClients();
+		Set<Client> clients = shiftService.getLast().getClients();
 		List<Boss> allBoss = bossRepository.getAllActiveBoss();
-		Double shortage = salaryShift - (cache + payWithCard);
 		Context context = new Context();
 		context.setVariable("message", text);
 		context.setVariable("workers", allWorker);
 		context.setVariable("calculate", calculate.size());
 		context.setVariable("clients", clients.size());
 		context.setVariable("allBoss", allBoss);
-		context.setVariable("cashBox", profitShift);
 		context.setVariable("shortage", shortage);
+		context.setVariable("allPrice", allPrice);
+		context.setVariable("cashBox", (cashBox - shortage));
 		return templateEngine.process(view, context);
 	}
 }

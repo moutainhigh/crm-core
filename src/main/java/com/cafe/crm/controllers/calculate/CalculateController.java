@@ -2,23 +2,23 @@ package com.cafe.crm.controllers.calculate;
 
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
-import com.cafe.crm.models.worker.Worker;
+import com.cafe.crm.models.discount.Discount;
+import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.calculate.CalculateControllerService;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.client.ClientService;
+import com.cafe.crm.services.interfaces.discount.DiscountService;
 import com.cafe.crm.services.interfaces.menu.MenuService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Set;
 
 
 @Controller
@@ -46,36 +46,19 @@ public class CalculateController {
 	@Autowired
 	private ShiftService shiftService;
 
+	@Autowired
+	private DiscountService discountService;
+
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView manager() {
-		Set<Worker> allActiveWorker = shiftService.getAllActiveWorkers();// добавленные воркеры на смену
-		List<Calculate> activeCalculate = calculateService.getAllOpen();//активные счета
-		List<Client> clients = shiftService.getLast().getClients();//клиенты на смене
-		Double shiftProfit = 0D;//касса без учета расходов
-		Long salaryWorker = 0L;//зп сотрудников
-		Double shiftSalaryWithoutWorker = 0D;//касса с учетом зп сотрудников
-		Double card = 0D;//оплата по картам
-		for (Client c : clients) {
-			shiftProfit = shiftProfit + c.getAllPrice();
-			card = card + c.getPayWithCard();
-		}
-		for (Worker worker : allActiveWorker) {
-			salaryWorker = salaryWorker + worker.getShiftSalary();
-		}
-		shiftSalaryWithoutWorker = shiftProfit - salaryWorker;
-
-		//TODO мониторинг баланса с банковской карты
-		ModelAndView modelAndView = new ModelAndView("/client/clients");
-		modelAndView.addObject("allWorker", allActiveWorker);
-		modelAndView.addObject("activeCalculate", activeCalculate);
-		modelAndView.addObject("clients", clients.size());
-		modelAndView.addObject("salary", shiftProfit);
-		modelAndView.addObject("salaryWithoutWorker", shiftSalaryWithoutWorker);
-		modelAndView.addObject("card", card);
+		Shift shift = shiftService.getLast(); //текущая смена
+		ModelAndView modelAndView = new ModelAndView("client/clients");
 		modelAndView.addObject("listMenu", menuService.getOne(1L));
 		modelAndView.addObject("listProduct", productService.findAll());
 		modelAndView.addObject("listCalculate", calculateService.getAllOpen());
-		modelAndView.addObject("listBoard", boardService.getAll());
+		modelAndView.addObject("listBoard", boardService.getAllOpen());
+		modelAndView.addObject("listDiscounts", discountService.getAllOpen());
+		modelAndView.addObject("CloseShiftView", shiftService.createShiftView(shift));
 		return modelAndView;
 	}
 
@@ -113,11 +96,18 @@ public class CalculateController {
 	@RequestMapping(value = {"/update-fields-client"}, method = RequestMethod.POST)
 	@ResponseBody
 	public String UpdateFieldsClient(@RequestParam("clientId") Long clientId,
-									 @RequestParam("discount") Double discount,
+									 @RequestParam("discountId") Long discountId,
 									 @RequestParam("payWithCard") Double payWithCard,
 									 @RequestParam("description") String description) {
 		Client client = clientService.getOne(clientId);
-		client.setDiscount(discount.longValue());
+		if (discountId == -1) {
+			client.setDiscount(0L);
+			client.setDiscountObj(null);
+		} else {
+			Discount discount = discountService.getOne(discountId);
+			client.setDiscount(discount.getDiscount());
+			client.setDiscountObj(discount);
+		}
 		client.setPayWithCard(payWithCard);
 		client.setDescription(description);
 		clientService.save(client);
@@ -139,13 +129,13 @@ public class CalculateController {
 	@RequestMapping(value = {"/delete-clients"}, method = RequestMethod.POST)
 	public String deleteClients(@RequestParam(name = "clientsId", required = false) long[] clientsId,
 								@RequestParam("calculateId") Long calculateId) {
-	calculateControllerService.deleteClients(clientsId, calculateId);
+		calculateControllerService.deleteClients(clientsId, calculateId);
 		return "redirect:/manager";
 	}
 
 	@RequestMapping(value = {"/output-clients"}, method = RequestMethod.POST)
 	@ResponseBody
-	public List<Client> outputClients(@RequestParam(name = "clientsId", required = false) Long[] clientsId) {
+	public List<Client> outputClients(@RequestParam(name = "clientsId", required = false) long[] clientsId) {
 		return calculateControllerService.outputClients(clientsId);
 	}
 

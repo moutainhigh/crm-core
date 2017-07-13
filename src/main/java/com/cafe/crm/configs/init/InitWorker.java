@@ -67,10 +67,9 @@ public class InitWorker {
 		worker.setFirstName("Max");
 		worker.setLastName("Worker");
 		worker.setEmail("Smith@gmail.com");
-		worker.setPhone(9123456789L);
+		worker.setPhone("9123456789");
 		worker.setAllPosition(workerPosList);
 		worker.setShiftSalary(1000L);
-		worker.setCountShift(2L);
 		worker.setSalary(2000L);
 		worker.setActionForm("worker");
 		worker.setAllShifts(test);
@@ -85,10 +84,9 @@ public class InitWorker {
 		manager.setFirstName("Anna");
 		manager.setLastName("Jons");
 		manager.setEmail("manager@mail.ru");
-		manager.setPhone(9233456789L);
+		manager.setPhone("9233456789");
 		manager.setAllPosition(adminPosList);
 		manager.setShiftSalary(1000L);
-		manager.setCountShift(2L);
 		manager.setSalary(2000L);
 		manager.setActionForm("admin");
 		Set<Role> adminRoles = new HashSet<>();
@@ -105,10 +103,9 @@ public class InitWorker {
 		boss.setFirstName("Martin");
 		boss.setLastName("Set");
 		boss.setEmail("boss@mail.ru");
-		boss.setPhone(9123456789L);
+		boss.setPhone("9123456789");
 		boss.setAllPosition(bossPosList);
 		boss.setShiftSalary(1000L);
-		boss.setCountShift(2L);
 		boss.setSalary(2000L);
 		boss.setActionForm("boss");
 		Set<Role> bossRoles = new HashSet<>();

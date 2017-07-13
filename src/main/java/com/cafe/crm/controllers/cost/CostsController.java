@@ -4,6 +4,7 @@ import com.cafe.crm.models.goods.Goods;
 import com.cafe.crm.models.goods.GoodsCategory;
 import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
 import com.cafe.crm.services.interfaces.goods.GoodsService;
+import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +31,15 @@ public class CostsController {
 
 	private final GoodsCategoryService goodsCategoryService;
 
+	private final ShiftService shiftService;
+
 	@Autowired
-	public CostsController(GoodsService goodsService, GoodsCategoryService goodsCategoryService, TimeManager timeManager) {
+	public CostsController(GoodsService goodsService, GoodsCategoryService goodsCategoryService, TimeManager timeManager,
+						   ShiftService shiftService) {
 		this.goodsService = goodsService;
 		this.goodsCategoryService = goodsCategoryService;
 		this.timeManager = timeManager;
+		this.shiftService = shiftService;
 	}
 
 	@RequestMapping(value = "/costs", method = RequestMethod.GET)
@@ -51,7 +56,7 @@ public class CostsController {
 		model.addAttribute("today", today);
 		model.addAttribute("fromDate", today);
 		model.addAttribute("toDate", null);
-
+		model.addAttribute("CloseShiftView", shiftService.createShiftView(shiftService.getLast()));
 		return "costs/costs";
 	}
 
@@ -78,6 +83,7 @@ public class CostsController {
 		model.addAttribute("today", today);
 		model.addAttribute("fromDate", from);
 		model.addAttribute("toDate", to);
+		model.addAttribute("ShiftView", shiftService.createShiftView(shiftService.getLast()));
 
 		return "costs/costs";
 	}
