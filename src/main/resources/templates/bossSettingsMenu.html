@@ -61,6 +61,49 @@
             </div>
         </div>
 
+        <div class="modal fade" id="smtpDBSettings" tabindex="-1" role="dialog"
+             aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 id="modalSMTPHeader">Таблица сохранённых настроек</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="messageAd"></div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Название настроек</th>
+                                    <th>email</th>
+                                    <th>Применение настроек</th>
+                                    <th>Удаление настроек</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="list : ${listSMTPSettings}">
+                                    <td th:text="${list.id}"></td>
+                                    <td th:text="${list.nameSettings}"></td>
+                                    <td th:text="${list.senderEmail}"></td>
+                                    <td>
+                                        <button type="button" class="btn btn-success"
+                                                th:onclick="'javascript:applySMTPSettings(\'' + ${list.id} + '\');'">Применить
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger"
+                                                th:onclick="'javascript:removeSettings(\'' + ${list.id} + '\');'">Удалить
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div>
             <h3 align="center"><h1 th:align="center" style="color: #5bc0de;">Меню настроек</h1></h3>
 
@@ -326,10 +369,12 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <h4>Задайте новые настройки</h4>
+
                         </div>
+
                         <div class="panel-body">
                             <center>
-                            <form role="form" method="post" action="/boss/property/advertising-settings">
+                            <form role="form" method="post" action="/boss/property/advertising-new-settings">
                                 <div class="form-group" style="margin: 0%">
                                     <h4>Название настроек</h4>
                                     <input type="text" class="form-control" id="settingsName" name="settingsName" placeholder="Название настроек"/>
@@ -356,6 +401,8 @@
 
                         </div>
                     </div>
+                        <button type="button" class="btn btn-success col-md-offset-3"
+                                data-toggle="modal" data-target="#smtpDBSettings">Или выберите из существующих</button>
                 </div>
                 </div>
                 <div class="tab-pane" id="loggerSettings">

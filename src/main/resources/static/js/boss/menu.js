@@ -335,3 +335,35 @@ function sendLogLevel() {
         $('.modal-title').html(json);
     }
 }
+
+function applySMTPSettings(id) {
+    var formData = {
+        settingsId: id,
+    }
+    $.ajax({
+        type: "POST",
+        url: "/boss/property/advertising-existing-settings",
+        data: formData,
+        success: function (result) {
+            var successMessage = '<h4 style="color:green;" align="center">' + result + '</h4>';
+            $('.messageAd').html(successMessage).show();
+            window.setTimeout(function () {
+                location.reload()
+            }, 1000);
+        },
+        error: function (e) {
+            var errorMessage = '<h4 style="color:red;" align="center">' + e.responseText + '</h4>';
+            $('.messageAd').html(errorMessage).show();
+        }
+    });
+}
+
+function removeSettings(id) {
+    var url = '/boss/property/advertising-del-settings';
+
+    var request = $.post(url, {settingsId: id},
+        window.setTimeout(function () {
+            location.reload()
+        }, 1000)
+    )
+}

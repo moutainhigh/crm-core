@@ -11,6 +11,7 @@ import com.cafe.crm.services.interfaces.advertising.AdvertisingSettingsService;
 import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.property.PropertyService;
+import org.hibernate.NonUniqueResultException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -154,8 +155,8 @@ public class EditController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/property/advertising-settings", method = RequestMethod.POST)
-	public String setAdvertisingCustomSettings(
+	@RequestMapping(value = "/property/advertising-new-settings", method = RequestMethod.POST)
+	public ResponseEntity<?> setAdvertisingCustomSettings(
 			@RequestParam(name = "settingsName")String settingsName,
 			@RequestParam(name = "password")String password,
 			@RequestParam(name = "email")String email,
@@ -164,14 +165,41 @@ public class EditController {
 		String referer = request.getHeader("Referer");
 
 		AdvertisingSettings newSettings = new AdvertisingSettings(settingsName, email, password, "smtp.gmail.com");
+		try {
+			advertisingSettingsService.save(newSettings);
+			JavaMailSenderImpl senderImpl = customSettings.getCustomSettings();
+			senderImpl.setUsername(email);
+			senderImpl.setPassword(password);
+		} catch (NonUniqueResultException e) {
+			return ResponseEntity.badRequest().body("Этот email уже используется");
+		}
 
-		advertisingSettingsService.save(newSettings);
 
-		JavaMailSenderImpl senderImpl = customSettings.getCustomSettings();
-		senderImpl.setUsername(email);
-		senderImpl.setPassword(password);
 
-		return "redirect:" + referer;
+
+		return ResponseEntity.ok("Настройки успешно применены и записаны!");
 	}
 
+	@RequestMapping(value = "/property/advertising-existing-settings", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> setExistingSettings(@RequestParam(name = "settingsId") Long id) {
+		AdvertisingSettings settings = advertisingSettingsService.get(id);
+		JavaMailSenderImpl senderImpl = customSettings.getCustomSettings();
+
+		if (settings.getSenderEmail().equalsIgnoreCase(senderImpl.getUsername())) {
+			return ResponseEntity.badRequest().body("Эти настройки уже применены!");
+		} else {
+			senderImpl.setUsername(settings.getSenderEmail());
+			senderImpl.setPassword(settings.getPassword());
+			return ResponseEntity.ok("Настройки успешно применены!");
+		}
+	}
+
+	@RequestMapping(value = "/property/advertising-del-settings", method = RequestMethod.POST)
+	public String delExistingSettings(@RequestParam(name = "settingsId")Long id) {
+
+		advertisingSettingsService.delete(id);
+
+		return "redirect:";
+	}
 }
