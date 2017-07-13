@@ -111,22 +111,16 @@ public class ShiftController {
 
 	// delete worker from shift
 	@RequestMapping(value = "/manager/shift/delWorker", method = RequestMethod.POST)
-	public ModelAndView deleteWorkerFromShift(@RequestParam(name = "delWorker") String name) {
-		shiftService.deleteWorkerFromShift(name);
-		ModelAndView mv = new ModelAndView("shift/editingShiftPage");
-		mv.addObject("workersOfShift", shiftService.getLast().getUsers());
-		mv.addObject("allWorkers", shiftService.getWorkers());
-		return mv;
+	public String deleteWorkerFromShift(@RequestParam(name = "delWorker") String name) {
+		shiftService.deleteWorkerFromShift(name);;
+		return "redirect:/manager/shift/edit";
 	}
 
 	// add worker on shift
 	@RequestMapping(value = "/manager/shift/addWorker", method = RequestMethod.POST)
-	public ModelAndView addWorkerFromShift(@RequestParam(name = "addWorker") String name) {
+	public String addWorkerFromShift(@RequestParam(name = "addWorker") String name) {
 		shiftService.addWorkerFromShift(name);
-		ModelAndView mv = new ModelAndView("shift/editingShiftPage");
-		mv.addObject("workersOfShift", shiftService.getLast().getUsers());
-		mv.addObject("allWorkers", shiftService.getWorkers());
-		return mv;
+		return "redirect:/manager/shift/edit";
 	}
 
 	@RequestMapping(value = "/endOfShift", method = RequestMethod.GET)
