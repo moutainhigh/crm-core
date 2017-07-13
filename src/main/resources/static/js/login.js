@@ -11,7 +11,6 @@ function validatePhone(phone) { //Validates the phone number
 
 $(document).ready(function () {
     $("#signin").submit(function (event) {
-        console.log("123");
         var username = $("#username").val();
         if (!(validateEmail(username.trim()) || validatePhone(username.trim()))) {
             event.preventDefault();

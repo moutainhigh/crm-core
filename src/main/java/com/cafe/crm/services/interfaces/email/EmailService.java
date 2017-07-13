@@ -14,7 +14,9 @@ public interface EmailService {
 
 	void sendDispatchStatusNotification(Card card);
 
-	void sendBalanceInfoAfterDebiting(Double newBalance, Double debited, String email);
+	void sendBalanceInfoAfterDeduction(Double newBalance, Double deductionAmount, String email);
+
+	void sendBalanceInfoAfterRefill(Double newBalance, Double refillAmount, String email);
 
 	void sendCloseShiftInfoFromText(Double cashBox, Double cache, Double bankKart, Double payWithCard,
 									Double allPrice, Collection<? extends Boss> boss, Double shortage);

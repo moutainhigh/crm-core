@@ -58,10 +58,13 @@ site:
   address: localhost:8080
 
 balance-info:
-  debiting:
-    mail:
-      view: db:balance-info-debiting
+  mail:
+    deduction:
+      view: db:balance-info-deduction
       subject: Изменение баланса карты!
+    refill:
+      view: db:balance-info-refill
+      subject: Измение баланса карты!
 
 closeShiftEmailShortage:
            view: db:closeShiftEmailShortage

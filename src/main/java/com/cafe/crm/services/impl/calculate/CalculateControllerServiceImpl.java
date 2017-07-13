@@ -20,7 +20,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // TODO: 06.07.2017 Проверить почему не работает с @Transactional
 @Service
@@ -191,6 +193,9 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		}
 		List<Client> listClient = clientService.findByIdIn(clientsId);
 		List<Card> listCard = new ArrayList<>();
+		Map<Long, Double> balanceBeforeDeduction = new HashMap<>();
+		clientService.findCardByClientIdIn(clientsId)
+			.forEach(card -> balanceBeforeDeduction.put(card.getId(), card.getBalance()));
 		for (Client client : listClient) {
 			client.setState(false);
 			Card clientCard = client.getCard();
@@ -206,7 +211,6 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 			if (clientCard != null) {
 				clientCard.setBalance(clientCard.getBalance() - client.getPayWithCard());
 				listCard.add(clientCard);
-				sendBalanceInfoAfterDebiting(clientCard.getBalance(), client.getPayWithCard(), clientCard.getEmail());
 			}
 		}
 		cardService.saveAll(listCard);
@@ -225,6 +229,8 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 			calculate.setState(false);
 			calculateService.save(calculate);
 		}
+
+		sendBalanceInfoAfterDeduction(listClient, balanceBeforeDeduction);
 	}
 
 	@Override
@@ -277,9 +283,18 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		return client.getDiscountWithCard();
 	}
 
-	private void sendBalanceInfoAfterDebiting(Double balance, Double distinction, String email) {
-		if (email != null) {
-			emailService.sendBalanceInfoAfterDebiting(balance, distinction, email);
-		}
+	private void sendBalanceInfoAfterDeduction(List<Client> clients, Map<Long, Double> mapOfBalanceBeforeDeduction) {
+		Map<Long, Client> uniqueClientsForCard = new HashMap<>();
+		clients
+			.stream()
+			.filter(client -> client.getCard() != null && client.getCard().getEmail() != null && client.getPayWithCard() > 0.0d)
+			.forEach(client -> uniqueClientsForCard.put(client.getCard().getId(), client));
+
+		uniqueClientsForCard.values().forEach(client -> {
+			Double balanceAfterDeduction = client.getCard().getBalance();
+			Double balanceBeforeDeduction = mapOfBalanceBeforeDeduction.get(client.getCard().getId());
+			Double deductionAmount = balanceBeforeDeduction - balanceAfterDeduction;
+			emailService.sendBalanceInfoAfterDeduction(balanceAfterDeduction, deductionAmount, client.getCard().getEmail());
+		});
 	}
 }

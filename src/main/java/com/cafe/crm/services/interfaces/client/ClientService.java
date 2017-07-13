@@ -1,9 +1,11 @@
 package com.cafe.crm.services.interfaces.client;
 
 
+import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.client.Client;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ClientService {
 
@@ -22,5 +24,7 @@ public interface ClientService {
 	List<Client> findByIdIn(long[] ids);
 
 	List<Client> findByCardId(Long cardId);
+
+	Set<Card> findCardByClientIdIn(long[] clientsIds);
 
 }
