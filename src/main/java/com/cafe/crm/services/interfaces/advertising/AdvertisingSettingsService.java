@@ -15,5 +15,7 @@ public interface AdvertisingSettingsService {
 
 	AdvertisingSettings get(Long id);
 
+	AdvertisingSettings findByEmail(String email);
+
 	List<AdvertisingSettings> getAll();
 }

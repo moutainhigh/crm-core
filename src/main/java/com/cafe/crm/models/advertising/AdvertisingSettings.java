@@ -14,7 +14,7 @@ public class AdvertisingSettings {
 	private String nameSettings;
 
 	@Column(unique = true)
-	private String senderEmail;
+	private String email;
 
 	private String password;
 
@@ -23,9 +23,9 @@ public class AdvertisingSettings {
 	public AdvertisingSettings() {
 	}
 
-	public AdvertisingSettings(String nameSettings, String senderEmail, String password, String smtpProvider) {
+	public AdvertisingSettings(String nameSettings, String email, String password, String smtpProvider) {
 		this.nameSettings = nameSettings;
-		this.senderEmail = senderEmail;
+		this.email = email;
 		this.password = password;
 		this.smtpProvider = smtpProvider;
 	}
@@ -42,12 +42,12 @@ public class AdvertisingSettings {
 		this.nameSettings = nameSettings;
 	}
 
-	public String getSenderEmail() {
-		return senderEmail;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setSenderEmail(String senderEmail) {
-		this.senderEmail = senderEmail;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
@@ -73,11 +73,11 @@ public class AdvertisingSettings {
 		AdvertisingSettings settings = (AdvertisingSettings) o;
 		return Objects.equals(id, settings.id) &&
 				Objects.equals(nameSettings, settings.nameSettings) &&
-				Objects.equals(senderEmail, settings.senderEmail);
+				Objects.equals(email, settings.email);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, nameSettings, senderEmail);
+		return Objects.hash(id, nameSettings, email);
 	}
 }

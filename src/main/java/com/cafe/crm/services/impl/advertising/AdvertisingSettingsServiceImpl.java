@@ -36,6 +36,11 @@ public class AdvertisingSettingsServiceImpl implements AdvertisingSettingsServic
 	}
 
 	@Override
+	public AdvertisingSettings findByEmail(String email) {
+		return repository.findByEmailIgnoreCase(email);
+	}
+
+	@Override
 	public List<AdvertisingSettings> getAll() {
 		return repository.findAll();
 	}
