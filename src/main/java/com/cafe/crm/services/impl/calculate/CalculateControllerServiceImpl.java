@@ -117,6 +117,9 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 	@Override
 	public void addClient(Long id, Long number, String description) {
+		if (number > 20) {
+			return;
+		}
 		Calculate calculate = calculateService.getOne(id);
 		List<Client> list = new ArrayList<>();
 		for (int i = 0; i < number; i++) {
