@@ -146,7 +146,6 @@ public class InitMenu {
 
 		menu.setCategories(myMenu);
 
-
 		repository.saveAndFlush(menu);
 
 
