@@ -59,8 +59,8 @@ public class WorkerController {
 	@RequestMapping(path = {"/manager/changePassword", "/boss/changePassword"}, method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> changePassword(@RequestParam(name = "old") String oldPassword,
-											@RequestParam(name = "new") String newPassword,
-											@RequestParam(name = "secondNew") String secondNewPassword, Authentication auth, HttpServletRequest request) {
+	                                        @RequestParam(name = "new") String newPassword,
+	                                        @RequestParam(name = "secondNew") String secondNewPassword, Authentication auth, HttpServletRequest request) {
 		UserDetails userDetails = (UserDetails) auth.getPrincipal();
 		HttpSession session = request.getSession();
 		String password = userDetails.getPassword();
@@ -82,7 +82,7 @@ public class WorkerController {
 				}
 			});
 
-			for(Object principal : sessionRegistry.getAllPrincipals()){
+			for (Object principal : sessionRegistry.getAllPrincipals()) {
 				sessionRegistry.getAllSessions(principal, false).forEach(org.springframework.security.core.session.SessionInformation::expireNow);
 			}
 			return new ResponseEntity<>(HttpStatus.OK);
