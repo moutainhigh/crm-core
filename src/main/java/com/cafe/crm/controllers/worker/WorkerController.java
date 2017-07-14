@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -34,6 +36,9 @@ public class WorkerController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private SessionRegistry sessionRegistry;
+
 	@RequestMapping(value = {"/"}, method = RequestMethod.GET)
 	public String redirectToLoginPage() {
 		return "redirect:/login";
@@ -54,8 +59,8 @@ public class WorkerController {
 	@RequestMapping(path = {"/manager/changePassword", "/boss/changePassword"}, method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> changePassword(@RequestParam(name = "old") String oldPassword,
-											@RequestParam(name = "new") String newPassword,
-											@RequestParam(name = "secondNew") String secondNewPassword, Authentication auth, HttpServletRequest request) {
+	                                        @RequestParam(name = "new") String newPassword,
+	                                        @RequestParam(name = "secondNew") String secondNewPassword, Authentication auth, HttpServletRequest request) {
 		UserDetails userDetails = (UserDetails) auth.getPrincipal();
 		HttpSession session = request.getSession();
 		String password = userDetails.getPassword();
@@ -76,7 +81,10 @@ public class WorkerController {
 					managerService.save(manager);
 				}
 			});
-			session.invalidate();
+
+			for (Object principal : sessionRegistry.getAllPrincipals()) {
+				sessionRegistry.getAllSessions(principal, false).forEach(org.springframework.security.core.session.SessionInformation::expireNow);
+			}
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

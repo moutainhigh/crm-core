@@ -69,5 +69,21 @@ $(document).ready(function () {
     }(jQuery));
 
 });
+$(document).ready(function () {
 
+	(function ($) {
+
+		$('#filter5').keyup(function () {
+
+			var rex = new RegExp($(this).val(), 'i');
+			$('.searchableIng tr').hide();
+			$('.searchableIng tr').filter(function () {
+				return rex.test($(this).text());
+			}).show();
+
+		})
+
+	}(jQuery));
+
+});
 

@@ -21,6 +21,7 @@
                 <th>Описание</th>
                 <th>Цена</th>
                 <th>Редактировать</th>
+                <th>Рецепт</th>
                 <th>Удалить</th>
             </tr>
             <tbody class="searchable" th:each="prod,iter:${products}">
@@ -31,8 +32,13 @@
                 <td th:id="'allD' + ${prod.id}"><p th:text="${prod.cost}"></p></td>
                 <td class="col-lg-2"><a id="ins" class="btn btn-primary btn-info"
                                         th:href="'#allP'+${prod.id}"
-                                        data-toggle="modal">Редактировать </a></td>
-
+                                        data-toggle="modal">Редактировать </a>
+                </td>
+                <td>
+                <button form="getRecipePage" name="id" class="btn btn-primary btn-info" th:value="${prod.id}" th:type="submit">
+                    Изменить рецепт
+                </button>
+                </td>
                 <td>
                     <button th:onclick="'del(\''+ ${prod.id} + '\');'"
                             class="btn btn-primary btn-danger" name="del">
@@ -58,20 +64,20 @@
                                         <input required="" type="hidden" class="form-control"
                                                th:id="allId + ${prod.id}"
                                                th:value="${prod.id}"/>
-                                        <h4><label>Название</label></h4>
+                                       <label>Название</label>
                                         <input type="text" class="form-control"
                                                th:id="allName + ${prod.id}" name="name"
                                                th:value="${prod.name}"/>
                                     </div>
                                     <div class="form-group">
-                                        <h4><label>Описание</label></h4>
+                                        <label>Описание</label>
                                         <input type="text" class="form-control"
                                                th:id="allDes + ${prod.id}"
                                                name="description"
                                                th:value="${prod.description}"/>
                                     </div>
                                     <div class="form-group">
-                                        <h4><label>Цена</label></h4>
+                                       <label>Цена</label>
                                         <input type="text" class="form-control"
                                                th:id="allCost + ${prod.id}" name="cost" required=""
                                                pattern="\d+" title="только цифры"

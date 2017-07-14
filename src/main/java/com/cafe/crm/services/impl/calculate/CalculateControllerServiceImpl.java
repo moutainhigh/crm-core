@@ -60,9 +60,6 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 	@Override
 	public void createCalculate(Long id, Long number, String description) {
-		if (number > 20) {
-			return;
-		}
 		Board board = boardService.getOne(id);
 		Calculate calculate = new Calculate();
 		List<Client> list = new ArrayList<>();
@@ -82,9 +79,6 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 	@Override
 	public void createCalculateWithCard(Long id, Long number, String description, Long idCard) {
-		if (number > 20) {
-			return;
-		}
 		Card card = cardService.getOne(idCard);
 		List<Card> cards = new ArrayList<>();
 		cards.add(card);

@@ -5,6 +5,7 @@ import com.cafe.crm.security.handlers.CustomAuthenticationSuccessHandler;
 import com.cafe.crm.security.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -12,8 +13,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 @Configuration
@@ -71,5 +75,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 				.csrf().disable()
 				.addFilterBefore(filter, CsrfFilter.class);
+
+		http
+				.sessionManagement()
+				.maximumSessions(100)
+				.maxSessionsPreventsLogin(false)
+				.expiredUrl("/login?logout")
+				.sessionRegistry(sessionRegistry());
+	}
+
+	@Bean
+	public static ServletListenerRegistrationBean httpSessionEventPublisher() {
+		return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
+	}
+
+	@Bean
+	public SessionRegistry sessionRegistry() {
+		SessionRegistry sessionRegistry = new SessionRegistryImpl();
+		return sessionRegistry;
 	}
 }

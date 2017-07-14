@@ -22,7 +22,7 @@ public class DiscountController {
 	private DiscountService discountService;
 
 	@Autowired
-	private ClientService clientServicel;
+	private ClientService clientService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView discountSettingPage() {
@@ -41,13 +41,16 @@ public class DiscountController {
 	public String deleteDiscount(@RequestParam("id") Long id, HttpServletRequest request) {
 		String referrer = request.getHeader("Referer");
 		Discount discount = discountService.getOne(id);
-		List<Client> clientList = clientServicel.getAllOpen();
+		List<Client> clientList = clientService.getAllOpen();
 		boolean flag = false;
 		for (Client client : clientList) {
-			if (client.getDiscountObj().equals(discount)) {
-				flag = true;
-				break;
+			if (client.getDiscountObj() != null) {
+				if (client.getDiscountObj().equals(discount)) {
+					flag = true;
+					break;
+				}
 			}
+
 		}
 		if (!flag) {
 			discount.setIsOpen(false);
