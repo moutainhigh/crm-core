@@ -5,6 +5,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Table(name = "product")
@@ -31,6 +33,19 @@ public class Product {
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Category.class)
 	@JoinTable(name = "product_and_categories", joinColumns = {@JoinColumn(name = "category_id")}, inverseJoinColumns = {@JoinColumn(name = "product_id")})
 	private Category category;
+
+	@ElementCollection
+	@MapKeyJoinColumn(name = "ingredient")
+	@Column(name = "amount")
+	private Map<Ingredients, Integer> recipe ;
+
+	public Map<Ingredients, Integer> getRecipe() {
+		return recipe;
+	}
+
+	public void setRecipe(Map<Ingredients, Integer> recipe) {
+		this.recipe = recipe;
+	}
 
 	public Product() {
 	}
@@ -63,10 +78,6 @@ public class Product {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	public Double getCost() {
