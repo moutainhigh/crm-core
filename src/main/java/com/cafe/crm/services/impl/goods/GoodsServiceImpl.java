@@ -85,8 +85,13 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public Set<Goods> findByDate(LocalDate date) {
-		return goodsRepository.findByDate(date);
+	public Set<Goods> findByDateAndVisibleTrue(LocalDate date) {
+		return goodsRepository.findByDateAndVisibleTrue(date);
+	}
+
+	@Override
+	public Set<Goods> findByDateAndCategoryNameAndVisibleTrue(LocalDate date, String name) {
+		return goodsRepository.findByDateAndCategoryNameAndVisibleTrue(date, name);
 	}
 
 }

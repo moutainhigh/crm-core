@@ -25,6 +25,8 @@ public interface GoodsService {
 
 	Set<Goods> findByNameStartingWith(String startName);
 
-	Set<Goods> findByDate(LocalDate date);
+	Set<Goods> findByDateAndVisibleTrue(LocalDate date);
+
+	Set<Goods> findByDateAndCategoryNameAndVisibleTrue(LocalDate date, String name);
 
 }

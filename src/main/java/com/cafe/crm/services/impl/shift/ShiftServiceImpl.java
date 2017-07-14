@@ -7,13 +7,13 @@ import com.cafe.crm.models.goods.GoodsCategory;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.shift.ShiftView;
 import com.cafe.crm.models.worker.Worker;
+import com.cafe.crm.repositories.goods.GoodsRepository;
 import com.cafe.crm.repositories.shift.ShiftRepository;
 import com.cafe.crm.repositories.worker.WorkerRepository;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
 import com.cafe.crm.services.interfaces.goods.GoodsService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
-import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +47,7 @@ public class ShiftServiceImpl implements ShiftService {
 	private CalculateService calculateService;
 
 	@Autowired
-	private TimeManager timeManager;
+	private GoodsRepository goodsRepository;
 
 
 	@Override
@@ -184,7 +184,7 @@ public class ShiftServiceImpl implements ShiftService {
 			allPrice = allPrice + client.getAllPrice();
 		}
 		LocalDate shiftDate = shift.getDateShift();
-		Set<Goods> goodsSet = goodsService.findByDate(shiftDate);
+		Set<Goods> goodsSet = goodsRepository.findByDateAndVisibleTrue(shiftDate);
 		Double otherCosts = 0D;
 		for (Goods goods : goodsSet) {
 			otherCosts = otherCosts + (goods.getPrice() * goods.getQuantity());
@@ -192,6 +192,11 @@ public class ShiftServiceImpl implements ShiftService {
 		totalCashBox = (cashBox + allPrice) - (salaryWorker + otherCosts);
 		return new ShiftView(allActiveWorker, clients, activeCalculate, allCalculate,
 				cashBox, totalCashBox, salaryWorker, card, allPrice, shiftDate, otherCosts);
+	}
+
+	@Override
+	public Shift findByDateShift(LocalDate date) {
+		return shiftRepository.findByDateShift(date);
 	}
 
 }

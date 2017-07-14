@@ -21,6 +21,8 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
 
 	List<Goods> findByIdIn(long[] ids);
 
-	Set<Goods> findByDate(LocalDate date);
+	Set<Goods> findByDateAndVisibleTrue(LocalDate date);
+
+	Set<Goods> findByDateAndCategoryNameAndVisibleTrue(LocalDate date, String name);
 
 }

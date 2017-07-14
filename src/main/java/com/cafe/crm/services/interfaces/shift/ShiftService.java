@@ -40,5 +40,6 @@ public interface ShiftService {
 
 	ShiftView createShiftView(Shift shift);
 
+	Shift findByDateShift(LocalDate date);
 
 }
