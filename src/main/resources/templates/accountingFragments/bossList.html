@@ -82,8 +82,8 @@
                                 </div>
 
 
-                                    <input type="hidden" class="form-control"  th:value="${boss.password}" name="password"/>
-                                    <br></br>
+                                <input type="hidden" class="form-control"  th:value="${boss.password}" name="password"/>
+                                <br></br>
 
 
                                 <h3 style="color: black" align="center">Активные должности &nbsp;&nbsp;&nbsp; <i
@@ -91,12 +91,31 @@
                                         data-toggle="tooltip" data-placement="right"
                                         title="Чтобы удалить должность снимите флаг с нужной позиции!"></i></h3>
                                 <div th:each="position : ${boss.getAllPosition()}" style="margin-left: 25%">
-                                    <input id="pos3" class="coupon_question"
-                                           style="width: 30px;height: 30px; margin-right: 20px" type="checkbox"
-                                           th:checked="checked" th:value="${position.id}" name="allPosition"
-                                           autocomplete="off" value=""/>
-                                    <label for="pos3"><h3 style="color: black;font-size: 20px"
-                                                          th:text="${position.jobName}"></h3></label>
+                                    <div class="question" th:if="${position.jobName} == 'Владелец'">
+                                        <input id="label4" class="addPos"
+                                               style="width: 30px;height: 30px; margin-right: 20px" type="checkbox" th:checked="checked"
+                                               th:value="${position.id}" name="bossPositionId"
+                                               autocomplete="off" value=""/>
+                                        <label for="label4"><h3 style="color: black;font-size: 20px"
+                                                                th:text="${position.jobName}"></h3></label>
+                                    </div>
+
+                                    <div class="question" th:if="${position.jobName} == 'Администратор'">
+                                        <input id="label3" class="addPos castBossToAdmin"
+                                               style="width: 30px;height: 30px; margin-right: 20px" type="checkbox" th:checked="checked"
+                                               th:value="${position.id}" name="adminPositionId"
+                                               autocomplete="off" value=""/>
+                                        <label for="label3"><h3 style="color: black;font-size: 20px"
+                                                                th:text="${position.jobName}"></h3></label>
+                                    </div>
+
+                                    <div th:if="${position.jobName} != 'Администратор' AND ${position.jobName} != 'Владелец'">
+                                        <input id="pos5" style="width: 30px;height: 30px; margin-right: 20px"
+                                               type="checkbox" th:value="${position.id}" name="allPosition" th:checked="checked"
+                                               autocomplete="off" value=""/>
+                                        <label for="pos5"><h3 style="color: black;font-size: 20px"
+                                                              th:text="${position.jobName}"></h3></label>
+                                    </div>
                                 </div>
 
                                 <h3 style="color: black" align="center">Добавить должности &nbsp;&nbsp;&nbsp; <i
@@ -106,7 +125,7 @@
 
                                 <div th:each="allPosBoss : ${allPosBoss}" style="margin-left: 25%">
                                     <div class="question" th:if="${allPosBoss.jobName} == 'Администратор'">
-                                        <input id="label3" class="addPos"
+                                        <input id="label3" class="addPos castBossToAdmin"
                                                style="width: 30px;height: 30px; margin-right: 20px" type="checkbox"
                                                th:value="${allPosBoss.id}" name="adminPositionId"
                                                autocomplete="off" value=""/>
@@ -132,6 +151,14 @@
                                                               th:text="${allPosBoss.jobName}"></h3></label>
                                     </div>
                                 </div>
+
+
+                                <div class="answer">
+                                    <h3 style="color: black;" align="center">Оклад</h3>
+                                    <input type="number" class="form-control" value="0" placeholder="Оклад" autofocus=""
+                                           name="shiftSalary"/>
+                                </div>
+
 
 
                                 <br></br>

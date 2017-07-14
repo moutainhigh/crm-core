@@ -25,7 +25,7 @@ public interface WorkerService {
 
 	void editManager(Manager manager, Long adminId, Long bossId);
 
-	void editBoss(Boss boss, Long bossId, Long adminId);
+	void editBoss(Boss boss, Long bossId, Long adminId, Long shiftSalary);
 
 	Worker findWorkerById(Long id);
 

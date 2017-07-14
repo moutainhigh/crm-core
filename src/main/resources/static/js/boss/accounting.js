@@ -9,6 +9,17 @@ $(".cast").click(function () {
     }
 });
 
+// скрыть-показать инпуты в editBossModal
+$(".answer").hide();
+$(".castBossToAdmin").click(function () {
+    if ($(this).is(":checked")) {
+        $(".answer").show();
+    } else {
+        $(".answer").hide();
+    }
+});
+
+
 // валидность паролей в newWorkerPage
 $(document).ready(function () {
     $('#repeatPasswordWorker').change(function () {

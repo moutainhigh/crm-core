@@ -1,5 +1,4 @@
 package com.cafe.crm.controllers.boss;
-
 import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;
 import com.cafe.crm.models.worker.Position;
@@ -60,26 +59,27 @@ public class AccountingController {
 		List<Manager> managerList = workerService.listAllManager();
 		List<Boss> bossList = workerService.listAllBoss();
 		List<Position> positionList = positionService.listAllPosition();
-
+		List<Position> allPosManager = positionService.listAllPosition();
 		for (Manager manager : managerList) {
-			List<Position> allPosManager = positionService.listAllPosition();
 			allPosManager.removeAll(manager.getAllPosition());
-			model.addObject("allPosManager", allPosManager);
 		}
+		List<Position> allPosBoss = positionService.listAllPosition();
 		for (Boss boss : bossList) {
-			List<Position> allPosBoss = positionService.listAllPosition();
 			allPosBoss.removeAll(boss.getAllPosition());
-			model.addObject("allPosBoss", allPosBoss);
 		}
+		List<Position> allPosWorker = positionService.listAllPosition();
 		for (Worker worker : workerList) {
-			List<Position> allPosWorker = positionService.listAllPosition();
-			allPosWorker.removeAll(worker.getAllPosition());
-			model.addObject("allPosWorker", allPosWorker);
+			if (worker.getActionForm().equalsIgnoreCase("worker")) {
+				allPosWorker.removeAll(worker.getAllPosition());
+			}
 		}
 		workerList.sort(Comparator.comparing(o -> (o.getLastName())));
 		managerList.sort(Comparator.comparing(o -> (o.getLastName())));
 		bossList.sort(Comparator.comparing(o -> (o.getLastName())));
 		positionList.sort(Comparator.comparing(o -> (o.getJobName())));
+		model.addObject("allPosWorker", allPosWorker);
+		model.addObject("allPosManager", allPosManager);
+		model.addObject("allPosBoss", allPosBoss);
 		model.addObject("managerList", managerList);
 		model.addObject("workerList", workerList);
 		model.addObject("bossList", bossList);
@@ -181,7 +181,6 @@ public class AccountingController {
 		Matcher matcherEmail = VALID_EMAIL_ADDRESS_REGEX.matcher(manager.getEmail());
 		Matcher matcherPhone = VALID_PNONE_REGEX.matcher(manager.getPhone());
 		Matcher matcherShiftSalary = VALID_SHIFT_SALARY_REGEX.matcher(String.valueOf(manager.getShiftSalary()));
-
 		if (matcherEmail.find() && matcherShiftSalary.find() && matcherPhone.find()) {
 			manager.setPhone(workerService.parsePhoneNumber(manager.getPhone()));
 			workerService.editManager(manager, adminPositionId, bossPositionId);
@@ -193,15 +192,14 @@ public class AccountingController {
 	@RequestMapping(value = {"worker/editBoss"}, method = RequestMethod.POST)
 	public String editBoss(Boss boss,
 						   @RequestParam(name = "bossPositionId", required = false) Long bossPositionId,
-						   @RequestParam(name = "adminPositionId", required = false) Long adminPositionId) throws IOException {
+						   @RequestParam(name = "adminPositionId", required = false) Long adminPositionId,
+						   @RequestParam(name = "shiftSalary", required = false) Long shiftSalary) throws IOException {
 
 		Matcher matcherEmail = VALID_EMAIL_ADDRESS_REGEX.matcher(boss.getEmail());
 		Matcher matcherPhone = VALID_PNONE_REGEX.matcher(boss.getPhone());
-		Matcher matcherShiftSalary = VALID_SHIFT_SALARY_REGEX.matcher(String.valueOf(boss.getShiftSalary()));
-
-		if (matcherEmail.find() && matcherShiftSalary.find() && matcherPhone.find()) {
+		if (matcherEmail.find() && matcherPhone.find()) {
 			boss.setPhone(workerService.parsePhoneNumber(boss.getPhone()));
-			workerService.editBoss(boss, bossPositionId, adminPositionId);
+			workerService.editBoss(boss, bossPositionId, adminPositionId, shiftSalary);
 			return "redirect:/worker";
 		}
 		return "redirect:/worker";
