@@ -13,7 +13,7 @@
     <div class="row">
         <hr/>
         <form role="form" th:method="post" action="/boss/statistics/search">
-            <div class="col-md-3"><p style="color: #5bc0de; font-size: 150%"> Дата начала поиска : <input name="start"
+            <div class="col-md-3" style="margin-left: 20%"><p style="color: #5bc0de; font-size: 150%"> Дата начала поиска : <input name="start" th:value="${date}"
                                                                                                           th:type="date"
                                                                                                           id="start"
                                                                                                           placeholder="Введите дату"
@@ -32,21 +32,6 @@
                 </button>
             </div>
         </form>
-        <div class="btn-group">
-            <button style="margin-top: 25px" class="btn btn-default btn-lg dropdown-toggle" type="button"
-                    data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">
-                Список смен <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a methods="post" href="/boss/statistics/search/lastWeek">Последняя неделя</a></li>
-                <li><a href="/boss/statistics/search/lastMonth">Последний месяц</a></li>
-                <li><a href="/boss/statistics/search/lastThreeMonth">Последнии три месяца</a></li>
-                <li><a href="/boss/statistics/search/lastHalfYear">Последние полгода</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="/boss/statistics/search/allShifts">Все смены</a></li>
-            </ul>
-        </div>
     </div>
 
     <div class="row">
@@ -56,6 +41,7 @@
                 <th>Номер</th>
                 <th>Дата открытия</th>
                 <th>Список сотрудников</th>
+                <th>Касса</th>
                 <th>Общая выручка</th>
                 <th>Подробный отчёт</th>
             </tr>
@@ -64,10 +50,10 @@
                 <td><p th:text="${shift.id}"></p></td>
                 <td><p th:text="${shift.dateShift}"></p></td>
                 <td><p th:text="${shift.getUsersNames()}"></p></td>
-                <td><p th:text="${15000}"></p></td>
-                <td class="col-lg-2"><a id="ins" class="btn btn-primary btn-info"
-                                        th:href="'#p'"
-                                        data-toggle="modal">Подробнее</a></td>
+                <td><p th:text="${shift.cashBox}"></p></td>
+                <td><p th:text="${shift.profit}"></p></td>
+                <td class="col-lg-2"><a  class="btn btn-primary btn-info"
+                                         th:href="'/boss/statistics/search/shiftDetail/' + ${shift.id}">Подробнее</a></td>
             </tr>
             </tbody>
         </table>
