@@ -16,7 +16,7 @@
         <div th:class="row">
 
             <center>
-                <form style="display: inline" th:action="@{/boss/menu/delete/recipe/__${product.id}__} " th:method="DELETE">
+                <form style="display: inline" th:action="@{/boss/menu/delete/recipe/__${product.id}__} " th:method="POST">
                     <button
                             type="sumbit" class="btn btn-danger ">Удалить рецепт
                     </button>

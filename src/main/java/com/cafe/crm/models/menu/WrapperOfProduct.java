@@ -22,7 +22,7 @@ public class WrapperOfProduct implements Serializable {  // wrapper for menuCont
 
 	}
 
-	public Long getIdCat() {
+	public Long getId() {
 		return idCat;
 	}
 

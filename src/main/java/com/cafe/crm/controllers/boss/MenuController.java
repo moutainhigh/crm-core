@@ -86,7 +86,7 @@ public class MenuController {
 	@ResponseBody
 	public ResponseEntity<?> createProd(@RequestBody final WrapperOfProduct wrapper) {
 
-		Category category = categoriesService.getOne(wrapper.getIdCat());
+		Category category = categoriesService.getOne(wrapper.getId());
 		Map<Ingredients, Integer> recipe = ingredientsService.createRecipe(wrapper);
 		if (category != null) {
 			Product product = new Product();
@@ -152,7 +152,7 @@ public class MenuController {
 	@RequestMapping(value = "/edit/recipe", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> editRecipe(@RequestBody WrapperOfProduct wrapper) {
-		Product product = productService.findOne(wrapper.getIdCat()); // id product
+		Product product = productService.findOne(wrapper.getId()); // id product
 		Map<Ingredients, Integer> recipe = ingredientsService.createRecipe(wrapper);
 
 		if (product != null) {
@@ -163,7 +163,7 @@ public class MenuController {
 		return new ResponseEntity<>(1L, HttpStatus.OK);
 	}
 
-	@DeleteMapping(value = "/delete/recipe/{id}")
+	@RequestMapping(value = "/delete/recipe/{id}" , method = RequestMethod.POST)
 	public String deleteRecipe(@PathVariable(name = "id") Long id, HttpServletRequest request) {
 		Product product = productService.findOne(id);
 		if (product != null) {
