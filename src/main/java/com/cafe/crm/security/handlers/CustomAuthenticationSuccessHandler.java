@@ -1,12 +1,16 @@
 package com.cafe.crm.security.handlers;
 
 import com.cafe.crm.models.worker.Role;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,8 +25,11 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
 	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
+	public final Integer SESSION_TIMEOUT_IN_SECONDS = 60 * 5;
+
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+		request.getSession().setMaxInactiveInterval(SESSION_TIMEOUT_IN_SECONDS);
 		handle(request, response, authentication);
 		clearAuthenticationAttributes(request);
 	}
