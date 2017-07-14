@@ -88,15 +88,30 @@
                         </tbody>
                     </table>
                     <div th:if="${shiftCashBox}==null">
-                        <h3>Введите количество денег в кассе</h3>
-                        <input type="text" class="form-control" value=""  placeholder="Введите количество денег в кассе" required="" autofocus=""
+                        <h3>Введите количество наличных в кассе</h3>
+                        <input type="number" class="form-control" value=""  placeholder="Введите количество денег в кассе" required="" autofocus=""
                                name="cashBox" />
                     </div>
 
                     <div th:if="${shiftCashBox}!=null">
-                        <h3>Количество денег в кассе</h3>
+                        <h3>Количество наличных в кассе</h3>
                         <span th:text="${shiftCashBox}"></span>
                     </div>
+
+
+                    <div th:if="${bankCashBox}==null">
+                        <h3>Введите количество денег на банковской карте</h3>
+                        <input type="number" class="form-control" value=""  placeholder="Введите количество денег на банковской карте" required="" autofocus=""
+                               name="bankCashBox" />
+                    </div>
+
+                    <div th:if="${bankCashBox}!=null">
+                        <h3>Количество денег на банковской карте</h3>
+                        <span th:text="${bankCashBox}"></span>
+                    </div>
+
+
+
                 </div>
                 <button type="submit" class="btn btn-danger btn-lg" name="upd">
                     Начать смену
@@ -114,6 +129,7 @@
 <div th:replace="closeShift :: closeShift"></div>
 <script th:src="@{/js/shift/page.js}"></script>
 <script th:src="@{/js/filter.js}"></script>
+<script th:src="@{/js/shift/close.js}"></script>
 </body>
 
 </html>

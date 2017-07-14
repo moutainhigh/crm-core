@@ -1,7 +1,9 @@
 package com.cafe.crm.controllers.debt;
 
 import com.cafe.crm.models.client.Debt;
+import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.services.interfaces.debt.DebtService;
+import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +23,15 @@ public class DebtController {
 
 	private TimeManager timeManager;
 
+	private ShiftService shiftService;
+
 	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 	@Autowired
-	public DebtController(DebtService debtService, TimeManager timeManager) {
+	public DebtController(DebtService debtService, TimeManager timeManager, ShiftService shiftService) {
 		this.debtService = debtService;
 		this.timeManager = timeManager;
+		this.shiftService = shiftService;
 	}
 
 	@RequestMapping(value = "/manager/tableDebt", method = RequestMethod.GET)
@@ -34,7 +39,6 @@ public class DebtController {
 		LocalDate today = timeManager.getDate();
 		List<Debt> debtList = debtService.findByVisibleIsTrueAndDateBetween(today, today.plusYears(100));
 		Double totalDebtAmount = getTotalPrice(debtList);
-
 		ModelAndView modelAndView = new ModelAndView("/debt/debt");
 		modelAndView.addObject("debtsList", debtList);
 		modelAndView.addObject("totalDebtAmount", totalDebtAmount);
@@ -43,14 +47,14 @@ public class DebtController {
 		modelAndView.addObject("today", today);
 		modelAndView.addObject("fromDate", today);
 		modelAndView.addObject("toDate", null);
-
+		modelAndView.addObject("CloseShiftView", shiftService.createShiftView(shiftService.getLast()));
 		return modelAndView;
 	}
 
 	@RequestMapping(value = "/manager/tableDebt", method = RequestMethod.POST)
 	public ModelAndView updatePageAfterSearch(@RequestParam(name = "fromDate") String fromDate,
-	                                          @RequestParam(name = "toDate") String toDate,
-	                                          @RequestParam(name = "debtorName") String debtorName) {
+											  @RequestParam(name = "toDate") String toDate,
+											  @RequestParam(name = "debtorName") String debtorName) {
 
 		LocalDate today = timeManager.getDate();
 		List<Debt> debtList = filter(debtorName, fromDate, toDate);

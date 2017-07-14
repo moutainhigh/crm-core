@@ -37,18 +37,30 @@ public class Shift {
 	@Column(name = "profit")
 	private Double profit = 0D;
 
+	@Column(name = "bankCashBox")
+	private Double bankCashBox = 0D;
+
 	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Worker.class)
 	@JoinTable(name = "permissions_allShifts",
 			joinColumns = {@JoinColumn(name = "shift_id")},
 			inverseJoinColumns = {@JoinColumn(name = "worker_id")})
 	private Set<Worker> users;
 
-	public Shift(LocalDate dateShift, Set<Worker> users) {
+	public Shift(LocalDate dateShift, Set<Worker> users, Double bankCashBox) {
 		this.dateShift = dateShift;
 		this.users = users;
+		this.bankCashBox = bankCashBox;
 	}
 
 	public Shift() {
+	}
+
+	public Double getBankCashBox() {
+		return bankCashBox;
+	}
+
+	public void setBankCashBox(Double bankCashBox) {
+		this.bankCashBox = bankCashBox;
 	}
 
 	public Set<Worker> getUsers() {

@@ -33,12 +33,14 @@ public class ShiftView {
 
 	private Double otherCosts;
 
+	private Double bankCashBox;
+
 	public ShiftView() {
 	}
 
 	public ShiftView(Set<Worker> allActiveWorker, Set<Client> clients, List<Calculate> activeCalculate,
 					 Set<Calculate> allCalculate, Double cashBox, Double totalCashBox, Long salaryWorker,
-					 Double card, Double allPrice, LocalDate shiftDate, Double otherCosts) {
+					 Double card, Double allPrice, LocalDate shiftDate, Double otherCosts, Double bankCashBox) {
 		this.allActiveWorker = allActiveWorker;
 		this.clients = clients;
 		this.activeCalculate = activeCalculate;
@@ -50,6 +52,7 @@ public class ShiftView {
 		this.allPrice = allPrice;
 		this.shiftDate = shiftDate;
 		this.otherCosts = otherCosts;
+		this.bankCashBox = bankCashBox;
 	}
 
 	public Set<Worker> getAllActiveWorker() {
@@ -138,5 +141,13 @@ public class ShiftView {
 
 	public void setOtherCosts(Double otherCosts) {
 		this.otherCosts = otherCosts;
+	}
+
+	public Double getBankCashBox() {
+		return bankCashBox;
+	}
+
+	public void setBankCashBox(Double bankCashBox) {
+		this.bankCashBox = bankCashBox;
 	}
 }

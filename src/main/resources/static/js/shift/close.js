@@ -25,3 +25,20 @@ function test2(){
     }
 }
 //]]>
+
+function recalculation() {
+    $.ajax({
+        type: "POST",
+        url: "/recalculation",
+        data: $('#form').serialize(),
+        success: function (data) {
+            //<![CDATA[
+            $('#salaryWorker').val(data[0]);
+            $('#totalCashBox').val(data[1]);
+            //]]>
+        },
+        error: function () {
+            console.log('ajaxModal сломался? ');
+        }
+    });
+}

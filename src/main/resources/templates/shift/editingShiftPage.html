@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Настройка смены</title>
-    <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
+    <div th:include="fragments/headTag :: bootstrap" ></div>
 </head>
 <body>
 <div th:replace="managernavbar :: managerNavbar"></div><!--/.navbar -->
@@ -112,8 +112,8 @@
                                         </div>
                                     </td>
 
-                                    <td><p th:text="${client.discount}"></p></td>
-                                    <td><p th:text="${client.discountWithCard}"></p></td>
+                                    <td><p th:text="${client.discount}+'%'"></p></td>
+                                    <td><p th:text="${client.discountWithCard}+'%'"></p></td>
                                     <td><p th:text="${client.allPrice}"></p></td>
                                     <td><p th:text="${client.cache}"></p></td>
                                     <td><p th:text="${client.payWithCard}"></p></td>
@@ -193,12 +193,15 @@
 
         </div>
     </div>
+
 </div>
 
 <div th:replace="fragments/managerChangePassword :: managerChangePassword"></div>
 <div th:replace="closeShift :: closeShift"></div>
 <script th:src="@{/js/manager/changePassword.js}"></script>
 <script th:src="@{/js/shift/close.js}"></script>
+
+
 </body>
 
 

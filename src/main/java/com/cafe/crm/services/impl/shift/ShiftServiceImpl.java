@@ -49,20 +49,20 @@ public class ShiftServiceImpl implements ShiftService {
 	@Autowired
 	private GoodsRepository goodsRepository;
 
-
 	@Override
 	public void saveAndFlush(Shift shift) {
 		shiftRepository.saveAndFlush(shift);
 	}
 
+
 	@Override
-	public Shift newShift(int[] box, Double cashBox) {
+	public Shift newShift(int[] box, Double cashBox, Double bankCashBox) {
 		Set<Worker> users = new HashSet<>();
 		for (int i = 0; i < box.length; i++) {
 			Worker worker = workerRepository.getOne(Long.valueOf((long) box[i]));
 			users.add(worker);
 		}
-		Shift shift = new Shift(LocalDate.now(), users);
+		Shift shift = new Shift(LocalDate.now(), users, bankCashBox);
 		shift.setOpen(true);
 		for (Worker worker : users) {
 			worker.getAllShifts().add(shift);
@@ -72,6 +72,7 @@ public class ShiftServiceImpl implements ShiftService {
 			shift.setCashBox(lastShift.getCashBox());
 		} else {
 			shift.setCashBox(cashBox);
+			shift.setBankCashBox(bankCashBox);
 		}
 		shiftRepository.saveAndFlush(shift);
 		return shift;
@@ -132,7 +133,8 @@ public class ShiftServiceImpl implements ShiftService {
 	}
 
 	@Override
-	public void closeShift(Double totalCashBox, Map<Long, Long> workerIdBonusMap, Double allPrice, Double shortage) {
+	public void closeShift(Double totalCashBox, Map<Long, Long> workerIdBonusMap, Double allPrice, Double shortage,
+						   Double bankKart) {
 		GoodsCategory goodsCategory = goodsCategoryService.findByNameIgnoreCase("Зарплата сотрудников");
 		Shift shift = shiftRepository.getLast();
 		for (Map.Entry<Long, Long> entry : workerIdBonusMap.entrySet()) {
@@ -149,10 +151,10 @@ public class ShiftServiceImpl implements ShiftService {
 			Goods goodsSalaryWorker = new Goods(worker.getFirstName() + " " + worker.getLastName(),
 					salaryCost, 1,
 					goodsCategory, LocalDate.now());
-			totalCashBox = totalCashBox - (bonusValue);
 			goodsService.save(goodsSalaryWorker);
 			workerRepository.saveAndFlush(worker);
 		}
+		shift.setBankCashBox(bankKart + shift.getBankCashBox());
 		shift.setOpen(false);
 		shift.setCashBox(totalCashBox - shortage);
 		shift.setProfit(allPrice);
@@ -172,6 +174,7 @@ public class ShiftServiceImpl implements ShiftService {
 		List<Calculate> activeCalculate = calculateService.getAllOpen(); //открытые счета
 		Set<Calculate> allCalculate = shift.getAllCalculate(); //все счета за смену
 		Double cashBox = shift.getCashBox(); //касса смены без учета расходов
+		Double bankCashBox = shift.getBankCashBox(); //деньги на банковской карте
 		Double totalCashBox = 0D; //итоговая касса
 		Long salaryWorker = 0L; //зп сотрудников
 		Double card = 0D; //оплата по клубным картам
@@ -185,13 +188,14 @@ public class ShiftServiceImpl implements ShiftService {
 		}
 		LocalDate shiftDate = shift.getDateShift();
 		Set<Goods> goodsSet = goodsRepository.findByDateAndVisibleTrue(shiftDate);
+		goodsSet.removeAll(goodsRepository.findByDateAndCategoryNameAndVisibleTrue(shiftDate, "Зарплата сотрудников"));
 		Double otherCosts = 0D;
 		for (Goods goods : goodsSet) {
 			otherCosts = otherCosts + (goods.getPrice() * goods.getQuantity());
 		}
 		totalCashBox = (cashBox + allPrice) - (salaryWorker + otherCosts);
 		return new ShiftView(allActiveWorker, clients, activeCalculate, allCalculate,
-				cashBox, totalCashBox, salaryWorker, card, allPrice, shiftDate, otherCosts);
+				cashBox, totalCashBox, salaryWorker, card, allPrice, shiftDate, otherCosts, bankCashBox);
 	}
 
 	@Override
