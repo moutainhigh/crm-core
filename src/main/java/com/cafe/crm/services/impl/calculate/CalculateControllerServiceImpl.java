@@ -134,9 +134,8 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		List<Client> clients = new ArrayList<>();
 		for (Calculate calculate : calculates) {
 			for (Client client : calculate.getClient()) {
-				if (calculate.isPausedIndex()) {
-
-
+				if (client.isPausedIndex()) {
+					calculatePriceService.calculatePriceTimeIfWasPause(client);
 				} else {
 					calculatePriceService.calculatePriceTime(client);
 				}
@@ -159,8 +158,8 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		Calculate calculate = calculateService.getAllOpenOnCalculate(calculateId);
 		List<Client> clients = calculate.getClient();
 		for (Client client : clients) {
-			if (calculate.isPausedIndex()) {
-				calculatePriceService.calculatePriceTimeIfWasPause(client,calculateId);
+			if (client.isPausedIndex()) {
+				calculatePriceService.calculatePriceTimeIfWasPause(client);
 			} else {
 				calculatePriceService.calculatePriceTime(client);
 

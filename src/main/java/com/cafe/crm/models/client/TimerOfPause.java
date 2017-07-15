@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.Map;
 
 @Entity
 public class TimerOfPause {
@@ -13,16 +13,20 @@ public class TimerOfPause {
 	@GeneratedValue
 	private Long id;
 
-	private Long idOfCalculate;
+	private Long idOfClient;
 
 	private LocalDateTime startTime;
 
 	private LocalDateTime endTime;
 
-	private Long wholeTimePause;
+	private Long wholeTimePause = 0L;
+
 
 	public TimerOfPause() {
+
 	}
+
+
 
 	public Long getId() {
 		return id;
@@ -32,12 +36,12 @@ public class TimerOfPause {
 		this.id = id;
 	}
 
-	public Long getIdOfCalculate() {
-		return idOfCalculate;
+	public Long getIdOfClient() {
+		return idOfClient;
 	}
 
-	public void setIdOfCalculate(Long idOfCalculate) {
-		this.idOfCalculate = idOfCalculate;
+	public void setIdOfClient(Long idOfClient) {
+		this.idOfClient = idOfClient;
 	}
 
 	public LocalDateTime getStartTime() {

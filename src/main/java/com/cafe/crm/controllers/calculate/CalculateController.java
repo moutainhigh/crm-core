@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -78,33 +79,45 @@ public class CalculateController {
 
 	@RequestMapping(value = {"/pause"}, method = RequestMethod.POST)
 	public String pause(@RequestParam("id") Long idCalculate) {
-		TimerOfPause timer = timerOfPauseService.findTimerOfPauseByIdOfCalculate(idCalculate);
+		TimerOfPause timer;
 		Calculate calculate = calculateService.getOne(idCalculate);
+		List<Client> clients = new ArrayList<>();
 		if (calculate != null) {
-			if (calculate.isPause()) {                                   //unset pause
-				Long timeOfPastPauses = timer.getWholeTimePause();
-				timer.setEndTime(timeManager.getDateTime());
-				long fullPauseTime = ChronoUnit.MINUTES.between( timer.getStartTime(),timer.getEndTime());
-				if (timeOfPastPauses != null) {
-					fullPauseTime += timeOfPastPauses;
+			clients = calculate.getClient();
+		}
+		if (!clients.isEmpty()) {
+			for (Client client : clients) {
+				timer = timerOfPauseService.findTimerOfPauseByIdOfCalculate(client.getId());
+				if (client.isPause()) {                                   //unset pause
+					Long timeOfPastPauses = timer.getWholeTimePause();
+					timer.setEndTime(timeManager.getDateTime());
+					long fullPauseTime = ChronoUnit.MINUTES.between(timer.getStartTime(), timer.getEndTime());
+					if (timeOfPastPauses != null) {
+						fullPauseTime += timeOfPastPauses;
+					}
+					timer.setWholeTimePause(fullPauseTime);
+					client.setPause(false);
+					calculate.setPause(false);
+				} else {                                                     //set pause
+					if (timer == null) {                                    // if this first pause on this calc
+						timer = new TimerOfPause();
+						timer.setIdOfClient(idCalculate);
+						timer.setStartTime(timeManager.getDateTime());
+						client.setPause(true);
+						client.setPausedIndex(true);
+						calculate.setPause(true);
+					} else {
+						timer.setStartTime(timeManager.getDateTime());      // if this second or more pause on this calc
+						client.setPause(true);
+						calculate.setPause(true);
+					}
 				}
-				timer.setWholeTimePause(fullPauseTime);
-				calculate.setPause(false);
-			} else {                                                     //set pause
-				if (timer == null) {                                    // if this first pause on this calc
-					timer = new TimerOfPause();
-					timer.setIdOfCalculate(idCalculate);
-					timer.setStartTime(timeManager.getDateTime());
-					calculate.setPause(true);
-					calculate.setPausedIndex(true);
-				} else {
-					timer.setStartTime(timeManager.getDateTime());      // if this second or more pause on this calc
-					calculate.setPause(true);
-				}
+				timerOfPauseService.save(timer);
+				clientService.save(client);
+				calculateService.save(calculate);
 			}
 		}
-		timerOfPauseService.save(timer);
-		calculateService.save(calculate);
+
 		return "redirect:/manager";
 	}
 
