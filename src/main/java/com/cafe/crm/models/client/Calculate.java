@@ -23,6 +23,18 @@ public class Calculate {
 
 	private boolean roundState = true;
 
+	private boolean isPause = false;  // now is paused ?
+
+	private boolean pausedIndex = false;     // true - if was pause
+
+	public boolean isPausedIndex() {
+		return pausedIndex;
+	}
+
+	public void setPausedIndex(boolean pausedIndex) {
+		this.pausedIndex = pausedIndex;
+	}
+
 	@OneToMany
 	private List<Client> client;
 
@@ -34,6 +46,14 @@ public class Calculate {
 
 
 	public Calculate() {
+	}
+
+	public boolean isPause() {
+		return isPause;
+	}
+
+	public void setPause(boolean pause) {
+		isPause = pause;
 	}
 
 	public boolean isRoundState() {

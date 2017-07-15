@@ -8,10 +8,11 @@
     <style> .cent {
         text-align: center;
     } </style>
-
+   <div th:if="${!calculate.isPause()}" >
     <button th:onclick="'ajaxModal(\'' + ${calculate.id} + '\');'" style="float: right" class="btn btn-danger" >
         Рассчитать
     </button>
+   </div>
     <br/><br/>
     <div th:id="'checkModal' + ${calculate.id}" class="modal"><!--class="modal "-->
         <div class="modal-dialog " style="width: 1000px;margin-top: 50px">

@@ -2,23 +2,27 @@ package com.cafe.crm.controllers.calculate;
 
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.client.TimerOfPause;
 import com.cafe.crm.models.discount.Discount;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.calculate.CalculateControllerService;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
+import com.cafe.crm.services.interfaces.calculate.TimerOfPauseService;
 import com.cafe.crm.services.interfaces.client.ClientService;
 import com.cafe.crm.services.interfaces.discount.DiscountService;
 import com.cafe.crm.services.interfaces.menu.CategoriesService;
 import com.cafe.crm.services.interfaces.menu.MenuService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
+import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
@@ -53,6 +57,12 @@ public class CalculateController {
 	@Autowired
 	private CategoriesService categoriesService;
 
+	@Autowired
+	private TimeManager timeManager;
+
+	@Autowired
+	private TimerOfPauseService timerOfPauseService;
+
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView manager() {
 		Shift shift = shiftService.getLast(); //текущая смена
@@ -64,6 +74,38 @@ public class CalculateController {
 		modelAndView.addObject("listDiscounts", discountService.getAllOpen());
 		modelAndView.addObject("CloseShiftView", shiftService.createShiftView(shift));
 		return modelAndView;
+	}
+
+	@RequestMapping(value = {"/pause"}, method = RequestMethod.POST)
+	public String pause(@RequestParam("id") Long idCalculate) {
+		TimerOfPause timer = timerOfPauseService.findTimerOfPauseByIdOfCalculate(idCalculate);
+		Calculate calculate = calculateService.getOne(idCalculate);
+		if (calculate != null) {
+			if (calculate.isPause()) {                                   //unset pause
+				Long timeOfPastPauses = timer.getWholeTimePause();
+				timer.setEndTime(timeManager.getDateTime());
+				long fullPauseTime = ChronoUnit.MINUTES.between( timer.getStartTime(),timer.getEndTime());
+				if (timeOfPastPauses != null) {
+					fullPauseTime += timeOfPastPauses;
+				}
+				timer.setWholeTimePause(fullPauseTime);
+				calculate.setPause(false);
+			} else {                                                     //set pause
+				if (timer == null) {                                    // if this first pause on this calc
+					timer = new TimerOfPause();
+					timer.setIdOfCalculate(idCalculate);
+					timer.setStartTime(timeManager.getDateTime());
+					calculate.setPause(true);
+					calculate.setPausedIndex(true);
+				} else {
+					timer.setStartTime(timeManager.getDateTime());      // if this second or more pause on this calc
+					calculate.setPause(true);
+				}
+			}
+		}
+		timerOfPauseService.save(timer);
+		calculateService.save(calculate);
+		return "redirect:/manager";
 	}
 
 	@RequestMapping(value = {"/add-calculate"}, method = RequestMethod.POST)

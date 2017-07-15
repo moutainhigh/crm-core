@@ -196,6 +196,12 @@
                         <button style="float: left;margin-left: 23px" class="btn btn-primary" data-toggle="modal" th:href="'#deleteModal' + ${calculate.id}">
                             Удалить
                         </button>
+
+                        <form action="/manager/pause" th:method="POST">
+                        <button th:text="${calculate.isPause()} ? 'Снять с паузы' : 'Пауза'"  name="id" th:value="${calculate.id}" style="float: left;margin-left: 23px" class="btn btn-primary" >
+                        </button>
+
+                        </form>
                         <div th:id="'deleteModal' + ${calculate.id}" class="modal fade">
                             <div class="modal-dialog " style="width: 250px;margin-top: 150px" role="document">
                                 <div class="modal-content">
@@ -203,14 +209,13 @@
                                         <p style="font-size: 20px">Вы желаете удалить клиента/тов ?</p>
                                         <button th:form="'formTest' + ${calculate.id}" class="btn btn-danger">Да</button>
                                         <button class="btn btn-danger" type="button" data-dismiss="modal">Нет</button>
-
                                     </div>
                                 </div>
                             </div>
                         </div>
 
 
-                        <button style="float: left;margin-left: 610px;" class="btn btn-primary"
+                        <button style="float: left;margin-left: 470px;" class="btn btn-primary"
                                 data-toggle="modal" th:href="'#menuModal' + ${calculate.id}"> Заказ
                         </button>
                         <div th:replace="client/clientFragments/getCheckFragment :: checkModal"></div>
@@ -225,7 +230,7 @@
 </div>
 
 <script type="text/javascript">
-    ajax();
+        ajax();
     setInterval(ajax, 60000);
     function cookiePanel(id) {
         if ($.cookie(id) == true.toString()) {
@@ -255,6 +260,7 @@
     }
 
     function ajaxModal(id) {
+    	alert("SSS")
         $.ajax({
             type: "POST",
             url: "/manager/output-clients",

@@ -1,7 +1,9 @@
 package com.cafe.crm.services.impl.calculate;
 
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.client.TimerOfPause;
 import com.cafe.crm.services.interfaces.calculate.CalculatePriceService;
+import com.cafe.crm.services.interfaces.calculate.TimerOfPauseService;
 import com.cafe.crm.services.interfaces.property.PropertyService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,30 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 
 	@Autowired
 	private PropertyService propertyService;
+
+	@Autowired
+	private TimerOfPauseService timerOfPauseService;
+
+	@Override
+	public void calculatePriceTimeIfWasPause(Client client, Long idCalculate) {
+		TimerOfPause timer = timerOfPauseService.findTimerOfPauseByIdOfCalculate(idCalculate);
+		Long timeOfpause = timer.getWholeTimePause();
+		LocalTime timeStart = client.getTimeStart().toLocalTime().withSecond(0).withNano(0);
+		LocalTime timeNow = timeManager.getTime().withSecond(0).withNano(0);
+		LocalTime timePassed = timeNow.minusHours(timeStart.getHour()).minusMinutes(timeStart.getMinute() + timeOfpause);
+		client.setPassedTime(timePassed);
+		double priceTime;
+		long passedHours = (long) timePassed.getHour();
+		long passedMinutes = (long) timePassed.getMinute();
+		double firstHour = propertyService.getOne(1L).getValue(); //  ставка за первый час
+		double secondHour = propertyService.getOne(2L).getValue(); // ставка за второй час
+		if (passedHours == 0) {
+			priceTime = firstHour;
+		} else {
+			priceTime = firstHour + ((passedHours - 1.0) * secondHour) + (passedMinutes / 60.0) * secondHour;
+		}
+		client.setPriceTime((double) Math.round(priceTime));
+	}
 
 	@Override
 	public void calculatePriceTime(Client client) {
@@ -34,25 +60,26 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 		} else {
 			priceTime = firstHour + ((passedHours - 1.0) * secondHour) + (passedMinutes / 60.0) * secondHour;
 		}
-		client.setPriceTime((double)Math.round(priceTime));
+		client.setPriceTime((double) Math.round(priceTime));
 	}
+
 
 	@Override
 	public void addDiscountOnPriceTime(Client client) {
 		double priceTime = client.getPriceTime();
 		priceTime -= (priceTime * (client.getDiscount() + client.getDiscountWithCard())) / 100;
-		client.setPriceTime((double)Math.round(priceTime));
+		client.setPriceTime((double) Math.round(priceTime));
 	}
 
 	@Override
 	public void getAllPrice(Client client) {
-		client.setAllPrice((double)Math.round(client.getPriceMenu() + client.getPriceTime()));
+		client.setAllPrice((double) Math.round(client.getPriceMenu() + client.getPriceTime()));
 	}
 
 	@Override
 	public void round(Client client, boolean stateRound) {
 		if (!stateRound) {
-			client.setAllPrice((double)Math.round(client.getAllPrice()));
+			client.setAllPrice((double) Math.round(client.getAllPrice()));
 			return;
 		}
 		Long allLong = client.getAllPrice().longValue();
@@ -82,7 +109,7 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 		if (client.getCard() == null) {
 			client.setPayWithCard(0D);
 		}
-		client.setCache(allPrice - (double)client.getPayWithCard());
+		client.setCache(allPrice - (double) client.getPayWithCard());
 	}
 
 }
