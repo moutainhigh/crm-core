@@ -7,6 +7,7 @@ import com.cafe.crm.services.interfaces.client.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -59,6 +60,19 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public Set<Card> findCardByClientIdIn(long[] clientsIds) {
 		return clientRepository.findCardByClientIdIn(clientsIds);
+	}
+
+	@Override
+	public boolean updateClientTime(Long id, int hours, int minutes) {
+		Client client = getOne(id);
+		if (client == null) {
+			return false;
+		}
+		LocalDateTime timeStart = client.getTimeStart();
+		LocalDateTime newTimeStart = timeStart.withHour(hours).withMinute(minutes);
+		client.setTimeStart(newTimeStart);
+		save(client);
+		return true;
 	}
 
 }

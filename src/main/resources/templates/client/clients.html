@@ -3,6 +3,7 @@
 <head>
     <title>Страница счетов</title>
     <div th:replace="fragments/headTag :: bootstrap"></div>
+    <link rel="stylesheet" th:href="@{/css/calculate.css}" type="text/css"/>
     <script th:src="@{/js/cookie.js}"></script>
 </head>
 <body>
@@ -149,8 +150,18 @@
                                                    style="width:150px;margin: auto;font-size: 17px"
                                                    name="description" th:value="${client.description}" maxlength="30"/>
                                         </td>
-                                        <td style="text-align: center">
-                                            <p th:text="${client.timeStart.toLocalTime().withSecond(0).withNano(0)}"></p></td>
+                                        <td style="text-align: center" >
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p th:text="${client.timeStart.toLocalTime().withSecond(0).withNano(0)}"></p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <button class="time-edit glyphicon glyphicon-edit" data-toggle="modal" th:href="'#timeEditModal' + ${client.id}"  aria-hidden="true"></button>
+                                                </div>
+
+                                            </div>
+                                        </td>
+                                        <div th:replace="client/clientFragments/timeEditModal :: timeEditModal" th:remove="tag"></div>
                                         <td style="text-align: center">
 
                                         </td>
@@ -238,6 +249,29 @@
         } else if ($.cookie(id) == false.toString() || $.cookie(id) == null) {
             $.cookie(id, "true");
         }
+    }
+
+    function editClientTimeStart(clientId) {
+        //<![CDATA[
+        var hours = $('#editHours' + clientId).val();
+        if (hours < 0 || hours > 23 || hours == "") {
+            var errorMessage = '<h4 style="color:red;" align="center">Допустимое значение часов от 0 до 23</h4>';
+            $('.messageEdit' + clientId).html(errorMessage).show();
+            return false;
+        }
+        var minutes = $('#editMinutes' + clientId).val();
+        if (minutes < 0 || minutes > 59 || minutes == "") {
+            var errorMessage = '<h4 style="color:red;" align="center">Допустимое значение минут от 0 до 59</h4>';
+            $('.messageEdit' + clientId).html(errorMessage).show();
+            return false;
+        }
+        //]]>
+        var url = "/manager/edit-client-time-start";
+        var data = {clientId: clientId, hours: hours, minutes: minutes};
+
+        $.post(url, data, function () {
+            location.reload()
+        });
     }
 
     function ajaxCardDiscount(id, calcId) {

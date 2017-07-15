@@ -12,18 +12,17 @@ import com.cafe.crm.services.interfaces.calculate.TimerOfPauseService;
 import com.cafe.crm.services.interfaces.client.ClientService;
 import com.cafe.crm.services.interfaces.discount.DiscountService;
 import com.cafe.crm.services.interfaces.menu.CategoriesService;
-import com.cafe.crm.services.interfaces.menu.MenuService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -42,9 +41,6 @@ public class CalculateController {
 
 	@Autowired
 	private BoardService boardService;
-
-	@Autowired
-	private MenuService menuService;
 
 	@Autowired
 	private ProductService productService;
@@ -119,6 +115,16 @@ public class CalculateController {
 		calculateService.save(calculate);
 
 		return "redirect:/manager";
+	}
+
+	@RequestMapping(value = "/edit-client-time-start", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> editClientTimeStart(@RequestParam("clientId") Long clientId,
+												 @RequestParam("hours") int hours,
+												 @RequestParam("minutes") int minutes){
+		boolean successfuly = clientService.updateClientTime(clientId, hours, minutes);
+
+		return successfuly ? ResponseEntity.ok("ok") : ResponseEntity.badRequest().body("bad");
 	}
 
 	@RequestMapping(value = {"/add-calculate"}, method = RequestMethod.POST)
