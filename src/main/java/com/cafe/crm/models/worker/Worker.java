@@ -24,11 +24,11 @@ public class Worker implements Serializable {
 	@Column(name = "lastName", length = 256)
 	private String lastName;
 
-	@Column(name = "email")
+	@Column(name = "email", unique = true)
 	private String email;
 
 	// Must be exactly 10 digits
-	@Column(name = "phone")
+	@Column(name = "phone", unique = true)
 	private String phone;
 
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

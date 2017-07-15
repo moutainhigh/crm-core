@@ -148,8 +148,11 @@ public class WorkerServiceImpl implements WorkerService {
 			bossRepository.saveAndFlush(boss);
 			managerRepository.saveAndFlush(manager);
 		} else if (adminId != null) {
+			Set<Role> adminRoles = new HashSet<>();
+			adminRoles.add(roleRepository.getRoleByName("MANAGER"));
 			List<Position> active = manager.getAllPosition();
 			active.add(positionRepository.findOne(adminId));
+			manager.setRoles(adminRoles);
 			manager.setAllPosition(active);
 			managerRepository.saveAndFlush(manager);
 		} else if (bossId != null) {
@@ -197,14 +200,20 @@ public class WorkerServiceImpl implements WorkerService {
 			managerRepository.saveAndFlush(manager);
 			bossRepository.saveAndFlush(boss);
 		} else if (bossId != null && adminId == null) {
+			Set<Role> rolesBoss = new HashSet<>();
+			rolesBoss.add(roleRepository.getRoleByName("BOSS"));
 			List<Position> activePosBoss = boss.getAllPosition();
 			activePosBoss.add(positionRepository.findOne(bossId));
+			boss.setRoles(rolesBoss);
 			boss.setAllPosition(activePosBoss);
 			bossRepository.saveAndFlush(boss);
 		} else {
+			Set<Role> rolesBoss = new HashSet<>();
+			rolesBoss.add(roleRepository.getRoleByName("BOSS"));
 			List<Position> activePosBoss = boss.getAllPosition();
 			activePosBoss.add(positionRepository.findOne(adminId));
 			activePosBoss.add(positionRepository.findOne(bossId));
+			boss.setRoles(rolesBoss);
 			boss.setAllPosition(activePosBoss);
 			bossRepository.saveAndFlush(boss);
 		}

@@ -21,9 +21,6 @@ import java.util.Set;
 public class InitWorker {
 
 	@Autowired
-	private WorkerRepository workerRepository;
-
-	@Autowired
 	private ManagerRepository managerRepository;
 
 	@Autowired
@@ -35,18 +32,13 @@ public class InitWorker {
 	@PostConstruct
 	public void init() {
 
-		Position workerPos = new Position("Кальянщик");
 		Position adminPos = new Position("Администратор");
 		Position bossPos = new Position("Владелец");
-		Position workerPos2 = new Position("Чайница");
 
-		List<Position> workerPosList = new ArrayList<>();
 		List<Position> adminPosList = new ArrayList<>();
 		List<Position> bossPosList = new ArrayList<>();
 
 
-		workerPosList.add(workerPos);
-		workerPosList.add(workerPos2);
 		adminPosList.add(adminPos);
 		bossPosList.add(bossPos);
 
@@ -58,22 +50,8 @@ public class InitWorker {
 		roleAdmin.setName("MANAGER");
 		roleRepository.saveAndFlush(roleAdmin);
 
-
-		Set<Shift> test = new HashSet<>();
 		Set<Shift> test2 = new HashSet<>();
 		Set<Shift> test3 = new HashSet<>();
-
-		Worker worker = new Worker();
-		worker.setFirstName("Max");
-		worker.setLastName("Worker");
-		worker.setEmail("Smith@gmail.com");
-		worker.setPhone("9123456789");
-		worker.setAllPosition(workerPosList);
-		worker.setShiftSalary(1000L);
-		worker.setSalary(2000L);
-		worker.setActionForm("worker");
-		worker.setAllShifts(test);
-		worker.setEnabled(true);
 
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String adminPassword = "manager";
@@ -100,13 +78,13 @@ public class InitWorker {
 
 		Boss boss = new Boss();
 		boss.setPassword(hashedBossPassword);
-		boss.setFirstName("Martin");
-		boss.setLastName("Set");
+		boss.setFirstName("Герман");
+		boss.setLastName("Севостьянов");
 		boss.setEmail("boss@mail.ru");
 		boss.setPhone("9123456789");
 		boss.setAllPosition(bossPosList);
-		boss.setShiftSalary(1000L);
-		boss.setSalary(2000L);
+		boss.setShiftSalary(0L);
+		boss.setSalary(0L);
 		boss.setActionForm("boss");
 		Set<Role> bossRoles = new HashSet<>();
 		bossRoles.add(roleBoss);
@@ -114,8 +92,6 @@ public class InitWorker {
 		boss.setAllShifts(test3);
 		boss.setEnabled(true);
 
-
-		workerRepository.saveAndFlush(worker);
 		managerRepository.saveAndFlush(manager);
 		bossRepository.saveAndFlush(boss);
 	}

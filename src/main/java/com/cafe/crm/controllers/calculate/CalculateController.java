@@ -9,6 +9,7 @@ import com.cafe.crm.services.interfaces.calculate.CalculateControllerService;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.client.ClientService;
 import com.cafe.crm.services.interfaces.discount.DiscountService;
+import com.cafe.crm.services.interfaces.menu.CategoriesService;
 import com.cafe.crm.services.interfaces.menu.MenuService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
@@ -49,11 +50,14 @@ public class CalculateController {
 	@Autowired
 	private DiscountService discountService;
 
+	@Autowired
+	private CategoriesService categoriesService;
+
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView manager() {
 		Shift shift = shiftService.getLast(); //текущая смена
 		ModelAndView modelAndView = new ModelAndView("client/clients");
-		modelAndView.addObject("listMenu", menuService.getOne(1L));
+		modelAndView.addObject("listMenu", categoriesService.findAll());
 		modelAndView.addObject("listProduct", productService.findAll());
 		modelAndView.addObject("listCalculate", calculateService.getAllOpen());
 		modelAndView.addObject("listBoard", boardService.getAllOpen());
