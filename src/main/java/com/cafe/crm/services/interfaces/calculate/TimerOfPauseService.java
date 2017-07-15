@@ -9,6 +9,6 @@ public interface TimerOfPauseService {
 
 	void save(TimerOfPause timer);
 
-	TimerOfPause findTimerOfPauseByIdOfCalculate(Long id);
+	TimerOfPause findTimerOfPauseByIdOfClient(Long id);
 
 }

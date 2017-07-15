@@ -23,7 +23,7 @@ public class TimerOfPauseServiceImpl implements TimerOfPauseService {
 	}
 
 	@Override
-	public TimerOfPause findTimerOfPauseByIdOfCalculate(Long id) {
-		return timerOfPauseRepository.findTimerOfPauseByIdOfCalculate(id);
+	public TimerOfPause findTimerOfPauseByIdOfClient(Long id) {
+		return timerOfPauseRepository.findTimerOfPauseByIdOfClient(id);
 	}
 }

@@ -81,42 +81,42 @@ public class CalculateController {
 	public String pause(@RequestParam("id") Long idCalculate) {
 		TimerOfPause timer;
 		Calculate calculate = calculateService.getOne(idCalculate);
-		List<Client> clients = new ArrayList<>();
+		List<Client> clients;
 		if (calculate != null) {
 			clients = calculate.getClient();
-		}
-		if (!clients.isEmpty()) {
-			for (Client client : clients) {
-				timer = timerOfPauseService.findTimerOfPauseByIdOfCalculate(client.getId());
-				if (client.isPause()) {                                   //unset pause
-					Long timeOfPastPauses = timer.getWholeTimePause();
-					timer.setEndTime(timeManager.getDateTime());
-					long fullPauseTime = ChronoUnit.MINUTES.between(timer.getStartTime(), timer.getEndTime());
-					if (timeOfPastPauses != null) {
-						fullPauseTime += timeOfPastPauses;
+			if (!clients.isEmpty()) {
+				for (Client client : clients) {
+					timer = timerOfPauseService.findTimerOfPauseByIdOfClient(client.getId());
+					if (client.isPause()) {                                   //unset pause
+						Long timeOfPastPauses = timer.getWholeTimePause();
+						timer.setEndTime(timeManager.getDateTime());
+						long fullPauseTime = ChronoUnit.MINUTES.between(timer.getStartTime(), timer.getEndTime());
+						if (timeOfPastPauses != null) {
+							fullPauseTime += timeOfPastPauses;
+						}
+						timer.setWholeTimePause(fullPauseTime);
+						client.setPause(false);
+						calculate.setPause(false);
+					} else {                                                     //set pause
+						if (timer == null) {                                    // if this first pause on this calc
+							timer = new TimerOfPause();
+							timer.setIdOfClient(client.getId());
+							timer.setStartTime(timeManager.getDateTime());
+							client.setPause(true);
+							client.setPausedIndex(true);
+							calculate.setPause(true);
+						} else {
+							timer.setStartTime(timeManager.getDateTime());      // if this second or more pause on this calc
+							client.setPause(true);
+							calculate.setPause(true);
+						}
 					}
-					timer.setWholeTimePause(fullPauseTime);
-					client.setPause(false);
-					calculate.setPause(false);
-				} else {                                                     //set pause
-					if (timer == null) {                                    // if this first pause on this calc
-						timer = new TimerOfPause();
-						timer.setIdOfClient(idCalculate);
-						timer.setStartTime(timeManager.getDateTime());
-						client.setPause(true);
-						client.setPausedIndex(true);
-						calculate.setPause(true);
-					} else {
-						timer.setStartTime(timeManager.getDateTime());      // if this second or more pause on this calc
-						client.setPause(true);
-						calculate.setPause(true);
-					}
+					timerOfPauseService.save(timer);
+					clientService.save(client);
 				}
-				timerOfPauseService.save(timer);
-				clientService.save(client);
-				calculateService.save(calculate);
 			}
 		}
+		calculateService.save(calculate);
 
 		return "redirect:/manager";
 	}

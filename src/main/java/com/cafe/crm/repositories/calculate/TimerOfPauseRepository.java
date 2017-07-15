@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TimerOfPauseRepository extends JpaRepository<TimerOfPause, Long> {
 
 
-	TimerOfPause findTimerOfPauseByIdOfCalculate(Long id);
+	TimerOfPause findTimerOfPauseByIdOfClient(Long id);
 
 }
