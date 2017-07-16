@@ -25,7 +25,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
 	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
-	public final Integer SESSION_TIMEOUT_IN_SECONDS = 60 * 5;
+	public final Integer SESSION_TIMEOUT_IN_SECONDS = 60 * 1200;
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
