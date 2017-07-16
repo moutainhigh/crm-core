@@ -14,7 +14,7 @@ public interface ShiftService {
 
 	void saveAndFlush(Shift shift);
 
-	Shift newShift(int[] box, Double cashBox, Double bankCashBox);
+	Shift newShift(long[] box, Double cashBox, Double bankCashBox);
 
 	Shift findOne(Long L);
 

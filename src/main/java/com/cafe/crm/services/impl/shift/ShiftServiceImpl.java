@@ -14,6 +14,7 @@ import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
 import com.cafe.crm.services.interfaces.goods.GoodsService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
+import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +50,9 @@ public class ShiftServiceImpl implements ShiftService {
 	@Autowired
 	private GoodsRepository goodsRepository;
 
+	@Autowired
+	private TimeManager timeManager;
+
 	@Override
 	public void saveAndFlush(Shift shift) {
 		shiftRepository.saveAndFlush(shift);
@@ -56,13 +60,13 @@ public class ShiftServiceImpl implements ShiftService {
 
 
 	@Override
-	public Shift newShift(int[] box, Double cashBox, Double bankCashBox) {
+	public Shift newShift(long[] box, Double cashBox, Double bankCashBox) {
 		Set<Worker> users = new HashSet<>();
 		for (int i = 0; i < box.length; i++) {
-			Worker worker = workerRepository.getOne(Long.valueOf((long) box[i]));
+			Worker worker = workerRepository.getOne(box[i]);
 			users.add(worker);
 		}
-		Shift shift = new Shift(LocalDate.now(), users, bankCashBox);
+		Shift shift = new Shift(timeManager.getDate(), users, bankCashBox);
 		shift.setOpen(true);
 		for (Worker worker : users) {
 			worker.getAllShifts().add(shift);

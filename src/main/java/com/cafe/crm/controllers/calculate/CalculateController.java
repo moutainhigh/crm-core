@@ -55,6 +55,9 @@ public class CalculateController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView manager() {
+		if(shiftService.getLast() == null || !(shiftService.getLast().getOpen())){
+			return new ModelAndView("redirect:/manager/shift/");
+		}
 		Shift shift = shiftService.getLast(); //текущая смена
 		ModelAndView modelAndView = new ModelAndView("client/clients");
 		modelAndView.addObject("listMenu", categoriesService.findAll());

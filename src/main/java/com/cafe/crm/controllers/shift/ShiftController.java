@@ -6,19 +6,26 @@ import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.shift.ShiftView;
 import com.cafe.crm.models.worker.Boss;
+import com.cafe.crm.models.worker.Manager;
+import com.cafe.crm.models.worker.Worker;
 import com.cafe.crm.repositories.boss.BossRepository;
 import com.cafe.crm.repositories.worker.WorkerRepository;
 import com.cafe.crm.services.interfaces.email.EmailService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
 import javax.transaction.Transactional;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -47,9 +54,6 @@ public class ShiftController {
 	private final Pattern VALID_CACHE_SALARY_REGEX =
 			Pattern.compile("\\d+");
 
-	private final Pattern VALID_BANKKART_SALARY_REGEX =
-			Pattern.compile("\\d+");
-
 	@Transactional
 	@RequestMapping(value = "/manager/shift/", method = RequestMethod.GET)
 	public String getAdminPage(Model model) {
@@ -76,12 +80,13 @@ public class ShiftController {
 
 	@Transactional
 	@RequestMapping(value = "/manager/shift/begin", method = RequestMethod.POST)
-	public String beginShift(@RequestParam(name = "box", required = false) int[] box,
-							 @RequestParam(name = "cashBox", required = false) Double cashBox,
-							 @RequestParam(name = "bankCashBox", required = false) Double bankCashBox) {
+	public String beginShift(@RequestParam(name = "box", required = false) long[] box,
+	                         @RequestParam(name = "cashBox", required = false) Double cashBox,
+	                         @RequestParam(name = "bankCashBox", required = false) Double bankCashBox) {
+		Worker worker = (Worker) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (shiftService.getLast() == null) {                     // if this first shift
 			if (box == null) {
-				int[] nullArray = new int[0];
+				long[] nullArray = {worker.getId()};
 				shiftService.newShift(nullArray, cashBox, bankCashBox);
 			} else {
 				shiftService.newShift(box, cashBox, bankCashBox);
@@ -90,7 +95,7 @@ public class ShiftController {
 		}
 		if (!shiftService.getLast().getOpen()) {                 // if shift is closed
 			if (box == null) {
-				int[] nullArray = new int[0];
+				long[] nullArray = {worker.getId()};
 				shiftService.newShift(nullArray, shiftService.getLast().getCashBox(),
 						shiftService.getLast().getBankCashBox());
 			} else {
@@ -109,6 +114,9 @@ public class ShiftController {
 	public String editPage(Model model) {
 		Shift shift = shiftService.getLast();
 		Set<Calculate> calculateSet = shift.getAllCalculate();
+		if(shiftService.getLast() == null || !(shiftService.getLast().getOpen())){
+			return"redirect:/manager/shift/";
+		}
 		for (Calculate calculate : calculateSet) {
 			List<Client> clientsOnCalculate = calculate.getClient();
 			model.addAttribute("clientsOnCalculate", clientsOnCalculate);
@@ -125,7 +133,6 @@ public class ShiftController {
 	@RequestMapping(value = "/manager/shift/delWorker", method = RequestMethod.POST)
 	public String deleteWorkerFromShift(@RequestParam(name = "delWorker") String name) {
 		shiftService.deleteWorkerFromShift(name);
-		;
 		return "redirect:/manager/shift/edit";
 	}
 
@@ -145,6 +152,10 @@ public class ShiftController {
 
 		Matcher matcherCache = VALID_CACHE_SALARY_REGEX.matcher(String.valueOf(cache));
 		Matcher matcherBankKart = VALID_CACHE_SALARY_REGEX.matcher(String.valueOf(bankKart));
+
+		if(shiftService.getLast() == null || !(shiftService.getLast().getOpen())){
+			return "redirect:/manager/shift/";
+		}
 
 		if (matcherCache.find() && matcherBankKart.find()) {
 			Double bonus = 0D;

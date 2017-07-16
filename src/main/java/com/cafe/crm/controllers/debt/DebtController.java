@@ -36,6 +36,9 @@ public class DebtController {
 
 	@RequestMapping(value = "/manager/tableDebt", method = RequestMethod.GET)
 	public ModelAndView showDebtPage() {
+		if(shiftService.getLast() == null || !(shiftService.getLast().getOpen())){
+			return new ModelAndView("redirect:/manager/shift/");
+		}
 		LocalDate today = timeManager.getDate();
 		List<Debt> debtList = debtService.findByVisibleIsTrueAndDateBetween(today, today.plusYears(100));
 		Double totalDebtAmount = getTotalPrice(debtList);

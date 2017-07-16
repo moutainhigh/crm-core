@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -43,21 +44,25 @@ public class CostsController {
 	}
 
 	@RequestMapping(value = "/costs", method = RequestMethod.GET)
-	public String showCostsPage(Model model) {
+	public ModelAndView showCostsPage(Model model) {
+		if(!(shiftService.getLast().getOpen())) {
+			return new ModelAndView("redirect:/manager/shift/");
+		}
+		ModelAndView modelAndView = new ModelAndView("costs/costs");
 		LocalDate today = getShiftDate();
 		List<Goods> goodsList = goodsService.findByDateBetween(today, today.plusYears(100));
 		Double totalPrice = getTotalPrice(goodsList);
 
-		model.addAttribute("goodsList", goodsList);
-		model.addAttribute("categoryName", null);
-		model.addAttribute("goodsName", null);
-		model.addAttribute("totalPrice", totalPrice);
-		model.addAttribute("formGoods", new Goods());
-		model.addAttribute("today", today);
-		model.addAttribute("fromDate", today);
-		model.addAttribute("toDate", null);
-		model.addAttribute("CloseShiftView", shiftService.createShiftView(shiftService.getLast()));
-		return "costs/costs";
+		modelAndView.addObject("goodsList", goodsList);
+		modelAndView.addObject("categoryName", null);
+		modelAndView.addObject("goodsName", null);
+		modelAndView.addObject("totalPrice", totalPrice);
+		modelAndView.addObject("formGoods", new Goods());
+		modelAndView.addObject("today", today);
+		modelAndView.addObject("fromDate", today);
+		modelAndView.addObject("toDate", null);
+		modelAndView.addObject("CloseShiftView", shiftService.createShiftView(shiftService.getLast()));
+		return modelAndView;
 	}
 
 	@RequestMapping(value = "/costs", method = RequestMethod.POST)
