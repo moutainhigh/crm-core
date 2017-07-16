@@ -6,6 +6,7 @@ import com.cafe.crm.repositories.client.ClientRepository;
 import com.cafe.crm.services.interfaces.client.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -62,6 +63,7 @@ public class ClientServiceImpl implements ClientService {
 		return clientRepository.findCardByClientIdIn(clientsIds);
 	}
 
+	@Transactional
 	@Override
 	public boolean updateClientTime(Long id, int hours, int minutes) {
 		Client client = getOne(id);

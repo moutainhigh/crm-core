@@ -271,6 +271,13 @@
 
         $.post(url, data, function () {
             location.reload()
+        })
+        .fail(function(response) {
+            var errorMessage = '<h4 style="color:red;" align="center">Не удалось обновить время</h4>';
+            $('.messageEdit' + clientId).html(errorMessage).show();
+            window.setTimeout(function () {
+                location.reload()
+            }, 1000);
         });
     }
 
