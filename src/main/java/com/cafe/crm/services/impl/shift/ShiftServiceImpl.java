@@ -174,7 +174,7 @@ public class ShiftServiceImpl implements ShiftService {
 	@Override
 	public ShiftView createShiftView(Shift shift) {
 		Set<Worker> allActiveWorker = shiftService.getAllActiveWorkers();// добавленные воркеры на смену
-		Set<Client> clients = shiftService.getLast().getClients(); //клиенты на смене
+		Set<Client> clients = shiftService.findOne(shift.getId()).getClients(); //клиенты на смене
 		List<Calculate> activeCalculate = calculateService.getAllOpen(); //открытые счета
 		Set<Calculate> allCalculate = shift.getAllCalculate(); //все счета за смену
 		Double cashBox = shift.getCashBox(); //касса смены без учета расходов

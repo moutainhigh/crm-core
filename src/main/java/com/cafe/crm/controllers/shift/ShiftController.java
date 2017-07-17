@@ -57,18 +57,19 @@ public class ShiftController {
 	@Transactional
 	@RequestMapping(value = "/manager/shift/", method = RequestMethod.GET)
 	public String getAdminPage(Model model) {
+		Shift lastShift = shiftService.getLast();
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("d.MM.YYYY");
 		LocalDateTime date = timeManager.getDateTime();
-		if (shiftService.getLast() != null && shiftService.getLast().getOpen()) {
+		if (lastShift != null && lastShift.getOpen()) {
 			return "redirect:/manager";
-		} else if (shiftService.getLast() != null) {
+		} else if (lastShift != null) {
 			model.addAttribute("shiftCashBox", shiftService.getLast().getCashBox());
 			model.addAttribute("bankCashBox", shiftService.getLast().getBankCashBox());
 			model.addAttribute("list", workerService.getAllActiveWorker());
 			model.addAttribute("date", dateTimeFormatter.format(date));
 			return "shift/shiftPage";
 
-		} else if (shiftService.getLast() == null || !shiftService.getLast().getOpen()) {
+		} else if (lastShift == null || !(lastShift.getOpen())) {
 			model.addAttribute("list", workerService.getAllActiveWorker());
 			model.addAttribute("date", dateTimeFormatter.format(date));
 			return "shift/shiftPage";
@@ -83,8 +84,9 @@ public class ShiftController {
 	public String beginShift(@RequestParam(name = "box", required = false) long[] box,
 	                         @RequestParam(name = "cashBox", required = false) Double cashBox,
 	                         @RequestParam(name = "bankCashBox", required = false) Double bankCashBox) {
+		Shift lastShift = shiftService.getLast();
 		Worker worker = (Worker) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (shiftService.getLast() == null) {                     // if this first shift
+		if (lastShift == null) {                     // if this first shift
 			if (box == null) {
 				long[] nullArray = {worker.getId()};
 				shiftService.newShift(nullArray, cashBox, bankCashBox);
@@ -93,17 +95,16 @@ public class ShiftController {
 			}
 			return "redirect:/manager";
 		}
-		if (!shiftService.getLast().getOpen()) {                 // if shift is closed
+		if (!lastShift.getOpen()) {                 // if shift is closed
 			if (box == null) {
 				long[] nullArray = {worker.getId()};
-				shiftService.newShift(nullArray, shiftService.getLast().getCashBox(),
-						shiftService.getLast().getBankCashBox());
+				shiftService.newShift(nullArray, lastShift.getCashBox(),
+						lastShift.getBankCashBox());
 			} else {
-				shiftService.newShift(box, shiftService.getLast().getCashBox(),
-						shiftService.getLast().getBankCashBox());
+				shiftService.newShift(box, lastShift.getCashBox(),
+						lastShift.getBankCashBox());
 			}
 			return "redirect:/manager";
-
 		} else {                                                  // if shift is open
 			return "redirect:/manager";
 		}
@@ -112,48 +113,52 @@ public class ShiftController {
 	// get all workers of shift
 	@RequestMapping(value = "/manager/shift/edit", method = RequestMethod.GET)
 	public String editPage(Model model) {
-		Shift shift = shiftService.getLast();
-		Set<Calculate> calculateSet = shift.getAllCalculate();
-		if(shiftService.getLast() == null || !(shiftService.getLast().getOpen())){
-			return"redirect:/manager/shift/";
+		Shift lastShift = shiftService.getLast();
+		Set<Calculate> calculateSet = lastShift.getAllCalculate();
+		if (lastShift == null || !(lastShift.getOpen())) {
+			return "redirect:/manager/shift/";
 		}
 		for (Calculate calculate : calculateSet) {
 			List<Client> clientsOnCalculate = calculate.getClient();
 			model.addAttribute("clientsOnCalculate", clientsOnCalculate);
 		}
-		model.addAttribute("workersOfShift", shiftService.getLast().getUsers());
+		model.addAttribute("workersOfShift", lastShift.getUsers());
 		model.addAttribute("allWorkers", shiftService.getWorkers());
-		model.addAttribute("CloseShiftView", shiftService.createShiftView(shiftService.getLast()));
+		model.addAttribute("CloseShiftView", shiftService.createShiftView(lastShift));
 		model.addAttribute("calculate", calculateSet);
-		model.addAttribute("client", shift.getClients());
+		model.addAttribute("client", lastShift.getClients());
 		return "shift/editingShiftPage";
 	}
 
 	// delete worker from shift
 	@RequestMapping(value = "/manager/shift/delWorker", method = RequestMethod.POST)
 	public String deleteWorkerFromShift(@RequestParam(name = "delWorker") String name) {
+
 		shiftService.deleteWorkerFromShift(name);
+
 		return "redirect:/manager/shift/edit";
 	}
 
 	// add worker on shift
 	@RequestMapping(value = "/manager/shift/addWorker", method = RequestMethod.POST)
 	public String addWorkerFromShift(@RequestParam(name = "addWorker") String name) {
+
 		shiftService.addWorkerFromShift(name);
+
 		return "redirect:/manager/shift/edit";
 	}
 
 	@RequestMapping(value = "/endOfShift", method = RequestMethod.GET)
 	public String closeShift(@RequestParam(name = "bonus") Long[] workerBonus,
-							 @RequestParam(name = "idWorker") Long[] idWorker,
-							 @RequestParam(name = "cache") Double cache,
-							 @RequestParam(name = "bankKart") Double bankKart) {
-
+	                         @RequestParam(name = "idWorker") Long[] idWorker,
+	                         @RequestParam(name = "cache") Double cache,
+	                         @RequestParam(name = "bankKart") Double bankKart) {
+		Shift lastShift = shiftService.getLast();
 
 		Matcher matcherCache = VALID_CACHE_SALARY_REGEX.matcher(String.valueOf(cache));
 		Matcher matcherBankKart = VALID_CACHE_SALARY_REGEX.matcher(String.valueOf(bankKart));
 
-		if(shiftService.getLast() == null || !(shiftService.getLast().getOpen())){
+		if (lastShift == null || !(lastShift.getOpen())) {
 			return "redirect:/manager/shift/";
 		}
 
@@ -165,7 +170,7 @@ public class ShiftController {
 					workerIdBonusMap.put(idWorker[j], workerBonus[j]);
 				}
 			}
-			ShiftView shiftView = shiftService.createShiftView(shiftService.getLast());
+			ShiftView shiftView = shiftService.createShiftView(lastShift);
 			Double primaryCashBox = shiftView.getCashBox();
 			Double allPrice = shiftView.getAllPrice();
 			Long salaryWorkerOnShift = shiftView.getSalaryWorker();
@@ -194,11 +199,13 @@ public class ShiftController {
 	@ResponseBody
 	@RequestMapping(value = "/recalculation", method = RequestMethod.POST)
 	public List<Object> recalculation(@RequestParam(name = "bonus") Long[] workerBonus) {
+		Shift lastShift = shiftService.getLast();
 		Double bonus = 0D;
+
 		for (int i = 0; workerBonus.length > i; i++) {
 			bonus = bonus + workerBonus[i];
 		}
-		ShiftView shiftView = shiftService.createShiftView(shiftService.getLast());
+		ShiftView shiftView = shiftService.createShiftView(lastShift);
 		Double primaryCashBox = shiftView.getCashBox();
 		Double allPrice = shiftView.getAllPrice();
 		Double salaryWorkerOnShift = shiftView.getSalaryWorker() + bonus;
