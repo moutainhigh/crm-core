@@ -1,6 +1,8 @@
 package com.cafe.crm.configs.init;
 
+import com.cafe.crm.models.board.Board;
 import com.cafe.crm.models.card.Card;
+import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.card.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,8 +15,33 @@ public class InitClient {
 	@Autowired
 	private CardService cardService;
 
+	@Autowired
+	private BoardService boardService;
+
 	@PostConstruct
 	public void init() {
+
+		Board board = new Board();
+		board.setName("Стол1");
+		board.setIsOpen(true);
+		boardService.save(board);
+
+		Board board1 = new Board();
+		board1.setName("Стол2");
+		board1.setIsOpen(true);
+		boardService.save(board1);
+
+		Board board2 = new Board();
+		board2.setName("Стол3");
+		board2.setIsOpen(true);
+		boardService.save(board2);
+
+		Board board3 = new Board();
+		board3.setName("Стол4");
+		board3.setIsOpen(true);
+		boardService.save(board3);
+
+
 		Card card = new Card();
 		card.setName("Данила");
 		card.setBalance(5000D);

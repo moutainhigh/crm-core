@@ -25,6 +25,10 @@ public class Category {
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "categories")
 	private Set<Menu> menus;
 
+	private boolean dirtyProfit = true;
+
+	private boolean floatingPrice;
+
 	public Category(String name) {
 		this.name = name;
 	}
@@ -66,6 +70,21 @@ public class Category {
 		this.menus = menus;
 	}
 
+	public boolean isDirtyProfit() {
+		return dirtyProfit;
+	}
+
+	public void setDirtyProfit(boolean dirtyProfit) {
+		this.dirtyProfit = dirtyProfit;
+	}
+
+	public boolean isFloatingPrice() {
+		return floatingPrice;
+	}
+
+	public void setFloatingPrice(boolean floatingPrice) {
+		this.floatingPrice = floatingPrice;
+	}
 
 	@Override
 	public boolean equals(Object o) {

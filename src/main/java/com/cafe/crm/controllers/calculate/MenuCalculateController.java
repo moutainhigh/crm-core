@@ -36,6 +36,15 @@ public class MenuCalculateController {
 		return menuCalculateService.createLayerProduct(calculateId, clientsId, productId);
 	}
 
+	@RequestMapping(value = {"/create-layer-product-floating-price"}, method = RequestMethod.POST)
+	@ResponseBody
+	public LayerProduct createLayerProductWithFloatingPrice(@RequestParam("calculateId") long calculateId,
+															@RequestParam("clientsId") long[] clientsId,
+															@RequestParam("productId") long productId,
+															@RequestParam("productPrice") double productPrice) {
+		return menuCalculateService.createLayerProductWithFloatingPrice(calculateId, clientsId, productId, productPrice);
+	}
+
 	@RequestMapping(value = {"/add-client-on-layer-product"}, method = RequestMethod.POST)
 	@ResponseBody
 	public LayerProduct addClientOnLayerProduct(@RequestParam("calculateId") long calculateId,
