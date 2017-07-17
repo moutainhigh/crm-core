@@ -3,6 +3,9 @@ import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;
 import com.cafe.crm.models.worker.Position;
 import com.cafe.crm.models.worker.Worker;
+import com.cafe.crm.repositories.boss.BossRepository;
+import com.cafe.crm.repositories.manager.ManagerRepository;
+import com.cafe.crm.repositories.worker.WorkerRepository;
 import com.cafe.crm.services.interfaces.position.PositionService;
 import com.cafe.crm.services.interfaces.worker.WorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +56,15 @@ public class AccountingController {
 	private final Pattern VALID_SHIFT_SALARY_REGEX =
 			Pattern.compile("\\d+");
 
+	@Autowired
+	private BossRepository bossRepository;
+
+	@Autowired
+	private ManagerRepository managerRepository;
+
+	@Autowired
+	private WorkerRepository workerRepository;
+
 	@RequestMapping(value = {"/worker"}, method = RequestMethod.GET)
 	public ModelAndView getAllWorker(ModelAndView model) {
 		List<Worker> workerList = workerService.listAllWorker();
@@ -100,17 +112,20 @@ public class AccountingController {
 		Matcher matcherShiftSalary = VALID_SHIFT_SALARY_REGEX.matcher(String.valueOf(worker.getShiftSalary()));
 		if (matcherEmail.find() && matcherShiftSalary.find() && matcherPhone.find()) {
 			worker.setPhone(workerService.parsePhoneNumber(worker.getPhone()));
-			if (adminPositionId == null && bossPositionId == null) {
-				workerService.addWorker(worker);
-			} else if (adminPositionId != null && bossPositionId != null &&
-					(passwordWorker.equals(submitNewPasswordWorker))) {
-				workerService.castWorkerToBoss(worker, passwordWorker, bossPositionId);
-			} else if ((adminPositionId != null) && (passwordWorker.equals(submitNewPasswordWorker))) {
-				workerService.castWorkerToManager(worker, passwordWorker, adminPositionId);
-			} else if (bossPositionId != null && passwordWorker.equals(submitNewPasswordWorker)) {
-				workerService.castWorkerToBoss(worker, passwordWorker, bossPositionId);
+			if (validDuplicateWorker(worker)){
+				if (adminPositionId == null && bossPositionId == null) {
+					workerService.addWorker(worker);
+				} else if (adminPositionId != null && bossPositionId != null &&
+						(passwordWorker.equals(submitNewPasswordWorker))) {
+					workerService.castWorkerToBoss(worker, passwordWorker, bossPositionId);
+				} else if ((adminPositionId != null) && (passwordWorker.equals(submitNewPasswordWorker))) {
+					workerService.castWorkerToManager(worker, passwordWorker, adminPositionId);
+				} else if (bossPositionId != null && passwordWorker.equals(submitNewPasswordWorker)) {
+					workerService.castWorkerToBoss(worker, passwordWorker, bossPositionId);
+				}
+			}else {
+				return "redirect:/worker";
 			}
-			return "redirect:/worker";
 		}
 		return "redirect:/worker";
 	}
@@ -125,12 +140,10 @@ public class AccountingController {
 		Matcher matcherShiftSalary = VALID_SHIFT_SALARY_REGEX.matcher(String.valueOf(manager.getShiftSalary()));
 		if (matcherEmail.find() && matcherShiftSalary.find() && matcherPhone.find()) {
 			manager.setPhone(workerService.parsePhoneNumber(manager.getPhone()));
-			if (!manager.getPassword().equals(submitAdminPassword)) {
-				return "redirect:/worker";
-			} else if (bossPositionId == null) {
+			if (validDuplicateManager(manager) && manager.getPassword().equals(submitAdminPassword)){
 				workerService.addManager(manager);
-			} else {
-				workerService.castManagerToBoss(manager, bossPositionId);
+			}else {
+				return "redirect:/worker";
 			}
 		}
 		return "redirect:/worker";
@@ -145,12 +158,11 @@ public class AccountingController {
 		Matcher matcherShiftSalary = VALID_SHIFT_SALARY_REGEX.matcher(String.valueOf(boss.getShiftSalary()));
 		if (matcherEmail.find() && matcherShiftSalary.find() && matcherPhone.find()) {
 			boss.setPhone(workerService.parsePhoneNumber(boss.getPhone()));
-			if (!boss.getPassword().equals(submitBossPassword)) {
-				return "redirect:/worker";
-			} else {
+			if (validDuplicateBoss(boss) && boss.getPassword().equals(submitBossPassword)){
 				workerService.addBoss(boss);
+			}else {
+				return "redirect:/worker";
 			}
-			return "redirect:/worker";
 		}
 		return "redirect:/worker";
 	}
@@ -166,8 +178,12 @@ public class AccountingController {
 		Matcher matcherPhone = VALID_PNONE_REGEX.matcher(worker.getPhone());
 		Matcher matcherShiftSalary = VALID_SHIFT_SALARY_REGEX.matcher(String.valueOf(worker.getShiftSalary()));
 		if (matcherEmail.find() && matcherShiftSalary.find() && matcherPhone.find()) {
-			worker.setPhone(workerService.parsePhoneNumber(worker.getPhone()));
-			workerService.editWorker(worker, adminPositionId, bossPositionId, password, submitPassword);
+			if (validDuplicateWorker(worker)){
+				worker.setPhone(workerService.parsePhoneNumber(worker.getPhone()));
+				workerService.editWorker(worker, adminPositionId, bossPositionId, password, submitPassword);
+			}else {
+				return "redirect:/worker";
+			}
 		}
 		return "redirect:/worker";
 	}
@@ -182,9 +198,12 @@ public class AccountingController {
 		Matcher matcherPhone = VALID_PNONE_REGEX.matcher(manager.getPhone());
 		Matcher matcherShiftSalary = VALID_SHIFT_SALARY_REGEX.matcher(String.valueOf(manager.getShiftSalary()));
 		if (matcherEmail.find() && matcherShiftSalary.find() && matcherPhone.find()) {
-			manager.setPhone(workerService.parsePhoneNumber(manager.getPhone()));
-			workerService.editManager(manager, adminPositionId, bossPositionId);
-			return "redirect:/worker";
+			if (validDuplicateManager(manager)){
+				manager.setPhone(workerService.parsePhoneNumber(manager.getPhone()));
+				workerService.editManager(manager, adminPositionId, bossPositionId);
+			}else {
+				return "redirect:/worker";
+			}
 		}
 		return "redirect:/worker";
 	}
@@ -198,9 +217,12 @@ public class AccountingController {
 		Matcher matcherEmail = VALID_EMAIL_ADDRESS_REGEX.matcher(boss.getEmail());
 		Matcher matcherPhone = VALID_PNONE_REGEX.matcher(boss.getPhone());
 		if (matcherEmail.find() && matcherPhone.find()) {
-			boss.setPhone(workerService.parsePhoneNumber(boss.getPhone()));
-			workerService.editBoss(boss, bossPositionId, adminPositionId, shiftSalary);
-			return "redirect:/worker";
+			if (validDuplicateBoss(boss)){
+				boss.setPhone(workerService.parsePhoneNumber(boss.getPhone()));
+				workerService.editBoss(boss, bossPositionId, adminPositionId, shiftSalary);
+			}else {
+				return "redirect:/worker";
+			}
 		}
 		return "redirect:/worker";
 	}
@@ -228,5 +250,17 @@ public class AccountingController {
 	public String deletePosition(@PathVariable("id") Long id) throws IOException {
 		positionService.deletePosition(id);
 		return "redirect:/worker";
+	}
+
+	private Boolean validDuplicateBoss(Boss boss){
+		return bossRepository.findByEmail(boss.getEmail()) == null || bossRepository.findByPhone(boss.getPhone()) == null;
+	}
+
+	private Boolean validDuplicateManager(Manager manager){
+		return managerRepository.findByEmail(manager.getEmail()) == null || managerRepository.findByPhone(manager.getPhone()) == null;
+	}
+
+	private Boolean validDuplicateWorker(Worker worker){
+		return workerRepository.findByEmail(worker.getEmail()) == null || workerRepository.findByPhone(worker.getPhone()) == null;
 	}
 }
