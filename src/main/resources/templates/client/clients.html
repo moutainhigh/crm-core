@@ -25,6 +25,7 @@
             <div class="panel panel-primary">
                 <div class="panel-heading" style="height: 44px; padding: 0">
                     <div class="panel-title">
+
                         <form style="float: left" method="post" action="/manager/refresh-board"
                               th:id="'formRef'+${calculate.id}">
                             <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
@@ -32,16 +33,13 @@
                             <select onchange="submit();"
                                     style="width:130px; float: left; height: 34px;font-size:18px;margin-top: 5px;margin-left: 6px "
                                     class="form-control" th:form="'formRef'+${calculate.id}" name="boardId">
-
+                                <option value="-1" th:selected="${listBoard} == null ? 'true' : 'false' ">
+                                    Нет
+                                </option>
                                 <p th:each="b : ${listBoard}">
-
-                                <p th:if="(${calculate.getBoard().name} != ${b.name})">
-                                    <option th:value="${b.id}" th:text="${b.name}"></option>
-                                </p>
-
-                                <p th:if="(${calculate.getBoard().name} == ${b.name})">
-                                    <option th:value="${b.id}" th:text="${b.name}" selected=""></option>
-                                </p>
+                                    <option th:value="${b.id}"
+                                            th:text="${b.name}"
+                                            th:selected="(${calculate.getBoard()} == ${b}) ? 'true' : 'false'"></option>
                                 </p>
                             </select>
                         </form>
@@ -57,14 +55,18 @@
                                 data-toggle="collapse" th:href="'#accord' + ${calculate.id}"
                                 th:text="${calculate.description}">
                         </button>
-                        <form th:id="'formRoundState' + ${calculate.id}" action="/manager/change-round-state" method="post">
+                        <form th:id="'formRoundState' + ${calculate.id}" action="/manager/change-round-state"
+                              method="post">
 
                             <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
                         </form>
 
-                        <button  class="btn btn-primary" style="float: left;margin-left: 10px;margin-top: 5px;border: none;padding: 3px" th:id="'rek' + ${calculate.id}"
-                                 th:onclick="'roundState(\'' + ${calculate.id} + '\',\'' + ${calculate.roundState} + '\');'">
-                            <p style="margin: 0;font-size: 20px" th:text="${calculate.roundState} ? 'Округлено' : 'Не округлено'"></p>
+                        <button class="btn btn-primary"
+                                style="float: left;margin-left: 10px;margin-top: 5px;border: none;padding: 3px"
+                                th:id="'rek' + ${calculate.id}"
+                                th:onclick="'roundState(\'' + ${calculate.id} + '\',\'' + ${calculate.roundState} + '\');'">
+                            <p style="margin: 0;font-size: 20px"
+                               th:text="${calculate.roundState} ? 'Округлено' : 'Не округлено'"></p>
                         </button>
 
                     </div>
@@ -124,76 +126,83 @@
                                                 <option value="-1"
                                                         th:selected="${client.card} == null ? 'true' : 'false'">Нет
                                                 </option>
-                                                <p th:each="card : ${calculate.cards}">
-                                                    <option th:text="${card.name} + ' ('+${card.balance}+ 'р, ' + ${card.discount} +'% )'"
-                                                            th:value="${card.id}"
-                                                            th:selected="(${client.card} == ${card}) ? 'true' : 'false' ">
+                            <p th:each="card : ${calculate.cards}">
+                                <option th:text="${card.name} + ' ('+${card.balance}+ 'р, ' + ${card.discount} +'% )'"
+                                        th:value="${card.id}"
+                                        th:selected="(${client.card} == ${card}) ? 'true' : 'false' ">
 
-                                                    </option>
-                                                </p>
-                                            </select>
-
-
-                                        </form>
-                                        <!-- -->
-
-                                    </td>
+                                </option>
+                            </p>
+                            </select>
 
 
-                                    <form th:id="'updateForm' + ${client.id}" method="post">
-                                        <input type="hidden" name="clientId" th:value="${client.id}"/>
+                            </form>
+                            <!-- -->
 
-                                        <td>
-                                            <input autocomplete="off" th:id="'one' + ${client.id}"
-                                                   th:onblur="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'" class="form-control"
-                                                   style="width:150px;margin: auto;font-size: 17px"
-                                                   name="description" th:value="${client.description}" maxlength="30"/>
-                                        </td>
-                                        <td style="text-align: center">
-                                            <p th:text="${client.timeStart.toLocalTime().withSecond(0).withNano(0)}"></p></td>
-                                        <td style="text-align: center">
-
-                                        </td>
-                                        <td>
-                                            <p th:id="'dopDiscount' + ${client.id}" style="float: left;"
-                                               th:text="${client.discountWithCard} + '% + '"></p>
+                            </td>
 
 
-                                            <select th:id="'two' + ${client.id}" autocomplete="off"
-                                                    th:onchange="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'" class="form-control"
-                                                    name="discountId"
-                                                    style="width: 90px; margin: auto; font-size: 17px;font-weight:bold">
-                                                <option value="-1" th:selected="${client.discount} == null ? 'true' : 'false' ">Нет</option>
-                                                <p th:each="d : ${listDiscounts}">
-                                                    <option th:value="${d.id}" th:text="${d.discount} + ' % - ' +${d.description}" th:selected ="(${client.discountObj} == ${d}) ? 'true' : 'false'" ></option>
-                                                </p>
-                                            </select>
+                            <form th:id="'updateForm' + ${client.id}" method="post">
+                                <input type="hidden" name="clientId" th:value="${client.id}"/>
 
-                                        </td>
-                                        <td>
+                                <td>
+                                    <input autocomplete="off" th:id="'one' + ${client.id}"
+                                           th:onblur="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'"
+                                           class="form-control"
+                                           style="width:150px;margin: auto;font-size: 17px"
+                                           name="description" th:value="${client.description}" maxlength="30"/>
+                                </td>
+                                <td style="text-align: center">
+                                    <p th:text="${client.timeStart.toLocalTime().withSecond(0).withNano(0)}"></p></td>
+                                <td style="text-align: center">
 
-                                            <input autocomplete="off" th:id="'three' + ${client.id}"
-                                                   th:onblur="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'"
-                                                   class="form-control"
-                                                   style="width:85px;margin: auto;font-size: 20px"
-                                                   name="payWithCard" maxlength="7" th:value="${client.payWithCard}"/>
-                                        </td>
-                                        <td th:id="'price' + ${client.id}" style="text-align: center">
-                                        </td>
+                                </td>
+                                <td>
+                                    <p th:id="'dopDiscount' + ${client.id}" style="float: left;"
+                                       th:text="${client.discountWithCard} + '% + '"></p>
 
-                                    </form>
-                                    <td>
-                                        <input th:form="'formTest' + ${calculate.id}" th:class="'class' + ${calculate.id}"
-                                               th:id="'test' + ${client.id}" type="checkbox" class="form-control"
-                                               style="width: 20px;height: 20px;margin-top: 5px" th:value="${client.id}"
-                                               name="clientsId"/>
-                                    </td>
-                                </tr>
+
+                                    <select th:id="'two' + ${client.id}" autocomplete="off"
+                                            th:onchange="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'"
+                                            class="form-control"
+                                            name="discountId"
+                                            style="width: 90px; margin: auto; font-size: 17px;font-weight:bold">
+                                        <option value="-1" th:selected="${client.discount} == null ? 'true' : 'false' ">
+                                            Нет
+                                        </option>
+                                        <p th:each="d : ${listDiscounts}">
+                                            <option th:value="${d.id}"
+                                                    th:text="${d.discount} + ' % - ' +${d.description}"
+                                                    th:selected="(${client.discountObj} == ${d}) ? 'true' : 'false'"></option>
+                                        </p>
+                                    </select>
+
+                                </td>
+                                <td>
+
+                                    <input autocomplete="off" th:id="'three' + ${client.id}"
+                                           th:onblur="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'"
+                                           class="form-control"
+                                           style="width:85px;margin: auto;font-size: 20px"
+                                           name="payWithCard" maxlength="7" th:value="${client.payWithCard}"/>
+                                </td>
+                                <td th:id="'price' + ${client.id}" style="text-align: center">
+                                </td>
+
+                            </form>
+                            <td>
+                                <input th:form="'formTest' + ${calculate.id}" th:class="'class' + ${calculate.id}"
+                                       th:id="'test' + ${client.id}" type="checkbox" class="form-control"
+                                       style="width: 20px;height: 20px;margin-top: 5px" th:value="${client.id}"
+                                       name="clientsId"/>
+                            </td>
+                            </tr>
                             </p>
                             </tbody>
 
                         </table>
-                        <button style="float: left;margin-left: 23px" class="btn btn-primary" data-toggle="modal" th:href="'#deleteModal' + ${calculate.id}">
+                        <button style="float: left;margin-left: 23px" class="btn btn-primary" data-toggle="modal"
+                                th:href="'#deleteModal' + ${calculate.id}">
                             Удалить
                         </button>
                         <div th:id="'deleteModal' + ${calculate.id}" class="modal fade">
@@ -201,7 +210,8 @@
                                 <div class="modal-content">
                                     <div class="modal-body">
                                         <p style="font-size: 20px">Вы желаете удалить клиента/тов ?</p>
-                                        <button th:form="'formTest' + ${calculate.id}" class="btn btn-danger">Да</button>
+                                        <button th:form="'formTest' + ${calculate.id}" class="btn btn-danger">Да
+                                        </button>
                                         <button class="btn btn-danger" type="button" data-dismiss="modal">Нет</button>
 
                                     </div>
@@ -245,7 +255,9 @@
             success: function (data) {
                 //<![CDATA[
                 $('#dopDiscount' + id).html(data + '%' + ' + ');
-                setTimeout(function () {ajaxForCalculate(calcId)}, 500);
+                setTimeout(function () {
+                    ajaxForCalculate(calcId)
+                }, 500);
                 //]]>
             },
             error: function () {
@@ -333,7 +345,7 @@
         $.ajax({
             type: "POST",
             url: "/manager/calculate-price-on-calculate",
-            data: {calculateId : calcId},
+            data: {calculateId: calcId},
             success: function (data) {
                 //<![CDATA[
                 for (var i = 0; i < data.length; i++) {
@@ -381,7 +393,7 @@
         }
     }
 
-    function subAjax(id,calcId) {
+    function subAjax(id, calcId) {
         $.ajax({
             type: "POST",
             url: "/manager/update-fields-client",
@@ -389,7 +401,9 @@
             success: function (data) {
                 //<![CDATA[
                 $('#clientMenuDescription' + id).text(data);
-                setTimeout(function () {ajaxForCalculate(calcId)}, 500);
+                setTimeout(function () {
+                    ajaxForCalculate(calcId)
+                }, 500);
                 //]]>
             },
             error: function () {
@@ -410,9 +424,13 @@
                 for (var i = 0; i < arr.length; i++) {
                     $('#ajaxMenu' + arr[i].id + ' li:last').after('<li id = "pr' + data.id + '">' + data.name + ' №' + data.id + ' (' + data.cost + 'р)' + '</li>');
                 }
-                setTimeout(function () {getOpenClientsOnCalculateAjax(calcId)}, 500);
+                setTimeout(function () {
+                    getOpenClientsOnCalculateAjax(calcId)
+                }, 500);
                 prog(calcId);
-                setTimeout(function () {ajaxForCalculate(calcId)}, 500);
+                setTimeout(function () {
+                    ajaxForCalculate(calcId)
+                }, 500);
                 //]]>
             },
             error: function () {
@@ -436,9 +454,13 @@
                         $('#ajaxMenu' + arr[i].id + ' li:last').after('<li id = "pr' + data.id + '">' + data.name + ' №' + data.id + ' (' + data.cost + 'р)' + '</li>');
                     }
                 }
-                setTimeout(function () {getOpenClientsOnCalculateAjax(calcId)}, 500);
+                setTimeout(function () {
+                    getOpenClientsOnCalculateAjax(calcId)
+                }, 500);
                 prog(calcId);
-                setTimeout(function () {ajaxForCalculate(calcId)}, 500);
+                setTimeout(function () {
+                    ajaxForCalculate(calcId)
+                }, 500);
 
                 //]]>
             },
@@ -464,9 +486,13 @@
                     }
                 }
                 getProductOnCalculateAjax(calcId);
-                setTimeout(function () {getOpenClientsOnCalculateAjax(calcId)}, 500);
+                setTimeout(function () {
+                    getOpenClientsOnCalculateAjax(calcId)
+                }, 500);
                 prog(calcId);
-                setTimeout(function () {ajaxForCalculate(calcId)}, 500);
+                setTimeout(function () {
+                    ajaxForCalculate(calcId)
+                }, 500);
 
                 //]]>
             },
@@ -550,27 +576,29 @@
 
     function prog(calcId) {
         var myTime = setInterval(
-                function () {
-                    if (+$('#progress' + calcId).val() != 100) {
-                        $('#progress' + calcId).val(+$('#progress' + calcId).val() + 7);
-                    } else {
-                        $('#progress' + calcId).val(0);
-                        clearInterval(myTime);
-                        myTime = 0;
-                    }
-                }, 10);
+            function () {
+                if (+$('#progress' + calcId).val() != 100) {
+                    $('#progress' + calcId).val(+$('#progress' + calcId).val() + 7);
+                } else {
+                    $('#progress' + calcId).val(0);
+                    clearInterval(myTime);
+                    myTime = 0;
+                }
+            }, 10);
     }
 
     function roundState(calcId, state) {
         if (state == 'true') {
             $('#rek' + calcId).html('<p style="margin: 0;font-size: 20px">Не округлено</p>');
-            $('#rek' + calcId).attr('onclick',  'roundState(' + '"' + calcId + '"' + ',' +'"'+ false +'"'+')');
+            $('#rek' + calcId).attr('onclick', 'roundState(' + '"' + calcId + '"' + ',' + '"' + false + '"' + ')');
         } else {
             $('#rek' + calcId).html('<p style="margin: 0;font-size: 20px">Округлено</p>');
-            $('#rek' + calcId).attr('onclick',  'roundState(' + '"' + calcId + '"' + ',' +'"'+ true +'"'+')')
+            $('#rek' + calcId).attr('onclick', 'roundState(' + '"' + calcId + '"' + ',' + '"' + true + '"' + ')')
         }
         $('#formRoundState' + calcId).submit();
-        setTimeout(function () {ajaxForCalculate(calcId)}, 500);
+        setTimeout(function () {
+            ajaxForCalculate(calcId)
+        }, 500);
     }
 
 
