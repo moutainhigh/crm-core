@@ -3,12 +3,15 @@ package com.cafe.crm.controllers.boss.settings;
 import com.cafe.crm.configs.property.AdvertisingCustomSettings;
 import com.cafe.crm.models.advertising.AdvertisingSettings;
 import com.cafe.crm.services.interfaces.advertising.AdvertisingSettingsService;
-import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -32,9 +35,9 @@ public class AdvertisingSettingsController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> setAdvertisingCustomSettings(
-			@RequestParam(name = "settingsName")String settingsName,
-			@RequestParam(name = "password")String password,
-			@RequestParam(name = "email")String email) {
+			@RequestParam(name = "settingsName") String settingsName,
+			@RequestParam(name = "password") String password,
+			@RequestParam(name = "email") String email) {
 
 		AdvertisingSettings settingsInDB = advertisingSettingsService.findByEmail(email);
 
@@ -67,7 +70,7 @@ public class AdvertisingSettingsController {
 	}
 
 	@RequestMapping(value = "/del-settings", method = RequestMethod.POST)
-	public String delExistingSettings(@RequestParam(name = "settingsId")Long id) {
+	public String delExistingSettings(@RequestParam(name = "settingsId") Long id) {
 
 		advertisingSettingsService.delete(id);
 

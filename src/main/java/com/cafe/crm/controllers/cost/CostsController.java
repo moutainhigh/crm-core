@@ -36,7 +36,7 @@ public class CostsController {
 
 	@Autowired
 	public CostsController(GoodsService goodsService, GoodsCategoryService goodsCategoryService, TimeManager timeManager,
-						   ShiftService shiftService) {
+	                       ShiftService shiftService) {
 		this.goodsService = goodsService;
 		this.goodsCategoryService = goodsCategoryService;
 		this.timeManager = timeManager;
@@ -45,7 +45,7 @@ public class CostsController {
 
 	@RequestMapping(value = "/costs", method = RequestMethod.GET)
 	public ModelAndView showCostsPage(Model model) {
-		if(!(shiftService.getLast().getOpen())) {
+		if (!(shiftService.getLast().getOpen())) {
 			return new ModelAndView("redirect:/manager/shift/");
 		}
 		ModelAndView modelAndView = new ModelAndView("costs/costs");
@@ -67,10 +67,10 @@ public class CostsController {
 
 	@RequestMapping(value = "/costs", method = RequestMethod.POST)
 	public String showCostsPageWithParameters(@RequestParam(name = "fromDate") String fromDate,
-											  @RequestParam(name = "toDate") String toDate,
-											  @RequestParam(name = "goodsName") String goodsName,
-											  @RequestParam(name = "categoryName") String categoryName,
-											  Model model) {
+	                                          @RequestParam(name = "toDate") String toDate,
+	                                          @RequestParam(name = "goodsName") String goodsName,
+	                                          @RequestParam(name = "categoryName") String categoryName,
+	                                          Model model) {
 		LocalDate today = getShiftDate();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 

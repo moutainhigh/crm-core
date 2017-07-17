@@ -15,7 +15,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 @Controller
@@ -64,7 +67,7 @@ public class MenuController {
 
 	@RequestMapping(value = "/updCategory", method = RequestMethod.POST)
 	public String updCategory(@RequestParam(name = "upd") Long id,
-							  @RequestParam(name = "name") String name) {
+	                          @RequestParam(name = "name") String name) {
 		Category category = categoriesService.getOne(id);
 		if (category != null) {
 			category.setName(name);
@@ -163,7 +166,7 @@ public class MenuController {
 		return new ResponseEntity<>(1L, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/delete/recipe/{id}" , method = RequestMethod.POST)
+	@RequestMapping(value = "/delete/recipe/{id}", method = RequestMethod.POST)
 	public String deleteRecipe(@PathVariable(name = "id") Long id, HttpServletRequest request) {
 		Product product = productService.findOne(id);
 		if (product != null) {
