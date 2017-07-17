@@ -29,7 +29,7 @@
                 <td th:id="'allA' + ${prod.id}"><p th:text="${iter.count}"></p></td>
                 <td th:id="'allB' + ${prod.id}"><p th:text="${prod.name}"></p></td>
                 <td th:id="'allC' + ${prod.id}"><p th:text="${prod.description}"></p></td>
-                <td th:id="'allD' + ${prod.id}"><p th:text="${prod.cost}"></p></td>
+                <td th:id="'allD' + ${prod.id}"><p th:text="${!prod.category.floatingPrice} ? ${prod.cost} : 'Плавающая'"></p></td>
                 <td class="col-lg-2"><a id="ins" class="btn btn-primary btn-info"
                                         th:href="'#allP'+${prod.id}"
                                         data-toggle="modal">Редактировать </a>
@@ -59,8 +59,8 @@
                                     <h4 class="modal-title" id="myModalLabel">Редактирование </h4>
                                 </div>
                                 <div class="modal-body">
+                                    <div th:class="'messageEditAll' + ${prod.id}"></div>
                                     <div class="form-group">
-
                                         <input required="" type="hidden" class="form-control"
                                                th:id="allId + ${prod.id}"
                                                th:value="${prod.id}"/>
@@ -80,15 +80,11 @@
                                        <label>Цена</label>
                                         <input type="text" class="form-control"
                                                th:id="allCost + ${prod.id}" name="cost" required=""
-                                               pattern="\d+" title="только цифры"
-                                               th:value="${prod.cost}"/>
+                                               pattern="\d+" title="только цифры" th:attrappend="disabled=${prod.category.floatingPrice} ? disabled, value=${prod.category.floatingPrice} ? 0.0 : ${prod.cost}" />
                                     </div>
                                 </div>
-                                <button id="super" type="button" name="upd"
-                                        class="btn btn-lg btn-primary btn-block"
-                                        data-dismiss="modal"
-                                        th:onclick="'editProdAll(\''+ ${prod.id} + '\');'"
-                                >Сохранить
+                                <button id="saveEditProductDataAll" type="button" name="upd"
+                                        class="btn btn-lg btn-primary btn-block" th:attr="data-id=${prod.id}">Сохранить
                                 </button>
 
                                 <div class="modal-footer">

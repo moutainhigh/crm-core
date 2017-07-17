@@ -421,6 +421,35 @@
         });
     }
 
+    function createLayerProductWithFloatingPriceAjax(prodId, calcId, inputId) {
+        $('#productId' + calcId).val(prodId);
+        var price = $(('#' + inputId) + prodId).val();
+        if (price == "" || price <= 0) {
+            return false;
+        }
+        var data = $('#addProductOnClientForm' + calcId).serializeArray();
+        data.push({name: 'productPrice', value: price});
+        $.ajax({
+            type: "POST",
+            url: "/manager/create-layer-product-floating-price",
+            data: data,
+            success: function (data) {
+                //<![CDATA[
+                var arr = data.clients;
+                for (var i = 0; i < arr.length; i++) {
+                    $('#ajaxMenu' + arr[i].id + ' li:last').after('<li id = "pr' + data.id + '">' + data.name + ' №' + data.id + ' (' + data.cost + 'р)' + '</li>');
+                }
+                setTimeout(function () {getOpenClientsOnCalculateAjax(calcId)}, 500);
+                prog(calcId);
+                setTimeout(function () {ajaxForCalculate(calcId)}, 500);
+                //]]>
+            },
+            error: function () {
+                console.log('createLayerProductWithFloatingPriceAjax сломался? ');
+            }
+        });
+    }
+
 
     function addLayerProductOnClientAjax(layerProdId, calcId) {
         $('#productId' + calcId).val(layerProdId);

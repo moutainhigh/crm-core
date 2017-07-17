@@ -57,9 +57,9 @@ public class ShiftStatisticController {
 		Double allOtherGoods = 0D;
 		Shift shift = shiftService.findOne(id);
 		ShiftView shiftView = shiftService.createShiftView(shift);
-		Set<Goods> salaryWorkerGoods = goodsService.findByDateAndCategoryNameAndVisibleTrue(shift.getDateShift(),
+		List<Goods> salaryWorkerGoods = goodsService.findByDateAndCategoryNameAndVisibleTrue(shift.getDateShift(),
 				"Зарплата сотрудников");
-		Set<Goods> otherGoods = goodsService.findByDateAndVisibleTrue(shift.getDateShift());
+		List<Goods> otherGoods = goodsService.findByDateAndVisibleTrue(shift.getDateShift());
 		otherGoods.removeAll(salaryWorkerGoods);
 		for (Goods salaryWorkerGood : salaryWorkerGoods) {
 			allSalaryGoods = allSalaryGoods + salaryWorkerGood.getPrice() * salaryWorkerGood.getQuantity();

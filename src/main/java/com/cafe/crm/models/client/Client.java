@@ -46,6 +46,7 @@ public class Client {
 	private Double priceMenu = 0D;
 
 	private Double priceTime = 0D;
+
 	@NotNull
 	private Double payWithCard = 0D;
 

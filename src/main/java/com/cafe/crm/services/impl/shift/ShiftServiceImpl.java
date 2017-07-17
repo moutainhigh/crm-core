@@ -2,6 +2,7 @@ package com.cafe.crm.services.impl.shift;
 
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.client.LayerProduct;
 import com.cafe.crm.models.goods.Goods;
 import com.cafe.crm.models.goods.GoodsCategory;
 import com.cafe.crm.models.shift.Shift;
@@ -182,12 +183,19 @@ public class ShiftServiceImpl implements ShiftService {
 		for (Worker worker : allActiveWorker) {
 			salaryWorker = salaryWorker + worker.getShiftSalary();
 		}
+		Set<LayerProduct> layerProducts = new HashSet<>();
 		for (Client client : clients) {
+			layerProducts.addAll(client.getLayerProducts());
 			card = card + client.getPayWithCard();
-			allPrice = allPrice + client.getAllPrice();
+			allPrice += client.getPriceTime();
+		}
+		for (LayerProduct layerProduct : layerProducts) {
+			if (layerProduct.isDirtyProfit()) {
+				allPrice += layerProduct.getCost();
+			}
 		}
 		LocalDate shiftDate = shift.getDateShift();
-		Set<Goods> goodsSet = goodsRepository.findByDateAndVisibleTrue(shiftDate);
+		List<Goods> goodsSet = goodsRepository.findByDateAndVisibleTrue(shiftDate);
 		goodsSet.removeAll(goodsRepository.findByDateAndCategoryNameAndVisibleTrue(shiftDate, "Зарплата сотрудников"));
 		Double otherCosts = 0D;
 		for (Goods goods : goodsSet) {

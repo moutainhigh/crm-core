@@ -8,6 +8,8 @@ public interface MenuCalculateControllerService {
 
 	LayerProduct createLayerProduct(long calculateId, long[] clientsId, long productId);
 
+	LayerProduct createLayerProductWithFloatingPrice(long calculateId, long[] clientsId, long productId, double productPrice);
+
 	LayerProduct addClientOnLayerProduct(long calculateId, long[] clientsId, long layerProductId);
 
 	LayerProduct deleteProductOnClient(long calculateId, long[] clientsId, long layerProductId);

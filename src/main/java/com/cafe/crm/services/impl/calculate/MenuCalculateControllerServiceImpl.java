@@ -42,6 +42,26 @@ public class MenuCalculateControllerServiceImpl implements MenuCalculateControll
 		layerProduct.setName(product.getName());
 		layerProduct.setDescription(product.getDescription());
 		layerProduct.setClients(clients);
+		if (!product.getCategory().isDirtyProfit()) {
+			layerProduct.setDirtyProfit(false);
+		}
+		layerProductService.save(layerProduct);
+		calculatePriceMenu(calculateId);
+		return layerProduct;
+	}
+
+	@Override
+	public LayerProduct createLayerProductWithFloatingPrice(long calculateId, long[] clientsId, long productId, double productPrice) {
+		List<Client> clients = clientService.findByIdIn(clientsId);
+		Product product = productService.findOne(productId);
+		LayerProduct layerProduct = new LayerProduct();
+		layerProduct.setCost(productPrice);
+		layerProduct.setName(product.getName());
+		layerProduct.setDescription(product.getDescription());
+		layerProduct.setClients(clients);
+		if (!product.getCategory().isDirtyProfit()) {
+			layerProduct.setDirtyProfit(false);
+		}
 		layerProductService.save(layerProduct);
 		calculatePriceMenu(calculateId);
 		return layerProduct;
