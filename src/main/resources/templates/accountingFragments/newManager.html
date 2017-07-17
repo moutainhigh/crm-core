@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"></meta>
+    <title>Title</title>
+</head>
+<body>
+
+<div class="wrapper" th:fragment="newManager">
+    <form action="" method="POST" class="form-signin">
+        <button type="button" class="btn btn-lg btn-primary btn-block"
+                data-toggle="modal" data-target="#myModalManager">Добавить Нового Администратора
+        </button>
+    </form>
+    <!-- Modal -->
+    <div id="myModalManager" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Форма Добавления Нового Администратора</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="addManager" method="POST" action="#" th:action="@{/worker/addManager}"
+                          th:object="${manager}"
+                          class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" th:field="*{firstName}" placeholder="Имя"
+                                       name="firstName"
+                                       required=""/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" th:field="*{lastName}" placeholder="Фамилия"
+                                       name="lastName"
+                                       required=""/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" th:field="*{email}" placeholder="Email"
+                                       name="email" required=""/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" th:field="*{phone}" placeholder="Телефон"
+                                       name="phone" required=""/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="number" class="form-control" th:field="*{shiftSalary}" name="shiftSalary"
+                                       placeholder="Оклад" required=""/>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="password" class="form-control" placeholder="Пароль для входа в систему"
+                                       name="password" required="" autofocus=""/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div style="margin-left: 32%" id="errorBlockManager"></div>
+                                <input type="password" class="form-control" placeholder="Подтвердите пароль"
+                                       name="submitPassword" required="" autofocus=""/>
+                            </div>
+                        </div>
+
+                        <br></br>
+
+
+                        <h3 style="color: black" align="center">Выберете нужные должности</h3>
+                        <div th:each="position : ${positionList}">
+                            <div style="margin-left: 25%">
+                                <div th:if="${position.jobName}=='Администратор'">
+                                    <input id="pos4" style="margin-right: 20px ;width: 30px;height: 30px;"
+                                           type="checkbox" onclick='window.event.returnValue=false'
+                                           th:value="${position.id}" th:checked="checked"
+                                           name="allPosition" autocomplete="off" value=""/>
+                                    <label for="pos4"><h3 style="color: black;font-size: 20px"
+                                                          th:text="${position.jobName}"></h3></label>
+                                </div>
+
+
+                                <div th:if="${position.jobName}!='Администратор' AND ${position.jobName} != 'Владелец'">
+                                    <input id="pos1" style="margin-right: 20px ;width: 30px;height: 30px;"
+                                           type="checkbox" th:value="${position.id}" name="allPosition"
+                                           autocomplete="off" value=""/>
+                                    <label for="pos1"><h3 style="color: black;font-size: 20px"
+                                                          th:text="${position.jobName}"></h3></label>
+                                </div>
+                            </div>
+                        </div>
+                        <br></br>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Добавить Сотрудника В Базу
+                            Данных
+                        </button>
+
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

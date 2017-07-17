@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/datatables/1.10.12/css/jquery.dataTables.min.css}"/>
+    <script th:src="@{/webjars/datatables/1.10.12/js/jquery.dataTables.min.js}" type="text/javascript"></script>
+</head>
+<body>
+<div th:replace="bossnavbar :: bossNavbar"></div><!--/.navbar -->
+<div class="container" style="margin-top: 50px">
+
+    <h1 style="color: #5bc0de;" th:align="center">Ингредиенты</h1>
+    <div>
+        <input id="filter5" style="margin-bottom: 10px" type="text" class="form-control"
+               placeholder="Поиск по полям"/>
+    </div>
+    <div class="panel panel-default">
+        <fieldset style=" background-color:gray;">
+            <div class="row ">
+                <form id="signin" class="navbar-form" th:object="${ingredients}" th:method="POST" role="form"
+                      th:action="@{/boss/menu/ingredients/}">
+                    <div class="col-md-1 ">
+                        <h4>Наименование</h4>
+                        <input th:type="text" th:field="*{name}" placeholder="Введите название"/>
+                        <p style="color: black ; font-weight:bold" th:if="${#fields.hasErrors('name')}"
+                           th:errors="*{name}"> error message</p>
+                    </div>
+                    <div class="col-md-1  col-md-offset-2">
+                        <h4>Размерность</h4>
+                        <input id="password" th:field="*{dimension}" th:type="text" placeholder="Введите размерность"/>
+                        <p style="color: black ; font-weight:bold" th:if="${#fields.hasErrors('dimension')}"
+                           th:errors="*{dimension}">Title error message</p>
+                    </div>
+                    <div class="col-md-1  col-md-offset-2">
+                        <h4>Количество</h4>
+                        <input th:type="number" min="0" max="2147483647" value="0" th:field="*{amount}"/>
+                        <p style="color: black ; font-weight:bold" th:if="${#fields.hasErrors('amount')}"
+                           th:errors="*{amount}">error message</p>
+                    </div>
+                    <div class="col-md-1  col-md-offset-2">
+                        <button style="margin-top: 30px;" type="submit" class="btn btn-success btn-lg col-md-offset-5">
+                            Создать
+                        </button>
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                </form>
+            </div>
+        </fieldset>
+        <table id="sortTable" class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Наименование</th>
+                <th>Количество</th>
+                <th>Размерность</th>
+                <th>Добавить</th>
+                <th>Вычесть</th>
+                <th>Удалить</th>
+            </tr>
+            </thead>
+            <tbody class="searchableIng">
+            <tr th:each="ingr:${list}">
+                <td th:text="${ingr.id}"></td>
+                <td th:text="${ingr.name}"></td>
+                <td th:text="${ingr.amount}"></td>
+                <td th:text="${ingr.dimension}"></td>
+                <td>
+                    <form action="/boss/menu/ingredients/add" th:method="POST">
+                        <input th:type="hidden" name="id" th:value="${ingr.id}"/>
+                        <input required="" name="add" style="width:75px" th:type="number" min="1" max="2147483647"/>
+                        <button>Добавить</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="/boss/menu/ingredients/deduct" th:method="POST">
+                        <input th:type="hidden" name="id" th:value="${ingr.id}"/>
+                        <input required="" name="deduct" style="width:75px" th:type="number" min="1" max="2147483647"/>
+                        <button>Вычесть</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="/boss/menu/ingredients/delete" th:method="POST">
+                        <input th:type="hidden" name="id" th:value="${ingr.id}"/>
+                        <button th:type="submit">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div th:replace="fragments/bossChangePassword :: BossChangePassword"></div>
+<div th:replace="media/advertisingDispatch :: advertising"></div>
+<script th:src="@{/js/tableSortIngredients.js}"></script>
+<script th:src="@{/js/filter.js}"></script>
+</body>
+</html>

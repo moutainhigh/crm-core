@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<div th:utext="${advertisingText}" th:remove="tag"></div>
+<br/>
+<a th:href="'http://' + ${siteAddress} + '/advertising/toggle?number=' + ${number} + '&amp;token=' + ${token}">Если
+    больше не хотите получать рекламу, нажмите на это сообщение</a>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"></meta>
+    <title>Title</title>
+</head>
+<body>
+
+<div class="wrapper" th:fragment="newWorker">
+
+
+    <form action="" method="POST" class="form-signin">
+        <button type="button" class="btn btn-lg btn-primary btn-block"
+                data-toggle="modal" data-target="#myModalWorker">Добавить Нового Сотрудника
+        </button>
+    </form>
+    <!-- Modal -->
+    <div id="myModalWorker" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Форма Добавления Нового Сотрудника</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="addWorker" method="POST" action="#" th:action="@{/worker/addWorker}" th:object="${worker}"
+                          class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" th:field="*{firstName}" placeholder="Имя"
+                                       name="firstName"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" th:field="*{lastName}" placeholder="Фамилия"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" th:field="*{email}" placeholder="Email"
+                                       name="email" required=""/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" th:field="*{phone}" placeholder="Телефон"
+                                       name="phone" required=""/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="number" class="form-control" th:field="*{shiftSalary}" name="shiftSalary"
+                                       placeholder="Оклад" required=""/>
+                            </div>
+                        </div>
+
+                        <div th:each="position : ${positionList}" style="margin-left: 25%">
+                            <div class="question" th:if="${position.jobName} == 'Администратор'">
+                                <input id="label1" class="cast"
+                                       style="width: 30px;height: 30px; margin-right: 20px" type="checkbox"
+                                       th:value="${position.id}" name="adminPositionId" autocomplete="off" value=""/>
+                                <label for="label1"><h3 style="color: black;font-size: 20px"
+                                                        th:text="${position.jobName}"></h3></label>
+                            </div>
+
+
+                            <div class="question" th:if="${position.jobName} == 'Владелец'">
+                                <input id="label2" class="cast"
+                                       style="width: 30px;height: 30px; margin-right: 20px" type="checkbox"
+                                       th:value="${position.id}" name="bossPositionId" autocomplete="off" value=""/>
+                                <label for="label2"><h3 style="color: black;font-size: 20px"
+                                                        th:text="${position.jobName}"></h3></label>
+                            </div>
+
+                            <div th:if="${position.jobName} != 'Администратор' AND ${position.jobName} != 'Владелец'">
+                                <input id="pos5" style="width: 30px;height: 30px; margin-right: 20px" type="checkbox"
+                                       th:value="${position.id}" name="allPosition" autocomplete="off" value=""/>
+                                <label for="pos5"><h3 style="color: black;font-size: 20px"
+                                                      th:text="${position.jobName}"></h3></label>
+                            </div>
+                        </div>
+
+                        <div class="answer">
+                            <h3 style="color: black;" align="center">Введите пароль</h3>
+                            <input type="password" class="form-control" id="passwordWorker"
+                                   placeholder="Пароль для доступа в систему" autofocus=""
+                                   name="passwordWorker"/>
+                        </div>
+                        <br></br>
+                        <div style="margin-left: 32%" id="errorBlockWorker"></div>
+                        <div class="answer">
+                            <h3 style="color: black;" align="center">Подтвердите пароль</h3>
+                            <input type="password" class="form-control" id="repeatPasswordWorker"
+                                   placeholder="Подтвердите пароль"
+                                   autofocus="" name="submitNewPasswordWorker"/>
+                        </div>
+                        <br></br>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Добавить Сотрудника В Базу
+                            Данных
+                        </button>
+
+                    </form>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

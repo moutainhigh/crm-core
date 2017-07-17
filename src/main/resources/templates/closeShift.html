@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"></meta>
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="closeShift">
+    <div align="center" class="modal fade" th:id="'closeShiftModalId'">
+        <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Закрытие смены</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="form" action="/endOfShift" method="GET" class="form-signin">
+
+                        <h3 align="center">Сотрудники на смене :</h3>
+                        <br></br>
+
+                        <div th:each="allWorker : ${CloseShiftView}">
+                            <div th:each="worker: ${CloseShiftView.allActiveWorker}">
+                                <div class="row">
+                                    <div class="col-md-4 ">
+                                        <h4>ФИО сотрудника</h4>
+                                        <input type="text" th:id="${worker.id}" style="margin-top: -4px"
+                                               readonly="readonly" class="form-control"
+                                               th:value="${worker.firstName+' '+worker.lastName}"/>
+                                        <br></br>
+                                    </div>
+                                    <div class="col-md-4" style="margin-top: -5px">
+                                        <div class="question">
+                                            <h4>Оклад
+                                                <input th:id="'id'+${worker.id}"
+                                                       th:onclick="'test(\'' + ${worker.id} + '\');'"
+                                                       style="width: 20px;height: 20px;float: right;margin-bottom: 10px;margin-top: 0px"
+                                                       class="coupon_question" type="checkbox" autocomplete="off"
+                                                       value=""/>
+                                                <input style="width: 20px;height: 20px;float: right;margin-bottom: 10px;margin-top: 0px"
+                                                       th:value="${worker.id}" name="idWorker" type="hidden"
+                                                       autocomplete="off" value=""/>
+                                            </h4>
+                                            <input type="text" readonly="readonly" class="form-control"
+                                                   th:value="${worker.shiftSalary}" name="salary"/>
+                                        </div>
+                                        <br></br>
+
+                                        <div class="answer">
+                                            <input th:id="'1'+${worker.id}" th:href="${worker.id}"
+                                                   onblur="recalculation()" value="0" type="hidden" class="form-control"
+                                                   placeholder="Введите бонус" autofocus="" name="bonus"/>
+                                        </div>
+                                        <br></br>
+                                    </div>
+                                    <div class="col-md-4 ">
+                                        <h4>Должности</h4>
+                                        <input type="text" style="margin-top: -4px" readonly="readonly"
+                                               class="form-control" th:value="${worker.allPosition}"/>
+                                        <br></br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 ">
+                            <div th:if="${CloseShiftView}!=null">
+                                <h4>Количество клиентов за смену: </h4>
+                                <input type="text" style="margin-top: -4px" readonly="readonly" class="form-control"
+                                       th:value="${CloseShiftView.clients.size()}"/>
+                                <br></br>
+                            </div>
+
+                            <div th:if="${CloseShiftView}==null">
+                                <h4>Количество клиентов за смену: </h4>
+                                <input type="text" style="margin-top: -4px" readonly="readonly" class="form-control"
+                                       th:value="0"/>
+                                <br></br>
+                            </div>
+
+
+                        </div>
+
+                        <div class="col-md-6 ">
+                            <div th:if="${CloseShiftView}!=null">
+                                <h4>Количество счетов за смену: </h4>
+                                <input type="text" style="margin-top: -4px" readonly="readonly" class="form-control"
+                                       th:value="${CloseShiftView.allCalculate.size()}"/>
+                                <br></br>
+                                <br></br>
+                            </div>
+                            <div th:if="${CloseShiftView}==null">
+                                <h4>Количество счетов за смену: </h4>
+                                <input type="text" style="margin-top: -4px" readonly="readonly" class="form-control"
+                                       th:value="0"/>
+                                <br></br>
+                                <br></br>
+                            </div>
+
+                        </div>
+
+                        <div th:if="${CloseShiftView}!=null">
+                            <div th:if="${#lists.isEmpty(CloseShiftView.activeCalculate)}">
+
+                                <h1>Сверка бюджета</h1>
+                                <!--<div class="col-md-6" style="margin-left: 220px;">-->
+                                <!--<h4>Касса на момент открытия смены : </h4>-->
+                                <!--<input type="text" style="margin-top: -4px" readonly="readonly" name="primaryCashBox" class="form-control" th:value="${cashBox}" />-->
+                                <!--<br></br>-->
+                                <!--</div>-->
+
+                                <div class="col-md-6" style="margin-left: 220px;">
+                                    <h4>Зарплата сотрудников : </h4>
+                                    <input type="text" style="margin-top: -4px" id="salaryWorker" readonly="readonly"
+                                           class="form-control" th:value="${CloseShiftView.salaryWorker}"/>
+                                    <br></br>
+                                </div>
+
+                                <div class="col-md-6" style="margin-left: 220px;">
+                                    <h4><a href="/manager/costs">Прочие расходы :</a></h4>
+                                    <input type="text" style="margin-top: -4px" readonly="readonly" class="form-control"
+                                           th:value="${CloseShiftView.otherCosts}"/>
+                                    <br></br>
+                                </div>
+
+                                <div class="col-md-6" style="margin-left: 220px;">
+                                    <h4><a href="/manager/shift/edit">Касса :</a>
+                                        <span>(наличные + клубная карта)</span></h4>
+                                    <input type="text" style="margin-top: -4px" readonly="readonly" id="totalCashBox"
+                                           name="totalCashBox" class="form-control"
+                                           th:value="${CloseShiftView.totalCashBox}"/>
+                                    <br></br>
+                                </div>
+
+                                <div class="col-md-6" style="margin-left: 220px;">
+                                    <h4>Прибыль грязными : </h4>
+                                    <input type="text" style="margin-top: -4px" readonly="readonly" id="allPrice"
+                                           name="allPrice" class="form-control" th:value="${CloseShiftView.allPrice}"/>
+                                    <br></br>
+                                </div>
+
+
+                                <div class="col-md-6" style="margin-left: 220px;">
+                                    <div id="goodBlock" style="color: green;font-size: 25px"></div>
+                                    <br></br>
+                                </div>
+
+                                <div class="col-md-3" style="margin-left: 100px;margin-top: 1px">
+                                    <h4 style="font-size: 15px">Наличные: </h4>
+                                    <input type="text" class="form-control" id="cache" name="cache" value="0"
+                                           placeholder="Наличные"/>
+                                    <br></br>
+                                </div>
+                                <div class="col-md-3">
+                                    <h4 style="font-size: 15px;margin-top: -1px">Деньги на банковской карте : </h4>
+                                    <input type="text" style="margin-top: -4px" class="form-control" id="bankKart"
+                                           name="bankKart" th:value="0" placeholder="Деньги с банковской карты"/>
+                                </div>
+                                <br></br>
+                                <div class="col-md-3">
+                                    <h4 style="font-size: 15px">Деньги с клубной карты: </h4>
+                                    <input type="text" class="form-control" id="payWithCard" readonly="readonly"
+                                           name="payWithCard" th:value="${CloseShiftView.card}"
+                                           placeholder="Деньги с карты"/>
+                                </div>
+                                <br></br>
+                                <button type="button" id="budget" onclick="test2()"
+                                        class="btn btn-lg btn-primary btn-block">Закрыть смену
+                                </button>
+                                <button style="visibility: hidden" id="closeShiftButtonShortage"
+                                        class="btn btn-lg btn-danger btn-block" type="submit">Закрыть смену с недосдачей
+                                </button>
+                            </div>
+
+
+                            <div th:if="${not #lists.isEmpty(CloseShiftView.activeCalculate)}">
+                                <h1>Нельзя закрыть смену</h1>
+                                <h3>Присутствуют незакрытые счета</h3>
+                            </div>
+                        </div>
+                        <br></br>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<script>-->
+    <!--function recalculation() {-->
+    <!--$.ajax({-->
+    <!--type: "POST",-->
+    <!--url: "manager/recalculation",-->
+    <!--data: $('#form').serialize(),-->
+    <!--success: function (data) {-->
+    <!--//<![CDATA[-->
+    <!--$('#salaryWorker').val(data[0]);-->
+    <!--$('#totalCashBox').val(data[1]);-->
+    <!--//]]>-->
+    <!--},-->
+    <!--error: function () {-->
+    <!--console.log('ajaxModal сломался? ');-->
+    <!--}-->
+    <!--});-->
+    <!--}-->
+
+    <!--function test(id){-->
+    <!--if ($('#1'+ id).attr('type')=='hidden'){-->
+    <!--$('#1'+ id).attr('type','text');-->
+    <!--}else {-->
+    <!--$('#1'+ id).attr('type','hidden');-->
+    <!--}-->
+    <!--}-->
+
+
+    <!--//<![CDATA[-->
+    <!--function test2(){-->
+    <!--var cashBox = parseFloat($("#totalCashBox").val());-->
+    <!--var cache = parseFloat($("#cache").val());-->
+    <!--var payWithCard = parseFloat($("#payWithCard").val());-->
+    <!--var bankKart = parseFloat($("#bankKart").val());-->
+    <!--var budget = cache + payWithCard + bankKart;-->
+    <!--if (budget < cashBox){-->
+    <!--$("#cache").css('border', 'red 3px solid');-->
+    <!--$("#bankKart").css('border', 'red 3px solid');-->
+    <!--$('#errorBlock').html('Сверка бюджета не прошла!');-->
+    <!--$("#closeShiftButtonShortage").css('visibility','visible');-->
+    <!--$("#budget").css('visibility','hidden');-->
+    <!--} else if (budget >= cashBox) {-->
+    <!--$('#budget').attr('type','submit');-->
+    <!--}-->
+    <!--}-->
+    <!--//]]>-->
+    <!--</script>-->
+</div>
+</body>
+</html>
+
+
+
+
+

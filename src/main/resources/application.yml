@@ -1,0 +1,72 @@
+# Database settings
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/world?serverTimezone=Europe/Moscow
+    username: root
+    password: root
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
+    database: default
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+  mandatory-file-encoding: UTF-8
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+    multipart:
+      max-file-size: 5MB
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: cafe.crm.test@gmail.com
+    password: Integer123
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+      defaultEncoding: UTF-8
+#Logging
+logging:
+  config: classpath:logback.xml
+
+time:
+ server: ntp.xs4all.nl,ntp04.oal.ul.pt,ntp02.oal.ul.pt,time-a.nist.gov
+
+advertising:
+  mail:
+    sender: smtp.gmail.com
+    image-view: db:image-advertising
+    text-view: db:text-advertising
+    disable-view: db:disable-advertising
+    disable-subject: Отключение рекламной рассылки
+  cloud:
+    name: hookahpacman
+    key: 172681431197699
+    secret: p1B4kuIACB-7avW2KXrAXgHuMj0
+
+site:
+  address: localhost:8080
+
+balance-info:
+  mail:
+    deduction:
+      view: db:balance-info-deduction
+      subject: Изменение баланса карты!
+    refill:
+      view: db:balance-info-refill
+      subject: Измение баланса карты!
+
+closeShiftEmailShortage:
+           view: db:closeShiftEmailShortage
+           text: Касса не сошлась!
+           subject: Касса не сошлась!

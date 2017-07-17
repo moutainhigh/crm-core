@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Открытие смены</title>
+    <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
+</head>
+<body>
+<div class="container" style="margin-top:50px">
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a style="font-size: 20px" class="navbar-brand">Cafe-CRM</a>
+        </div>
+        <div style="font-size: 17px;margin-top: 5px;" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav ">
+                <li sec:authorize="hasAuthority('BOSS')">
+                    <a class="glyphicon glyphicon-refresh" th:href="@{/boss/menu}"
+                       style="padding-left: 10px;    padding-top: 8px;"></a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/logout">Выход</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.navbar -->
+
+    <div style="margin-top: 200px" class="row-fluid">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title" th:align="center">Новая смена</h3>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal">
+                    <div class="form-group ">
+                        <label for="inputEmail" class="col-xs-2 control-label col-xs-4 col-md-offset-3">Дата начала
+                            смены</label>
+                        <div class="col-xs-2  col-md-offset-1">
+                            <input type="email" readonly="true" class="form-control" id="inputEmail"
+                                   th:placeholder="${date}"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail" class="col-xs-2 control-label  col-xs-4 col-md-offset-3">Начало
+                            смены</label>
+                        <div class="col-xs-4 col-md-offset-1">
+                            <a id="ins" class="btn btn-primary btn-info" style="width: 160px" th:href="'#add'"
+                               data-toggle="modal">Начать смену</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<form role="form" method="post" action="/manager/shift/begin" style="margin: 10px auto; width: 50%">
+    <div align="center" class="modal fade" th:id="'add'" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel2">Добавить сотрудников</h4>
+                </div>
+                <div>
+                    <h3 align="center"><h1 th:align="center" style="color: #5bc0de;">Поиск</h1></h3>
+                    <input id="filter" style="margin-bottom: 10px" type="text" class="form-control"
+                           placeholder="Быстрый поиск"></input>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tr>
+                            <th>#</th>
+                            <th>Имя</th>
+                            <th>Фамилия</th>
+                            <th>Должность</th>
+                            <th>Добавить сотрудника</th>
+                        </tr>
+                        <tbody class="searchable" th:each="user:${list}">
+                        <tr>
+                            <td><p th:text="${user.id}"></p></td>
+                            <td><p th:text="${user.firstName}"></p></td>
+                            <td><p th:text="${user.lastName}"></p></td>
+                            <td><p th:text="${user.allPosition}"></p></td>
+                            <td><input type="checkbox" style="width:20px;height:20px;" name="box"
+                                       th:value="${user.id}"/></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div th:if="${shiftCashBox}==null">
+                        <h3>Введите количество денег в кассе</h3>
+                        <input type="text" class="form-control" value="" placeholder="Введите количество денег в кассе"
+                               required="" autofocus=""
+                               name="cashBox"/>
+                    </div>
+
+                    <div th:if="${shiftCashBox}!=null">
+                        <h3>Количество наличных в кассе</h3>
+                        <span th:text="${shiftCashBox}"></span>
+                    </div>
+
+
+                    <div th:if="${bankCashBox}==null">
+                        <h3>Введите количество денег на банковской карте</h3>
+                        <input type="number" class="form-control" value=""
+                               placeholder="Введите количество денег на банковской карте" required="" autofocus=""
+                               name="bankCashBox"/>
+                    </div>
+
+                    <div th:if="${bankCashBox}!=null">
+                        <h3>Количество денег на банковской карте</h3>
+                        <span th:text="${bankCashBox}"></span>
+                    </div>
+
+
+                </div>
+                <button type="submit" class="btn btn-danger btn-lg" name="upd">
+                    Начать смену
+                </button>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div th:replace="fragments/managerChangePassword :: managerChangePassword"></div>
+<div th:replace="closeShift :: closeShift"></div>
+<script th:src="@{/js/shift/page.js}"></script>
+<script th:src="@{/js/filter.js}"></script>
+<script th:src="@{/js/shift/close.js}"></script>
+</body>
+
+</html>

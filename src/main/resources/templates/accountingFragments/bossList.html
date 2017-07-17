@@ -1,0 +1,242 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+
+<body>
+<div class="table" style="border-radius:5px" th:fragment="bossList">
+    <table class="table table-striped">
+        <tr>
+            <th> Имя</th>
+            <th> Фамилия</th>
+            <th> Email</th>
+            <th> Номер телефона</th>
+            <th> Должность</th>
+            <th> Оклад за смену</th>
+            <th> Количество смен</th>
+            <th> Зарплата</th>
+            <th> Бонус</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tbody class="searchableBoss">
+        <tr th:each="boss : ${bossList}">
+
+            <td th:text="${boss.firstName}"></td>
+            <td th:text="${boss.lastName}"></td>
+            <td th:text="${boss.email}"></td>
+            <td th:text="${boss.phone}"></td>
+            <td th:text="${boss.allPosition}"></td>
+            <td th:text="${boss.shiftSalary}"></td>
+            <td th:text="${boss.allShifts.size()}"></td>
+            <td th:text="${boss.salary}"></td>
+            <td th:text="${boss.bonus}"></td>
+            <td class="col-lg-2">
+                <a class="btn btn-primary btn-info" th:href="'#bossEdit'+${boss.id}"
+                   data-toggle="modal">Редактировать</a>
+            </td>
+
+            <td class="col-lg-2">
+                <a class="btn btn-primary btn-danger" th:href="'#bossDelete'+${boss.id}" data-toggle="modal">Удалить</a>
+            </td>
+
+
+            <div class="modal fade" th:id="'bossEdit'+${boss.id}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="form-signin-heading">Форма Редактирования Сотрудника</h2>
+                        </div>
+                        <div class="modal-body">
+
+                            <form class="form-signin" action="worker/editBoss" method="POST">
+
+                                <input type="hidden" class="form-control" th:value="${boss.id}" name="id"/>
+
+                                <div class="row">
+                                    <div class="col-md-6 ">
+                                        <h4>Имя</h4>
+                                        <input type="text" class="form-control" th:value="${boss.firstName}"
+                                               name="firstName"/>
+                                        <br></br>
+                                    </div>
+                                    <div class="col-md-6 ">
+                                        <h4>Фамилия</h4>
+                                        <input type="text" class="form-control" th:value="${boss.lastName}"
+                                               name="lastName"/>
+                                        <br></br>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 ">
+                                        <h4>Email <span id="editValidEmailBoss2"></span></h4>
+                                        <input type="text" class="form-control" id="editEmailBoss2"
+                                               th:value="${boss.email}" name="email"/>
+                                        <br></br>
+                                    </div>
+                                    <div class="col-md-6 ">
+                                        <h4>Номер телефона <span id="editValidPhoneBoss2"></span></h4>
+                                        <input type="text" class="form-control" th:value="${boss.phone}"
+                                               id="editPhoneBoss2" name="phone"/>
+                                        <br></br>
+                                    </div>
+                                </div>
+
+
+                                <input type="hidden" class="form-control" th:value="${boss.password}" name="password"/>
+                                <br></br>
+
+
+                                <h3 style="color: black" align="center">Активные должности &nbsp;&nbsp;&nbsp; <i
+                                        style="font-size: 30px" class="fa fa-question" aria-hidden="true"
+                                        data-toggle="tooltip" data-placement="right"
+                                        title="Чтобы удалить должность снимите флаг с нужной позиции!"></i></h3>
+                                <div th:each="position : ${boss.getAllPosition()}" style="margin-left: 25%">
+                                    <div class="question" th:if="${position.jobName} == 'Владелец'">
+                                        <input id="label4" class="addPos"
+                                               style="width: 30px;height: 30px; margin-right: 20px" type="checkbox"
+                                               th:checked="checked"
+                                               th:value="${position.id}" name="bossPositionId"
+                                               autocomplete="off" value=""/>
+                                        <label for="label4"><h3 style="color: black;font-size: 20px"
+                                                                th:text="${position.jobName}"></h3></label>
+                                    </div>
+
+                                    <div class="question" th:if="${position.jobName} == 'Администратор'">
+                                        <input id="label3" class="addPos castBossToAdmin"
+                                               style="width: 30px;height: 30px; margin-right: 20px" type="checkbox"
+                                               th:checked="checked"
+                                               th:value="${position.id}" name="adminPositionId"
+                                               autocomplete="off" value=""/>
+                                        <label for="label3"><h3 style="color: black;font-size: 20px"
+                                                                th:text="${position.jobName}"></h3></label>
+                                    </div>
+
+                                    <div th:if="${position.jobName} != 'Администратор' AND ${position.jobName} != 'Владелец'">
+                                        <input id="pos5" style="width: 30px;height: 30px; margin-right: 20px"
+                                               type="checkbox" th:value="${position.id}" name="allPosition"
+                                               th:checked="checked"
+                                               autocomplete="off" value=""/>
+                                        <label for="pos5"><h3 style="color: black;font-size: 20px"
+                                                              th:text="${position.jobName}"></h3></label>
+                                    </div>
+                                </div>
+
+                                <h3 style="color: black" align="center">Добавить должности &nbsp;&nbsp;&nbsp; <i
+                                        style="font-size: 30px" class="fa fa-question" aria-hidden="true"
+                                        data-toggle="tooltip" data-placement="right"
+                                        title="Чтобы добавить должность поставьте флаг на нужную позицию!"></i></h3>
+
+                                <div th:each="allPosBoss : ${allPosBoss}" style="margin-left: 25%">
+                                    <div class="question" th:if="${allPosBoss.jobName} == 'Администратор'">
+                                        <input id="label3" class="addPos castBossToAdmin"
+                                               style="width: 30px;height: 30px; margin-right: 20px" type="checkbox"
+                                               th:value="${allPosBoss.id}" name="adminPositionId"
+                                               autocomplete="off" value=""/>
+                                        <label for="label3"><h3 style="color: black;font-size: 20px"
+                                                                th:text="${allPosBoss.jobName}"></h3></label>
+                                    </div>
+
+
+                                    <div class="question" th:if="${allPosBoss.jobName} == 'Владелец'">
+                                        <input id="label4" class="addPos"
+                                               style="width: 30px;height: 30px; margin-right: 20px" type="checkbox"
+                                               th:value="${allPosBoss.id}" name="bossPositionId"
+                                               autocomplete="off" value=""/>
+                                        <label for="label4"><h3 style="color: black;font-size: 20px"
+                                                                th:text="${allPosBoss.jobName}"></h3></label>
+                                    </div>
+
+                                    <div th:if="${allPosBoss.jobName} != 'Администратор' AND ${allPosBoss.jobName} != 'Владелец'">
+                                        <input id="pos5" style="width: 30px;height: 30px; margin-right: 20px"
+                                               type="checkbox" th:value="${allPosBoss.id}" name="allPosition"
+                                               autocomplete="off" value=""/>
+                                        <label for="pos5"><h3 style="color: black;font-size: 20px"
+                                                              th:text="${allPosBoss.jobName}"></h3></label>
+                                    </div>
+                                </div>
+
+
+                                <div class="answer">
+                                    <h3 style="color: black;" align="center">Оклад</h3>
+                                    <input type="number" class="form-control" value="0" placeholder="Оклад" autofocus=""
+                                           name="shiftSalary"/>
+                                </div>
+
+
+                                <br></br>
+
+
+                                <button type="submit" class="btn btn-lg btn-primary btn-block">Изменить Данные</button>
+                                <br></br>
+                            </form>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal fade" th:id="'bossDelete'+${boss.id}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="form-signin-heading">Форма Удаления Сотрудника</h2>
+                        </div>
+                        <div class="modal-body">
+                            <h3 style="color: crimson">Удалить сотрудника?</h3>
+                            <br></br>
+                            <form class="form-signin" th:action="'worker/deleteWorker/'+${boss.id}" method="GET">
+
+                                <input type="hidden" class="form-control" readonly="readonly" th:value="${boss.id}"
+                                       name="id"/>
+
+                                <h4>Имя</h4>
+                                <span readonly="" class="form-control" th:text="${boss.firstName}"></span>
+                                <br></br>
+
+
+                                <h4>Фамилия</h4>
+                                <span readonly="" class="form-control" th:text="${boss.lastName}"></span>
+                                <br></br>
+
+                                <h4>Должность</h4>
+                                <span readonly="readonly" class="form-control"
+                                      th:text="${boss.allPosition}"></span>
+                                <br></br>
+
+
+                                <h4>Оклад За Смену</h4>
+                                <input type="text" class="form-control" th:value="${boss.shiftSalary}"
+                                       name="shiftSalary"/>
+                                <br></br>
+
+                                <button type="submit" class="btn btn-lg btn-primary btn-block">Да</button>
+                                <br></br>
+                                <button type="button" class="btn btn-lg btn-primary btn-block" data-dismiss="modal">
+                                    Нет
+                                </button>
+                                <br></br>
+                            </form>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

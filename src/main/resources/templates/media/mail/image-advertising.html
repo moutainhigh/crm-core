@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+</head>
+<body>
+<table align="center" border="0" cellpacing="0" cellpadding="0" width="550" style="background-color: #88ffee">
+    <tbody>
+    <tr>
+        <td>
+            <table>
+                <tbody>
+                <tr>
+                    <td width="450">
+                        <img src="https://pp.userapi.com/c639220/v639220279/eb29/bGMV4tU4pDU.jpg" alt="PACMAN"
+                             border="0"
+                             width="50" height="50"/>
+                    </td>
+                    <td style="border-left:#e7e7e7 1px solid;text-align:center;vertical-align:middle;"
+                        valign="middle">
+                        <a href="https://vk.com/hookahpacman" alt="Вконтакте">
+                            <img src="https://lh3.googleusercontent.com/BIiGrMnIkSZXn3a8qYmEbKShNutHhqK7AEcWaLOlyZ9vxmf5QXPPoeUFpsEhH42fww=w300"
+                                 alt="VK" border="0" width="45" height="45"/>
+                        </a>
+                    </td>
+                    <td style="border-left:#e7e7e7 1px solid;text-align:center;vertical-align:middle;"
+                        valign="middle">
+                        <a href="https://www.instagram.com/hookahpacman/" alt="Инстаграм">
+                            <img src="https://lh3.googleusercontent.com/aYbdIM1abwyVSUZLDKoE0CDZGRhlkpsaPOg9tNnBktUQYsXflwknnOn2Ge1Yr7rImGk=w300"
+                                 alt="VK" border="0" width="40" height="40"/>
+                        </a>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table>
+                <tbody>
+                <tr>
+                    <td>
+                        <a href="https://vk.com/hookahpacman" th:href="${urlToLink}">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRa-dkyRnlAJVrYcHi6qneUAxUQPF4f_JeXYAtX4pToMygPkbxbCQ"
+                                 th:src="${advertisingUrl}" width="550"/>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table>
+                <tbody>
+                <tr>
+                    <td>
+                        <a th:href="'http://' + ${siteAddress} + '/advertising/toggle?number=' + ${number} + '&amp;token=' + ${token}">Если
+                            больше не хотите получать рекламу, нажмите на это сообщение</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+
+</table>
+</body>
+</html>

@@ -1,0 +1,31 @@
+.table > thead > tr > th {
+    text-align: center;
+}
+
+.table > tbody > tr > td {
+    text-align: center;
+}
+
+.table-name {
+    color: #5bc0de;
+}
+
+thead, tfoot {
+    background-color: #5bc0de;
+}
+
+th > .btn-default {
+    color: #fff !important;
+    background-color: #000 !important;
+    border-color: #000 !important;
+}
+
+th > .btn-default:hover, th > .btn-default:focus, th > .btn-default:active, th > .btn-default.active, th > .open > .dropdown-toggle.btn-default {
+    color: #000 !important;
+    background-color: #fff !important;
+    border-color: #fff !important;
+}
+
+.ui-autocomplete {
+    z-index: 1500 !important;
+}
