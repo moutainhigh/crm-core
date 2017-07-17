@@ -64,10 +64,13 @@ public class MenuController {
 
 	@RequestMapping(value = "/updCategory", method = RequestMethod.POST)
 	public String updCategory(@RequestParam(name = "upd") Long id,
-							  @RequestParam(name = "name") String name) {
+							  @RequestParam(name = "name") String name,
+							  @RequestParam(name = "dirtyProfit", required = false, defaultValue = "true") String dirtyProfit) {
+		Boolean isDirty = Boolean.valueOf(dirtyProfit);
 		Category category = categoriesService.getOne(id);
 		if (category != null) {
 			category.setName(name);
+			category.setDirtyProfit(isDirty);
 			categoriesService.saveAndFlush(category);
 		}
 		return "redirect:/boss/menu/";
@@ -104,10 +107,16 @@ public class MenuController {
 	}
 
 	@RequestMapping(value = "/addCategory", method = RequestMethod.POST)
-	public String addCategories(@RequestParam(name = "name") String name) {
+	public String addCategories(@RequestParam(name = "name") String name,
+								@RequestParam(name = "dirtyProfit", required = false, defaultValue = "true") String dirtyProfit,
+								@RequestParam(name = "floatingPrice", required = false, defaultValue = "false") String floatingPrice) {
+		Boolean isDirty = Boolean.valueOf(dirtyProfit);
+		Boolean isFloatingPrice = Boolean.valueOf(floatingPrice);
 		Category category = new Category(name);
 		Set<Product> setProducts = new HashSet<>();
 		category.setProducts(setProducts);
+		category.setDirtyProfit(isDirty);
+		category.setFloatingPrice(isFloatingPrice);
 		categoriesService.saveAndFlush(category);
 		return "redirect:/boss/menu";
 	}
@@ -163,7 +172,7 @@ public class MenuController {
 		return new ResponseEntity<>(1L, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/delete/recipe/{id}" , method = RequestMethod.POST)
+	@RequestMapping(value = "/delete/recipe/{id}", method = RequestMethod.POST)
 	public String deleteRecipe(@PathVariable(name = "id") Long id, HttpServletRequest request) {
 		Product product = productService.findOne(id);
 		if (product != null) {

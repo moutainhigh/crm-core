@@ -91,7 +91,6 @@ public class Ingredients {
 		int result = id != null ? id.hashCode() : 0;
 		result = 31 * result + (name != null ? name.hashCode() : 0);
 		result = 31 * result + (dimension != null ? dimension.hashCode() : 0);
-		result = 31 * result + (amount != null ? amount.hashCode() : 0);
 		return result;
 	}
 

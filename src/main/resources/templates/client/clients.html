@@ -3,6 +3,7 @@
 <head>
     <title>Страница счетов</title>
     <div th:replace="fragments/headTag :: bootstrap"></div>
+    <link rel="stylesheet" th:href="@{/css/calculate.css}" type="text/css"/>
     <script th:src="@{/js/cookie.js}"></script>
 </head>
 <body>
@@ -25,7 +26,6 @@
             <div class="panel panel-primary">
                 <div class="panel-heading" style="height: 44px; padding: 0">
                     <div class="panel-title">
-
                         <form style="float: left" method="post" action="/manager/refresh-board"
                               th:id="'formRef'+${calculate.id}">
                             <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
@@ -145,16 +145,25 @@
                             <form th:id="'updateForm' + ${client.id}" method="post">
                                 <input type="hidden" name="clientId" th:value="${client.id}"/>
 
-                                <td>
-                                    <input autocomplete="off" th:id="'one' + ${client.id}"
-                                           th:onblur="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'"
-                                           class="form-control"
-                                           style="width:150px;margin: auto;font-size: 17px"
-                                           name="description" th:value="${client.description}" maxlength="30"/>
-                                </td>
-                                <td style="text-align: center">
-                                    <p th:text="${client.timeStart.toLocalTime().withSecond(0).withNano(0)}"></p></td>
-                                <td style="text-align: center">
+                                        <td>
+                                            <input autocomplete="off" th:id="'one' + ${client.id}"
+                                                   th:onblur="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'" class="form-control"
+                                                   style="width:150px;margin: auto;font-size: 17px"
+                                                   name="description" th:value="${client.description}" maxlength="30"/>
+                                        </td>
+                                        <td style="text-align: center" >
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <p th:text="${client.timeStart.toLocalTime().withSecond(0).withNano(0)}"></p>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <button class="time-edit glyphicon glyphicon-edit" data-toggle="modal" th:href="'#timeEditModal' + ${client.id}"  aria-hidden="true"></button>
+                                                </div>
+
+                                            </div>
+                                        </td>
+                                        <div th:replace="client/clientFragments/timeEditModal :: timeEditModal" th:remove="tag"></div>
+                                        <td style="text-align: center">
 
                                 </td>
                                 <td>
@@ -205,6 +214,12 @@
                                 th:href="'#deleteModal' + ${calculate.id}">
                             Удалить
                         </button>
+
+                        <form action="/manager/pause" th:method="POST">
+                        <button th:text="${calculate.isPause()} ? 'Снять с паузы' : 'Пауза'"  name="id" th:value="${calculate.id}" style="float: left;margin-left: 23px" class="btn btn-primary" >
+                        </button>
+
+                        </form>
                         <div th:id="'deleteModal' + ${calculate.id}" class="modal fade">
                             <div class="modal-dialog " style="width: 250px;margin-top: 150px" role="document">
                                 <div class="modal-content">
@@ -213,14 +228,13 @@
                                         <button th:form="'formTest' + ${calculate.id}" class="btn btn-danger">Да
                                         </button>
                                         <button class="btn btn-danger" type="button" data-dismiss="modal">Нет</button>
-
                                     </div>
                                 </div>
                             </div>
                         </div>
 
 
-                        <button style="float: left;margin-left: 610px;" class="btn btn-primary"
+                        <button style="float: left;margin-left: 470px;" class="btn btn-primary"
                                 data-toggle="modal" th:href="'#menuModal' + ${calculate.id}"> Заказ
                         </button>
                         <div th:replace="client/clientFragments/getCheckFragment :: checkModal"></div>
@@ -243,6 +257,37 @@
         } else if ($.cookie(id) == false.toString() || $.cookie(id) == null) {
             $.cookie(id, "true");
         }
+    }
+
+    function editClientTimeStart(clientId) {
+        //<![CDATA[
+        var hours = $('#editHours' + clientId).val();
+        if (hours < 0 || hours > 23 || hours == "") {
+            var errorMessage = '<h4 style="color:red;" align="center">Допустимое значение часов от 0 до 23</h4>';
+            $('.messageEdit' + clientId).html(errorMessage).show();
+            return false;
+        }
+        var minutes = $('#editMinutes' + clientId).val();
+        if (minutes < 0 || minutes > 59 || minutes == "") {
+            var errorMessage = '<h4 style="color:red;" align="center">Допустимое значение минут от 0 до 59</h4>';
+            $('.messageEdit' + clientId).html(errorMessage).show();
+            return false;
+        }
+        //]]>
+
+        var url = "/manager/edit-client-time-start";
+        var data = {clientId: clientId, hours: hours, minutes: minutes};
+
+        $.post(url, data, function () {
+            location.reload()
+        })
+        .fail(function(response) {
+            var errorMessage = '<h4 style="color:red;" align="center">Не удалось обновить время</h4>';
+            $('.messageEdit' + clientId).html(errorMessage).show();
+            window.setTimeout(function () {
+                location.reload()
+            }, 1000);
+        });
     }
 
     function ajaxCardDiscount(id, calcId) {
@@ -435,6 +480,35 @@
             },
             error: function () {
                 console.log('createLayerProductAjax сломался? ');
+            }
+        });
+    }
+
+    function createLayerProductWithFloatingPriceAjax(prodId, calcId, inputId) {
+        $('#productId' + calcId).val(prodId);
+        var price = $(('#' + inputId) + prodId).val();
+        //<![CDATA[
+        if (price == "" || price <= 0) {
+            return false;
+        }
+        var data = $('#addProductOnClientForm' + calcId).serializeArray();
+        data.push({name: 'productPrice', value: price});
+        $.ajax({
+            type: "POST",
+            url: "/manager/create-layer-product-floating-price",
+            data: data,
+            success: function (data) {
+                var arr = data.clients;
+                for (var i = 0; i < arr.length; i++) {
+                    $('#ajaxMenu' + arr[i].id + ' li:last').after('<li id = "pr' + data.id + '">' + data.name + ' №' + data.id + ' (' + data.cost + 'р)' + '</li>');
+                }
+                setTimeout(function () {getOpenClientsOnCalculateAjax(calcId)}, 500);
+                prog(calcId);
+                setTimeout(function () {ajaxForCalculate(calcId)}, 500);
+                //]]>
+            },
+            error: function () {
+                console.log('createLayerProductWithFloatingPriceAjax сломался? ');
             }
         });
     }

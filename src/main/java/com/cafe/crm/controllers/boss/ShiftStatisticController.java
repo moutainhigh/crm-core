@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -57,9 +58,9 @@ public class ShiftStatisticController {
 		Double allOtherGoods = 0D;
 		Shift shift = shiftService.findOne(id);
 		ShiftView shiftView = shiftService.createShiftView(shift);
-		Set<Goods> salaryWorkerGoods = goodsService.findByDateAndCategoryNameAndVisibleTrue(shift.getDateShift(),
+		List<Goods> salaryWorkerGoods = goodsService.findByDateAndCategoryNameAndVisibleTrue(shift.getDateShift(),
 				"Зарплата сотрудников");
-		Set<Goods> otherGoods = goodsService.findByDateAndVisibleTrue(shift.getDateShift());
+		List<Goods> otherGoods = goodsService.findByDateAndVisibleTrue(shift.getDateShift());
 		otherGoods.removeAll(salaryWorkerGoods);
 		for (Goods salaryWorkerGood : salaryWorkerGoods) {
 			allSalaryGoods = allSalaryGoods + salaryWorkerGood.getPrice() * salaryWorkerGood.getQuantity();

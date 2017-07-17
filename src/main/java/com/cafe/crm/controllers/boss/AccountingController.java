@@ -1,4 +1,5 @@
 package com.cafe.crm.controllers.boss;
+
 import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;
 import com.cafe.crm.models.worker.Position;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Comparator;
@@ -102,10 +104,10 @@ public class AccountingController {
 
 	@RequestMapping(value = {"worker/addWorker"}, method = RequestMethod.POST)
 	public String addWorker(Worker worker,
-							@RequestParam(name = "passwordWorker", required = false) String passwordWorker,
-							@RequestParam(name = "submitNewPasswordWorker", required = false) String submitNewPasswordWorker,
-							@RequestParam(name = "adminPositionId", required = false) Long adminPositionId,
-							@RequestParam(name = "bossPositionId", required = false) Long bossPositionId) throws IOException, URISyntaxException {
+	                        @RequestParam(name = "passwordWorker", required = false) String passwordWorker,
+	                        @RequestParam(name = "submitNewPasswordWorker", required = false) String submitNewPasswordWorker,
+	                        @RequestParam(name = "adminPositionId", required = false) Long adminPositionId,
+	                        @RequestParam(name = "bossPositionId", required = false) Long bossPositionId) throws IOException, URISyntaxException {
 
 		Matcher matcherEmail = VALID_EMAIL_ADDRESS_REGEX.matcher(worker.getEmail());
 		Matcher matcherPhone = VALID_PNONE_REGEX.matcher(worker.getPhone());
@@ -132,8 +134,8 @@ public class AccountingController {
 
 	@RequestMapping(value = {"worker/addManager"}, method = RequestMethod.POST)
 	public String addManager(Manager manager,
-							 @RequestParam(name = "bossPositionId", required = false) Long bossPositionId,
-							 @RequestParam(name = "submitPassword", required = false) String submitAdminPassword) throws IOException {
+	                         @RequestParam(name = "bossPositionId", required = false) Long bossPositionId,
+	                         @RequestParam(name = "submitPassword", required = false) String submitAdminPassword) throws IOException {
 
 		Matcher matcherEmail = VALID_EMAIL_ADDRESS_REGEX.matcher(manager.getEmail());
 		Matcher matcherPhone = VALID_PNONE_REGEX.matcher(manager.getPhone());
@@ -151,7 +153,7 @@ public class AccountingController {
 
 	@RequestMapping(value = {"worker/addBoss"}, method = RequestMethod.POST)
 	public String addBoss(Boss boss,
-						  @RequestParam(name = "submitPassword", required = false) String submitBossPassword) throws IOException {
+	                      @RequestParam(name = "submitPassword", required = false) String submitBossPassword) throws IOException {
 
 		Matcher matcherEmail = VALID_EMAIL_ADDRESS_REGEX.matcher(boss.getEmail());
 		Matcher matcherPhone = VALID_PNONE_REGEX.matcher(boss.getPhone());
@@ -169,10 +171,10 @@ public class AccountingController {
 
 	@RequestMapping(value = {"worker/editWorker"}, method = RequestMethod.POST)
 	public String editWorker(Worker worker,
-							 @RequestParam(name = "adminPositionId", required = false) Long adminPositionId,
-							 @RequestParam(name = "bossPositionId", required = false) Long bossPositionId,
-							 @RequestParam(name = "passwordEditWorkerToAdmin", required = false) String password,
-							 @RequestParam(name = "submitPasswordEditWorkerToAdmin", required = false) String submitPassword) throws IOException {
+	                         @RequestParam(name = "adminPositionId", required = false) Long adminPositionId,
+	                         @RequestParam(name = "bossPositionId", required = false) Long bossPositionId,
+	                         @RequestParam(name = "passwordEditWorkerToAdmin", required = false) String password,
+	                         @RequestParam(name = "submitPasswordEditWorkerToAdmin", required = false) String submitPassword) throws IOException {
 
 		Matcher matcherEmail = VALID_EMAIL_ADDRESS_REGEX.matcher(worker.getEmail());
 		Matcher matcherPhone = VALID_PNONE_REGEX.matcher(worker.getPhone());
@@ -191,8 +193,8 @@ public class AccountingController {
 
 	@RequestMapping(value = {"worker/editManager"}, method = RequestMethod.POST)
 	public String editManager(Manager manager,
-							  @RequestParam(name = "adminPositionId", required = false) Long adminPositionId,
-							  @RequestParam(name = "bossPositionId", required = false) Long bossPositionId) throws IOException {
+	                          @RequestParam(name = "adminPositionId", required = false) Long adminPositionId,
+	                          @RequestParam(name = "bossPositionId", required = false) Long bossPositionId) throws IOException {
 
 		Matcher matcherEmail = VALID_EMAIL_ADDRESS_REGEX.matcher(manager.getEmail());
 		Matcher matcherPhone = VALID_PNONE_REGEX.matcher(manager.getPhone());
@@ -210,9 +212,9 @@ public class AccountingController {
 
 	@RequestMapping(value = {"worker/editBoss"}, method = RequestMethod.POST)
 	public String editBoss(Boss boss,
-						   @RequestParam(name = "bossPositionId", required = false) Long bossPositionId,
-						   @RequestParam(name = "adminPositionId", required = false) Long adminPositionId,
-						   @RequestParam(name = "shiftSalary", required = false) Long shiftSalary) throws IOException {
+	                       @RequestParam(name = "bossPositionId", required = false) Long bossPositionId,
+	                       @RequestParam(name = "adminPositionId", required = false) Long adminPositionId,
+	                       @RequestParam(name = "shiftSalary", required = false) Long shiftSalary) throws IOException {
 
 		Matcher matcherEmail = VALID_EMAIL_ADDRESS_REGEX.matcher(boss.getEmail());
 		Matcher matcherPhone = VALID_PNONE_REGEX.matcher(boss.getPhone());

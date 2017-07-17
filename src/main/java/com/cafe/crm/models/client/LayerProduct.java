@@ -14,12 +14,17 @@ public class LayerProduct {
 	@Id
 	@GeneratedValue
 	private Long id;
+
 	@NotNull
 	private String name;
+
 	@NotNull
 	private String description;
+
 	@NotNull
 	private Double cost;
+
+	private boolean dirtyProfit = true;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JsonManagedReference
@@ -61,6 +66,14 @@ public class LayerProduct {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public boolean isDirtyProfit() {
+		return dirtyProfit;
+	}
+
+	public void setDirtyProfit(boolean dirtyProfit) {
+		this.dirtyProfit = dirtyProfit;
 	}
 
 	public List<Client> getClients() {

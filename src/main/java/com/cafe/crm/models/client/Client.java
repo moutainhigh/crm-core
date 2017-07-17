@@ -23,6 +23,26 @@ public class Client {
 	@NotNull
 	private String description = "";
 
+	private boolean isPause = false;  // now is paused ?
+
+	private boolean pausedIndex = false;     // true - if was pause
+
+	public boolean isPause() {
+		return isPause;
+	}
+
+	public void setPause(boolean pause) {
+		isPause = pause;
+	}
+
+	public boolean isPausedIndex() {
+		return pausedIndex;
+	}
+
+	public void setPausedIndex(boolean pausedIndex) {
+		this.pausedIndex = pausedIndex;
+	}
+
 	private LocalDateTime timeStart;
 
 	private boolean state = true;// Open or Closed
@@ -46,6 +66,7 @@ public class Client {
 	private Double priceMenu = 0D;
 
 	private Double priceTime = 0D;
+
 	@NotNull
 	private Double payWithCard = 0D;
 

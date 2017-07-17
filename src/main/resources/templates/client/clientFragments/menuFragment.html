@@ -79,11 +79,21 @@
                                                 <div th:text="${product.description} "></div>
                                             </td>
                                             <td>
-                                                <div th:text="${product.cost} + 'р'"></div>
+                                                <div th:if="${product.category.floatingPrice}">
+                                                    <input type="number" style="width: 6em;" step="0.01" class="form-control input-sm"  placeholder="цена" th:id="'inputPriceInAll' + ${product.id}" required="required"/>
+                                                </div>
+                                                <div th:unless="${product.category.floatingPrice}" th:text="${product.cost} + 'р'"></div>
                                             </td>
                                             <td>
-                                                <button th:onclick="'createLayerProductAjax(\'' + ${product.id} + '\',\'' + ${calculate.id} + '\');'"
-                                                        style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;">
+                                                <button th:if="${product.category.floatingPrice}"
+                                                        style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;"
+                                                        th:onclick="'createLayerProductWithFloatingPriceAjax(\'' + ${product.id} + '\',\'' + ${calculate.id} + '\',\'inputPriceInAll\');'">
+                                                    <i class="fa fa-check" aria-hidden="true"
+                                                       style="font-size: 30px"></i>
+                                                </button>
+                                                <button th:unless="${product.category.floatingPrice}"
+                                                        style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;"
+                                                        th:onclick="'createLayerProductAjax(\'' + ${product.id} + '\',\'' + ${calculate.id} + '\');'">
                                                     <i class="fa fa-check" aria-hidden="true"
                                                        style="font-size: 30px"></i>
                                                 </button>
@@ -133,10 +143,19 @@
                                                 <div th:text="${prod.description} "></div>
                                             </td>
                                             <td>
-                                                <div th:text="${prod.cost} + 'р'"></div>
+                                                <div th:if="${cat.floatingPrice}">
+                                                    <input type="number" style="width: 6em;" step="0.01" class="form-control input-sm"  placeholder="цена" th:id="'inputPriceInCategory' + ${prod.id}" required="required"/>
+                                                </div>
+                                                <div th:unless="${cat.floatingPrice}" th:text="${prod.cost} + 'р'"></div>
                                             </td>
                                             <td>
-                                                <button th:id="'butProd' + ${prod.id}"
+                                                <button th:if="${cat.floatingPrice}" th:id="'butProd' + ${prod.id}"
+                                                        style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;"
+                                                        th:onclick="'createLayerProductWithFloatingPriceAjax(\'' + ${prod.id} + '\',\'' + ${calculate.id} + '\',\'inputPriceInCategory\');'">
+                                                    <i class="fa fa-check" aria-hidden="true"
+                                                       style="font-size: 30px"></i>
+                                                </button>
+                                                <button th:unless="${cat.floatingPrice}" th:id="'butProd' + ${prod.id}"
                                                         style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;"
                                                         th:onclick="'createLayerProductAjax(\'' + ${prod.id} + '\',\'' + ${calculate.id} + '\');'">
                                                     <i class="fa fa-check" aria-hidden="true"

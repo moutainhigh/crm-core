@@ -27,4 +27,6 @@ public interface ClientService {
 
 	Set<Card> findCardByClientIdIn(long[] clientsIds);
 
+	boolean updateClientTime(Long id, int hours, int minutes);
+
 }

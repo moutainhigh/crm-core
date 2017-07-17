@@ -23,58 +23,77 @@ function showModal(id) {
 	modal.fadeIn();
 }
 
-function createProd(id) {
-	var setName = $("#addName" + id).val();
-	var setDes = $("#addDes" + id).val();
-	var setCost = $("#addCost" + id).val();
+$(document).on('click', '#saveNewProductData', function () {
+    var id = $(this).data('id');
+    $('.messageAdd' + id).html(errorMessage).hide();
 
-	var ingredient = [];
-	var amount = [];
-	var myMap = new Object();
-	var i;
+    var setName = $("#addName" + id).val();
+    var setDes = $("#addDes" + id).val();
+    var setCost = $("#addCost" + id).val();
 
-	var table_parent = $(document).find('#recipeTable' + id);
+    if (!productDataValidating(setName, setCost)) {
+        var errorMessage = '<h4 style="color:red;" align="center">Неверный формат данных!</h4>';
+        $('.messageAdd' + id).html(errorMessage).show();
+        return false;
+    }
 
-	table_parent.find('.mySelect option:selected').each(function () {
-		ingredient.push($(this).val());
-	});
-	table_parent.find('.inputClassTest').each(function () {
+    var ingredient = [];
+    var amount = [];
+    var myMap = new Object();
+    var i;
 
-		amount.push($(this).val());
-	});
+    var table_parent = $(document).find('#recipeTable' + id);
 
-	for (i = 0; i < ingredient.length; i++) {
-		myMap[ingredient[i]] = amount[i];
-	}
+    table_parent.find('.mySelect option:selected').each(function () {
+        ingredient.push($(this).val());
+    });
+    table_parent.find('.inputClassTest').each(function () {
 
-	var wrapper = {
-		idCat: id,
-		name: setName,
-		description: setDes,
-		cost: setCost,
-		names: ingredient,
-		amount: amount
-	};
-	$.ajax({
-		type: "POST",
-		url: "/boss/menu/addAjax",
-		contentType: "application/json; charset=utf-8",
-		dataType: "json",
-		data:JSON.stringify(wrapper),
-		success: function (result) {
-            var recipeButton = '<button form="getRecipePage" name="id" class="btn btn-primary btn-info" value="'+result+'" th:type="submit"   >Изменить рецепт </button>';
-			var editButton = '<a id="ins"  class="btn btn-primary btn-info" onclick="showModal(' + result + ')"  data-toggle="modal" >Редактировать </a>';
-			var delButton = '<a id="del"  class="btn btn-primary btn-danger" onclick="del2(' + result + ')"   >Удалить </a>';
-			var tr = '<tr id="tr' + result + '"><td>#</td><td id="b' + result + '"><p id="E' + result + '">' + setName + '</p></td><td id="c' + result + '">' + setDes + '</td><td id="d' + result + '">' + setCost + '</td><td>' + editButton + '</td><td>' + recipeButton + '</td><td>' + delButton + '</td></tr>';
-			var allTR = '<tr id="allTR' + result + '"><td>#</td><td id="allB' + result + '">' + setName + '</td><td id="allC' + result + '">' + setDes + '</td><td id="allD' + result + '">' + setCost + '</td><td>' + editButton + '</td><td>' + recipeButton + '</td><td>' + delButton + '</td></tr>';
-			$('#qwe' + id + ' tr:last').after(tr);
-			$('#allTable' + ' tr:last').after(allTR);
-		},
-		error: function (e) {
-			alert("Неверный формат данных");
-		}
-	});
-}
+        amount.push($(this).val());
+    });
+
+    for (i = 0; i < ingredient.length; i++) {
+        myMap[ingredient[i]] = amount[i];
+    }
+
+    var wrapper = {
+        idCat: id,
+        name: setName,
+        description: setDes,
+        cost: setCost,
+        names: ingredient,
+        amount: amount
+    };
+    $.ajax({
+        type: "POST",
+        url: "/boss/menu/addAjax",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(wrapper),
+        success: function (result) {
+            if ($("#addCost" + id)[0].hasAttribute('disabled')) {
+                setCost = 'Плавающая';
+            }
+            var trCount = $("#qwe" + id + " > tbody > tr").length;
+            var recipeButton = '<button form="getRecipePage" name="id" class="btn btn-primary btn-info" value="' + result + '" th:type="submit"   >Изменить рецепт </button>';
+            var editButton = '<a id="ins"  class="btn btn-primary btn-info" onclick="showModal(' + result + ')"  data-toggle="modal" >Редактировать </a>';
+            var delButton = '<a id="del"  class="btn btn-primary btn-danger" onclick="del2(' + result + ')"   >Удалить </a>';
+            var tr = '<tr id="tr' + result + '"><td>' + trCount + '</td><td id="b' + result + '"><p id="E' + result + '">' + setName + '</p></td><td id="c' + result + '">' + setDes + '</td><td id="d' + result + '">' + setCost + '</td><td>' + editButton + '</td><td>' + recipeButton + '</td><td>' + delButton + '</td></tr>';
+            var allTR = '<tr id="allTR' + result + '"><td>#</td><td id="allB' + result + '">' + setName + '</td><td id="allC' + result + '">' + setDes + '</td><td id="allD' + result + '">' + setCost + '</td><td>' + editButton + '</td><td>' + recipeButton + '</td><td>' + delButton + '</td></tr>';
+            $('#qwe' + id + ' tr:last').after(tr);
+            $('#allTable' + ' tr:last').after(allTR);
+
+            $("#add" + id).modal('hide');
+            $("#addName" + id).val("");
+            $("#addDes" + id).val("");
+            $("#addCost" + id).val("0.0");
+        },
+        error: function (e) {
+            var errorMessage = '<h4 style="color:red;" align="center">Неудалось добавить продукт!</h4>';
+            $('.messageAdd' + id).html(errorMessage).show();
+        }
+    });
+});
 
 function closeModal() {
 	var modal = $('.dima_modal');
@@ -158,48 +177,60 @@ function del2(id) {
 	});
 }
 
-function editProd(id) {
-	var formData = {
-		id: $("#updId" + id).val(),
-		name: $("#updName" + id).val(),
-		description: $("#updDes" + id).val(),
-		cost: $("#updCost" + id).val(),
-	}
-	var cst = $("#updCost" + id).val();
-	var nme = $("#updName" + id).val();
+function productDataValidating(name, cost) {
+    if (name == "" || !$.isNumeric(cost)) {
+        return false;
+    }
+    return true;
+};
 
-	if (!isNaN(+cst)) {
+$(document).on('click', '#saveEditProductData', function () {
+    var id = $(this).data("id");
+    $('.messageEdit' + id).html(errorMessage).hide();
 
-		if ("" != nme) {
-			$.ajax({
-				type: "POST",
-				contentType: "application/json",
-				url: "/boss/menu/updProd",
-				data: JSON.stringify(formData),
-				dataType: 'json',
-				success: function (result) {
+    var prodId = $("#updId" + id).val();
+    var name = $("#updName" + id).val();
+    var des = $("#updDes" + id).val();
+    var cost = $("#updCost" + id).val();
 
-					$("#b" + id).html(result.name);
-					$("#c" + id).html(result.description);
-					$("#d" + id).html(result.cost);
-					$("#allB" + id).html(result.name);
-					$("#allC" + id).html(result.description);
-					$("#allD" + id).html(result.cost);
-				},
-				error: function (e) {
+    if (!productDataValidating(name, cost)) {
+        var errorMessage = '<h4 style="color:red;" align="center">Неверный формат данных!</h4>';
+        $('.messageEdit' + id).html(errorMessage).show();
+        return false;
+    }
 
-					alert("Неверный формат данных!  1")
-				}
-			});
-		}
-		else {
-			alert("Неверный формат названия! 2")
-		}
-	}
-	else {
-		alert("Неверный формат цены! 3")
-	}
-}
+    var formData = {
+        id: prodId,
+        name: name,
+        description: des,
+        cost: cost
+    };
+
+    $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/boss/menu/updProd",
+        data: JSON.stringify(formData),
+        dataType: 'json',
+        success: function (result) {
+            $("#b" + id).html(result.name);
+            $("#c" + id).html(result.description);
+            $("#d" + id).html(result.cost);
+            $("#allB" + id).html(result.name);
+            $("#allC" + id).html(result.description);
+            $("#allD" + id).html(result.cost);
+            $('#allName' + id).val(result.name);
+            $('#allDes' + id).val(result.description);
+            $('#allCost' + id).val(result.cost);
+
+            $("#p" + id).modal('hide');
+        },
+        error: function (e) {
+            var errorMessage = '<h4 style="color:red;" align="center">Неудалось изменить данные!</h4>';
+            $('.messageEdit' + id).html(errorMessage).show();
+        }
+    });
+});
 
 $(document).ready(function () {
 
@@ -260,49 +291,54 @@ function showModal(id) {
 
 	modal.fadeIn();
 }
-function editProdAll(id) {
+$(document).on('click', '#saveEditProductDataAll', function () {
+    var id = $(this).data("id");
+    $('.messageEditAll' + id).html(errorMessage).hide();
 
-	var formData = {
-		id: $("#allId" + id).val(),
-		name: $("#allName" + id).val(),
-		description: $("#allDes" + id).val(),
-		cost: $("#allCost" + id).val(),
-	}
-	var cst = $("#allCost" + id).val();
-	var nme = $("#allName" + id).val();
+    var prodId = $("#allId" + id).val();
+    var name = $("#allName" + id).val();
+    var des = $("#allDes" + id).val();
+    var cost = $("#allCost" + id).val();
 
-	if (!isNaN(+cst)) {
+    if (!productDataValidating(name, cost)) {
+        var errorMessage = '<h4 style="color:red;" align="center">Неверный формат данных!</h4>';
+        $('.messageEditAll' + id).html(errorMessage).show();
+        return false;
+    }
 
-		if ("" != nme) {
-			$.ajax({
-				type: "POST",
-				contentType: "application/json",
-				url: "/boss/menu/updProd",
-				data: JSON.stringify(formData),
-				dataType: 'json',
-				success: function (result) {
+    var formData = {
+        id: prodId,
+        name: name,
+        description: des,
+        cost: cost
+    };
 
-					$("#b" + id).html(result.name);
-					$("#c" + id).html(result.description);
-					$("#d" + id).html(result.cost);
-					$("#allB" + id).html(result.name);
-					$("#allC" + id).html(result.description);
-					$("#allD" + id).html(result.cost);
-				},
-				error: function (e) {
-					alert("Неверный формат данных!")
-					console.log("ERROR: ", e);
-				}
-			});
-		}
-		else {
-			alert("Неверный формат названия!")
-		}
-	}
-	else {
-		alert("Неверный формат цены!")
-	}
-}
+    $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/boss/menu/updProd",
+        data: JSON.stringify(formData),
+        dataType: 'json',
+        success: function (result) {
+            $("#b" + id).html(result.name);
+            $("#c" + id).html(result.description);
+            $("#d" + id).html(result.cost);
+            $('#allB' + id).html(result.name);
+            $("#allC" + id).html(result.description);
+            $("#allD" + id).html(result.cost);
+            $('#updName' + id).val(result.name);
+            $('#updDes' + id).val(result.description);
+            $('#updCost' + id).val(result.cost);
+
+            $("#allP" + id).modal('hide');
+        },
+        error: function (e) {
+            var errorMessage = '<h4 style="color:red;" align="center">Неудалось изменить данные!</h4>';
+            $('.messageEditAll' + id).html(errorMessage).show();
+        }
+    });
+});
+
 function closeModal() {
 	var modal = $('.dima_modal');
 	modal.fadeOut();

@@ -1,7 +1,6 @@
 package com.cafe.crm.controllers.debt;
 
 import com.cafe.crm.models.client.Debt;
-import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.services.interfaces.debt.DebtService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
@@ -36,6 +35,9 @@ public class DebtController {
 
 	@RequestMapping(value = "/manager/tableDebt", method = RequestMethod.GET)
 	public ModelAndView showDebtPage() {
+		if (shiftService.getLast() == null || !(shiftService.getLast().getOpen())) {
+			return new ModelAndView("redirect:/manager/shift/");
+		}
 		LocalDate today = timeManager.getDate();
 		List<Debt> debtList = debtService.findByVisibleIsTrueAndDateBetween(today, today.plusYears(100));
 		Double totalDebtAmount = getTotalPrice(debtList);
@@ -53,8 +55,8 @@ public class DebtController {
 
 	@RequestMapping(value = "/manager/tableDebt", method = RequestMethod.POST)
 	public ModelAndView updatePageAfterSearch(@RequestParam(name = "fromDate") String fromDate,
-											  @RequestParam(name = "toDate") String toDate,
-											  @RequestParam(name = "debtorName") String debtorName) {
+	                                          @RequestParam(name = "toDate") String toDate,
+	                                          @RequestParam(name = "debtorName") String debtorName) {
 
 		LocalDate today = timeManager.getDate();
 		List<Debt> debtList = filter(debtorName, fromDate, toDate);

@@ -21,9 +21,9 @@ body {
     position: relative;
     display: block;
     padding-top: 10px;
-    padding-right: 49px;
+    padding-right: 30px;
     padding-bottom: 10px;
-    padding-left: 49px;
+    padding-left: 30px;
 }
 
 .dropdown-submenu > .dropdown-menu {
