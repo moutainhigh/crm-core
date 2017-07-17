@@ -76,13 +76,15 @@
                         <div th:each="position : ${positionList}">
                             <div style="margin-left: 25%">
                                 <div th:if="${position.jobName}=='Владелец'">
-                                    <input id="admin" style="margin-right: 20px ;width: 30px;height: 30px;"
+                                    <input id="pos4" style="margin-right: 20px ;width: 30px;height: 30px;"
                                            type="checkbox" th:value="${position.id}" th:checked="checked"
                                            name="allPosition" autocomplete="off" value=""/>
-                                    <label for="admin"><h3 style="color: black;font-size: 20px"
-                                                           th:text="${position.jobName}"></h3></label>
+                                    <label for="pos4"><h3 style="color: black;font-size: 20px"
+                                                          th:text="${position.jobName}"></h3></label>
                                 </div>
-                                <div th:if="${position.jobName}!='Владелец'">
+
+
+                                <div th:if="${position.jobName}!='Владелец' AND ${position.jobName} != 'Администратор'">
                                     <input id="pos1" style="margin-right: 20px ;width: 30px;height: 30px;"
                                            type="checkbox" th:value="${position.id}" name="allPosition"
                                            autocomplete="off" value=""/>

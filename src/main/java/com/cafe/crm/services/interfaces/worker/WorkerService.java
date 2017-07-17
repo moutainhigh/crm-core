@@ -4,7 +4,6 @@ package com.cafe.crm.services.interfaces.worker;
 import com.cafe.crm.models.worker.Boss;
 import com.cafe.crm.models.worker.Manager;
 import com.cafe.crm.models.worker.Worker;
-
 import java.util.List;
 
 public interface WorkerService {
@@ -36,6 +35,12 @@ public interface WorkerService {
 	void castWorkerToBoss(Worker worker, String password, Long bossPositionId);
 
 	void castManagerToBoss(Manager manager, Long bossPositionId);
+
+	void castManagerToWorker(Manager manager);
+
+	void castBossToWorker(Boss boss);
+
+	void castBossToManager(Boss boss, Long adminPositionId , Long shiftSalary);
 
 	String parsePhoneNumber(String phoneNumber);
 

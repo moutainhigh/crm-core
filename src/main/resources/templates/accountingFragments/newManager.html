@@ -82,22 +82,14 @@
                             <div style="margin-left: 25%">
                                 <div th:if="${position.jobName}=='Администратор'">
                                     <input id="pos4" style="margin-right: 20px ;width: 30px;height: 30px;"
-                                           type="checkbox" th:value="${position.id}" th:checked="checked"
+                                           type="checkbox" onclick='window.event.returnValue=false' th:value="${position.id}" th:checked="checked"
                                            name="allPosition" autocomplete="off" value=""/>
                                     <label for="pos4"><h3 style="color: black;font-size: 20px"
                                                           th:text="${position.jobName}"></h3></label>
                                 </div>
 
-                                <div class="question" th:if="${position.jobName} == 'Владелец'">
-                                    <input id="pos6" class="coupon_questionBoss"
-                                           style="width: 30px;height: 30px; margin-right: 20px" type="checkbox"
-                                           th:value="${position.id}" name="bossPositionId" autocomplete="off" value=""/>
-                                    <label for="pos6"><h3 style="color: black;font-size: 20px"
-                                                          th:text="${position.jobName}"></h3></label>
-                                </div>
 
-
-                                <div th:if="${position.jobName}!='Администратор' AND ${position.jobName}!='Владелец'">
+                                <div th:if="${position.jobName}!='Администратор' AND ${position.jobName} != 'Владелец'">
                                     <input id="pos1" style="margin-right: 20px ;width: 30px;height: 30px;"
                                            type="checkbox" th:value="${position.id}" name="allPosition"
                                            autocomplete="off" value=""/>

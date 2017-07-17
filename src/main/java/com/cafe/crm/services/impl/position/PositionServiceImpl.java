@@ -44,4 +44,9 @@ public class PositionServiceImpl implements PositionService {
 		}
 		positionRepository.delete(id);
 	}
+
+	@Override
+	public Position findById(Long id) {
+		return positionRepository.findOne(id);
+	}
 }
