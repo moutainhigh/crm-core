@@ -35,7 +35,7 @@ public class Worker implements Serializable {
 	private List<Position> allPosition;
 
 	@Column(name = "shiftSalary", nullable = true)
-	private Long shiftSalary;
+	private Long shiftSalary = 0L;
 
 	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Shift.class)
 	private Set<Shift> allShifts;

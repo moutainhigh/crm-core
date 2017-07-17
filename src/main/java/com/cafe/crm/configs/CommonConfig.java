@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
+import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
@@ -63,9 +64,15 @@ public class CommonConfig {
 	}
 
 	@Bean
+	public SpringSecurityDialect springSecurityDialect() {
+		return new SpringSecurityDialect();
+	}
+
+	@Bean
 	public SpringTemplateEngine thymeleafTemplateEngine() {
 		SpringTemplateEngine engine = new SpringTemplateEngine();
 		engine.addDialect(java8TimeDialect());
+		engine.addDialect(springSecurityDialect());
 		HashSet<TemplateResolver> templateResolvers = new HashSet<>();
 		templateResolvers.add(springThymeleafTemplateResolver());
 		templateResolvers.add(dbTemplateResolver());

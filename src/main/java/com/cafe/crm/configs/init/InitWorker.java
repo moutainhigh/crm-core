@@ -1,11 +1,16 @@
 package com.cafe.crm.configs.init;
 
+import com.cafe.crm.models.board.Board;
+import com.cafe.crm.models.goods.GoodsCategory;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.worker.*;
+import com.cafe.crm.repositories.board.BoardRepository;
 import com.cafe.crm.repositories.boss.BossRepository;
+import com.cafe.crm.repositories.goods.GoodsCategoryRepository;
 import com.cafe.crm.repositories.manager.ManagerRepository;
 import com.cafe.crm.repositories.role.RoleRepository;
 import com.cafe.crm.repositories.worker.WorkerRepository;
+import com.cafe.crm.services.interfaces.board.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -28,6 +33,12 @@ public class InitWorker {
 
 	@Autowired
 	private RoleRepository roleRepository;
+
+	@Autowired
+	private BoardRepository boardRepository;
+
+	@Autowired
+	private GoodsCategoryRepository goodsCategoryRepository;
 
 	@PostConstruct
 	public void init() {
@@ -64,8 +75,8 @@ public class InitWorker {
 		manager.setEmail("manager@mail.ru");
 		manager.setPhone("9233456789");
 		manager.setAllPosition(adminPosList);
-		manager.setShiftSalary(1000L);
-		manager.setSalary(2000L);
+		manager.setShiftSalary(0L);
+		manager.setSalary(0L);
 		manager.setActionForm("admin");
 		Set<Role> adminRoles = new HashSet<>();
 		adminRoles.add(roleAdmin);
@@ -92,7 +103,14 @@ public class InitWorker {
 		boss.setAllShifts(test3);
 		boss.setEnabled(true);
 
+
 		managerRepository.saveAndFlush(manager);
 		bossRepository.saveAndFlush(boss);
+
+		Board board = new Board();
+		board.setName("Стол");
+		GoodsCategory goodsCategory = new GoodsCategory("Зарплата сотрудников");
+		goodsCategoryRepository.saveAndFlush(goodsCategory);
+		boardRepository.saveAndFlush(board);
 	}
 }

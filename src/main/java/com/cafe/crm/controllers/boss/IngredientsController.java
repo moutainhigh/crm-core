@@ -2,9 +2,7 @@ package com.cafe.crm.controllers.boss;
 
 
 import com.cafe.crm.models.menu.Ingredients;
-import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.services.interfaces.menu.IngredientsService;
-import com.cafe.crm.services.interfaces.menu.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,8 +26,6 @@ public class IngredientsController {
 	public Ingredients get() {
 		return new Ingredients();
 	}
-
-
 
 
 	@RequestMapping(method = RequestMethod.GET)

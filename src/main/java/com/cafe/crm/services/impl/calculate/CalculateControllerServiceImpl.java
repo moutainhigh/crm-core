@@ -134,7 +134,11 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		List<Client> clients = new ArrayList<>();
 		for (Calculate calculate : calculates) {
 			for (Client client : calculate.getClient()) {
-				calculatePriceService.calculatePriceTime(client);
+				if (client.isPausedIndex()) {
+					calculatePriceService.calculatePriceTimeIfWasPause(client);
+				} else {
+					calculatePriceService.calculatePriceTime(client);
+				}
 				calculatePriceService.addDiscountOnPriceTime(client);
 				calculatePriceService.getAllPrice(client);
 				if (calculate.isRoundState()) {
@@ -154,7 +158,12 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		Calculate calculate = calculateService.getAllOpenOnCalculate(calculateId);
 		List<Client> clients = calculate.getClient();
 		for (Client client : clients) {
-			calculatePriceService.calculatePriceTime(client);
+			if (client.isPausedIndex()) {
+				calculatePriceService.calculatePriceTimeIfWasPause(client);
+			} else {
+				calculatePriceService.calculatePriceTime(client);
+
+			}
 			calculatePriceService.addDiscountOnPriceTime(client);
 			calculatePriceService.getAllPrice(client);
 			if (calculate.isRoundState()) {
@@ -171,7 +180,6 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		if (clientsId == null) {
 			return null;
 		}
-
 		List<Client> clients = clientService.findByIdIn(clientsId);
 		for (Client client : clients) {
 			calculatePriceService.payWithCardAndCache(client);

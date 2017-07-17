@@ -23,6 +23,8 @@ public class Calculate {
 
 	private boolean roundState = true;
 
+	private boolean isPause = false;  // now is paused ?
+
 	@OneToMany
 	private List<Client> client;
 
@@ -32,9 +34,17 @@ public class Calculate {
 	@ManyToMany
 	private List<Card> cards;
 
+	public boolean isPause() {
+		return isPause;
+	}
+
+	public void setPause(boolean pause) {
+		isPause = pause;
+	}
 
 	public Calculate() {
 	}
+
 
 	public boolean isRoundState() {
 		return roundState;

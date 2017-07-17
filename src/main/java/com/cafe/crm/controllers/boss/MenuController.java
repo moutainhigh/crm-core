@@ -172,7 +172,7 @@ public class MenuController {
 		return new ResponseEntity<>(1L, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/delete/recipe/{id}" , method = RequestMethod.POST)
+	@RequestMapping(value = "/delete/recipe/{id}", method = RequestMethod.POST)
 	public String deleteRecipe(@PathVariable(name = "id") Long id, HttpServletRequest request) {
 		Product product = productService.findOne(id);
 		if (product != null) {

@@ -36,9 +36,9 @@ public class CardGenerationController {
 
 	@RequestMapping(value = "/generateCard", method = RequestMethod.POST)
 	public String generateCard(@RequestParam(value = "accessKey") String accessKey,
-							   @RequestParam(value = "secretKey") String secretKey,
-							   @RequestParam(value = "link") String link,
-							   @RequestParam(value = "amountOfCards") Integer amountOfCards) throws IOException {
+	                           @RequestParam(value = "secretKey") String secretKey,
+	                           @RequestParam(value = "link") String link,
+	                           @RequestParam(value = "amountOfCards") Integer amountOfCards) throws IOException {
 		AmazonS3 s3client = amazonService.getConnection(accessKey, secretKey);
 		for (int i = 1; i <= amountOfCards; i++) {
 			Card card = new Card();
