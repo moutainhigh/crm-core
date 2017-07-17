@@ -472,6 +472,7 @@
     function createLayerProductWithFloatingPriceAjax(prodId, calcId, inputId) {
         $('#productId' + calcId).val(prodId);
         var price = $(('#' + inputId) + prodId).val();
+        //<![CDATA[
         if (price == "" || price <= 0) {
             return false;
         }
@@ -482,7 +483,6 @@
             url: "/manager/create-layer-product-floating-price",
             data: data,
             success: function (data) {
-                //<![CDATA[
                 var arr = data.clients;
                 for (var i = 0; i < arr.length; i++) {
                     $('#ajaxMenu' + arr[i].id + ' li:last').after('<li id = "pr' + data.id + '">' + data.name + ' №' + data.id + ' (' + data.cost + 'р)' + '</li>');
