@@ -25,4 +25,6 @@ public interface GoodsService {
 
 	Set<Goods> findByNameStartingWith(String startName);
 
+	Set<Goods> findByDate(LocalDate date);
+
 }

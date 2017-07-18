@@ -84,4 +84,9 @@ public class GoodsServiceImpl implements GoodsService {
 		return goodsRepository.findByNameStartingWith(startName);
 	}
 
+	@Override
+	public Set<Goods> findByDate(LocalDate date) {
+		return goodsRepository.findByDate(date);
+	}
+
 }
