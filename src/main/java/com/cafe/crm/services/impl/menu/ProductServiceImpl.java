@@ -35,4 +35,14 @@ public class ProductServiceImpl implements ProductService {
 		productRepository.delete(id);
 	}
 
+	@Override
+	public Product findByNameAndDescriptionAndCost(String name, String description, Double cost) {
+		return productRepository.findByNameAndDescriptionAndCost(name, description, cost);
+	}
+
+	@Override
+	public List<Product> findAllOrderByRatingDesc() {
+		return productRepository.findAllByOrderByRatingDescNameAsc();
+	}
+
 }

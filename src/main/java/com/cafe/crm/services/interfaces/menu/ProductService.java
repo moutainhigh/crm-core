@@ -15,4 +15,8 @@ public interface ProductService {
 
 	void delete(Long id);
 
+	Product findByNameAndDescriptionAndCost(String name, String description, Double cost);
+
+	List<Product> findAllOrderByRatingDesc();
+
 }

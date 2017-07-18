@@ -259,7 +259,8 @@
         }
     }
 
-    function editClientTimeStart(clientId) {
+    function editClientTimeStart(clientId, event) {
+        event.preventDefault();
         //<![CDATA[
         var hours = $('#editHours' + clientId).val();
         if (hours < 0 || hours > 23 || hours == "") {

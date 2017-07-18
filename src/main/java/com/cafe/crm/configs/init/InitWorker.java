@@ -34,11 +34,6 @@ public class InitWorker {
 	@Autowired
 	private RoleRepository roleRepository;
 
-	@Autowired
-	private BoardRepository boardRepository;
-
-	@Autowired
-	private GoodsCategoryRepository goodsCategoryRepository;
 
 	@PostConstruct
 	public void init() {
@@ -109,8 +104,6 @@ public class InitWorker {
 
 		Board board = new Board();
 		board.setName("Стол");
-		GoodsCategory goodsCategory = new GoodsCategory("Зарплата сотрудников");
-		goodsCategoryRepository.saveAndFlush(goodsCategory);
-		boardRepository.saveAndFlush(board);
+
 	}
 }

@@ -37,6 +37,8 @@ public class MenuCalculateControllerServiceImpl implements MenuCalculateControll
 	public LayerProduct createLayerProduct(long calculateId, long[] clientsId, long productId) {
 		List<Client> clients = clientService.findByIdIn(clientsId);
 		Product product = productService.findOne(productId);
+		int oldRating = product.getRating();
+		product.setRating(++oldRating);
 		LayerProduct layerProduct = new LayerProduct();
 		layerProduct.setCost(product.getCost());
 		layerProduct.setName(product.getName());
@@ -54,6 +56,8 @@ public class MenuCalculateControllerServiceImpl implements MenuCalculateControll
 	public LayerProduct createLayerProductWithFloatingPrice(long calculateId, long[] clientsId, long productId, double productPrice) {
 		List<Client> clients = clientService.findByIdIn(clientsId);
 		Product product = productService.findOne(productId);
+		int oldRating = product.getRating();
+		product.setRating(++oldRating);
 		LayerProduct layerProduct = new LayerProduct();
 		layerProduct.setCost(productPrice);
 		layerProduct.setName(product.getName());
@@ -97,6 +101,10 @@ public class MenuCalculateControllerServiceImpl implements MenuCalculateControll
 		}
 		calculatePriceMenu(calculateId);
 		layerProduct.setClients(forDelClients);//for json
+		Product product = productService.findByNameAndDescriptionAndCost(layerProduct.getName(), layerProduct.getDescription(), layerProduct.getCost());
+		int oldRating = product.getRating();
+		product.setRating(--oldRating);
+		productService.saveAndFlush(product);
 		return layerProduct;
 	}
 
