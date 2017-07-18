@@ -45,10 +45,13 @@ public class BoardController {
 		List<Calculate> calc = calculateService.getAllOpen();
 		boolean flag = false;
 		for (Calculate calculate : calc) {
-			if (calculate.getBoard().equals(board)) {
-				flag = true;
-				break;
+			if (calculate.getBoard() != null) {
+				if (calculate.getBoard().equals(board)) {
+					flag = true;
+					break;
+				}
 			}
+
 		}
 		if (!flag) {
 			board.setIsOpen(false);
