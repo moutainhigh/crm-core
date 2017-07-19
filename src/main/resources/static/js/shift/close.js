@@ -29,7 +29,7 @@ function test2(){
 function recalculation() {
     $.ajax({
         type: "POST",
-        url: "/recalculation",
+        url: "/manager/recalculation",
         data: $('#form').serialize(),
         success: function (data) {
             //<![CDATA[

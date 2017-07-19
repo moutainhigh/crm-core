@@ -111,12 +111,8 @@ public class ShiftController {
 	// get all workers of shift
 	@RequestMapping(value = "/manager/shift/edit", method = RequestMethod.GET)
 	public String editPage(Model model) {
-
 		Shift lastShift = shiftService.getLast();
 		Set<Calculate> calculateSet = lastShift.getAllCalculate();
-		if (lastShift == null || !(lastShift.getOpen())) {
-			return "redirect:/manager/shift/";
-		}
 		for (Calculate calculate : calculateSet) {
 			List<Client> clientsOnCalculate = calculate.getClient();
 			model.addAttribute("clientsOnCalculate", clientsOnCalculate);
@@ -147,19 +143,14 @@ public class ShiftController {
 		return "redirect:/manager/shift/edit";
 	}
 
-	@RequestMapping(value = "/endOfShift", method = RequestMethod.GET)
+	@RequestMapping(value = "/manager/endOfShift", method = RequestMethod.GET)
 	public String closeShift(@RequestParam(name = "bonus") Long[] workerBonus,
 	                         @RequestParam(name = "idWorker") Long[] idWorker,
 	                         @RequestParam(name = "cache") Double cache,
 	                         @RequestParam(name = "bankKart") Double bankKart) {
-
 		Shift lastShift = shiftService.getLast();
 		Matcher matcherCache = VALID_CACHE_SALARY_REGEX.matcher(String.valueOf(cache));
 		Matcher matcherBankKart = VALID_CACHE_SALARY_REGEX.matcher(String.valueOf(bankKart));
-
-		if (lastShift == null || !(lastShift.getOpen())) {
-			return "redirect:/manager/shift/";
-		}
 
 		if (matcherCache.find() && matcherBankKart.find()) {
 			Double bonus = 0D;
@@ -197,9 +188,8 @@ public class ShiftController {
 
 
 	@ResponseBody
-	@RequestMapping(value = "/recalculation", method = RequestMethod.POST)
+	@RequestMapping(value = "/manager/recalculation", method = RequestMethod.POST)
 	public List<Object> recalculation(@RequestParam(name = "bonus") Long[] workerBonus) {
-
 		Shift lastShift = shiftService.getLast();
 		Double bonus = 0D;
 

@@ -45,9 +45,6 @@ public class CostsController {
 
 	@RequestMapping(value = "/costs", method = RequestMethod.GET)
 	public ModelAndView showCostsPage(Model model) {
-		if (!(shiftService.getLast().getOpen())) {
-			return new ModelAndView("redirect:/manager/shift/");
-		}
 		ModelAndView modelAndView = new ModelAndView("costs/costs");
 		LocalDate today = getShiftDate();
 		List<Goods> goodsList = goodsService.findByDateBetween(today, today.plusYears(100));

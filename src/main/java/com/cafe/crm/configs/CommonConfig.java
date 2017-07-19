@@ -1,8 +1,10 @@
 package com.cafe.crm.configs;
 
+import com.cafe.crm.configs.filters.ShiftOpenFilter;
 import com.cafe.crm.configs.property.AdvertisingProperties;
 import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -78,6 +80,19 @@ public class CommonConfig {
 		templateResolvers.add(dbTemplateResolver());
 		engine.setTemplateResolvers(templateResolvers);
 		return engine;
+	}
+
+	@Bean
+	public ShiftOpenFilter shiftOpenFilter() {
+		return new ShiftOpenFilter();
+	}
+
+	@Bean
+	public FilterRegistrationBean filterRegistrationBean() {
+		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+		filterRegistrationBean.setFilter(shiftOpenFilter());
+		filterRegistrationBean.setOrder(Integer.MAX_VALUE);
+		return filterRegistrationBean;
 	}
 
 }
