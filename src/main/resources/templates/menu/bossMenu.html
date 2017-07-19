@@ -422,52 +422,7 @@
 <script th:src="@{/js/boss/changePassword.js}"></script>
 <script th:src="@{/js/mail.js}"></script>
 <script th:src="@{/js/filter.js}"></script>
-<script>
 
-    function getRecipePage() {
-
-
-		$.get("test.php", { name: "John", time: "2pm" } );
-
-	}
-
-
-	//<![CDATA[
-	function addIng(id) {
-		first_row = $('#Row2');
-		first_row.clone().appendTo('#recipeTable' + id);
-	};
-
-	function deleteIng(id) {
-		var table_parent = $(document).find('#recipeTable'+id);
-		var inputs = [];
-		table_parent.find('.inputClassTest').each(function () {
-			inputs.push($(this).val());
-		});
-
-		if(inputs.length >= 2) {
-			$('#recipeTable' + id + ' tr:last').remove();
-		}
-	};
-
-	function test(id) {
-		var ingredient = [];
-		var amount = [];
-		var map = new Object();
-		var i = 0;
-		var table_parent = $(document).find('#recipeTable' + id);
-		table_parent.find('.mySelect option:selected').each(function () {
-			ingredient.push($(this).val());
-		});
-		table_parent.find('.inputClassTest').each(function () {
-			amount.push($(this).val());
-		});
-		for (i = 0; i < ingredient.length; i++) {
-			map[ingredient[i]] = amount[i];
-		}
-	};
-	//]]>
-</script>
 </body>
 
 </html>

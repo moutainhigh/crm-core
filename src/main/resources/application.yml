@@ -10,7 +10,7 @@ spring:
     hibernate:
       ddl-auto: create-drop
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    show-sql: true
+    show-sql: false
     database: default
   thymeleaf:
     cache: false

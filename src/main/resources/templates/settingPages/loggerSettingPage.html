@@ -38,13 +38,6 @@
     </center>
 
         </div>
-<script>
-    function sendLogLevel() {
-        var check = $('#chooseLogLevel').val();
-        if (check == 'INFO' || check == 'ERROR' || check == 'DEBUG' || check == 'WARN') {
-            $('#formLog').submit();
-        }
-    }
-</script>
+<script th:src="@{/js/setting/page/logger.js}"></script>
 </body>
 </html>

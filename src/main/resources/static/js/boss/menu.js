@@ -449,3 +449,37 @@ function removeSettings(id) {
 		}, 100)
 	)
 }
+
+function addIng(id) {
+    first_row = $('#Row2');
+    first_row.clone().appendTo('#recipeTable' + id);
+};
+
+function deleteIng(id) {
+    var table_parent = $(document).find('#recipeTable'+id);
+    var inputs = [];
+    table_parent.find('.inputClassTest').each(function () {
+        inputs.push($(this).val());
+    });
+
+    if(inputs.length >= 2) {
+        $('#recipeTable' + id + ' tr:last').remove();
+    }
+};
+
+function test(id) {
+    var ingredient = [];
+    var amount = [];
+    var map = new Object();
+    var i = 0;
+    var table_parent = $(document).find('#recipeTable' + id);
+    table_parent.find('.mySelect option:selected').each(function () {
+        ingredient.push($(this).val());
+    });
+    table_parent.find('.inputClassTest').each(function () {
+        amount.push($(this).val());
+    });
+    for (i = 0; i < ingredient.length; i++) {
+        map[ingredient[i]] = amount[i];
+    }
+};
