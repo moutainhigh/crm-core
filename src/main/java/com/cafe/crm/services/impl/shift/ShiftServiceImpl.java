@@ -17,6 +17,8 @@ import com.cafe.crm.services.interfaces.goods.GoodsService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +55,9 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Autowired
 	private TimeManager timeManager;
+
+	@Autowired
+	private SessionRegistry sessionRegistry;
 
 	@Override
 	public void saveAndFlush(Shift shift) {
@@ -137,6 +142,7 @@ public class ShiftServiceImpl implements ShiftService {
 		return shiftRepository.findAll();
 	}
 
+	@Transactional
 	@Override
 	public void closeShift(Double totalCashBox, Map<Long, Long> workerIdBonusMap, Double allPrice, Double shortage,
 						   Double bankKart) {
@@ -164,6 +170,13 @@ public class ShiftServiceImpl implements ShiftService {
 		shift.setCashBox(totalCashBox - shortage);
 		shift.setProfit(allPrice);
 		shiftRepository.saveAndFlush(shift);
+		closeAllWorkerSessions();
+	}
+
+	private void closeAllWorkerSessions() {
+		for (Object principal : sessionRegistry.getAllPrincipals()) {
+			sessionRegistry.getAllSessions(principal, false).forEach(SessionInformation::expireNow);
+		}
 	}
 
 	@Transactional(readOnly = true)
