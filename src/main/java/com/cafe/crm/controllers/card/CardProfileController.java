@@ -74,7 +74,7 @@ public class CardProfileController {
 	public String addCardToCalculate(@RequestParam("idCard") Long idCard,
 	                                 @RequestParam("idCalculate") Long idCalculate) {
 		cardControllerService.addCardToCalculate(idCard, idCalculate);
-		return "redirect:/manager/card/" + idCard;
+		return "redirect:/manager";
 	}
 
 	@RequestMapping(value = {"/card/edit"}, method = RequestMethod.POST)
@@ -83,8 +83,7 @@ public class CardProfileController {
 	                                  @RequestParam("name") String name,
 	                                  @RequestParam("surname") String surname,
 	                                  @RequestParam("phone") String phone,
-	                                  @RequestParam("email") String email,
-	                                  HttpServletRequest request) {
+	                                  @RequestParam("email") String email) {
 		Card card = cardService.getOne(idCard);
 		if (card != null) {
 			Card testPhone = cardService.findByPhone(phone);

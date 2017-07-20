@@ -34,19 +34,10 @@ public class TimeManager {
 	}
 
 	public LocalDate getDate() {
-		return getDateTime0().toLocalDate();
+		return getDateTime().toLocalDate();
 	}
 
 	public LocalDateTime getDateTime() {
-		return getDateTime0();
-	}
-
-	public LocalTime getTime() {
-		return getDateTime0().toLocalTime();
-	}
-
-	// TODO: 06.07.2017 Придумать название
-	private LocalDateTime getDateTime0() {
 		timeClient.setDefaultTimeout(500);
 		for (String server : servers) {
 			try {
@@ -63,4 +54,9 @@ public class TimeManager {
 		date = LocalDateTime.now();
 		return date;
 	}
+
+	public LocalTime getTime() {
+		return getDateTime().toLocalTime();
+	}
+
 }

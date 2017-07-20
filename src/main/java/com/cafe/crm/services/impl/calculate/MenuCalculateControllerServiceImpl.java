@@ -11,14 +11,15 @@ import com.cafe.crm.services.interfaces.layerproduct.LayerProductService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-// TODO: 06.07.2017 Проверить почему не работает с @Transactional
 @Service
+@Transactional
 public class MenuCalculateControllerServiceImpl implements MenuCalculateControllerService {
 
 	@Autowired
@@ -87,9 +88,9 @@ public class MenuCalculateControllerServiceImpl implements MenuCalculateControll
 	@Override
 	public LayerProduct deleteProductOnClient(long calculateId, long[] clientsId, long layerProductId) {
 		LayerProduct layerProduct = layerProductService.getOne(layerProductId);
-		List<Client> сlients = layerProduct.getClients();
+		List<Client> clients = layerProduct.getClients();
 		List<Client> forDelClients = clientService.findByIdIn(clientsId);
-		сlients.removeAll(forDelClients);
+		clients.removeAll(forDelClients);
 		if (layerProduct.getClients().isEmpty()) {
 			layerProductService.delete(layerProduct);
 		} else {
@@ -117,6 +118,9 @@ public class MenuCalculateControllerServiceImpl implements MenuCalculateControll
 		for (Client client : clients) {
 			client.setPriceMenu(0D);
 			for (LayerProduct layerProduct : client.getLayerProducts()) {
+				if (layerProduct.getClients().size() == 0) {
+					continue;
+				}
 				client.setPriceMenu(Math.round((client.getPriceMenu() + layerProduct.getCost() / layerProduct.getClients().size()) * 100) / 100.00);
 			}
 		}

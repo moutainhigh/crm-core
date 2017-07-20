@@ -8,10 +8,12 @@ import com.cafe.crm.services.interfaces.property.PropertyService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 
 @Service
+@Transactional
 public class CalculatePriceServiceImpl implements CalculatePriceService {
 
 	@Autowired

@@ -18,14 +18,15 @@ import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// TODO: 06.07.2017 Проверить почему не работает с @Transactional
 @Service
+@Transactional
 public class CalculateControllerServiceImpl implements CalculateControllerService {
 	@Autowired
 	private ClientService clientService;
