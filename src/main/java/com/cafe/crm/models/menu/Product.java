@@ -5,7 +5,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
 import java.util.Map;
 
 @Entity
@@ -38,6 +37,8 @@ public class Product {
 	@MapKeyJoinColumn(name = "ingredient")
 	@Column(name = "amount")
 	private Map<Ingredients, Integer> recipe ;
+
+	private int rating;
 
 	public Map<Ingredients, Integer> getRecipe() {
 		return recipe;
@@ -96,6 +97,14 @@ public class Product {
 		this.category = category;
 	}
 
+	public int getRating() {
+		return rating;
+	}
+
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -103,17 +112,16 @@ public class Product {
 
 		Product product = (Product) o;
 
-		if (cost != product.cost) return false;
-		if (id != null ? !id.equals(product.id) : product.id != null) return false;
 		if (name != null ? !name.equals(product.name) : product.name != null) return false;
-		return description != null ? description.equals(product.description) : product.description == null;
+		if (description != null ? !description.equals(product.description) : product.description != null) return false;
+		return cost != null ? cost.equals(product.cost) : product.cost == null;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = id != null ? id.hashCode() : 0;
-		result = 31 * result + (name != null ? name.hashCode() : 0);
+		int result = name != null ? name.hashCode() : 0;
 		result = 31 * result + (description != null ? description.hashCode() : 0);
+		result = 31 * result + (cost != null ? cost.hashCode() : 0);
 		return result;
 	}
 

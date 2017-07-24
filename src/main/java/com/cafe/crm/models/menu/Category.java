@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,7 +21,7 @@ public class Category {
 	private String name;
 
 	@OneToMany(mappedBy = "category", fetch = FetchType.EAGER, orphanRemoval = true)
-	private Set<Product> products;
+	private List<Product> products;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "categories")
 	private Set<Menu> menus;
@@ -53,11 +54,11 @@ public class Category {
 		this.name = name;
 	}
 
-	public Set<Product> getProducts() {
+	public List<Product> getProducts() {
 		return products;
 	}
 
-	public void setProducts(Set<Product> products) {
+	public void setProducts(List<Product> products) {
 
 		this.products = products;
 	}

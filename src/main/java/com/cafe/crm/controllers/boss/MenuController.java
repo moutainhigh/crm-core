@@ -113,8 +113,8 @@ public class MenuController {
 		Boolean isDirty = Boolean.valueOf(dirtyProfit);
 		Boolean isFloatingPrice = Boolean.valueOf(floatingPrice);
 		Category category = new Category(name);
-		Set<Product> setProducts = new HashSet<>();
-		category.setProducts(setProducts);
+		List<Product> listProducts = new ArrayList<>();
+		category.setProducts(listProducts);
 		category.setDirtyProfit(isDirty);
 		category.setFloatingPrice(isFloatingPrice);
 		categoriesService.saveAndFlush(category);

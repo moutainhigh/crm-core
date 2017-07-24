@@ -67,8 +67,8 @@ public class CalculateController {
 		}
 		Shift shift = shiftService.getLast(); //текущая смена
 		ModelAndView modelAndView = new ModelAndView("client/clients");
-		modelAndView.addObject("listMenu", categoriesService.findAll());
-		modelAndView.addObject("listProduct", productService.findAll());
+		modelAndView.addObject("listMenu", categoriesService.sortProductListAndGetAllCategories());
+		modelAndView.addObject("listProduct", productService.findAllOrderByRatingDesc());
 		modelAndView.addObject("listCalculate", calculateService.getAllOpen());
 		modelAndView.addObject("listBoard", boardService.getAllOpen());
 		modelAndView.addObject("listDiscounts", discountService.getAllOpen());
@@ -125,9 +125,9 @@ public class CalculateController {
 	public ResponseEntity<?> editClientTimeStart(@RequestParam("clientId") Long clientId,
 	                                             @RequestParam("hours") int hours,
 	                                             @RequestParam("minutes") int minutes) {
-		boolean successfuly = clientService.updateClientTime(clientId, hours, minutes);
+		boolean successfully = clientService.updateClientTime(clientId, hours, minutes);
 
-		return successfuly ? ResponseEntity.ok("ok") : ResponseEntity.badRequest().body("bad");
+		return successfully ? ResponseEntity.ok("ok") : ResponseEntity.badRequest().body("bad");
 	}
 
 	@RequestMapping(value = {"/add-calculate"}, method = RequestMethod.POST)

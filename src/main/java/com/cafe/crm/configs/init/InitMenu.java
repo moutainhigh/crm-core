@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -72,17 +74,17 @@ public class InitMenu {
 		category.saveAndFlush(category4);
 
 
-		Set<Product> products1 = new HashSet<>();
-		Set<Product> products2 = new HashSet<>();
-		Set<Product> products3 = new HashSet<>();
-		Set<Product> products4 = new HashSet<>();
+		List<Product> products1 = new ArrayList<>();
+		List<Product> products2 = new ArrayList<>();
+		List<Product> products3 = new ArrayList<>();
+		List<Product> products4 = new ArrayList<>();
 
 
 		Product pro1 = new Product("Цезарь", "вкусный", 100d);
 		Product pro11 = new Product("Лёгкий", "вкусный", 100d);
 		Product pro111 = new Product("Летний", "вкусный", 100d);
 
-		Product pro2 = new Product("Кофе", "вкусный", 5d);
+		Product pro2 = new Product("Кофе", "вкусный", 15d);
 		Product pro22 = new Product("Кока-кола", "вкусный", 5d);
 		Product pro222 = new Product("Кофе", "вкусный", 5d);
 
