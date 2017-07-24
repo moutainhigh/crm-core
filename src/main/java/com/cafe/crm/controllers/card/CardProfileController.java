@@ -62,7 +62,6 @@ public class CardProfileController {
 
 	@RequestMapping(value = {"/card/{id}"}, method = RequestMethod.GET)
 	public ModelAndView getCard(@PathVariable Long id) {
-
 		ModelAndView modelAndView = new ModelAndView("card/card");
 		modelAndView.addObject("card", cardService.getOne(id));
 		modelAndView.addObject("listCalculate", calculateService.getAllOpen());

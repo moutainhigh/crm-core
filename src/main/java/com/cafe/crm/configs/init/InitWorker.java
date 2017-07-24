@@ -1,7 +1,6 @@
 package com.cafe.crm.configs.init;
 
 import com.cafe.crm.models.board.Board;
-import com.cafe.crm.models.goods.GoodsCategory;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.worker.*;
 import com.cafe.crm.repositories.board.BoardRepository;
@@ -9,8 +8,6 @@ import com.cafe.crm.repositories.boss.BossRepository;
 import com.cafe.crm.repositories.goods.GoodsCategoryRepository;
 import com.cafe.crm.repositories.manager.ManagerRepository;
 import com.cafe.crm.repositories.role.RoleRepository;
-import com.cafe.crm.repositories.worker.WorkerRepository;
-import com.cafe.crm.services.interfaces.board.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
