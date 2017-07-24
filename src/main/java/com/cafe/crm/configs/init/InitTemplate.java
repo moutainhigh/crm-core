@@ -30,53 +30,34 @@ public class InitTemplate {
 
 	@PostConstruct
 	public void init() throws IOException {
-		//File tempFile = File.createTempFile("prefix", "suffix");
 		Resource resourceDisable = resourceLoader.getResource("classpath:templates/media/mail/disable-advertising.html");
 		InputStream inStream = resourceDisable.getInputStream();
 		byte[] disableContext = IOUtils.toByteArray(inStream);
-
-		//Resource resourceDisable = resourceLoader.getResource("classpath:templates/media/mail/disable-advertising.html");
-		//byte[] disableContext = Files.readAllBytes(Paths.get(resourceDisable.getFile().getPath()));
 		Template disable = new Template("disable-advertising", disableContext);
 
-		Resource resourceText = resourceLoader.getResource("classpath:templates/media/mail/disable-advertising.html");
+		Resource resourceText = resourceLoader.getResource("classpath:templates/media/mail/text-advertising.html");
 		InputStream textInStream = resourceText.getInputStream();
 		byte[] textContext = IOUtils.toByteArray(textInStream);
-
-		//Resource resourceText = resourceLoader.getResource("classpath:templates/media/mail/text-advertising.html");
-		//byte[] textContext = Files.readAllBytes(Paths.get(resourceText.getFile().getPath()));
 		Template text = new Template("text-advertising", textContext);
 
-		Resource resourceImage = resourceLoader.getResource("classpath:templates/media/mail/disable-advertising.html");
+		Resource resourceImage = resourceLoader.getResource("classpath:templates/media/mail/image-advertising.html");
 		InputStream imageInStream = resourceImage.getInputStream();
 		byte[] imageContext = IOUtils.toByteArray(imageInStream);
-
-		//Resource resourceImage = resourceLoader.getResource("classpath:templates/media/mail/image-advertising.html");
-		//byte[] imageContext = Files.readAllBytes(Paths.get(resourceImage.getFile().getPath()));
 		Template image = new Template("image-advertising", imageContext);
 
-		Resource resourceBalanceAfterDeduction = resourceLoader.getResource("classpath:templates/media/mail/disable-advertising.html");
+		Resource resourceBalanceAfterDeduction = resourceLoader.getResource("classpath:templates/balance/balance-info-deduction.html");
 		InputStream balanceInStream = resourceBalanceAfterDeduction.getInputStream();
 		byte[] balanceAfterDeductionContext = IOUtils.toByteArray(balanceInStream);
-
-		//Resource resourceBalanceAfterDeduction = resourceLoader.getResource("classpath:templates/balance/balance-info-deduction.html");
-		//byte[] balanceAfterDeductionContext = Files.readAllBytes(Paths.get(resourceBalanceAfterDeduction.getFile().getPath()));
 		Template balanceAfterDeduction = new Template("balance-info-deduction", balanceAfterDeductionContext);
 
-		Resource resourceBalanceAfterRefill = resourceLoader.getResource("classpath:templates/media/mail/disable-advertising.html");
+		Resource resourceBalanceAfterRefill = resourceLoader.getResource("classpath:templates/balance/balance-info-refill.html");
 		InputStream balanceAfterInStream = resourceBalanceAfterRefill.getInputStream();
 		byte[] balanceAfterRefillContext = IOUtils.toByteArray(balanceAfterInStream);
-
-		//Resource resourceBalanceAfterRefill = resourceLoader.getResource("classpath:templates/balance/balance-info-refill.html");
-		//byte[] balanceAfterRefillContext = Files.readAllBytes(Paths.get(resourceBalanceAfterRefill.getFile().getPath()));
 		Template balanceAfterRefill = new Template("balance-info-refill", balanceAfterRefillContext);
 
-		Resource resourceExampleCloseShift = resourceLoader.getResource("classpath:templates/media/mail/disable-advertising.html");
+		Resource resourceExampleCloseShift = resourceLoader.getResource("classpath:templates/closeShiftEmailShortage.html");
 		InputStream exampleCloseShiftInStream = resourceExampleCloseShift.getInputStream();
 		byte[] exampleCloseShiftAfterDebitingContext = IOUtils.toByteArray(exampleCloseShiftInStream);
-
-		//Resource resourceExampleCloseShift = resourceLoader.getResource("classpath:templates/closeShiftEmailShortage.html");
-		//byte[] exampleCloseShiftAfterDebitingContext = Files.readAllBytes(Paths.get(resourceExampleCloseShift.getFile().getPath()));
 		Template exampleCloseShift = new Template("closeShiftEmailShortage", exampleCloseShiftAfterDebitingContext);
 
 		templateService.save(disable);
