@@ -141,6 +141,14 @@
                                 <br></br>
                                 <button type="button" id="budget" onclick="test2()" class="btn btn-lg btn-primary btn-block">Закрыть смену</button>
                                 <button style="visibility: hidden" id="closeShiftButtonShortage" class="btn btn-lg btn-danger btn-block" type="submit">Закрыть смену с недосдачей</button>
+                                <button id="collapseText" type="button" class="btn btn-primary" data-toggle="collapse"
+                                        data-target="#comment" aria-expanded="false">Оставить комментарий
+                                </button>
+                                <div id="comment" class="form-group collapse">
+                                    <br/>
+                                    <textarea id="commentText" type="text" rows="5" class="form-control"
+                                              placeholder="Оставте комментарий" name="comment"/>
+                                </div>
                             </div>
 
 
@@ -160,52 +168,6 @@
             </div>
         </div>
     </div>
-    <!--<script>-->
-        <!--function recalculation() {-->
-            <!--$.ajax({-->
-                <!--type: "POST",-->
-                <!--url: "manager/recalculation",-->
-                <!--data: $('#form').serialize(),-->
-                <!--success: function (data) {-->
-                    <!--//<![CDATA[-->
-                    <!--$('#salaryWorker').val(data[0]);-->
-                    <!--$('#totalCashBox').val(data[1]);-->
-                    <!--//]]>-->
-                <!--},-->
-                <!--error: function () {-->
-                    <!--console.log('ajaxModal сломался? ');-->
-                <!--}-->
-            <!--});-->
-        <!--}-->
-
-        <!--function test(id){-->
-            <!--if ($('#1'+ id).attr('type')=='hidden'){-->
-                <!--$('#1'+ id).attr('type','text');-->
-            <!--}else {-->
-                <!--$('#1'+ id).attr('type','hidden');-->
-            <!--}-->
-        <!--}-->
-
-
-        <!--//<![CDATA[-->
-        <!--function test2(){-->
-            <!--var cashBox = parseFloat($("#totalCashBox").val());-->
-            <!--var cache = parseFloat($("#cache").val());-->
-            <!--var payWithCard = parseFloat($("#payWithCard").val());-->
-            <!--var bankKart = parseFloat($("#bankKart").val());-->
-            <!--var budget = cache + payWithCard + bankKart;-->
-            <!--if (budget < cashBox){-->
-                <!--$("#cache").css('border', 'red 3px solid');-->
-                <!--$("#bankKart").css('border', 'red 3px solid');-->
-                <!--$('#errorBlock').html('Сверка бюджета не прошла!');-->
-                <!--$("#closeShiftButtonShortage").css('visibility','visible');-->
-                <!--$("#budget").css('visibility','hidden');-->
-            <!--} else if (budget >= cashBox) {-->
-                <!--$('#budget').attr('type','submit');-->
-            <!--}-->
-        <!--}-->
-        <!--//]]>-->
-    <!--</script>-->
 </div>
 </body>
 </html>

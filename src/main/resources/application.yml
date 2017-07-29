@@ -70,3 +70,18 @@ closeShiftEmailShortage:
            view: db:closeShiftEmailShortage
            text: Касса не сошлась!
            subject: Касса не сошлась!
+
+vk:
+  application-id:  # application id in vk
+  application-secret:  # application secret key
+  message-name: daily-report # name of template in db
+  chat-id:  # id of conference
+  access-token:
+  api-version: 5.67 # vk api version
+  mail: # Notification to email
+    invalid-token:
+      view: db:invalid-token
+      subject: Токен доступа недействителен
+
+cost-category-name:
+  salary-for-shift: Зарплата сотрудников # Название расхода

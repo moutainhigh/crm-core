@@ -16,4 +16,6 @@ public interface HtmlService {
 	String getCloseShiftFromText(String Text, Double cashBox, Double cache, Double bankKart, Double payWithCard,
 								 Double allPrice, String view, Double shortage);
 
+	String getInvalidToken(String view);
+
 }

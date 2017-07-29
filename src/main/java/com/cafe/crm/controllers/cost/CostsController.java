@@ -2,6 +2,7 @@ package com.cafe.crm.controllers.cost;
 
 import com.cafe.crm.models.goods.Goods;
 import com.cafe.crm.models.goods.GoodsCategory;
+import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
 import com.cafe.crm.services.interfaces.goods.GoodsService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -44,22 +44,23 @@ public class CostsController {
 	}
 
 	@RequestMapping(value = "/costs", method = RequestMethod.GET)
-	public ModelAndView showCostsPage(Model model) {
-		ModelAndView modelAndView = new ModelAndView("costs/costs");
+	public String showCostsPage(Model model) {
 		LocalDate today = getShiftDate();
 		List<Goods> goodsList = goodsService.findByDateBetween(today, today.plusYears(100));
 		Double totalPrice = getTotalPrice(goodsList);
+		Shift shift = shiftService.getLast();
 
-		modelAndView.addObject("goodsList", goodsList);
-		modelAndView.addObject("categoryName", null);
-		modelAndView.addObject("goodsName", null);
-		modelAndView.addObject("totalPrice", totalPrice);
-		modelAndView.addObject("formGoods", new Goods());
-		modelAndView.addObject("today", today);
-		modelAndView.addObject("fromDate", today);
-		modelAndView.addObject("toDate", null);
-		modelAndView.addObject("CloseShiftView", shiftService.createShiftView(shiftService.getLast()));
-		return modelAndView;
+		model.addAttribute("goodsList", goodsList);
+		model.addAttribute("categoryName", null);
+		model.addAttribute("goodsName", null);
+		model.addAttribute("totalPrice", totalPrice);
+		model.addAttribute("formGoods", new Goods());
+		model.addAttribute("today", today);
+		model.addAttribute("fromDate", today);
+		model.addAttribute("toDate", null);
+		model.addAttribute("CloseShiftView", shiftService.createShiftView(shift));
+
+		return "costs/costs";
 	}
 
 	@RequestMapping(value = "/costs", method = RequestMethod.POST)
@@ -76,6 +77,7 @@ public class CostsController {
 
 		LocalDate from = (fromDate == null || fromDate.isEmpty()) ? null : LocalDate.parse(fromDate, formatter);
 		LocalDate to = (toDate == null || toDate.isEmpty()) ? null : LocalDate.parse(toDate, formatter);
+		Shift shift = shiftService.getLast();
 
 		model.addAttribute("goodsList", goodsList);
 		model.addAttribute("goodsName", goodsName);
@@ -85,7 +87,7 @@ public class CostsController {
 		model.addAttribute("today", today);
 		model.addAttribute("fromDate", from);
 		model.addAttribute("toDate", to);
-		model.addAttribute("ShiftView", shiftService.createShiftView(shiftService.getLast()));
+		model.addAttribute("CloseShiftView", shiftService.createShiftView(shift));
 
 		return "costs/costs";
 	}
@@ -144,7 +146,7 @@ public class CostsController {
 		if (result.hasErrors()) {
 			return ResponseEntity.badRequest().body("Не удалось изменить товар!");
 		}
-		goodsService.save(goods);
+		goodsService.update(goods);
 
 		return ResponseEntity.ok("Товар успешно изменен!");
 	}

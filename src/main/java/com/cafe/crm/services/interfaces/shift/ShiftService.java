@@ -14,7 +14,7 @@ public interface ShiftService {
 
 	void saveAndFlush(Shift shift);
 
-	Shift newShift(long[] box, Double cashBox, Double bankCashBox);
+	Shift newShift(Double cashBox, Double bankCashBox, long... workersId);
 
 	Shift findOne(Long L);
 
@@ -34,8 +34,8 @@ public interface ShiftService {
 
 	List<Shift> findAll();
 
-	void closeShift(Double totalCashBox, Map<Long, Long> workerIdBonusMap, Double allPrice, Double shortage,
-					Double bankCashBox);
+	Shift closeShift(Double totalCashBox, Map<Long, Long> workerIdBonusMap, Double allPrice, Double shortage,
+					Double bankCashBox, String comment);
 
 	Set<Shift> findByDates(LocalDate start, LocalDate end);
 

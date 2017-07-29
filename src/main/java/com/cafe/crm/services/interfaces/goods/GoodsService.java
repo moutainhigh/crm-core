@@ -2,6 +2,7 @@ package com.cafe.crm.services.interfaces.goods;
 
 
 import com.cafe.crm.models.goods.Goods;
+import com.cafe.crm.models.shift.Shift;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.Set;
 public interface GoodsService {
 
 	void save(Goods goods);
+
+	void update(Goods goods);
 
 	void offVisibleStatus(Long id);
 
@@ -28,5 +31,9 @@ public interface GoodsService {
 	List<Goods> findByDateAndVisibleTrue(LocalDate date);
 
 	List<Goods> findByDateAndCategoryNameAndVisibleTrue(LocalDate date, String name);
+
+	List<Goods> findByShiftIdAndCategoryNameNot(Long shiftId, String name);
+
+	List<Goods> findByShiftId(Long shiftId);
 
 }

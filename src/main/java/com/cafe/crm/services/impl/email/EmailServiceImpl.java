@@ -6,6 +6,7 @@ import com.cafe.crm.configs.property.AdvertisingProperties;
 import com.cafe.crm.configs.property.BalanceInfoProperties;
 import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.worker.Boss;
+import com.cafe.crm.models.worker.Worker;
 import com.cafe.crm.services.interfaces.email.EmailService;
 import com.cafe.crm.services.interfaces.email.HtmlService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,12 @@ public class EmailServiceImpl implements EmailService {
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	private final BalanceInfoProperties balanceInfoProperties;
+
+	@Value("${vk.mail.invalid-token.view}")
+	private String invalidTokenView;
+
+	@Value("${vk.mail.invalid-token.subject}")
+	private String invalidTokenSubject;
 
 	@Value("${closeShiftEmailShortage.view}")
 	private String closeShiftView;
@@ -176,6 +183,30 @@ public class EmailServiceImpl implements EmailService {
 				messageHelper.setSubject(closeShiftSubject);
 				String html = htmlService.getCloseShiftFromText(closeShiftText, cashBox, cache, bankKart, payWithCard,
 						allPrice, closeShiftView, shortage);
+				messageHelper.setText(html, true);
+			};
+		}
+		if (messageNum == 0) {
+			return;
+		}
+		javaMailSender.send(mimeMessages);
+	}
+
+	@Override
+	public void sendInvalidTokenNotification(Collection<? extends Worker> workers) {
+		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[workers.size()];
+		int messageNum = 0;
+		for (Worker worker : workers) {
+			String email = worker.getEmail();
+			if (email == null) {
+				continue;
+			}
+			mimeMessages[messageNum++] = mimeMessage -> {
+				MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+				messageHelper.setFrom(properties.getMail().getSender());
+				messageHelper.setTo(email);
+				messageHelper.setSubject(invalidTokenSubject);;
+				String html = htmlService.getInvalidToken(invalidTokenView);
 				messageHelper.setText(html, true);
 			};
 		}

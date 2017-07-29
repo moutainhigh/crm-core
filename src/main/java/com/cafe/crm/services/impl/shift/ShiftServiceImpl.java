@@ -8,7 +8,6 @@ import com.cafe.crm.models.goods.GoodsCategory;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.shift.ShiftView;
 import com.cafe.crm.models.worker.Worker;
-import com.cafe.crm.repositories.goods.GoodsRepository;
 import com.cafe.crm.repositories.shift.ShiftRepository;
 import com.cafe.crm.repositories.worker.WorkerRepository;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
@@ -17,6 +16,7 @@ import com.cafe.crm.services.interfaces.goods.GoodsService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,10 +49,12 @@ public class ShiftServiceImpl implements ShiftService {
 	private CalculateService calculateService;
 
 	@Autowired
-	private GoodsRepository goodsRepository;
-
-	@Autowired
 	private TimeManager timeManager;
+
+	@Value("${cost-category-name.salary-for-shift}")
+	private String categoryNameSalaryForShift;
+
+
 
 	@Override
 	public void saveAndFlush(Shift shift) {
@@ -61,7 +63,7 @@ public class ShiftServiceImpl implements ShiftService {
 
 
 	@Override
-	public Shift newShift(long[] box, Double cashBox, Double bankCashBox) {
+	public Shift newShift(Double cashBox, Double bankCashBox, long... box) {
 		Set<Worker> users = new HashSet<>();
 		for (int i = 0; i < box.length; i++) {
 			Worker worker = workerRepository.getOne(box[i]);
@@ -138,9 +140,9 @@ public class ShiftServiceImpl implements ShiftService {
 	}
 
 	@Override
-	public void closeShift(Double totalCashBox, Map<Long, Long> workerIdBonusMap, Double allPrice, Double shortage,
-						   Double bankKart) {
-		GoodsCategory goodsCategory = goodsCategoryService.findByNameIgnoreCase("Зарплата сотрудников");
+	public Shift closeShift(Double totalCashBox, Map<Long, Long> workerIdBonusMap, Double allPrice, Double cashe,
+						   Double bankKart, String comment) {
+		GoodsCategory goodsCategory = goodsCategoryService.findByNameIgnoreCase(categoryNameSalaryForShift);
 		Shift shift = shiftRepository.getLast();
 		for (Map.Entry<Long, Long> entry : workerIdBonusMap.entrySet()) {
 			Worker worker = workerRepository.findOne(entry.getKey());
@@ -159,11 +161,13 @@ public class ShiftServiceImpl implements ShiftService {
 			goodsService.save(goodsSalaryWorker);
 			workerRepository.saveAndFlush(worker);
 		}
-		shift.setBankCashBox(bankKart + shift.getBankCashBox());
-		shift.setOpen(false);
-		shift.setCashBox(totalCashBox - shortage);
+		shift.setBankCashBox(bankKart);
+		shift.setCashBox(cashe);
 		shift.setProfit(allPrice);
+		shift.setComment(comment);
+		shift.setOpen(false);
 		shiftRepository.saveAndFlush(shift);
+		return shift;
 	}
 
 	@Transactional(readOnly = true)
@@ -199,10 +203,9 @@ public class ShiftServiceImpl implements ShiftService {
 			}
 		}
 		LocalDate shiftDate = shift.getDateShift();
-		List<Goods> goodsSet = goodsRepository.findByDateAndVisibleTrue(shiftDate);
-		goodsSet.removeAll(goodsRepository.findByDateAndCategoryNameAndVisibleTrue(shiftDate, "Зарплата сотрудников"));
+		List<Goods> goodsWithoutWorkersSalary = goodsService.findByShiftIdAndCategoryNameNot(shift.getId(), categoryNameSalaryForShift);
 		Double otherCosts = 0D;
-		for (Goods goods : goodsSet) {
+		for (Goods goods : goodsWithoutWorkersSalary) {
 			otherCosts = otherCosts + (goods.getPrice() * goods.getQuantity());
 		}
 		totalCashBox = (cashBox + allPrice) - (salaryWorker + otherCosts);

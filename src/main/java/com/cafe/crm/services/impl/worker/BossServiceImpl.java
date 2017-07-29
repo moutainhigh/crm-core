@@ -7,6 +7,8 @@ import com.cafe.crm.services.interfaces.worker.BossService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BossServiceImpl implements BossService {
 
@@ -21,6 +23,11 @@ public class BossServiceImpl implements BossService {
 	@Override
 	public void save(Boss boss) {
 		bossRepository.saveAndFlush(boss);
+	}
+
+	@Override
+	public List<Boss> findAll() {
+		return bossRepository.findByEnabledIsTrue();
 	}
 
 }

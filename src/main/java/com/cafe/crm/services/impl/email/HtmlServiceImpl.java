@@ -100,4 +100,9 @@ public class HtmlServiceImpl implements HtmlService {
 		context.setVariable("cashBox", (cashBox - shortage));
 		return templateEngine.process(view, context);
 	}
+
+	@Override
+	public String getInvalidToken(String view) {
+		return templateEngine.process(view, new Context());
+	}
 }
