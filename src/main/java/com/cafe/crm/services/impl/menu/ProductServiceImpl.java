@@ -2,6 +2,7 @@ package com.cafe.crm.services.impl.menu;
 
 import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.repositories.menu.ProductRepository;
+import com.cafe.crm.services.interfaces.menu.IngredientsService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,9 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private ProductRepository productRepository;
+
+	@Autowired
+	IngredientsService ingredientsService;
 
 	@Override
 	public List<Product> findAll() {
@@ -43,6 +47,11 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Product> findAllOrderByRatingDesc() {
 		return productRepository.findAllByOrderByRatingDescNameAsc();
+	}
+
+	@Override
+	public void reduceIngredientAmount(Product product) {
+		ingredientsService.reduceIngredientAmount(product.getRecipe());
 	}
 
 }

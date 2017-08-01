@@ -2,8 +2,6 @@ function editRecipe(id) {
 
     var ingredient = [];
     var amount = [];
-    var myMap = new Object();
-    var i;
 
     var table_parent = $(document).find('#editRecipe');
 
@@ -13,10 +11,6 @@ function editRecipe(id) {
     table_parent.find('.inputClassTest').each(function () {
         amount.push($(this).val());
     });
-
-    for (i = 0; i < ingredient.length; i++) {
-        myMap[ingredient[i]] = amount[i];
-    }
 
     var wrapper = {
         idCat: id,

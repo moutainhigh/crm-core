@@ -18,7 +18,6 @@ public class IngredientsServiceImpl implements IngredientsService {
 	private IngredientsRepository ingredientsRepository;
 
 
-
 	@Override
 	public List<Ingredients> getAll() {
 		return ingredientsRepository.findAll();
@@ -61,5 +60,25 @@ public class IngredientsServiceImpl implements IngredientsService {
 			}
 		}
 		return recipe;
+	}
+
+	@Override
+	public Double getRecipeCost(Map<Ingredients, Integer> recipe) {
+		double result = 0L;
+
+		for (Map.Entry<Ingredients, Integer> entry : recipe.entrySet()) {
+			result += entry.getKey().getPrice() * entry.getValue();
+		}
+		return result;
+	}
+
+	@Override
+	public void reduceIngredientAmount(Map<Ingredients, Integer> recipe) {
+
+		for (Map.Entry<Ingredients, Integer> entry : recipe.entrySet()) {
+			entry.getKey().setAmount(entry.getKey().getAmount() - entry.getValue());
+			save(entry.getKey());
+		}
+
 	}
 }

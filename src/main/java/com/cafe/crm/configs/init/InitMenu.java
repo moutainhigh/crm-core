@@ -43,18 +43,22 @@ public class InitMenu {
 		ingredients1.setName("Сметана");
 		ingredients1.setDimension("граммы");
 		ingredients1.setAmount(300);
+		ingredients1.setPrice(0.076D);
 
 		ingredients2.setName("Вишня");
 		ingredients2.setDimension("кг");
 		ingredients2.setAmount(3);
+		ingredients2.setPrice(278D);
 
 		ingredients3.setName("Зелень");
 		ingredients3.setDimension("кг");
 		ingredients3.setAmount(5);
+		ingredients3.setPrice(120.5D);
 
 		ingredients4.setName("Молоко");
 		ingredients4.setDimension("литры");
 		ingredients4.setAmount(15);
+		ingredients4.setPrice(69.2D);
 
 		ingredientsService.save(ingredients1);
 		ingredientsService.save(ingredients2);
@@ -80,8 +84,10 @@ public class InitMenu {
 		List<Product> products4 = new ArrayList<>();
 
 
-		Product pro1 = new Product("Цезарь", "вкусный", 100d);
+		Product pro1 = new Product("Цезарь", "вкусный", 400d);
+		pro1.setSelfCost(200d);
 		Product pro11 = new Product("Лёгкий", "вкусный", 100d);
+		pro11.setSelfCost(50d);
 		Product pro111 = new Product("Летний", "вкусный", 100d);
 
 		Product pro2 = new Product("Кофе", "вкусный", 15d);

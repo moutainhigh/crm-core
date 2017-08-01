@@ -30,6 +30,7 @@ $(document).on('click', '#saveNewProductData', function () {
     var setName = $("#addName" + id).val();
     var setDes = $("#addDes" + id).val();
     var setCost = $("#addCost" + id).val();
+	var setSelfCost = $("#addSelfCost" + id).val();
 
     if (!productDataValidating(setName, setCost)) {
         var errorMessage = '<h4 style="color:red;" align="center">Неверный формат данных!</h4>';
@@ -62,11 +63,12 @@ $(document).on('click', '#saveNewProductData', function () {
         description: setDes,
         cost: setCost,
         names: ingredient,
-        amount: amount
+        amount: amount,
+		selfCost: setSelfCost
     };
     $.ajax({
         type: "POST",
-        url: "/boss/menu/addAjax",
+        url: "/boss/menu/addProduct",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         data: JSON.stringify(wrapper),
@@ -78,8 +80,8 @@ $(document).on('click', '#saveNewProductData', function () {
             var recipeButton = '<button form="getRecipePage" name="id" class="btn btn-primary btn-info" value="' + result + '" th:type="submit"   >Изменить рецепт </button>';
             var editButton = '<a id="ins"  class="btn btn-primary btn-info" onclick="showModal(' + result + ')"  data-toggle="modal" >Редактировать </a>';
             var delButton = '<a id="del"  class="btn btn-primary btn-danger" onclick="del2(' + result + ')"   >Удалить </a>';
-            var tr = '<tr id="tr' + result + '"><td>' + trCount + '</td><td id="b' + result + '"><p id="E' + result + '">' + setName + '</p></td><td id="c' + result + '">' + setDes + '</td><td id="d' + result + '">' + setCost + '</td><td>' + editButton + '</td><td>' + recipeButton + '</td><td>' + delButton + '</td></tr>';
-            var allTR = '<tr id="allTR' + result + '"><td>#</td><td id="allB' + result + '">' + setName + '</td><td id="allC' + result + '">' + setDes + '</td><td id="allD' + result + '">' + setCost + '</td><td>' + editButton + '</td><td>' + recipeButton + '</td><td>' + delButton + '</td></tr>';
+            var tr = '<tr id="tr' + result + '"><td>' + trCount + '</td><td id="b' + result + '"><p id="E' + result + '">' + setName + '</p></td><td id="c' + result + '">' + setDes + '</td><td id="d' + result + '">' + setCost + '</td>><td id="e' + result + '">' + setSelfCost + '</td><td>' + editButton + '</td><td>' + recipeButton + '</td><td>' + delButton + '</td></tr>';
+            var allTR = '<tr id="allTR' + result + '"><td>#</td><td id="allB' + result + '">' + setName + '</td><td id="allC' + result + '">' + setDes + '</td><td id="allD' + result + '">' + setCost + '</td><td id="allE' + result + '">' + setSelfCost + '</td><td>' + editButton + '</td><td>' + recipeButton + '</td><td>' + delButton + '</td></tr>';
             $('#qwe' + id + ' tr:last').after(tr);
             $('#allTable' + ' tr:last').after(allTR);
 

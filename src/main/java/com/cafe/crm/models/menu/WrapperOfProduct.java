@@ -18,6 +18,8 @@ public class WrapperOfProduct implements Serializable {  // wrapper for menuCont
 
 	private Double cost;
 
+	private Double selfCost;
+
 	public WrapperOfProduct() {
 
 	}
@@ -54,6 +56,13 @@ public class WrapperOfProduct implements Serializable {  // wrapper for menuCont
 		this.cost = cost;
 	}
 
+	public Double getSelfCost() {
+		return selfCost;
+	}
+
+	public void setSelfCost(Double selfCost) {
+		this.selfCost = selfCost;
+	}
 
 	public List<String> getNames() {
 		return names;

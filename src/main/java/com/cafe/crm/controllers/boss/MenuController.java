@@ -1,6 +1,9 @@
 package com.cafe.crm.controllers.boss;
 
-import com.cafe.crm.models.menu.*;
+import com.cafe.crm.models.menu.Category;
+import com.cafe.crm.models.menu.Ingredients;
+import com.cafe.crm.models.menu.Product;
+import com.cafe.crm.models.menu.WrapperOfProduct;
 import com.cafe.crm.services.interfaces.menu.CategoriesService;
 import com.cafe.crm.services.interfaces.menu.IngredientsService;
 import com.cafe.crm.services.interfaces.menu.MenuService;
@@ -15,7 +18,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -49,7 +54,7 @@ public class MenuController {
 		ModelAndView mv = new ModelAndView("menu/bossMenu");
 		mv.addObject("menu", menuService.getOne(1L));
 		mv.addObject("categories", categoriesService.findAll());
-		mv.addObject("products", productService.findAll());
+		mv.addObject("products", productService.findAllOrderByRatingDesc());
 
 		return mv;
 	}
@@ -64,8 +69,8 @@ public class MenuController {
 
 	@RequestMapping(value = "/updCategory", method = RequestMethod.POST)
 	public String updCategory(@RequestParam(name = "upd") Long id,
-							  @RequestParam(name = "name") String name,
-							  @RequestParam(name = "dirtyProfit", required = false, defaultValue = "true") String dirtyProfit) {
+	                          @RequestParam(name = "name") String name,
+	                          @RequestParam(name = "dirtyProfit", required = false, defaultValue = "true") String dirtyProfit) {
 		Boolean isDirty = Boolean.valueOf(dirtyProfit);
 		Category category = categoriesService.getOne(id);
 		if (category != null) {
@@ -85,7 +90,7 @@ public class MenuController {
 		return new ResponseEntity<>(product, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/addAjax", method = RequestMethod.POST)
+	@RequestMapping(value = "/addProduct", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> createProd(@RequestBody final WrapperOfProduct wrapper) {
 
@@ -96,6 +101,7 @@ public class MenuController {
 			product.setCategory(category);
 			product.setName(wrapper.getName());
 			product.setCost(wrapper.getCost());
+			product.setSelfCost(wrapper.getSelfCost());
 			product.setDescription(wrapper.getDescription());
 			product.setRecipe(recipe);
 			productService.saveAndFlush(product);
@@ -108,8 +114,8 @@ public class MenuController {
 
 	@RequestMapping(value = "/addCategory", method = RequestMethod.POST)
 	public String addCategories(@RequestParam(name = "name") String name,
-								@RequestParam(name = "dirtyProfit", required = false, defaultValue = "true") String dirtyProfit,
-								@RequestParam(name = "floatingPrice", required = false, defaultValue = "false") String floatingPrice) {
+	                            @RequestParam(name = "dirtyProfit", required = false, defaultValue = "true") String dirtyProfit,
+	                            @RequestParam(name = "floatingPrice", required = false, defaultValue = "false") String floatingPrice) {
 		Boolean isDirty = Boolean.valueOf(dirtyProfit);
 		Boolean isFloatingPrice = Boolean.valueOf(floatingPrice);
 		Category category = new Category(name);
@@ -133,12 +139,13 @@ public class MenuController {
 
 	@RequestMapping(value = "/updProd", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public WrapperOfEditProduct updProd(@RequestBody WrapperOfEditProduct wrapper) {
+	public WrapperOfProduct updProd(@RequestBody WrapperOfProduct wrapper) {
 
 		Product product = productService.findOne(wrapper.getId());
 		if (product != null) {
 			product.setName(wrapper.getName());
 			product.setCost(wrapper.getCost());
+			product.setSelfCost(wrapper.getSelfCost());
 			product.setDescription(wrapper.getDescription());
 
 			productService.saveAndFlush(product);
@@ -162,7 +169,10 @@ public class MenuController {
 	@ResponseBody
 	public ResponseEntity<?> editRecipe(@RequestBody WrapperOfProduct wrapper) {
 		Product product = productService.findOne(wrapper.getId()); // id product
+
 		Map<Ingredients, Integer> recipe = ingredientsService.createRecipe(wrapper);
+
+		product.setSelfCost(ingredientsService.getRecipeCost(recipe));
 
 		if (product != null) {
 			product.setRecipe(recipe);
