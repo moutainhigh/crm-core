@@ -2,6 +2,7 @@ package com.cafe.crm.services.impl.shift;
 
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.models.client.LayerProduct;
 import com.cafe.crm.models.goods.Goods;
 import com.cafe.crm.models.goods.GoodsCategory;
@@ -210,6 +211,9 @@ public class ShiftServiceImpl implements ShiftService {
 			if (layerProduct.isDirtyProfit()) {
 				allPrice += layerProduct.getCost();
 			}
+		}
+		for (Debt debt : shift.getDebtList()) {
+			allPrice += debt.getDebtAmount();
 		}
 		LocalDate shiftDate = shift.getDateShift();
 		List<Goods> goodsSet = goodsRepository.findByDateAndVisibleTrue(shiftDate);

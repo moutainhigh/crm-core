@@ -17,7 +17,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="debts : ${debtsList}" th:id="'debts' + ${debts.id}">
+    <tr th:each="debts : ${debtsList}" th:id="'debts' + ${debts.id}" th:if="debts.visible">
         <td th:text="${debts.id}" class="id">1</td>
         <td th:text="${debts.debtor}" class="name">Вася</td>
         <td th:text="${debts.debtAmount}" class="price">3000</td>

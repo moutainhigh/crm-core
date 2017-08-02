@@ -1,10 +1,12 @@
 package com.cafe.crm.controllers.debt;
 
 import com.cafe.crm.models.client.Debt;
+import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.services.interfaces.debt.DebtService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +48,6 @@ public class DebtController {
 		modelAndView.addObject("today", today);
 		modelAndView.addObject("fromDate", today);
 		modelAndView.addObject("toDate", null);
-		modelAndView.addObject("CloseShiftView", shiftService.createShiftView(shiftService.getLast()));
 		return modelAndView;
 	}
 
@@ -107,8 +108,13 @@ public class DebtController {
 	@ResponseBody
 	public ResponseEntity<?> deleteGoods(@RequestParam(name = "debtId") Long id) {
 
-		debtService.delete(id);
+		Shift lastShift = shiftService.getLast();
+		Debt debt = debtService.get(id);
 
-		return ResponseEntity.ok("Товар успешно удален!");
+		lastShift.addDebtToList(debt);
+		shiftService.saveAndFlush(lastShift);
+		debtService.offVisibleStatus(id);
+
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
