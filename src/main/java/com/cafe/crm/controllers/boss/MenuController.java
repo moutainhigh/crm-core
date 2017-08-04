@@ -96,12 +96,13 @@ public class MenuController {
 
 		Category category = categoriesService.getOne(wrapper.getId());
 		Map<Ingredients, Integer> recipe = ingredientsService.createRecipe(wrapper);
+		double recipeCost = ingredientsService.getRecipeCost(recipe);
 		if (category != null) {
 			Product product = new Product();
 			product.setCategory(category);
 			product.setName(wrapper.getName());
 			product.setCost(wrapper.getCost());
-			product.setSelfCost(wrapper.getSelfCost());
+			product.setSelfCost(wrapper.getSelfCost() + recipeCost);
 			product.setDescription(wrapper.getDescription());
 			product.setRecipe(recipe);
 			productService.saveAndFlush(product);
