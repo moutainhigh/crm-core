@@ -117,7 +117,7 @@ public class ShiftController {
 		}
 		model.addAttribute("workersOfShift", lastShift.getUsers());
 		model.addAttribute("allWorkers", shiftService.getWorkers());
-		model.addAttribute("CloseShiftView", shiftService.createShiftView(lastShift));
+		model.addAttribute("closeShiftView", shiftService.createShiftView(lastShift));
 		model.addAttribute("calculate", calculateSet);
 		model.addAttribute("client", lastShift.getClients());
 		return "shift/editingShiftPage";
@@ -167,11 +167,10 @@ public class ShiftController {
 			for (int i = 0; workerBonus.length > i; i++) {
 				bonus = bonus + workerBonus[i];
 			}
+			Double totalCashBox = shiftView.getTotalCashBox() - bonus;
+			Double shortage = totalCashBox - (cache + bankKart); //недосдача
 
-			Double totalCashBox = (primaryCashBox + allPrice) - (salaryWorkerOnShift + otherCosts + bonus);
-			Double shortage = totalCashBox - (cache + payWithCard + bankKart); //недосдача
-
-			if ((cache + bankKart + payWithCard) >= totalCashBox) {
+			if (shortage > 0) {
 				Shift shift = shiftService.closeShift(totalCashBox, workerIdBonusMap, allPrice, cache, bankKart, comment);
 				vkService.sendDailyReportToConference(shift);
 				return "redirect:/login";
@@ -198,15 +197,12 @@ public class ShiftController {
 			bonus = bonus + workerBonus[i];
 		}
 		ShiftView shiftView = shiftService.createShiftView(lastShift);
-		Double primaryCashBox = shiftView.getCashBox();
-		Double allPrice = shiftView.getAllPrice();
 		Double salaryWorkerOnShift = shiftView.getSalaryWorker() + bonus;
-		Double otherCosts = shiftView.getOtherCosts();
-		Double totalCashBox = (primaryCashBox + allPrice) - (salaryWorkerOnShift + otherCosts);
-		List<Object> testList = new ArrayList<>();
-		testList.add(salaryWorkerOnShift);
-		testList.add(totalCashBox);
-		return testList;
+		Double totalCashBox = shiftView.getTotalCashBox() - bonus;
+		List<Object> result = new ArrayList<>();
+		result.add(salaryWorkerOnShift);
+		result.add(totalCashBox);
+		return result;
 	}
 
 

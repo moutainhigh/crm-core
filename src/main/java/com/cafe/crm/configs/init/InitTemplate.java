@@ -78,7 +78,7 @@ public class InitTemplate {
 		dailyReportMessage.append("Всего расходов за день - {7}\n\n");
 		dailyReportMessage.append("Наличными - {8}\n");
 		dailyReportMessage.append("Карта - {9}\n");
-		dailyReportMessage.append("Общая Сумма - {10}");
+		dailyReportMessage.append("Общая Сумма - {10}\n");
 		dailyReportMessage.append("{11}");
 		byte[] byteOfDailyMessage = dailyReportMessage.toString().getBytes("UTF-8");
 		Template dailyReportForVk = new Template("daily-report", byteOfDailyMessage);

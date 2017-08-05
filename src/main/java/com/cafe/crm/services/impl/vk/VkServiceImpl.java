@@ -62,6 +62,8 @@ public class VkServiceImpl implements VkService {
 			return;
 		}
 		String message = formatMessage(shift, new String(messageTemplate.getContent(), Charset.forName("UTF-8")));
+		// TODO: 05.08.2017 Убрать sout при релизе новой версии
+		System.out.println(message);
 		Map<String, String> variables = new HashMap<>();
 		variables.put("chat_id", vkProperties.getChatId());
 		variables.put("message", message);
@@ -116,13 +118,20 @@ public class VkServiceImpl implements VkService {
 	}
 
 	private double formatCostsAndGetTotalCosts(List<Goods> goodses, StringBuilder salaries, StringBuilder otherCosts) {
+		DecimalFormat df = new DecimalFormat("#.##");
 		double totalCosts = 0d;
 		for (Goods goods : goodses) {
 			totalCosts += goods.getPrice() * goods.getQuantity();
 			if (goods.getCategory().getName().equals(categoryNameSalaryForShift)) {
-				salaries.append(goods.getName()).append(" - ").append(goods.getPrice() * goods.getQuantity()).append(System.getProperty("line.separator"));
+				salaries
+						.append(goods.getName())
+						.append(" - ").append(df.format(goods.getPrice() * goods.getQuantity()))
+						.append(System.getProperty("line.separator"));
 			} else {
-				otherCosts.append(goods.getName()).append(" - ").append(goods.getPrice() * goods.getQuantity()).append(System.getProperty("line.separator"));
+				otherCosts
+						.append(goods.getName())
+						.append(" - ").append(df.format(goods.getPrice() * goods.getQuantity()))
+						.append(System.getProperty("line.separator"));
 			}
 		}
 		if (salaries.length() > 0) {

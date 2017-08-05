@@ -140,8 +140,7 @@ public class ShiftServiceImpl implements ShiftService {
 	}
 
 	@Override
-	public Shift closeShift(Double totalCashBox, Map<Long, Long> workerIdBonusMap, Double allPrice, Double cashe,
-						   Double bankKart, String comment) {
+	public Shift closeShift(Double totalCashBox, Map<Long, Long> workerIdBonusMap, Double allPrice, Double cashe, Double bankKart, String comment) {
 		GoodsCategory goodsCategory = goodsCategoryService.findByNameIgnoreCase(categoryNameSalaryForShift);
 		Shift shift = shiftRepository.getLast();
 		for (Map.Entry<Long, Long> entry : workerIdBonusMap.entrySet()) {
@@ -208,7 +207,7 @@ public class ShiftServiceImpl implements ShiftService {
 		for (Goods goods : goodsWithoutWorkersSalary) {
 			otherCosts = otherCosts + (goods.getPrice() * goods.getQuantity());
 		}
-		totalCashBox = (cashBox + allPrice) - (salaryWorker + otherCosts);
+		totalCashBox = (cashBox + bankCashBox + allPrice) - (salaryWorker + otherCosts);
 		return new ShiftView(allActiveWorker, clients, activeCalculate, allCalculate,
 				cashBox, totalCashBox, salaryWorker, card, allPrice, shiftDate, otherCosts, bankCashBox);
 	}
