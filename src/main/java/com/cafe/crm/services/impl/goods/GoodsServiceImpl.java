@@ -2,9 +2,11 @@ package com.cafe.crm.services.impl.goods;
 
 import com.cafe.crm.models.goods.Goods;
 import com.cafe.crm.models.goods.GoodsCategory;
+import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.repositories.goods.GoodsRepository;
 import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
 import com.cafe.crm.services.interfaces.goods.GoodsService;
+import com.cafe.crm.services.interfaces.shift.ShiftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +21,15 @@ public class GoodsServiceImpl implements GoodsService {
 
 	private final GoodsRepository goodsRepository;
 
+	private final ShiftService shiftService;
+
 	private GoodsCategoryService goodsCategoryService;
 
 
 	@Autowired
-	public GoodsServiceImpl(GoodsRepository goodsRepository) {
+	public GoodsServiceImpl(GoodsRepository goodsRepository, ShiftService shiftService) {
 		this.goodsRepository = goodsRepository;
+		this.shiftService = shiftService;
 	}
 
 	@Autowired
@@ -42,7 +47,22 @@ public class GoodsServiceImpl implements GoodsService {
 		} else {
 			goods.setCategory(categoryInDb);
 		}
+		if (goods.getShift() == null) {
+			Shift shift = shiftService.getLast();
+			if (shift.getOpen()) {
+				goods.setShift(shift);
+			}
+		}
 		goodsRepository.save(goods);
+	}
+
+	@Override
+	public void update(Goods goods) {
+		if (goods.getId() != null && goods.getShift() == null) {
+			Goods goodsInDb = goodsRepository.findOne(goods.getId());
+			goods.setShift(goodsInDb.getShift());
+		}
+		save(goods);
 	}
 
 	@Override
@@ -92,6 +112,16 @@ public class GoodsServiceImpl implements GoodsService {
 	@Override
 	public List<Goods> findByDateAndCategoryNameAndVisibleTrue(LocalDate date, String name) {
 		return goodsRepository.findByDateAndCategoryNameAndVisibleTrue(date, name);
+	}
+
+	@Override
+	public List<Goods> findByShiftIdAndCategoryNameNot(Long shiftId, String name) {
+		return goodsRepository.findByShiftIdAndCategoryNameNotAndVisibleIsTrue(shiftId, name);
+	}
+
+	@Override
+	public List<Goods> findByShiftId(Long shiftId) {
+		return goodsRepository.findByShiftIdAndVisibleIsTrue(shiftId);
 	}
 
 }

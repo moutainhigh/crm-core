@@ -1,6 +1,7 @@
 package com.cafe.crm.repositories.goods;
 
 import com.cafe.crm.models.goods.Goods;
+import com.cafe.crm.models.shift.Shift;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -24,5 +25,9 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
 	List<Goods> findByDateAndVisibleTrue(LocalDate date);
 
 	List<Goods> findByDateAndCategoryNameAndVisibleTrue(LocalDate date, String name);
+
+	List<Goods> findByShiftIdAndCategoryNameNotAndVisibleIsTrue(Long shiftId, String name);
+
+	List<Goods> findByShiftIdAndVisibleIsTrue(Long shiftId);
 
 }

@@ -3,6 +3,7 @@ package com.cafe.crm.models.shift;
 
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.goods.Goods;
 import com.cafe.crm.models.worker.Worker;
 
 import javax.persistence.*;
@@ -15,16 +16,20 @@ import java.util.Set;
 @Table(name = "Shift")
 public class Shift {
 
-	@Column(name = "isOpen") // shift is open ?
-			Boolean isOpen;
 	@Id
 	@GeneratedValue
 	@Column(name = "id")
 	private Long id;
+
+	@Column(name = "isOpen")
+	private Boolean isOpen;
+
 	@Column(name = "dateShift")
 	private LocalDate dateShift;
+
 	@Column(name = "checkValue")
 	private Integer checkValue;// after change on set<>
+
 	@OneToMany
 	private Set<Calculate> allCalculate;
 
@@ -45,6 +50,12 @@ public class Shift {
 			joinColumns = {@JoinColumn(name = "shift_id")},
 			inverseJoinColumns = {@JoinColumn(name = "worker_id")})
 	private Set<Worker> users;
+
+	@OneToMany(mappedBy = "shift")
+	private List<Goods> goodses;
+
+	// TODO: 26.07.2017 Подумать над размером
+	private String comment;
 
 	public Shift(LocalDate dateShift, Set<Worker> users, Double bankCashBox) {
 		this.dateShift = dateShift;
@@ -145,6 +156,21 @@ public class Shift {
 		isOpen = open;
 	}
 
+	public List<Goods> getGoodses() {
+		return goodses;
+	}
+
+	public void setGoodses(List<Goods> goodses) {
+		this.goodses = goodses;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
 
 	@Override
 	public boolean equals(Object o) {

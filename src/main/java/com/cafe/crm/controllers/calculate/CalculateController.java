@@ -69,7 +69,7 @@ public class CalculateController {
 		modelAndView.addObject("listCalculate", calculateService.getAllOpen());
 		modelAndView.addObject("listBoard", boardService.getAllOpen());
 		modelAndView.addObject("listDiscounts", discountService.getAllOpen());
-		modelAndView.addObject("CloseShiftView", shiftService.createShiftView(shift));
+		modelAndView.addObject("closeShiftView", shiftService.createShiftView(shift));
 		return modelAndView;
 	}
 

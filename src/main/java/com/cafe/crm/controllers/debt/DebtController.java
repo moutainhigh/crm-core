@@ -46,7 +46,7 @@ public class DebtController {
 		modelAndView.addObject("today", today);
 		modelAndView.addObject("fromDate", today);
 		modelAndView.addObject("toDate", null);
-		modelAndView.addObject("CloseShiftView", shiftService.createShiftView(shiftService.getLast()));
+		modelAndView.addObject("closeShiftView", shiftService.createShiftView(shiftService.getLast()));
 		return modelAndView;
 	}
 

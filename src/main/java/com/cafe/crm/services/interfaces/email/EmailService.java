@@ -3,6 +3,7 @@ package com.cafe.crm.services.interfaces.email;
 
 import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.worker.Boss;
+import com.cafe.crm.models.worker.Worker;
 
 import java.util.Collection;
 
@@ -20,5 +21,7 @@ public interface EmailService {
 
 	void sendCloseShiftInfoFromText(Double cashBox, Double cache, Double bankKart, Double payWithCard,
 									Double allPrice, Collection<? extends Boss> boss, Double shortage);
+
+	void sendInvalidTokenNotification(Collection<? extends Worker> workers);
 
 }

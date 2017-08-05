@@ -11,6 +11,7 @@ import com.cafe.crm.repositories.boss.BossRepository;
 import com.cafe.crm.repositories.worker.WorkerRepository;
 import com.cafe.crm.services.interfaces.email.EmailService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
+import com.cafe.crm.services.interfaces.vk.VkService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,6 +48,9 @@ public class ShiftController {
 	@Autowired
 	private BossRepository bossRepository;
 
+	@Autowired
+	private VkService vkService;
+
 	private final Pattern VALID_CACHE_SALARY_REGEX =
 			Pattern.compile("\\d+");
 
@@ -66,11 +70,9 @@ public class ShiftController {
 			model.addAttribute("date", dateTimeFormatter.format(date));
 			return "shift/shiftPage";
 
-		} else if (lastShift == null || !(lastShift.getOpen())) {
+		} else {
 			model.addAttribute("list", workerService.getAllActiveWorker());
 			model.addAttribute("date", dateTimeFormatter.format(date));
-			return "shift/shiftPage";
-		} else {
 			return "shift/shiftPage";
 		}
 	}
@@ -86,21 +88,17 @@ public class ShiftController {
 		Worker worker = (Worker) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (lastShift == null) {                     // if this first shift
 			if (box == null) {
-				long[] nullArray = {worker.getId()};
-				shiftService.newShift(nullArray, cashBox, bankCashBox);
+				shiftService.newShift(cashBox, bankCashBox, worker.getId());
 			} else {
-				shiftService.newShift(box, cashBox, bankCashBox);
+				shiftService.newShift(cashBox, bankCashBox, box);
 			}
 			return "redirect:/manager";
 		}
 		if (!lastShift.getOpen()) {                 // if shift is closed
 			if (box == null) {
-				long[] nullArray = {worker.getId()};
-				shiftService.newShift(nullArray, lastShift.getCashBox(),
-						lastShift.getBankCashBox());
+				shiftService.newShift(lastShift.getCashBox(), lastShift.getBankCashBox(), worker.getId());
 			} else {
-				shiftService.newShift(box, lastShift.getCashBox(),
-						lastShift.getBankCashBox());
+				shiftService.newShift(lastShift.getCashBox(), lastShift.getBankCashBox(), box);
 			}
 			return "redirect:/manager";
 		} else {                                                  // if shift is open
@@ -119,7 +117,7 @@ public class ShiftController {
 		}
 		model.addAttribute("workersOfShift", lastShift.getUsers());
 		model.addAttribute("allWorkers", shiftService.getWorkers());
-		model.addAttribute("CloseShiftView", shiftService.createShiftView(lastShift));
+		model.addAttribute("closeShiftView", shiftService.createShiftView(lastShift));
 		model.addAttribute("calculate", calculateSet);
 		model.addAttribute("client", lastShift.getClients());
 		return "shift/editingShiftPage";
@@ -147,7 +145,8 @@ public class ShiftController {
 	public String closeShift(@RequestParam(name = "bonus") Long[] workerBonus,
 	                         @RequestParam(name = "idWorker") Long[] idWorker,
 	                         @RequestParam(name = "cache") Double cache,
-	                         @RequestParam(name = "bankKart") Double bankKart) {
+	                         @RequestParam(name = "bankKart") Double bankKart,
+							 @RequestParam(name = "comment") String comment) {
 		Shift lastShift = shiftService.getLast();
 		Matcher matcherCache = VALID_CACHE_SALARY_REGEX.matcher(String.valueOf(cache));
 		Matcher matcherBankKart = VALID_CACHE_SALARY_REGEX.matcher(String.valueOf(bankKart));
@@ -168,17 +167,18 @@ public class ShiftController {
 			for (int i = 0; workerBonus.length > i; i++) {
 				bonus = bonus + workerBonus[i];
 			}
+			Double totalCashBox = shiftView.getTotalCashBox() - bonus;
+			Double shortage = totalCashBox - (cache + bankKart); //недосдача
 
-			Double totalCashBox = (primaryCashBox + allPrice) - (salaryWorkerOnShift + otherCosts + bonus);
-			Double shortage = totalCashBox - (cache + payWithCard + bankKart); //недосдача
-
-			if ((cache + bankKart + payWithCard) >= totalCashBox) {
-				shiftService.closeShift(totalCashBox, workerIdBonusMap, allPrice, shortage, bankKart);
+			if (shortage > 0) {
+				Shift shift = shiftService.closeShift(totalCashBox, workerIdBonusMap, allPrice, cache, bankKart, comment);
+				vkService.sendDailyReportToConference(shift);
 				return "redirect:/login";
 			} else {
 				List<Boss> bossList = bossRepository.getAllActiveBoss();
 				emailService.sendCloseShiftInfoFromText(totalCashBox, cache, bankKart, payWithCard, allPrice, bossList, shortage);
-				shiftService.closeShift(totalCashBox, workerIdBonusMap, allPrice, shortage, bankKart);
+				Shift shift = shiftService.closeShift(totalCashBox, workerIdBonusMap, allPrice, cache, bankKart, comment);
+				vkService.sendDailyReportToConference(shift);
 			}
 		} else {
 			return "redirect:/login";
@@ -197,15 +197,12 @@ public class ShiftController {
 			bonus = bonus + workerBonus[i];
 		}
 		ShiftView shiftView = shiftService.createShiftView(lastShift);
-		Double primaryCashBox = shiftView.getCashBox();
-		Double allPrice = shiftView.getAllPrice();
 		Double salaryWorkerOnShift = shiftView.getSalaryWorker() + bonus;
-		Double otherCosts = shiftView.getOtherCosts();
-		Double totalCashBox = (primaryCashBox + allPrice) - (salaryWorkerOnShift + otherCosts);
-		List<Object> testList = new ArrayList<>();
-		testList.add(salaryWorkerOnShift);
-		testList.add(totalCashBox);
-		return testList;
+		Double totalCashBox = shiftView.getTotalCashBox() - bonus;
+		List<Object> result = new ArrayList<>();
+		result.add(salaryWorkerOnShift);
+		result.add(totalCashBox);
+		return result;
 	}
 
 

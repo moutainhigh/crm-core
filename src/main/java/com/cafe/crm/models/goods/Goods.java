@@ -1,5 +1,6 @@
 package com.cafe.crm.models.goods;
 
+import com.cafe.crm.models.shift.Shift;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -34,6 +35,10 @@ public class Goods {
 	private GoodsCategory category;
 
 	private boolean visible = true;
+
+	@ManyToOne
+	@JoinColumn(name = "shift_id", nullable = false)
+	private Shift shift;
 
 	public Goods() {
 	}
@@ -100,6 +105,14 @@ public class Goods {
 
 	public void setVisible(boolean visible) {
 		this.visible = visible;
+	}
+
+	public Shift getShift() {
+		return shift;
+	}
+
+	public void setShift(Shift shift) {
+		this.shift = shift;
 	}
 
 	@Override

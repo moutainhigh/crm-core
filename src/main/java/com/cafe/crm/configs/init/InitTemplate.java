@@ -55,16 +55,41 @@ public class InitTemplate {
 		byte[] balanceAfterRefillContext = IOUtils.toByteArray(balanceAfterInStream);
 		Template balanceAfterRefill = new Template("balance-info-refill", balanceAfterRefillContext);
 
+		Resource resourceInvalidToken = resourceLoader.getResource("classpath:templates/invalidToken.html");
+		InputStream invalidTokenInStream = resourceInvalidToken.getInputStream();
+		byte[] invalidTokenContext = IOUtils.toByteArray(invalidTokenInStream);
+		Template invalidToken = new Template("invalid-token", invalidTokenContext);
+
 		Resource resourceExampleCloseShift = resourceLoader.getResource("classpath:templates/closeShiftEmailShortage.html");
 		InputStream exampleCloseShiftInStream = resourceExampleCloseShift.getInputStream();
 		byte[] exampleCloseShiftAfterDebitingContext = IOUtils.toByteArray(exampleCloseShiftInStream);
 		Template exampleCloseShift = new Template("closeShiftEmailShortage", exampleCloseShiftAfterDebitingContext);
+
+		StringBuilder dailyReportMessage = new StringBuilder();
+		dailyReportMessage.append("{0} {1}\n");
+		dailyReportMessage.append("Грязными: {2}\n\n");
+		dailyReportMessage.append("Количество гостей:\n");
+		dailyReportMessage.append("{3}\n");
+		dailyReportMessage.append("Всего: {4}\n\n");
+		dailyReportMessage.append("Зарплата Сотрудников:\n");
+		dailyReportMessage.append("{5}\n");
+		dailyReportMessage.append("Прочее расходы:\n");
+		dailyReportMessage.append("{6}\n");
+		dailyReportMessage.append("Всего расходов за день - {7}\n\n");
+		dailyReportMessage.append("Наличными - {8}\n");
+		dailyReportMessage.append("Карта - {9}\n");
+		dailyReportMessage.append("Общая Сумма - {10}\n");
+		dailyReportMessage.append("{11}");
+		byte[] byteOfDailyMessage = dailyReportMessage.toString().getBytes("UTF-8");
+		Template dailyReportForVk = new Template("daily-report", byteOfDailyMessage);
 
 		templateService.save(disable);
 		templateService.save(text);
 		templateService.save(image);
 		templateService.save(balanceAfterDeduction);
 		templateService.save(balanceAfterRefill);
+		templateService.save(invalidToken);
 		templateService.save(exampleCloseShift);
+		templateService.save(dailyReportForVk);
 	}
 }

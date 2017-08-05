@@ -7,7 +7,6 @@ function test(id){
 }
 
 
-//<![CDATA[
 function test2(){
     var cashBox = parseFloat($("#totalCashBox").val());
     var cache = parseFloat($("#cache").val());
@@ -24,7 +23,6 @@ function test2(){
         $('#budget').attr('type','submit');
     }
 }
-//]]>
 
 function recalculation() {
     $.ajax({
@@ -32,10 +30,8 @@ function recalculation() {
         url: "/manager/recalculation",
         data: $('#form').serialize(),
         success: function (data) {
-            //<![CDATA[
             $('#salaryWorker').val(data[0]);
             $('#totalCashBox').val(data[1]);
-            //]]>
         },
         error: function () {
             console.log('ajaxModal сломался? ');
