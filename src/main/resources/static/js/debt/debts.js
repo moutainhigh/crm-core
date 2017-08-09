@@ -101,8 +101,45 @@ $(document).ready(function () {
     });
 });
 
-function removeDebt(id) {
-    var url = '/manager/tableDebt/delete';
+function removeDebtBoss(id) {
+    var url = '/manager/tableDebt/deleteBoss';
+
+    var request = $.post(url, {debtId: id}, function () {
+        location.reload();
+    });
+}
+
+function removeDebtManager(id) {
+
+    var formData = {
+        masterKey: $('#masterKey').val(),
+        debtId: id
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "/manager/tableDebt/deleteManager",
+        data: formData,
+        success: function (result) {
+            var successMessage = '<h4 style="color:green;" align="center">' + result + '</h4>';
+            $('.deleteManagerDebt').html(successMessage).show();
+            window.setTimeout(function () {
+                $('.deleteManagerDebt').html(successMessage).hide();
+                location.reload();
+            }, 1000);
+        },
+        error: function (error) {
+            var errorMessage = '<h4 style="color:red;" align="center">' + error.responseText + '</h4>';
+            $('.deleteManagerDebt').html(errorMessage).show();
+            window.setTimeout(function () {
+                $('.deleteManagerDebt').html(errorMessage).hide();
+            }, 3000);
+        }
+    });
+}
+
+function repayDebt(id) {
+    var url = '/manager/tableDebt/repay';
 
     var request = $.post(url, {debtId: id}, function () {
         location.reload();

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
-    <meta charset="UTF-8"/>
-    <title>Title</title>
+    <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
 </head>
 <body>
+
+
+
 
 <table class="table table-striped" id="sortedTable" th:fragment="debtsTable">
     <thead>
@@ -13,6 +15,7 @@
         <th>Должник</th>
         <th>Сумма долга</th>
         <th>Дата взятия долга</th>
+        <th></th>
         <th></th>
     </tr>
     </thead>
@@ -23,9 +26,21 @@
         <td th:text="${debts.debtAmount}" class="price">3000</td>
         <td th:text="${#temporals.format(debts.date, 'dd-MM-yyyy')}" class="date">20.20.2000</td>
         <td>
-            <button type="button" class="btn btn-danger" data-toggle="modal" th:href="'#debtDelete' +${debts.id}">Удалить</button>
+            <button type="button" class="btn btn-danger" data-toggle="modal" th:href="'#repayDebt' +${debts.id}">Вернуть</button>
         </td>
-        <div class="modal fade" tabindex="-1" role="dialog" th:id="'debtDelete'+${debts.id}" th:fragment="modalDelete">
+        <li sec:authorize="hasAuthority('BOSS')">
+        <td>
+            <button type="button" class="glyphicon glyphicon-remove" data-toggle="modal" th:href="'#debtDeleteBoss' +${debts.id}"></button>
+        </td>
+        </li>
+        <li sec:authorize="hasAuthority('MANAGER')">
+        <td>
+            <button type="button" class="glyphicon glyphicon-remove" data-toggle="modal" th:href="'#debtDeleteManager' +${debts.id}"></button>
+        </td>
+        </li>
+
+        <!--Modals-->
+        <div class="modal fade" tabindex="-1" role="dialog" th:id="'debtDeleteManager'+${debts.id}" th:fragment="modalDeleteManager">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -34,15 +49,58 @@
                         <h2 class="modal-title">УДАЛЕНИЕ ДОЛГА</h2>
                     </div>
                     <div class="modal-body" align="center">
-                        <div class="lead" th:text="'Вы действительно хотите удалить долг ' + ${debts.debtor}" ></div>
+                        <div class="deleteManagerDebt"/>
+                        <div class="lead" th:text="'Вы действительно хотите удалить долг ' + ${debts.debtor} + '?'"
+                             id="modal"></div>
+                        <label for="masterKey">Чтобы удалить долг введите мастер ключ</label>
+                        <input type="password" required="" class="form-control" id="masterKey" placeholder="Master Key"/>
+                        <button type="submit" class="btn btn-primary"
+                                id="deleteDebtManager" th:onclick="'removeDebtManager(\'' + ${debts.id} + '\');'">Да
+                        </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Нет</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
+        <div class="modal fade" tabindex="-1" role="dialog" th:id="'debtDeleteBoss'+${debts.id}" th:fragment="modalDeleteBoss">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h2 class="modal-title">УДАЛЕНИЕ ДОЛГА</h2>
+                    </div>
+                    <div class="modal-body" align="center">
+                        <div class="lead" th:text="'Вы действительно хотите удалить долг ' + ${debts.debtor} + '?'" ></div>
                         <button type="button" class="btn btn-primary"
-                                id="deleteAllGoods" th:onclick="'removeDebt(\'' + ${debts.id} + '\');'">Да</button>
+                                id="deleteDebtBoss" th:onclick="'removeDebtBoss(\'' + ${debts.id} + '\');'">Да</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Нет</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
+        <div class="modal fade" tabindex="-1" role="dialog" th:id="'repayDebt'+${debts.id}" th:fragment="modalRepayDebt">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h2 class="modal-title">ВОЗВРАТ ДОЛГА</h2>
+                    </div>
+                    <div class="modal-body" align="center">
+                        <div class="lead" th:text="'Вы действительно хотите вернуть долг ' + ${debts.debtor} + '?'" ></div>
+                        <button type="button" class="btn btn-primary"
+                                id="repayDebt" th:onclick="'repayDebt(\'' + ${debts.id} + '\');'">Да</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Нет</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div>
     </tr>
+
+
     </tbody>
     <tfoot>
     <tr>
@@ -50,6 +108,7 @@
         <td></td>
         <td><b>Общая сумма :</b></td>
         <td><b th:text="${totalDebtAmount}" id="totalPrice"></b></td>
+        <td></td>
         <td></td>
 
     </tr>
