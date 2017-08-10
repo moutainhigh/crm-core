@@ -92,7 +92,7 @@ public class MenuController {
 
 	@RequestMapping(value = "/addProduct", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> createProd(@RequestBody final WrapperOfProduct wrapper) {
+	public WrapperOfProduct createProd(@RequestBody final WrapperOfProduct wrapper) {
 
 		Category category = categoriesService.getOne(wrapper.getId());
 		Map<Ingredients, Integer> recipe = ingredientsService.createRecipe(wrapper);
@@ -108,9 +108,12 @@ public class MenuController {
 			productService.saveAndFlush(product);
 			category.getProducts().add(product);
 			categoriesService.saveAndFlush(category);
-			return new ResponseEntity<>(product.getId(), HttpStatus.OK);
-		} else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+			wrapper.setProductId(product.getId());
+			wrapper.setSelfCost(wrapper.getSelfCost() + recipeCost);
+
+			return wrapper;
+		} else return wrapper;
 	}
 
 	@RequestMapping(value = "/addCategory", method = RequestMethod.POST)
@@ -170,16 +173,14 @@ public class MenuController {
 	@ResponseBody
 	public ResponseEntity<?> editRecipe(@RequestBody WrapperOfProduct wrapper) {
 		Product product = productService.findOne(wrapper.getId()); // id product
-
 		Map<Ingredients, Integer> recipe = ingredientsService.createRecipe(wrapper);
 
-		product.setSelfCost(ingredientsService.getRecipeCost(recipe));
-
 		if (product != null) {
+
+			product.setSelfCost(ingredientsService.getRecipeCost(recipe));
 			product.setRecipe(recipe);
 			productService.saveAndFlush(product);
 		}
-
 		return new ResponseEntity<>(1L, HttpStatus.OK);
 	}
 
@@ -187,6 +188,8 @@ public class MenuController {
 	public String deleteRecipe(@PathVariable(name = "id") Long id, HttpServletRequest request) {
 		Product product = productService.findOne(id);
 		if (product != null) {
+			double recipeCost = ingredientsService.getRecipeCost(product.getRecipe());
+			product.setSelfCost(product.getSelfCost() - recipeCost);
 			product.getRecipe().clear();
 			productService.saveAndFlush(product);
 		}
