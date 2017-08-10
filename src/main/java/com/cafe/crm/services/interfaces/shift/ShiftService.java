@@ -1,8 +1,8 @@
 package com.cafe.crm.services.interfaces.shift;
 
 import com.cafe.crm.models.shift.Shift;
-import com.cafe.crm.models.shift.ShiftView;
-import com.cafe.crm.models.worker.Worker;
+import com.cafe.crm.dto.ShiftView;
+import com.cafe.crm.models.user.User;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,28 +14,23 @@ public interface ShiftService {
 
 	void saveAndFlush(Shift shift);
 
-	Shift newShift(Double cashBox, Double bankCashBox, long... workersId);
+	Shift crateNewShift(Double cashBox, Double bankCashBox, long... workersId);
 
 	Shift findOne(Long L);
 
-	List<Worker> findAllUsers();
+	List<User> getUsersNotOnShift();
 
-	// Рабочие не добавленные в открытую  смену
-	List<Worker> getWorkers();
+	List<User> getUsersOnShift();
 
-	// Рабочие добавленные в открытую  смену
-	Set<Worker> getAllActiveWorkers();
+	void deleteUserFromShift(Long userId);
 
-	void deleteWorkerFromShift(String name);
-
-	void addWorkerFromShift(String name);
+	void addUserToShift(Long userId);
 
 	Shift getLast();
 
 	List<Shift> findAll();
 
-	Shift closeShift(Double totalCashBox, Map<Long, Long> workerIdBonusMap, Double allPrice, Double shortage,
-					Double bankCashBox, String comment);
+	Shift closeShift(Map<Long, Integer> mapOfUsersIdsAndBonuses, Double allPrice, Double shortage, Double bankCashBox, String comment);
 
 	Set<Shift> findByDates(LocalDate start, LocalDate end);
 

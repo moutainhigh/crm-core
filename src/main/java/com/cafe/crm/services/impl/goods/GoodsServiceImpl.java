@@ -20,17 +20,20 @@ import java.util.Set;
 public class GoodsServiceImpl implements GoodsService {
 
 	private final GoodsRepository goodsRepository;
-
-	private final ShiftService shiftService;
-
+	@Autowired
+	private ShiftService shiftService;
 	private GoodsCategoryService goodsCategoryService;
 
 
 	@Autowired
-	public GoodsServiceImpl(GoodsRepository goodsRepository, ShiftService shiftService) {
+	public GoodsServiceImpl(GoodsRepository goodsRepository) {
 		this.goodsRepository = goodsRepository;
-		this.shiftService = shiftService;
 	}
+
+//	@Autowired
+//	public void setShiftService(ShiftService shiftService) {
+//		this.shiftService = shiftService;
+//	}
 
 	@Autowired
 	public void setGoodsCategoryService(GoodsCategoryService goodsCategoryService) {
@@ -49,7 +52,7 @@ public class GoodsServiceImpl implements GoodsService {
 		}
 		if (goods.getShift() == null) {
 			Shift shift = shiftService.getLast();
-			if (shift.getOpen()) {
+			if (shift.isOpen()) {
 				goods.setShift(shift);
 			}
 		}

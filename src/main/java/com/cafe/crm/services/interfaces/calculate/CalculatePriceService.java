@@ -15,6 +15,6 @@ public interface CalculatePriceService {
 
 	void addDiscountOnPriceTime(Client client);
 
-	 void calculatePriceTimeIfWasPause(Client client);
+	void calculatePriceTimeIfWasPause(Client client);
 
 }

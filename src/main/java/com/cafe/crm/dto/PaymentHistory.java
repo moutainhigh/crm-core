@@ -6,25 +6,15 @@ import java.time.LocalTime;
 public class PaymentHistory {
 
 	private final Long calculateId;
-
 	private final String calculateDescription;
-
 	private final String clientDescription;
-
 	private final Double totalPrice;
-
 	private final Double menuPrice;
-
 	private final Double timePrice;
-
 	private final Long cafeDiscount;
-
 	private final Long cardDiscount;
-
 	private final Double payWithCard;
-
 	private final LocalDateTime dateStart;
-
 	private final LocalTime spentTime;
 
 
@@ -42,7 +32,7 @@ public class PaymentHistory {
 		this.spentTime = spentTime;
 	}
 
-	public static PaymentHistoryBuilder builder(){
+	public static PaymentHistoryBuilder builder() {
 		return new PaymentHistoryBuilder();
 	}
 
@@ -114,7 +104,7 @@ public class PaymentHistory {
 
 		private LocalTime spentTime;
 
-		public PaymentHistory build(){
+		public PaymentHistory build() {
 			return new PaymentHistory(calculateId, calculateDescription, clientDescription, totalPrice, menuPrice, timePrice, cafeDiscount, cardDiscount, payWithCard, dateStart, spentTime);
 		}
 

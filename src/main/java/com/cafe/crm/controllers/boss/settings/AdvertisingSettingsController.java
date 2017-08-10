@@ -18,11 +18,14 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/boss/settings/advert-setting")
 public class AdvertisingSettingsController {
 
-	@Autowired
-	AdvertisingSettingsService advertisingSettingsService;
+	private final AdvertisingSettingsService advertisingSettingsService;
+	private final AdvertisingCustomSettings customSettings;
 
 	@Autowired
-	AdvertisingCustomSettings customSettings;
+	public AdvertisingSettingsController(AdvertisingSettingsService advertisingSettingsService, AdvertisingCustomSettings customSettings) {
+		this.advertisingSettingsService = advertisingSettingsService;
+		this.customSettings = customSettings;
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView bardSettingPage() {

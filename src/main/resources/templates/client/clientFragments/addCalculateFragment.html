@@ -4,13 +4,13 @@
 </head>
 <body>
 <div th:fragment="calculateModal">
-    <div th:replace="closeShift :: closeShift"></div>
+    <div th:replace="shift/shiftClose :: closeShift"></div>
     <center>
         <button class="btn btn-info" data-toggle="modal" data-target="#calculateModal">Открыть счет</button>
     </center>
 
     <div id="calculateModal" class="modal fade">
-        <div class="modal-dialog " style="width: 300px;margin-top: 50px" role="document">
+        <div class="modal-dialog " style="width: 300px;margin-top: 50px" roles="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button class="close" type="button" data-dismiss="modal">×</button>
@@ -37,7 +37,7 @@
                     </datalist>
 
                     <select class="form-control " form="formMod" style="width:110px;font-size: 17px" name="boardId">
-                            <option value="-1"></option>
+                        <option value="-1"></option>
                         <c th:each="board : ${listBoard}">
                             <option th:value="${board.id}"><h4 th:text="${board.name}"></h4></option>
                         </c>

@@ -39,26 +39,24 @@ public class CardProfileController {
 	private final Pattern VALID_EMAIL_ADDRESS_REGEX =
 			Pattern.compile("^([a-zA-Z0-9_\\.\\-])+\\@(([a-zA-Z0-9\\-])+\\.)+([a-zA-Z0-9]{2,4})+$");
 
-	@Autowired
-	private CardService cardService;
+	private final CardService cardService;
+	private final CalculateService calculateService;
+	private final CardControllerService cardControllerService;
+	private final BoardService boardService;
+	private final CalculateControllerService calculateControllerService;
+	private final PropertyService propertyService;
+	private final EmailService emailService;
 
 	@Autowired
-	private CalculateService calculateService;
-
-	@Autowired
-	private CardControllerService cardControllerService;
-
-	@Autowired
-	private BoardService boardService;
-
-	@Autowired
-	private CalculateControllerService calculateControllerService;
-
-	@Autowired
-	private PropertyService propertyService;
-
-	@Autowired
-	private EmailService emailService;
+	public CardProfileController(CardService cardService, CalculateControllerService calculateControllerService, PropertyService propertyService, CardControllerService cardControllerService, BoardService boardService, CalculateService calculateService, EmailService emailService) {
+		this.cardService = cardService;
+		this.calculateControllerService = calculateControllerService;
+		this.propertyService = propertyService;
+		this.cardControllerService = cardControllerService;
+		this.boardService = boardService;
+		this.calculateService = calculateService;
+		this.emailService = emailService;
+	}
 
 	@RequestMapping(value = {"/card/{id}"}, method = RequestMethod.GET)
 	public ModelAndView getCard(@PathVariable Long id) {
@@ -71,7 +69,7 @@ public class CardProfileController {
 
 	@RequestMapping(value = {"/add-card-to-calculate"}, method = RequestMethod.POST)
 	public String addCardToCalculate(@RequestParam("idCard") Long idCard,
-	                                 @RequestParam("idCalculate") Long idCalculate) {
+									 @RequestParam("idCalculate") Long idCalculate) {
 		cardControllerService.addCardToCalculate(idCard, idCalculate);
 		return "redirect:/manager";
 	}
@@ -79,10 +77,10 @@ public class CardProfileController {
 	@RequestMapping(value = {"/card/edit"}, method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> editCard(@RequestParam("idCard") Long idCard,
-	                                  @RequestParam("name") String name,
-	                                  @RequestParam("surname") String surname,
-	                                  @RequestParam("phone") String phone,
-	                                  @RequestParam("email") String email) {
+									  @RequestParam("name") String name,
+									  @RequestParam("surname") String surname,
+									  @RequestParam("phone") String phone,
+									  @RequestParam("email") String email) {
 		Card card = cardService.getOne(idCard);
 		if (card != null) {
 			Card testPhone = cardService.findByPhone(phone);
@@ -100,11 +98,11 @@ public class CardProfileController {
 
 	@RequestMapping(value = {"/card/registration"}, method = RequestMethod.POST)
 	public ResponseEntity registrationNewUser(@RequestParam("idCard") Long idCard,
-	                                          @RequestParam("name") String name,
-	                                          @RequestParam("surname") String surname,
-	                                          @RequestParam("phone") String phone,
-	                                          @RequestParam("email") String email,
-	                                          @RequestParam(value = "invited", required = false) Long invited) {
+											  @RequestParam("name") String name,
+											  @RequestParam("surname") String surname,
+											  @RequestParam("phone") String phone,
+											  @RequestParam("email") String email,
+											  @RequestParam(value = "invited", required = false) Long invited) {
 		Card card = cardService.getOne(idCard);
 		if (card != null) {
 			Card testPhone = cardService.findByPhone(phone);
@@ -130,8 +128,8 @@ public class CardProfileController {
 
 	@RequestMapping(value = {"/card/addMoney"}, method = RequestMethod.POST)
 	public String addMoneyToBalance(@RequestParam("id") Long idCard,
-	                                @RequestParam("money") Long money,
-	                                HttpServletRequest request) {
+									@RequestParam("money") Long money,
+									HttpServletRequest request) {
 		Card card = cardService.getOne(idCard);
 		if (card != null && money >= 0) {
 			Double balance = card.getBalance();
@@ -150,10 +148,10 @@ public class CardProfileController {
 
 	@RequestMapping(value = {"/add-calculate-with-card"}, method = RequestMethod.POST)
 	public String createCalculate(@RequestParam("boardId") Long id,
-	                              @RequestParam("number") Double number,
-	                              @RequestParam("description") String description,
-	                              @RequestParam("idCard") Long idCard,
-	                              HttpServletRequest request) {
+								  @RequestParam("number") Double number,
+								  @RequestParam("description") String description,
+								  @RequestParam("idCard") Long idCard,
+								  HttpServletRequest request) {
 		calculateControllerService.createCalculateWithCard(id, number.longValue(), description, idCard);
 		String referrer = request.getHeader("Referer");
 		return "redirect:" + referrer;
@@ -161,8 +159,8 @@ public class CardProfileController {
 
 	@RequestMapping(value = {"/uploadPhoto"}, method = RequestMethod.POST)
 	public String uploadPhoto(@RequestParam("file") MultipartFile file,
-	                          @RequestParam("id") Long idCard,
-	                          HttpServletRequest request) {
+							  @RequestParam("id") Long idCard,
+							  HttpServletRequest request) {
 		String referer = request.getHeader("Referer");
 		Card card = cardService.getOne(idCard);
 		try {

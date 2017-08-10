@@ -1,5 +1,7 @@
 package com.cafe.crm.controllers.boss;
 
+import com.cafe.crm.dto.WrapperOfEditProduct;
+import com.cafe.crm.dto.WrapperOfProduct;
 import com.cafe.crm.models.menu.*;
 import com.cafe.crm.services.interfaces.menu.CategoriesService;
 import com.cafe.crm.services.interfaces.menu.IngredientsService;
@@ -15,24 +17,27 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
 @RequestMapping("/boss/menu")
 public class MenuController {
 
-	@Autowired
-	private MenuService menuService;
+	private final MenuService menuService;
+	private final CategoriesService categoriesService;
+	private final ProductService productService;
+	private final IngredientsService ingredientsService;
 
 	@Autowired
-	private CategoriesService categoriesService;
-
-	@Autowired
-	private ProductService productService;
-
-	@Autowired
-	private IngredientsService ingredientsService;
+	public MenuController(CategoriesService categoriesService, ProductService productService, IngredientsService ingredientsService, MenuService menuService) {
+		this.categoriesService = categoriesService;
+		this.productService = productService;
+		this.ingredientsService = ingredientsService;
+		this.menuService = menuService;
+	}
 
 	@ModelAttribute(value = "product")
 	public Product newProduct() {

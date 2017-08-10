@@ -2,7 +2,6 @@ package com.cafe.crm.security.configs;
 
 
 import com.cafe.crm.security.handlers.CustomAuthenticationSuccessHandler;
-import com.cafe.crm.security.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
@@ -15,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
@@ -25,28 +25,30 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	private AuthenticationService authenticationService;
+	private final UserDetailsService userDetailsService;
+	private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Autowired
-	private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+	public SecurityConfig(UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) {
+		this.userDetailsService = userDetailsService;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+		this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
+	}
 
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	@Bean
+	public static ServletListenerRegistrationBean httpSessionEventPublisher() {
+		return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
+	}
 
 	@Bean
 	public CustomAuthenticationSuccessHandler getHandler() {
 		return new CustomAuthenticationSuccessHandler();
 	}
 
-	@Bean
-	public AuthenticationService getService() {
-		return new AuthenticationService();
-	}
-
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(authenticationService).passwordEncoder(bCryptPasswordEncoder);
+		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
 	}
 
 	@Override
@@ -82,11 +84,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.maxSessionsPreventsLogin(false)
 				.expiredUrl("/login?logout")
 				.sessionRegistry(sessionRegistry());
-	}
-
-	@Bean
-	public static ServletListenerRegistrationBean httpSessionEventPublisher() {
-		return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
 	}
 
 	@Bean

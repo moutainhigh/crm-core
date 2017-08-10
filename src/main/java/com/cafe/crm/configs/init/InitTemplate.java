@@ -9,17 +9,13 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 @Component
 public class InitTemplate {
 
 	private final TemplateService templateService;
-
 	private final ResourceLoader resourceLoader;
 
 	@Autowired

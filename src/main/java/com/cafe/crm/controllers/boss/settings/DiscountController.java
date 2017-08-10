@@ -18,11 +18,14 @@ import java.util.List;
 @RequestMapping("/boss/settings/discount-setting")
 public class DiscountController {
 
-	@Autowired
-	private DiscountService discountService;
+	private final DiscountService discountService;
+	private final ClientService clientService;
 
 	@Autowired
-	private ClientService clientService;
+	public DiscountController(DiscountService discountService, ClientService clientService) {
+		this.discountService = discountService;
+		this.clientService = clientService;
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView discountSettingPage() {

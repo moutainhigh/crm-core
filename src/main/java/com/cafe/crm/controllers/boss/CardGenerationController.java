@@ -22,12 +22,16 @@ import java.util.UUID;
 @RequestMapping("/boss")
 public class CardGenerationController {
 
+	private final QrServiceImpl qrService;
+	private final AmazonServiceImpl amazonService;
+	private final CardRepository cardRepository;
+
 	@Autowired
-	private QrServiceImpl qrService;
-	@Autowired
-	private AmazonServiceImpl amazonService;
-	@Autowired
-	private CardRepository cardRepository;
+	public CardGenerationController(QrServiceImpl qrService, CardRepository cardRepository, AmazonServiceImpl amazonService) {
+		this.qrService = qrService;
+		this.cardRepository = cardRepository;
+		this.amazonService = amazonService;
+	}
 
 	@RequestMapping(value = "/cardGenerationPage", method = RequestMethod.GET)
 	public String cardGenerationPage() throws IOException {
@@ -36,9 +40,9 @@ public class CardGenerationController {
 
 	@RequestMapping(value = "/generateCard", method = RequestMethod.POST)
 	public String generateCard(@RequestParam(value = "accessKey") String accessKey,
-	                           @RequestParam(value = "secretKey") String secretKey,
-	                           @RequestParam(value = "link") String link,
-	                           @RequestParam(value = "amountOfCards") Integer amountOfCards) throws IOException {
+							   @RequestParam(value = "secretKey") String secretKey,
+							   @RequestParam(value = "link") String link,
+							   @RequestParam(value = "amountOfCards") Integer amountOfCards) throws IOException {
 		AmazonS3 s3client = amazonService.getConnection(accessKey, secretKey);
 		for (int i = 1; i <= amountOfCards; i++) {
 			Card card = new Card();

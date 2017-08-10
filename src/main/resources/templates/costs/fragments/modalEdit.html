@@ -5,9 +5,10 @@
     <title>Title</title>
 </head>
 <body>
-<div class="modal fade" tabindex="-1" role="dialog" id="modalEditGoods" th:fragment="modalEdit">
-    <form class="form-horizontal" id="formEditGoods" method="post" th:action="@{/manager/costs/edit}" th:object="${formGoods}">
-        <div class="modal-dialog" role="document">
+<div class="modal fade" tabindex="-1" roles="dialog" id="modalEditGoods" th:fragment="modalEdit">
+    <form class="form-horizontal" id="formEditGoods" method="post" th:action="@{/manager/costs/edit}"
+          th:object="${formGoods}">
+        <div class="modal-dialog" roles="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span

@@ -12,11 +12,14 @@ import javax.annotation.PostConstruct;
 @Component
 public class InitClient {
 
-	@Autowired
-	private CardService cardService;
+	private final CardService cardService;
+	private final BoardService boardService;
 
 	@Autowired
-	private BoardService boardService;
+	public InitClient(BoardService boardService, CardService cardService) {
+		this.boardService = boardService;
+		this.cardService = cardService;
+	}
 
 	@PostConstruct
 	public void init() {

@@ -5,12 +5,12 @@
 </head>
 <body>
 <div th:fragment="PropertyForm">
-    <form role="form" method="post" th:id="myForm" th:object="${wrapper}" th:action="@{/boss/property/edit}"
+    <form roles="form" method="post" th:id="myForm" th:object="${wrapper}" th:action="@{/boss/property/edit}"
           style="margin: 10px auto; width: 50%"
           modelAttribute="properties">
-        <div align="center" class="modal fade" th:id="'Property'" tabindex="-1" role="dialog"
+        <div align="center" class="modal fade" th:id="'Property'" tabindex="-1" roles="dialog"
              aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog" roles="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"

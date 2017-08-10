@@ -19,7 +19,8 @@
         <div style="font-size: 17px;margin-top: 5px;" class="collapse navbar-collapse">
             <ul class="nav navbar-nav ">
                 <li sec:authorize="hasAuthority('BOSS')">
-                    <a class="glyphicon glyphicon-refresh" th:href="@{/boss/menu}" style="padding-left: 10px;    padding-top: 8px;"></a>
+                    <a class="glyphicon glyphicon-refresh" th:href="@{/boss/menu}"
+                       style="padding-left: 10px;    padding-top: 8px;"></a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -56,10 +57,10 @@
         </div>
     </div>
 </div>
-<form role="form" method="post" action="/manager/shift/begin" style="margin: 10px auto; width: 50%">
-    <div align="center" class="modal fade" th:id="'add'" tabindex="-1" role="dialog"
+<form roles="form" method="post" action="/manager/shift/begin" style="margin: 10px auto; width: 50%">
+    <div align="center" class="modal fade" th:id="'add'" tabindex="-1" roles="dialog"
          aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" roles="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"
@@ -81,21 +82,22 @@
                             <th>Должность</th>
                             <th>Добавить сотрудника</th>
                         </tr>
-                        <tbody class="searchable" th:each="user:${list}">
-                        <tr>
+                        <tbody class="searchable">
+                        <tr th:each="user:${users}">
                             <td><p th:text="${user.id}"></p></td>
                             <td><p th:text="${user.firstName}"></p></td>
                             <td><p th:text="${user.lastName}"></p></td>
-                            <td><p th:text="${user.allPosition}"></p></td>
-                            <td><input type="checkbox" style="width:20px;height:20px;" name="box"
+                            <td><p th:text="${user.positions}"></p></td>
+                            <td><input type="checkbox" style="width:20px;height:20px;" name="userId"
                                        th:value="${user.id}"/></td>
                         </tr>
                         </tbody>
                     </table>
                     <div th:if="${shiftCashBox}==null">
                         <h3>Введите количество денег в кассе</h3>
-                        <input type="text" class="form-control" value=""  placeholder="Введите количество денег в кассе" required="" autofocus=""
-                               name="cashBox" />
+                        <input type="text" class="form-control" value="" placeholder="Введите количество денег в кассе"
+                               required="" autofocus=""
+                               name="cashBox"/>
                     </div>
 
                     <div th:if="${shiftCashBox}!=null">
@@ -106,15 +108,15 @@
 
                     <div th:if="${bankCashBox}==null">
                         <h3>Введите количество денег на банковской карте</h3>
-                        <input type="number" class="form-control" value=""  placeholder="Введите количество денег на банковской карте" required="" autofocus=""
-                               name="bankCashBox" />
+                        <input type="number" class="form-control" value=""
+                               placeholder="Введите количество денег на банковской карте" required="" autofocus=""
+                               name="bankCashBox"/>
                     </div>
 
                     <div th:if="${bankCashBox}!=null">
                         <h3>Количество денег на банковской карте</h3>
                         <span th:text="${bankCashBox}"></span>
                     </div>
-
 
 
                 </div>
@@ -131,7 +133,7 @@
     </div>
 </form>
 <div th:replace="fragments/managerChangePassword :: managerChangePassword"></div>
-<div th:replace="closeShift :: closeShift"></div>
+<div th:replace="shift/shiftClose :: closeShift"></div>
 <script th:src="@{/js/shift/page.js}"></script>
 <script th:src="@{/js/filter.js}"></script>
 <script th:src="@{/js/shift/close.js}"></script>

@@ -30,35 +30,30 @@ import java.util.List;
 @RequestMapping("/manager")
 public class CalculateController {
 
-	@Autowired
-	private ClientService clientService;
+	private final ClientService clientService;
+	private final CalculateControllerService calculateControllerService;
+	private final CalculateService calculateService;
+	private final BoardService boardService;
+	private final ProductService productService;
+	private final ShiftService shiftService;
+	private final DiscountService discountService;
+	private final CategoriesService categoriesService;
+	private final TimeManager timeManager;
+	private final TimerOfPauseService timerOfPauseService;
 
 	@Autowired
-	private CalculateControllerService calculateControllerService;
-
-	@Autowired
-	private CalculateService calculateService;
-
-	@Autowired
-	private BoardService boardService;
-
-	@Autowired
-	private ProductService productService;
-
-	@Autowired
-	private ShiftService shiftService;
-
-	@Autowired
-	private DiscountService discountService;
-
-	@Autowired
-	private CategoriesService categoriesService;
-
-	@Autowired
-	private TimeManager timeManager;
-
-	@Autowired
-	private TimerOfPauseService timerOfPauseService;
+	public CalculateController(TimeManager timeManager, ProductService productService, ClientService clientService, CategoriesService categoriesService, CalculateService calculateService, ShiftService shiftService, BoardService boardService, DiscountService discountService, CalculateControllerService calculateControllerService, TimerOfPauseService timerOfPauseService) {
+		this.timeManager = timeManager;
+		this.productService = productService;
+		this.clientService = clientService;
+		this.categoriesService = categoriesService;
+		this.calculateService = calculateService;
+		this.shiftService = shiftService;
+		this.boardService = boardService;
+		this.discountService = discountService;
+		this.calculateControllerService = calculateControllerService;
+		this.timerOfPauseService = timerOfPauseService;
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView manager() {
@@ -120,8 +115,8 @@ public class CalculateController {
 	@RequestMapping(value = "/edit-client-time-start", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> editClientTimeStart(@RequestParam("clientId") Long clientId,
-	                                             @RequestParam("hours") int hours,
-	                                             @RequestParam("minutes") int minutes) {
+												 @RequestParam("hours") int hours,
+												 @RequestParam("minutes") int minutes) {
 		boolean successfully = clientService.updateClientTime(clientId, hours, minutes);
 
 		return successfully ? ResponseEntity.ok("ok") : ResponseEntity.badRequest().body("bad");
@@ -129,8 +124,8 @@ public class CalculateController {
 
 	@RequestMapping(value = {"/add-calculate"}, method = RequestMethod.POST)
 	public String createCalculate(@RequestParam("boardId") Long id,
-	                              @RequestParam("number") Double number,
-	                              @RequestParam("description") String description) {
+								  @RequestParam("number") Double number,
+								  @RequestParam("description") String description) {
 		calculateControllerService.createCalculate(id, number.longValue(), description);
 		return "redirect:/manager";
 	}
@@ -138,22 +133,22 @@ public class CalculateController {
 	@RequestMapping(value = {"/add-card-on-client"}, method = RequestMethod.POST)
 	@ResponseBody
 	public Long addCardOnClient(@RequestParam("calculateId") Long calculateId,
-	                            @RequestParam("clientId") Long clientId,
-	                            @RequestParam("cardId") Long cardId) {
+								@RequestParam("clientId") Long clientId,
+								@RequestParam("cardId") Long cardId) {
 		return calculateControllerService.addCardOnClient(calculateId, clientId, cardId);
 	}
 
 	@RequestMapping(value = {"/refresh-board"}, method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void refreshBoard(@RequestParam("boardId") Long idB,
-	                         @RequestParam("calculateId") Long idC) {
+							 @RequestParam("calculateId") Long idC) {
 		calculateControllerService.refreshBoard(idC, idB);
 	}
 
 	@RequestMapping(value = {"/add-client"}, method = RequestMethod.POST)
 	public String addClient(@RequestParam("calculateId") Long id,
-	                        @RequestParam("number") Double number,
-	                        @RequestParam("description") String description) {
+							@RequestParam("number") Double number,
+							@RequestParam("description") String description) {
 		calculateControllerService.addClient(id, number.longValue(), description);
 		return "redirect:/manager";
 	}
@@ -161,9 +156,9 @@ public class CalculateController {
 	@RequestMapping(value = {"/update-fields-client"}, method = RequestMethod.POST)
 	@ResponseBody
 	public String UpdateFieldsClient(@RequestParam("clientId") Long clientId,
-	                                 @RequestParam("discountId") Long discountId,
-	                                 @RequestParam("payWithCard") Double payWithCard,
-	                                 @RequestParam("description") String description) {
+									 @RequestParam("discountId") Long discountId,
+									 @RequestParam("payWithCard") Double payWithCard,
+									 @RequestParam("description") String description) {
 		Client client = clientService.getOne(clientId);
 		if (discountId == -1) {
 			client.setDiscount(0L);
@@ -193,7 +188,7 @@ public class CalculateController {
 
 	@RequestMapping(value = {"/delete-clients"}, method = RequestMethod.POST)
 	public String deleteClients(@RequestParam(name = "clientsId", required = false) long[] clientsId,
-	                            @RequestParam("calculateId") Long calculateId) {
+								@RequestParam("calculateId") Long calculateId) {
 		calculateControllerService.deleteClients(clientsId, calculateId);
 		return "redirect:/manager";
 	}
@@ -206,7 +201,7 @@ public class CalculateController {
 
 	@RequestMapping(value = {"/close-client"}, method = RequestMethod.POST)
 	public String closeClient(@RequestParam(name = "clientsId", required = false) long[] clientsId,
-	                          @RequestParam("calculateId") Long calculateId) {
+							  @RequestParam("calculateId") Long calculateId) {
 		calculateControllerService.closeClient(clientsId, calculateId);
 		return "redirect:/manager";
 	}

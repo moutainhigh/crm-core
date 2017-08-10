@@ -12,8 +12,12 @@ import java.util.List;
 @Service
 public class PropertyServiceImpl implements PropertyService {
 
+	private final PropertyRepository propertyRepository;
+
 	@Autowired
-	private PropertyRepository propertyRepository;
+	public PropertyServiceImpl(PropertyRepository propertyRepository) {
+		this.propertyRepository = propertyRepository;
+	}
 
 	@Override
 	public void save(Property property) {

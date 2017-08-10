@@ -18,13 +18,10 @@ import java.util.List;
 @Controller
 public class DebtController {
 
-	private DebtService debtService;
-
-	private TimeManager timeManager;
-
-	private ShiftService shiftService;
-
-	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	private final DebtService debtService;
+	private final TimeManager timeManager;
+	private final ShiftService shiftService;
 
 	@Autowired
 	public DebtController(DebtService debtService, TimeManager timeManager, ShiftService shiftService) {
@@ -52,8 +49,8 @@ public class DebtController {
 
 	@RequestMapping(value = "/manager/tableDebt", method = RequestMethod.POST)
 	public ModelAndView updatePageAfterSearch(@RequestParam(name = "fromDate") String fromDate,
-	                                          @RequestParam(name = "toDate") String toDate,
-	                                          @RequestParam(name = "debtorName") String debtorName) {
+											  @RequestParam(name = "toDate") String toDate,
+											  @RequestParam(name = "debtorName") String debtorName) {
 		LocalDate today = timeManager.getDate();
 		List<Debt> debtList = filter(debtorName, fromDate, toDate);
 		Double totalDebtAmount = getTotalPrice(debtList);

@@ -2,8 +2,7 @@ package com.cafe.crm.services.interfaces.email;
 
 
 import com.cafe.crm.models.card.Card;
-import com.cafe.crm.models.worker.Boss;
-import com.cafe.crm.models.worker.Worker;
+import com.cafe.crm.models.user.User;
 
 import java.util.Collection;
 
@@ -19,9 +18,8 @@ public interface EmailService {
 
 	void sendBalanceInfoAfterRefill(Double newBalance, Double refillAmount, String email);
 
-	void sendCloseShiftInfoFromText(Double cashBox, Double cache, Double bankKart, Double payWithCard,
-									Double allPrice, Collection<? extends Boss> boss, Double shortage);
+	void sendCloseShiftInfoFromText(Double cashBox, Double cache, Double bankKart, Double payWithCard, Double allPrice, Collection<? extends User> users, Double shortage);
 
-	void sendInvalidTokenNotification(Collection<? extends Worker> workers);
+	void sendInvalidTokenNotification(Collection<? extends User> users);
 
 }

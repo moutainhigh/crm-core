@@ -17,13 +17,9 @@ public class TimeManager {
 	private List<String> servers;
 
 	private LocalDateTime date;
-
 	private NTPUDPClient timeClient = new NTPUDPClient();
-
 	private InetAddress inetAddress;
-
 	private TimeInfo timeInfo;
-
 	private boolean isServerDateTime;
 
 	public TimeManager() {

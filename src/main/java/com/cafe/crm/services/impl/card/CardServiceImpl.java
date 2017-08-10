@@ -10,8 +10,13 @@ import java.util.List;
 
 @Service
 public class CardServiceImpl implements CardService {
+
+	private final CardRepository cardRepository;
+
 	@Autowired
-	private CardRepository cardRepository;
+	public CardServiceImpl(CardRepository cardRepository) {
+		this.cardRepository = cardRepository;
+	}
 
 	public void saveAll(List<Card> card) {
 		cardRepository.save(card);

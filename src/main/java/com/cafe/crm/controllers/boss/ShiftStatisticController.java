@@ -2,7 +2,7 @@ package com.cafe.crm.controllers.boss;
 
 import com.cafe.crm.models.goods.Goods;
 import com.cafe.crm.models.shift.Shift;
-import com.cafe.crm.models.shift.ShiftView;
+import com.cafe.crm.dto.ShiftView;
 import com.cafe.crm.services.interfaces.goods.GoodsService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
@@ -23,14 +23,16 @@ import java.util.Set;
 @RequestMapping("/boss/statistics")
 public class ShiftStatisticController {
 
-	@Autowired
-	private ShiftService shiftService;
+	private final ShiftService shiftService;
+	private final GoodsService goodsService;
+	private final TimeManager timeManager;
 
 	@Autowired
-	private GoodsService goodsService;
-
-	@Autowired
-	private TimeManager timeManager;
+	public ShiftStatisticController(ShiftService shiftService, GoodsService goodsService, TimeManager timeManager) {
+		this.shiftService = shiftService;
+		this.goodsService = goodsService;
+		this.timeManager = timeManager;
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getAdminPage() {
@@ -58,9 +60,9 @@ public class ShiftStatisticController {
 		Double allOtherGoods = 0D;
 		Shift shift = shiftService.findOne(id);
 		ShiftView shiftView = shiftService.createShiftView(shift);
-		List<Goods> salaryWorkerGoods = goodsService.findByDateAndCategoryNameAndVisibleTrue(shift.getDateShift(),
+		List<Goods> salaryWorkerGoods = goodsService.findByDateAndCategoryNameAndVisibleTrue(shift.getShiftDate(),
 				"Зарплата сотрудников");
-		List<Goods> otherGoods = goodsService.findByDateAndVisibleTrue(shift.getDateShift());
+		List<Goods> otherGoods = goodsService.findByDateAndVisibleTrue(shift.getShiftDate());
 		otherGoods.removeAll(salaryWorkerGoods);
 		for (Goods salaryWorkerGood : salaryWorkerGoods) {
 			allSalaryGoods = allSalaryGoods + salaryWorkerGood.getPrice() * salaryWorkerGood.getQuantity();

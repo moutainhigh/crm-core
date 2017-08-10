@@ -29,7 +29,7 @@ function editClientTimeStart(clientId, event) {
     $.post(url, data, function () {
         location.reload()
     })
-        .fail(function(response) {
+        .fail(function (response) {
             var errorMessage = '<h4 style="color:red;" align="center">Не удалось обновить время</h4>';
             $('.messageEdit' + clientId).html(errorMessage).show();
             window.setTimeout(function () {
@@ -235,9 +235,13 @@ function createLayerProductWithFloatingPriceAjax(prodId, calcId, inputId) {
             for (var i = 0; i < arr.length; i++) {
                 $('#ajaxMenu' + arr[i].id + ' li:last').after('<li id = "pr' + data.id + '">' + data.name + ' №' + data.id + ' (' + data.cost + 'р)' + '</li>');
             }
-            setTimeout(function () {getOpenClientsOnCalculateAjax(calcId)}, 500);
+            setTimeout(function () {
+                getOpenClientsOnCalculateAjax(calcId)
+            }, 500);
             prog(calcId);
-            setTimeout(function () {ajaxForCalculate(calcId)}, 500);
+            setTimeout(function () {
+                ajaxForCalculate(calcId)
+            }, 500);
         },
         error: function () {
             console.log('createLayerProductWithFloatingPriceAjax сломался? ');

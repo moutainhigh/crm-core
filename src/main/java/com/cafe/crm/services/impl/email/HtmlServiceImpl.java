@@ -3,17 +3,17 @@ package com.cafe.crm.services.impl.email;
 
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
-import com.cafe.crm.models.worker.Boss;
-import com.cafe.crm.models.worker.Worker;
-import com.cafe.crm.repositories.boss.BossRepository;
+import com.cafe.crm.models.user.User;
 import com.cafe.crm.services.interfaces.email.HtmlService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
+import com.cafe.crm.services.interfaces.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -21,19 +21,15 @@ import java.util.Set;
 public class HtmlServiceImpl implements HtmlService {
 
 	private final TemplateEngine templateEngine;
-
-	@Autowired
-	private ShiftService shiftService;
-
-	@Autowired
-	private BossRepository bossRepository;
+	private final ShiftService shiftService;
 
 	@Value("${site.address}")
 	private String siteAddress;
 
 	@Autowired
-	public HtmlServiceImpl(TemplateEngine templateEngine) {
+	public HtmlServiceImpl(TemplateEngine templateEngine, ShiftService shiftService) {
 		this.templateEngine = templateEngine;
+		this.shiftService = shiftService;
 	}
 
 	@Override
@@ -83,18 +79,16 @@ public class HtmlServiceImpl implements HtmlService {
 	}
 
 	@Override
-	public String getCloseShiftFromText(String text, Double cashBox, Double cache, Double bankKart, Double payWithCard,
-										Double allPrice, String view, Double shortage) {
-		Set<Worker> allWorker = shiftService.getAllActiveWorkers();
-		Set<Calculate> calculate = shiftService.getLast().getAllCalculate();
+	public String getCloseShiftFromText(String text, Double cashBox, Double cache, Double bankKart, Double payWithCard, Double allPrice, String view, Collection<? extends User> recipients, Double shortage) {
+		List<User> usersOnShift = shiftService.getUsersOnShift();
+		Set<Calculate> calculates = shiftService.getLast().getCalculates();
 		Set<Client> clients = shiftService.getLast().getClients();
-		List<Boss> allBoss = bossRepository.getAllActiveBoss();
 		Context context = new Context();
 		context.setVariable("message", text);
-		context.setVariable("workers", allWorker);
-		context.setVariable("calculate", calculate.size());
+		context.setVariable("usersOnShift", usersOnShift);
+		context.setVariable("calculate", calculates.size());
 		context.setVariable("clients", clients.size());
-		context.setVariable("allBoss", allBoss);
+		context.setVariable("recipients", recipients);
 		context.setVariable("shortage", shortage);
 		context.setVariable("allPrice", allPrice);
 		context.setVariable("cashBox", (cashBox - shortage));

@@ -36,17 +36,9 @@ public class Product {
 	@ElementCollection
 	@MapKeyJoinColumn(name = "ingredient")
 	@Column(name = "amount")
-	private Map<Ingredients, Integer> recipe ;
+	private Map<Ingredients, Integer> recipe;
 
 	private int rating;
-
-	public Map<Ingredients, Integer> getRecipe() {
-		return recipe;
-	}
-
-	public void setRecipe(Map<Ingredients, Integer> recipe) {
-		this.recipe = recipe;
-	}
 
 	public Product() {
 	}
@@ -55,6 +47,14 @@ public class Product {
 		this.name = name;
 		this.description = description;
 		this.cost = cost;
+	}
+
+	public Map<Ingredients, Integer> getRecipe() {
+		return recipe;
+	}
+
+	public void setRecipe(Map<Ingredients, Integer> recipe) {
+		this.recipe = recipe;
 	}
 
 	public Long getId() {

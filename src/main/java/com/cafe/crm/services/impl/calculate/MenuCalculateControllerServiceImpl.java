@@ -1,9 +1,9 @@
 package com.cafe.crm.services.impl.calculate;
 
-import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.LayerProduct;
+import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.calculate.MenuCalculateControllerService;
 import com.cafe.crm.services.interfaces.client.ClientService;
@@ -22,17 +22,18 @@ import java.util.Set;
 @Transactional
 public class MenuCalculateControllerServiceImpl implements MenuCalculateControllerService {
 
-	@Autowired
-	private LayerProductService layerProductService;
+	private final LayerProductService layerProductService;
+	private final ClientService clientService;
+	private final ProductService productService;
+	private final CalculateService calculateService;
 
 	@Autowired
-	private ClientService clientService;
-
-	@Autowired
-	private ProductService productService;
-
-	@Autowired
-	private CalculateService calculateService;
+	public MenuCalculateControllerServiceImpl(ProductService productService, ClientService clientService, LayerProductService layerProductService, CalculateService calculateService) {
+		this.productService = productService;
+		this.clientService = clientService;
+		this.layerProductService = layerProductService;
+		this.calculateService = calculateService;
+	}
 
 	@Override
 	public LayerProduct createLayerProduct(long calculateId, long[] clientsId, long productId) {

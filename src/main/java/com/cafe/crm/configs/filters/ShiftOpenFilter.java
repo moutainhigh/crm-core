@@ -20,13 +20,15 @@ public class ShiftOpenFilter extends GenericFilterBean {
 	@Autowired
 	private ShiftService shiftService;
 
+	public ShiftOpenFilter() {}
+
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		String requestURI = request.getRequestURI();
 		if (requestURI.startsWith("/manager") && (!requestURI.equals("/manager/shift/") && !requestURI.equals("/manager/shift/begin"))) {
 			Shift lastShift = shiftService.getLast();
-			if (lastShift == null || !lastShift.getOpen()) {
+			if (lastShift == null || !lastShift.isOpen()) {
 				HttpServletResponse response = (HttpServletResponse) servletResponse;
 				response.sendRedirect("/manager/shift/");
 				return;

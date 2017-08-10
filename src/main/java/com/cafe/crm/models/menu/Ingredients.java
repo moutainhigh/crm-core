@@ -18,11 +18,11 @@ public class Ingredients {
 	private Long id;
 
 	@NotBlank(message = "Заполните поле")
-	@Size(max = 30,message = "Максимальный размер 30 символов")
+	@Size(max = 30, message = "Максимальный размер 30 символов")
 	private String name;
 
 	@NotBlank(message = "Заполните поле")
-	@Size(max = 20,message = "Максимальный размер 20 символов")
+	@Size(max = 20, message = "Максимальный размер 20 символов")
 	private String dimension;
 
 	@NotNull(message = "Заполните поле")
@@ -37,6 +37,7 @@ public class Ingredients {
 		this.dimension = dimension;
 		this.amount = amount;
 	}
+
 	public Ingredients(Long id, String name, String dimension, Integer amount) {
 		this.id = id;
 		this.name = name;
@@ -73,6 +74,10 @@ public class Ingredients {
 		return amount;
 	}
 
+	public void setAmount(Integer amount) {
+		this.amount = amount;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -92,10 +97,6 @@ public class Ingredients {
 		result = 31 * result + (name != null ? name.hashCode() : 0);
 		result = 31 * result + (dimension != null ? dimension.hashCode() : 0);
 		return result;
-	}
-
-	public void setAmount(Integer amount) {
-		this.amount = amount;
 	}
 
 	@Override

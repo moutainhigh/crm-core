@@ -1,26 +1,26 @@
 function showModal(id) {
-	var modal = $('.dima_modal');
-	modal.find("#d_id").val(id);
-	$.ajax({
-		type: "POST",
-		url: "/boss/menu/getProduct",
-		data: ({
-			id: id
-		}),
-		success: function (product) {
+    var modal = $('.dima_modal');
+    modal.find("#d_id").val(id);
+    $.ajax({
+        type: "POST",
+        url: "/boss/menu/getProduct",
+        data: ({
+            id: id
+        }),
+        success: function (product) {
 
-			modal.find("#d_name").val(product.name);
-			modal.find("#d_des").val(product.description);
-			modal.find("#d_cost").val(product.cost);
+            modal.find("#d_name").val(product.name);
+            modal.find("#d_des").val(product.description);
+            modal.find("#d_cost").val(product.cost);
 
-		},
-		error: function (e) {
+        },
+        error: function (e) {
 
-			alert("Error show modal ");
-		}
-	});
+            alert("Error show modal ");
+        }
+    });
 
-	modal.fadeIn();
+    modal.fadeIn();
 }
 
 $(document).on('click', '#saveNewProductData', function () {
@@ -96,85 +96,85 @@ $(document).on('click', '#saveNewProductData', function () {
 });
 
 function closeModal() {
-	var modal = $('.dima_modal');
-	modal.fadeOut();
+    var modal = $('.dima_modal');
+    modal.fadeOut();
 }
 
 function editProdModal() {
-	var formData = {
-		id: $("#d_id").val(),
-		name: $("#d_name").val(),
-		description: $("#d_des").val(),
-		cost: $("#d_cost").val(),
-	}
+    var formData = {
+        id: $("#d_id").val(),
+        name: $("#d_name").val(),
+        description: $("#d_des").val(),
+        cost: $("#d_cost").val(),
+    }
 
-	var cst = $("#d_cost").val();
-	var nme = $("#d_name").val();
-	var id = $("#d_id").val();
+    var cst = $("#d_cost").val();
+    var nme = $("#d_name").val();
+    var id = $("#d_id").val();
 
-	if (!isNaN(+cst)) {
-		if ("" != nme) {
-			$.ajax({
-				type: "POST",
-				contentType: "application/json",
-				url: "/boss/menu/updProd",
-				data: JSON.stringify(formData),
-				dataType: 'json',
-				success: function (result) {
-					$("#b" + id).html(result.name);
-					$("#c" + id).html(result.description);
-					$("#d" + id).html(result.cost);
-					$("#allB" + id).html(result.name);
-					$("#allC" + id).html(result.description);
-					$("#allD" + id).html(result.cost);
-					closeModal()
-				},
-				error: function (e) {
-					alert("Неверный формат данных!")
-				}
-			});
-		}
-		else {
-			alert("Неверный формат названия!")
-		}
-	}
-	else {
-		alert("Неверный формат цены!")
-	}
+    if (!isNaN(+cst)) {
+        if ("" != nme) {
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: "/boss/menu/updProd",
+                data: JSON.stringify(formData),
+                dataType: 'json',
+                success: function (result) {
+                    $("#b" + id).html(result.name);
+                    $("#c" + id).html(result.description);
+                    $("#d" + id).html(result.cost);
+                    $("#allB" + id).html(result.name);
+                    $("#allC" + id).html(result.description);
+                    $("#allD" + id).html(result.cost);
+                    closeModal()
+                },
+                error: function (e) {
+                    alert("Неверный формат данных!")
+                }
+            });
+        }
+        else {
+            alert("Неверный формат названия!")
+        }
+    }
+    else {
+        alert("Неверный формат цены!")
+    }
 }
 
 function del(id) {
-	var formData = {
-		del: id,
-	}
-	$.ajax({
-		type: "POST",
-		url: "/boss/menu/deleteProduct",
-		data: formData,
-		success: function (result) {
-			$("#tr" + id).remove();
-			$("#allTR" + id).remove();
-		},
-		error: function (e) {
-		}
-	});
+    var formData = {
+        del: id,
+    }
+    $.ajax({
+        type: "POST",
+        url: "/boss/menu/deleteProduct",
+        data: formData,
+        success: function (result) {
+            $("#tr" + id).remove();
+            $("#allTR" + id).remove();
+        },
+        error: function (e) {
+        }
+    });
 }
 
 function del2(id) {
-	var formData = {
-		del: id,
-	}
-	$.ajax({
-		type: "POST",
-		url: "/boss/menu/deleteProduct",
-		data: formData,
-		success: function (result) {
-			$(document).find("#tr" + id).remove();
-			$(document).find("#allTR" + id).remove();
-		},
-		error: function (e) {
-		}
-	});
+    var formData = {
+        del: id,
+    }
+    $.ajax({
+        type: "POST",
+        url: "/boss/menu/deleteProduct",
+        data: formData,
+        success: function (result) {
+            $(document).find("#tr" + id).remove();
+            $(document).find("#allTR" + id).remove();
+        },
+        error: function (e) {
+        }
+    });
 }
 
 function productDataValidating(name, cost) {
@@ -234,62 +234,62 @@ $(document).on('click', '#saveEditProductData', function () {
 
 $(document).ready(function () {
 
-	(function ($) {
+    (function ($) {
 
-		$('#filter').keyup(function () {
+        $('#filter').keyup(function () {
 
-			var rex = new RegExp($(this).val(), 'i');
-			$('.searchable tr').hide();
-			$('.searchable tr').filter(function () {
-				return rex.test($(this).text());
-			}).show();
-		})
-	}(jQuery));
+            var rex = new RegExp($(this).val(), 'i');
+            $('.searchable tr').hide();
+            $('.searchable tr').filter(function () {
+                return rex.test($(this).text());
+            }).show();
+        })
+    }(jQuery));
 });
 
 $(document).ready(function () {
-	$("#myTab a").click(function (e) {
-		e.preventDefault();
-		$(this).tab('show');
-	});
+    $("#myTab a").click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
 });
 
 $('.super').click(function () {
-	var pageName = $(this).data('page');
-	// ajax-запрос
-	$.ajax({
-		url: '/boss/menu/upd',
-		cache: false,
-		success: function (html) {
+    var pageName = $(this).data('page');
+    // ajax-запрос
+    $.ajax({
+        url: '/boss/menu/upd',
+        cache: false,
+        success: function (html) {
 
-			$("#bossview").html(html);
-		}
-	});
+            $("#bossview").html(html);
+        }
+    });
 });
 
 function showModal(id) {
-	var modal = $('.dima_modal');
-	modal.find("#d_id").val(id);
-	$.ajax({
-		type: "POST",
-		url: "/boss/menu/getProduct",
-		data: ({
-			id: id
-		}),
-		success: function (product) {
+    var modal = $('.dima_modal');
+    modal.find("#d_id").val(id);
+    $.ajax({
+        type: "POST",
+        url: "/boss/menu/getProduct",
+        data: ({
+            id: id
+        }),
+        success: function (product) {
 
-			modal.find("#d_name").val(product.name);
-			modal.find("#d_des").val(product.description);
-			modal.find("#d_cost").val(product.cost);
+            modal.find("#d_name").val(product.name);
+            modal.find("#d_des").val(product.description);
+            modal.find("#d_cost").val(product.cost);
 
-		},
-		error: function (e) {
-			alert("Ошибка ;( ");
-			console.log("ERROR: ", e);
-		}
-	});
+        },
+        error: function (e) {
+            alert("Ошибка ;( ");
+            console.log("ERROR: ", e);
+        }
+    });
 
-	modal.fadeIn();
+    modal.fadeIn();
 }
 $(document).on('click', '#saveEditProductDataAll', function () {
     var id = $(this).data("id");
@@ -340,114 +340,114 @@ $(document).on('click', '#saveEditProductDataAll', function () {
 });
 
 function closeModal() {
-	var modal = $('.dima_modal');
-	modal.fadeOut();
+    var modal = $('.dima_modal');
+    modal.fadeOut();
 }
 $(document).ready(function () {
 
-	(function ($) {
+    (function ($) {
 
-		$('#filter').keyup(function () {
+        $('#filter').keyup(function () {
 
-			var rex = new RegExp($(this).val(), 'i');
-			$('.searchable tr').hide();
-			$('.searchable tr').filter(function () {
-				return rex.test($(this).text());
-			}).show();
-		})
-	}(jQuery));
+            var rex = new RegExp($(this).val(), 'i');
+            $('.searchable tr').hide();
+            $('.searchable tr').filter(function () {
+                return rex.test($(this).text());
+            }).show();
+        })
+    }(jQuery));
 });
 $(document).ready(function () {
-	$("#myTab a").click(function (e) {
-		e.preventDefault();
-		$(this).tab('show');
-	});
+    $("#myTab a").click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
 });
 $('.super').click(function () {
-	var pageName = $(this).data('page');
-	// ajax-запрос
-	$.ajax({
-		url: '/boss/menu/upd',
-		cache: false,
-		success: function (html) {
-			$("#bossview").html(html);
-		}
-	});
+    var pageName = $(this).data('page');
+    // ajax-запрос
+    $.ajax({
+        url: '/boss/menu/upd',
+        cache: false,
+        success: function (html) {
+            $("#bossview").html(html);
+        }
+    });
 });
 
 function sendLogLevel() {
-	var levelMap = {level: $('#chooseLogLevel').val()};
-	if ($('#chooseLogLevel').val() == 'INFO' || $('#chooseLogLevel').val() == 'ERROR'
-		|| $('#chooseLogLevel').val() == 'DEBUG' || $('#chooseLogLevel').val() == 'WARN') {
-		$.ajax({
-			type: "POST",
-			url: "/boss/property/logLevel",
-			data: levelMap,
-			success: function (result) {
-				$('.form-group').html('Уровень логирования задан.');
-			},
-			error: function (e) {
-				var json = '<h4 style="color:aqua">Действующий пароль введён неверно</h4>';
-			}
-		});
+    var levelMap = {level: $('#chooseLogLevel').val()};
+    if ($('#chooseLogLevel').val() == 'INFO' || $('#chooseLogLevel').val() == 'ERROR'
+        || $('#chooseLogLevel').val() == 'DEBUG' || $('#chooseLogLevel').val() == 'WARN') {
+        $.ajax({
+            type: "POST",
+            url: "/boss/property/logLevel",
+            data: levelMap,
+            success: function (result) {
+                $('.form-group').html('Уровень логирования задан.');
+            },
+            error: function (e) {
+                var json = '<h4 style="color:aqua">Действующий пароль введён неверно</h4>';
+            }
+        });
 
-	} else {
-		var json = '<h4 style="color:red">Неизвестный уровень логгирования</h4>';
-		$('.modal-title').html(json);
-	}
+    } else {
+        var json = '<h4 style="color:red">Неизвестный уровень логгирования</h4>';
+        $('.modal-title').html(json);
+    }
 }
 
 function newSMTPSettings() {
-	var formData = {
-		settingsName: $("#settingsName").val(),
-		password: $("#settingsPassword").val(),
-		email: $("#settingsEmail").val()
-	}
-	$.ajax({
-		type: "POST",
-		url: "/boss/settings/advert-setting/new",
-		data: formData,
-		success: function (result) {
-			$("#successModal").modal('show')
-			alert("Получилось!")
-		},
-		error: function (e) {
-			$("#errorModal").modal('show')
-			alert("Ошибка")
-		}
-	});
+    var formData = {
+        settingsName: $("#settingsName").val(),
+        password: $("#settingsPassword").val(),
+        email: $("#settingsEmail").val()
+    }
+    $.ajax({
+        type: "POST",
+        url: "/boss/settings/advert-setting/new",
+        data: formData,
+        success: function (result) {
+            $("#successModal").modal('show')
+            alert("Получилось!")
+        },
+        error: function (e) {
+            $("#errorModal").modal('show')
+            alert("Ошибка")
+        }
+    });
 }
 
 function applySMTPSettings(id) {
-	var formData = {
-		settingsId: id,
-	}
-	$.ajax({
-		type: "POST",
-		url: "/boss/settings/advert-setting/existing-settings",
-		data: formData,
-		success: function (result) {
-			var successMessage = '<h4 style="color:green;" align="center">' + result + '</h4>';
-			$('.messageAd').html(successMessage).show();
-			window.setTimeout(function () {
-				location.reload()
-			}, 1000);
-		},
-		error: function (e) {
-			var errorMessage = '<h4 style="color:red;" align="center">' + e.responseText + '</h4>';
-			$('.messageAd').html(errorMessage).show();
-		}
-	});
+    var formData = {
+        settingsId: id,
+    }
+    $.ajax({
+        type: "POST",
+        url: "/boss/settings/advert-setting/existing-settings",
+        data: formData,
+        success: function (result) {
+            var successMessage = '<h4 style="color:green;" align="center">' + result + '</h4>';
+            $('.messageAd').html(successMessage).show();
+            window.setTimeout(function () {
+                location.reload()
+            }, 1000);
+        },
+        error: function (e) {
+            var errorMessage = '<h4 style="color:red;" align="center">' + e.responseText + '</h4>';
+            $('.messageAd').html(errorMessage).show();
+        }
+    });
 }
 
 function removeSettings(id) {
-	var url = '/boss/settings/advert-setting/del-settings';
+    var url = '/boss/settings/advert-setting/del-settings';
 
-	var request = $.post(url, {settingsId: id},
-		window.setTimeout(function () {
-			location.reload()
-		}, 100)
-	)
+    var request = $.post(url, {settingsId: id},
+        window.setTimeout(function () {
+            location.reload()
+        }, 100)
+    )
 }
 
 function addIng(id) {
@@ -456,13 +456,13 @@ function addIng(id) {
 };
 
 function deleteIng(id) {
-    var table_parent = $(document).find('#recipeTable'+id);
+    var table_parent = $(document).find('#recipeTable' + id);
     var inputs = [];
     table_parent.find('.inputClassTest').each(function () {
         inputs.push($(this).val());
     });
 
-    if(inputs.length >= 2) {
+    if (inputs.length >= 2) {
         $('#recipeTable' + id + ' tr:last').remove();
     }
 };

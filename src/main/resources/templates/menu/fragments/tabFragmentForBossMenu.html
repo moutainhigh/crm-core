@@ -29,15 +29,17 @@
                 <td th:id="'allA' + ${prod.id}"><p th:text="${iter.count}"></p></td>
                 <td th:id="'allB' + ${prod.id}"><p th:text="${prod.name}"></p></td>
                 <td th:id="'allC' + ${prod.id}"><p th:text="${prod.description}"></p></td>
-                <td th:id="'allD' + ${prod.id}"><p th:text="${!prod.category.floatingPrice} ? ${prod.cost} : 'Плавающая'"></p></td>
+                <td th:id="'allD' + ${prod.id}"><p
+                        th:text="${!prod.category.floatingPrice} ? ${prod.cost} : 'Плавающая'"></p></td>
                 <td class="col-lg-2"><a id="ins" class="btn btn-primary btn-info"
                                         th:href="'#allP'+${prod.id}"
                                         data-toggle="modal">Редактировать </a>
                 </td>
                 <td>
-                <button form="getRecipePage" name="id" class="btn btn-primary btn-info" th:value="${prod.id}" th:type="submit">
-                    Изменить рецепт
-                </button>
+                    <button form="getRecipePage" name="id" class="btn btn-primary btn-info" th:value="${prod.id}"
+                            th:type="submit">
+                        Изменить рецепт
+                    </button>
                 </td>
                 <td>
                     <button th:onclick="'del(\''+ ${prod.id} + '\');'"
@@ -45,12 +47,12 @@
                         Удалить
                     </button>
                 </td>
-                <form role="form" method="post" action="/boss/menu/upd"
+                <form roles="form" method="post" action="/boss/menu/upd"
                       style="margin: 10px auto; width: 50%; paddng-bottom:40px;">
                     <div th:object="${product}" align="center" class="modal fade" th:id="'allP'+${prod.id}"
                          tabindex="-1"
-                         role="dialog" aria-labelledby="myModalLabel">
-                        <div class="modal-dialog" role="document">
+                         roles="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" roles="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal"
@@ -64,7 +66,7 @@
                                         <input required="" type="hidden" class="form-control"
                                                th:id="allId + ${prod.id}"
                                                th:value="${prod.id}"/>
-                                       <label>Название</label>
+                                        <label>Название</label>
                                         <input type="text" class="form-control"
                                                th:id="allName + ${prod.id}" name="name"
                                                th:value="${prod.name}"/>
@@ -77,10 +79,11 @@
                                                th:value="${prod.description}"/>
                                     </div>
                                     <div class="form-group">
-                                       <label>Цена</label>
+                                        <label>Цена</label>
                                         <input type="text" class="form-control"
                                                th:id="allCost + ${prod.id}" name="cost" required=""
-                                               pattern="\d+" title="только цифры" th:attrappend="disabled=${prod.category.floatingPrice} ? disabled, value=${prod.category.floatingPrice} ? 0.0 : ${prod.cost}" />
+                                               pattern="\d+" title="только цифры"
+                                               th:attrappend="disabled=${prod.category.floatingPrice} ? disabled, value=${prod.category.floatingPrice} ? 0.0 : ${prod.cost}"/>
                                     </div>
                                 </div>
                                 <button id="saveEditProductDataAll" type="button" name="upd"

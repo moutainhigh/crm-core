@@ -145,25 +145,29 @@
                             <form th:id="'updateForm' + ${client.id}" method="post">
                                 <input type="hidden" name="clientId" th:value="${client.id}"/>
 
-                                        <td>
-                                            <input autocomplete="off" th:id="'one' + ${client.id}"
-                                                   th:onblur="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'" class="form-control"
-                                                   style="width:150px;margin: auto;font-size: 17px"
-                                                   name="description" th:value="${client.description}" maxlength="30"/>
-                                        </td>
-                                        <td style="text-align: center" >
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <p th:text="${client.timeStart.toLocalTime().withSecond(0).withNano(0)}"></p>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <button class="time-edit glyphicon glyphicon-edit" data-toggle="modal" th:href="'#timeEditModal' + ${client.id}"  aria-hidden="true"></button>
-                                                </div>
+                                <td>
+                                    <input autocomplete="off" th:id="'one' + ${client.id}"
+                                           th:onblur="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'"
+                                           class="form-control"
+                                           style="width:150px;margin: auto;font-size: 17px"
+                                           name="description" th:value="${client.description}" maxlength="30"/>
+                                </td>
+                                <td style="text-align: center">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p th:text="${client.timeStart.toLocalTime().withSecond(0).withNano(0)}"></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button class="time-edit glyphicon glyphicon-edit" data-toggle="modal"
+                                                    th:href="'#timeEditModal' + ${client.id}"
+                                                    aria-hidden="true"></button>
+                                        </div>
 
-                                            </div>
-                                        </td>
-                                        <div th:replace="client/clientFragments/timeEditModal :: timeEditModal" th:remove="tag"></div>
-                                        <td style="text-align: center">
+                                    </div>
+                                </td>
+                                <div th:replace="client/clientFragments/timeEditModal :: timeEditModal"
+                                     th:remove="tag"></div>
+                                <td style="text-align: center">
 
                                 </td>
                                 <td>
@@ -216,12 +220,14 @@
                         </button>
 
                         <form action="/manager/pause" th:method="POST">
-                        <button th:text="${calculate.isPause()} ? 'Снять с паузы' : 'Пауза'"  name="id" th:value="${calculate.id}" style="float: left;margin-left: 23px" class="btn btn-primary" >
-                        </button>
+                            <button th:text="${calculate.isPause()} ? 'Снять с паузы' : 'Пауза'" name="id"
+                                    th:value="${calculate.id}" style="float: left;margin-left: 23px"
+                                    class="btn btn-primary">
+                            </button>
 
                         </form>
                         <div th:id="'deleteModal' + ${calculate.id}" class="modal fade">
-                            <div class="modal-dialog " style="width: 250px;margin-top: 150px" role="document">
+                            <div class="modal-dialog " style="width: 250px;margin-top: 150px" roles="document">
                                 <div class="modal-content">
                                     <div class="modal-body">
                                         <p style="font-size: 20px">Вы желаете удалить клиента/тов ?</p>

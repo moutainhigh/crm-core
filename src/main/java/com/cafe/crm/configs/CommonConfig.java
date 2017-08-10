@@ -2,6 +2,7 @@ package com.cafe.crm.configs;
 
 import com.cafe.crm.configs.filters.ShiftOpenFilter;
 import com.cafe.crm.configs.property.AdvertisingProperties;
+import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
@@ -40,7 +42,7 @@ public class CommonConfig {
 	}
 
 	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+	public PasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 

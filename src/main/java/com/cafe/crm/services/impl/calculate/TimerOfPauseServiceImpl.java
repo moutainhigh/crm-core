@@ -9,8 +9,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class TimerOfPauseServiceImpl implements TimerOfPauseService {
 
+	private final TimerOfPauseRepository timerOfPauseRepository;
+
 	@Autowired
-	private TimerOfPauseRepository timerOfPauseRepository;
+	public TimerOfPauseServiceImpl(TimerOfPauseRepository timerOfPauseRepository) {
+		this.timerOfPauseRepository = timerOfPauseRepository;
+	}
 
 	@Override
 	public TimerOfPause getOne(Long id) {

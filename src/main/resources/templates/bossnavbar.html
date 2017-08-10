@@ -17,7 +17,8 @@
     <div style="font-size: 17px;margin-top: 5px;" class="collapse navbar-collapse">
         <ul class="nav navbar-nav ">
             <li sec:authorize="hasAuthority('BOSS')">
-                <a class="glyphicon glyphicon-refresh" th:href="@{/manager}" style="padding-left: 10px;    padding-top: 8px;"></a>
+                <a class="glyphicon glyphicon-refresh" th:href="@{/manager}"
+                   style="padding-left: 10px;    padding-top: 8px;"></a>
             </li>
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">Меню<b class="caret"></b></a>
@@ -35,7 +36,7 @@
                     <li><a href="/boss/card/statistic/all">Статистика по картам</a></li>
                 </ul>
             </li>
-            <li><a href="/worker">Учет сотрудников</a></li>
+            <li><a href="/boss/user/accounting">Учет сотрудников</a></li>
             <li><a href="/boss/settings/general-setting">Настройки</a></li>
             <!--<li><a href="/boss/cardGenerationPage">Генерация карт</a></li>-->
             <li><a data-toggle="modal" th:href="'#advertising'">Рассылка Рекламы</a></li>

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("vk")
 public class VkProperties {
+
 	private String applicationId;
 	private String applicationSecret;
 	private String messageName;
@@ -15,6 +16,10 @@ public class VkProperties {
 
 	public String getMessageName() {
 		return messageName;
+	}
+
+	public void setMessageName(String messageName) {
+		this.messageName = messageName;
 	}
 
 	public String getApplicationId() {
@@ -31,10 +36,6 @@ public class VkProperties {
 
 	public void setApplicationSecret(String applicationSecret) {
 		this.applicationSecret = applicationSecret;
-	}
-
-	public void setMessageName(String messageName) {
-		this.messageName = messageName;
 	}
 
 	public String getChatId() {

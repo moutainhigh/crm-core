@@ -39,7 +39,7 @@ public class AdvertisingController {
 	@RequestMapping(path = "/advertising/text", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> sendAdvertisingFromText(@RequestParam("subject") String subject,
-	                                                 @RequestParam("text") String advertisingText) {
+													 @RequestParam("text") String advertisingText) {
 		advertisingService.sendAdvertisingFromText(advertisingText, subject);
 
 		return ResponseEntity.ok("Реклама успешно разослана!");
@@ -47,7 +47,7 @@ public class AdvertisingController {
 
 	@RequestMapping(path = "advertising/toggle", method = RequestMethod.GET)
 	public String toggleAdvertisingDispatchStatus(@RequestParam("number") String id,
-	                                              @RequestParam("token") String token, Model model) {
+												  @RequestParam("token") String token, Model model) {
 		boolean status = advertisingService.toggleAdvertisingDispatchStatus(id, token);
 		model.addAttribute("status", status);
 

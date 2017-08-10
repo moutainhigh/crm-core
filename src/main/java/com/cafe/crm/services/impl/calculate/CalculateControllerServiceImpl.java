@@ -1,8 +1,8 @@
 package com.cafe.crm.services.impl.calculate;
 
 import ch.qos.logback.classic.Logger;
-import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.board.Board;
+import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.services.interfaces.board.BoardService;
@@ -28,36 +28,31 @@ import java.util.Map;
 @Service
 @Transactional
 public class CalculateControllerServiceImpl implements CalculateControllerService {
-	@Autowired
-	private ClientService clientService;
+
+	private final ClientService clientService;
+	private final CalculateService calculateService;
+	private final BoardService boardService;
+	private final CardService cardService;
+	private final CalculatePriceService calculatePriceService;
+	private final EmailService emailService;
+	private final TimeManager timeManager;
+	private final PropertyService propertyService;
+	private final ShiftService shiftService;
+	private final Logger logger;
 
 	@Autowired
-	private CalculateService calculateService;
-
-	@Autowired
-	private BoardService boardService;
-
-	@Autowired
-	private CardService cardService;
-
-	@Autowired
-	private CalculatePriceService calculatePriceService;
-
-	@Autowired
-	private EmailService emailService;
-
-	@Autowired
-	private TimeManager timeManager;
-
-	@Autowired
-	private PropertyService propertyService;
-
-	@Autowired
-	private ShiftService shiftService;
-
-	@Autowired
-	@Qualifier(value = "logger")
-	private Logger logger;
+	public CalculateControllerServiceImpl(CalculatePriceService calculatePriceService, EmailService emailService, TimeManager timeManager, ClientService clientService, CalculateService calculateService, @Qualifier(value = "logger") Logger logger, BoardService boardService, PropertyService propertyService, ShiftService shiftService, CardService cardService) {
+		this.calculatePriceService = calculatePriceService;
+		this.emailService = emailService;
+		this.timeManager = timeManager;
+		this.clientService = clientService;
+		this.calculateService = calculateService;
+		this.logger = logger;
+		this.boardService = boardService;
+		this.propertyService = propertyService;
+		this.shiftService = shiftService;
+		this.cardService = cardService;
+	}
 
 	@Override
 	public void createCalculate(Long id, Long number, String description) {
@@ -73,7 +68,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		calculate.setDescription(description);
 		calculate.setBoard(board);
 		calculate.setClient(list);
-		shiftService.getLast().getAllCalculate().add(calculate);
+		shiftService.getLast().getCalculates().add(calculate);
 		shiftService.getLast().getClients().addAll(list);
 		calculateService.save(calculate);
 	}
@@ -97,7 +92,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		calculate.setDescription(description);
 		calculate.setBoard(board);
 		calculate.setClient(list);
-		shiftService.getLast().getAllCalculate().add(calculate);
+		shiftService.getLast().getCalculates().add(calculate);
 		shiftService.getLast().getClients().addAll(list);
 		calculateService.save(calculate);
 	}
@@ -198,7 +193,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		List<Card> listCard = new ArrayList<>();
 		Map<Long, Double> balanceBeforeDeduction = new HashMap<>();
 		clientService.findCardByClientIdIn(clientsId)
-			.forEach(card -> balanceBeforeDeduction.put(card.getId(), card.getBalance()));
+				.forEach(card -> balanceBeforeDeduction.put(card.getId(), card.getBalance()));
 		for (Client client : listClient) {
 			client.setState(false);
 			Card clientCard = client.getCard();
@@ -289,9 +284,9 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	private void sendBalanceInfoAfterDeduction(List<Client> clients, Map<Long, Double> mapOfBalanceBeforeDeduction) {
 		Map<Long, Client> uniqueClientsForCard = new HashMap<>();
 		clients
-			.stream()
-			.filter(client -> client.getCard() != null && client.getCard().getEmail() != null && client.getPayWithCard() > 0.0d)
-			.forEach(client -> uniqueClientsForCard.put(client.getCard().getId(), client));
+				.stream()
+				.filter(client -> client.getCard() != null && client.getCard().getEmail() != null && client.getPayWithCard() > 0.0d)
+				.forEach(client -> uniqueClientsForCard.put(client.getCard().getId(), client));
 
 		uniqueClientsForCard.values().forEach(client -> {
 			Double balanceAfterDeduction = client.getCard().getBalance();

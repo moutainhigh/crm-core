@@ -71,19 +71,19 @@ $(document).ready(function () {
 });
 $(document).ready(function () {
 
-	(function ($) {
+    (function ($) {
 
-		$('#filter5').keyup(function () {
+        $('#filter5').keyup(function () {
 
-			var rex = new RegExp($(this).val(), 'i');
-			$('.searchableIng tr').hide();
-			$('.searchableIng tr').filter(function () {
-				return rex.test($(this).text());
-			}).show();
+            var rex = new RegExp($(this).val(), 'i');
+            $('.searchableIng tr').hide();
+            $('.searchableIng tr').filter(function () {
+                return rex.test($(this).text());
+            }).show();
 
-		})
+        })
 
-	}(jQuery));
+    }(jQuery));
 
 });
 
