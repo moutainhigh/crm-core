@@ -17,7 +17,7 @@ public class ProductServiceImpl implements ProductService {
 	private ProductRepository productRepository;
 
 	@Autowired
-	IngredientsService ingredientsService;
+	private IngredientsService ingredientsService;
 
 	@Override
 	public List<Product> findAll() {

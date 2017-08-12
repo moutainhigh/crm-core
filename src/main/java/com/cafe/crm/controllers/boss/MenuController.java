@@ -111,9 +111,8 @@ public class MenuController {
 
 			wrapper.setProductId(product.getId());
 			wrapper.setSelfCost(wrapper.getSelfCost() + recipeCost);
-
-			return wrapper;
-		} else return wrapper;
+		}
+		return wrapper;
 	}
 
 	@RequestMapping(value = "/addCategory", method = RequestMethod.POST)
