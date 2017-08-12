@@ -14,7 +14,7 @@ import java.util.List;
 public class SystemPropertyServiceImpl implements SystemPropertyService {
 
 	@Autowired
-	SystemPropertyRepository repository;
+	private SystemPropertyRepository repository;
 
 	@Override
 	public void save(AllSystemProperty property) {
@@ -23,12 +23,12 @@ public class SystemPropertyServiceImpl implements SystemPropertyService {
 
 	@Override
 	public void saveMasterKey(String newMasterKey) {
-		AllSystemProperty masterKey = repository.findByNameIgnoreCase("MasterKey");
+		AllSystemProperty masterKey = repository.findByNameIgnoreCase("masterKey");
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 		if (masterKey == null) {
 			masterKey = new AllSystemProperty();
-			masterKey.setName("MasterKey");
+			masterKey.setName("masterKey");
 			masterKey.setProperty(passwordEncoder.encode(newMasterKey));
 		} else {
 			masterKey.setProperty(passwordEncoder.encode(newMasterKey));

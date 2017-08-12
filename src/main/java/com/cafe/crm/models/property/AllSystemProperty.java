@@ -12,7 +12,7 @@ public class AllSystemProperty {
 	private Long id;
 
 	@Column(unique = true, nullable = false)
-	String name;
+	private String name;
 
 	@Column
 	private String property;

@@ -146,7 +146,7 @@ public class DebtController {
 	                                            @RequestParam(name = "masterKey") String masterKey) {
 
 		Debt debt = debtService.get(id);
-		AllSystemProperty property = systemPropertyService.findOne("MasterKey");
+		AllSystemProperty property = systemPropertyService.findOne("masterKey");
 		String dbMasterKey;
 
 		if (property != null) {
