@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface DiscountRepository extends JpaRepository<Discount, Long>{
+public interface DiscountRepository extends JpaRepository<Discount, Long> {
 
 	@Query("SELECT c FROM Discount c WHERE c.isOpen = true")
 	List<Discount> getAllOpen();

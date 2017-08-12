@@ -15,10 +15,10 @@ public interface ShiftRepository extends JpaRepository<Shift, Long> {
 		//последняя смена в базе
 	Shift getLast();
 
-	@Query("SELECT e FROM Shift e WHERE e.dateShift BETWEEN :startDate and :endDate")
+	@Query("SELECT e FROM Shift e WHERE e.shiftDate BETWEEN :startDate and :endDate")
 	Set<Shift> findByDates(@Param("startDate") LocalDate startDate,
 						   @Param("endDate") LocalDate endDate);
 
-	Shift findByDateShift(LocalDate date);
+	Shift findByShiftDate(LocalDate date);
 
 }

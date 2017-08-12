@@ -13,8 +13,12 @@ import java.util.List;
 @Service
 public class DebtServiceImpl implements DebtService {
 
+	private final DebtRepository repository;
+
 	@Autowired
-	DebtRepository repository;
+	public DebtServiceImpl(DebtRepository repository) {
+		this.repository = repository;
+	}
 
 	@Override
 	public void save(Debt debt) {

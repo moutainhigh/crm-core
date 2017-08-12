@@ -16,14 +16,16 @@ import java.time.LocalTime;
 @Transactional
 public class CalculatePriceServiceImpl implements CalculatePriceService {
 
-	@Autowired
-	private TimeManager timeManager;
+	private final TimeManager timeManager;
+	private final PropertyService propertyService;
+	private final TimerOfPauseService timerOfPauseService;
 
 	@Autowired
-	private PropertyService propertyService;
-
-	@Autowired
-	private TimerOfPauseService timerOfPauseService;
+	public CalculatePriceServiceImpl(TimerOfPauseService timerOfPauseService, PropertyService propertyService, TimeManager timeManager) {
+		this.timerOfPauseService = timerOfPauseService;
+		this.propertyService = propertyService;
+		this.timeManager = timeManager;
+	}
 
 	@Override
 	public void calculatePriceTimeIfWasPause(Client client) {

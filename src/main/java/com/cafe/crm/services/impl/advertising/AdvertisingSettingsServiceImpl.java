@@ -12,8 +12,12 @@ import java.util.List;
 @Service
 public class AdvertisingSettingsServiceImpl implements AdvertisingSettingsService {
 
+	private final AdvertisingSettingsRepository repository;
+
 	@Autowired
-	AdvertisingSettingsRepository repository;
+	public AdvertisingSettingsServiceImpl(AdvertisingSettingsRepository repository) {
+		this.repository = repository;
+	}
 
 	@Override
 	public void save(AdvertisingSettings settings) {

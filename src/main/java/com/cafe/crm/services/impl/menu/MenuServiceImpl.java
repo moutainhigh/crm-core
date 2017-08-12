@@ -10,8 +10,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class MenuServiceImpl implements MenuService {
 
+	private final MenuRepository menuRepository;
+
 	@Autowired
-	private MenuRepository menuRepository;
+	public MenuServiceImpl(MenuRepository menuRepository) {
+		this.menuRepository = menuRepository;
+	}
 
 	@Override
 	public Menu getOne(Long id) {

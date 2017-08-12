@@ -11,8 +11,12 @@ import java.util.List;
 @Service
 public class CalculateServiceImpl implements CalculateService {
 
+	private final CalculateRepository calculateRepository;
+
 	@Autowired
-	private CalculateRepository calculateRepository;
+	public CalculateServiceImpl(CalculateRepository calculateRepository) {
+		this.calculateRepository = calculateRepository;
+	}
 
 	@Override
 	public void save(Calculate calculate) {

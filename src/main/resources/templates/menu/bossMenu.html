@@ -92,68 +92,71 @@
                                     </button>
 
                                 </td>
-                                    <div  align="center" class="modal fade" th:id="'p'+${prod.id}"
-                                         tabindex="-1"
-                                         role="dialog" aria-labelledby="myModalLabel">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close"><span
-                                                            aria-hidden="true">&times;</span></button>
-                                                    <h4 class="modal-title" id="myModalLabel">Редактирование </h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div th:class="'messageEdit' + ${prod.id}"></div>
-                                                    <div class="form-group">
+                                <div align="center" class="modal fade" th:id="'p'+${prod.id}"
+                                     tabindex="-1"
+                                     roles="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog" roles="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close"><span
+                                                        aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">Редактирование </h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div th:class="'messageEdit' + ${prod.id}"></div>
+                                                <div class="form-group">
 
-                                                        <input required="" type="hidden" class="form-control"
-                                                               th:id="updId + ${prod.id}"
-                                                               th:value="${prod.id}"/>
-                                                        <label>Название</label>
-                                                        <input type="text" class="form-control"
-                                                               th:id="updName + ${prod.id}" name="name"
-                                                               th:value="${prod.name}"/>
-                                                    </div>
-                                                    <div class="form-group">
-                                                      <label>Описание</label>
-                                                        <input type="text" class="form-control"
-                                                               th:id="updDes + ${prod.id}"
-                                                               name="description"
-                                                               th:value="${prod.description}"/>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label>Цена</label>
-                                                        <input type="number" step="0.01" class="form-control"
-                                                               th:id="updCost + ${prod.id}" name="cost" required="" title="только цифры" th:attrappend="disabled=${prod.category.floatingPrice} ? disabled, value=${prod.category.floatingPrice} ? 0.0 : ${prod.cost}" />
-                                                    </div>
-
+                                                    <input required="" type="hidden" class="form-control"
+                                                           th:id="updId + ${prod.id}"
+                                                           th:value="${prod.id}"/>
+                                                    <label>Название</label>
+                                                    <input type="text" class="form-control"
+                                                           th:id="updName + ${prod.id}" name="name"
+                                                           th:value="${prod.name}"/>
                                                 </div>
-                                                <button id="saveEditProductData" type="button" name="upd" th:attr="data-id=${prod.id}"
-                                                        class="btn btn-lg btn-primary btn-block" >Сохранить
+                                                <div class="form-group">
+                                                    <label>Описание</label>
+                                                    <input type="text" class="form-control"
+                                                           th:id="updDes + ${prod.id}"
+                                                           name="description"
+                                                           th:value="${prod.description}"/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Цена</label>
+                                                    <input type="number" step="0.01" class="form-control"
+                                                           th:id="updCost + ${prod.id}" name="cost" required=""
+                                                           title="только цифры"
+                                                           th:attrappend="disabled=${prod.category.floatingPrice} ? disabled, value=${prod.category.floatingPrice} ? 0.0 : ${prod.cost}"/>
+                                                </div>
+
+                                            </div>
+                                            <button id="saveEditProductData" type="button" name="upd"
+                                                    th:attr="data-id=${prod.id}"
+                                                    class="btn btn-lg btn-primary btn-block">Сохранить
+                                            </button>
+
+                                            <div class="modal-footer">
+                                                <button type="button" name="upd" class="btn btn-default"
+                                                        data-dismiss="modal">
+                                                    Отмена
                                                 </button>
-
-                                                <div class="modal-footer">
-                                                    <button type="button" name="upd" class="btn btn-default"
-                                                            data-dismiss="modal">
-                                                        Отмена
-                                                    </button>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
 
                             </tr>
                             </tbody>
                         </table>
                     </div>
-                    <form role="form" method="post" action="/boss/menu/updCategory"
+                    <form roles="form" method="post" action="/boss/menu/updCategory"
                           style="margin: 10px auto; width: 50%">
                         <div align="center" class="modal fade" th:id="'editCat'+${categor.id}" tabindex="-1"
-                             role="dialog"
+                             roles="dialog"
                              aria-labelledby="myModalLabel">
-                            <div class="modal-dialog" role="document">
+                            <div class="modal-dialog" roles="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal"
@@ -170,7 +173,8 @@
                                         </div>
                                         <div class="checkbox" align="left">
                                             <label>
-                                                <input type="checkbox" value="false" name="dirtyProfit" th:attrappend="checked=${!categor.dirtyProfit} ? checked ">
+                                                <input type="checkbox" value="false" name="dirtyProfit"
+                                                       th:attrappend="checked=${!categor.dirtyProfit} ? checked ">
                                                 Не добавлять в прибыль грязными</input>
                                             </label>
                                         </div>
@@ -189,9 +193,9 @@
                             </div>
                         </div>
                     </form>
-                    <div align="center" class="modal fade" th:id="'add'+${categor.id}" tabindex="-1" role="dialog"
+                    <div align="center" class="modal fade" th:id="'add'+${categor.id}" tabindex="-1" roles="dialog"
                          aria-labelledby="myModalLabel">
-                        <div class="modal-dialog" role="document">
+                        <div class="modal-dialog" roles="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal"
@@ -219,7 +223,8 @@
                                         <input type="text" class="form-control" th:id="addCost+${categor.id}"
                                                autocomplete="off"
                                                name="cost"
-                                               th:placeholder="${!categor.floatingPrice} ? 'Цена' : 'Плавающая'" th:attrappend="disabled=${categor.floatingPrice} ? disabled, value=${categor.floatingPrice} ? 0.0 "/>
+                                               th:placeholder="${!categor.floatingPrice} ? 'Цена' : 'Плавающая'"
+                                               th:attrappend="disabled=${categor.floatingPrice} ? disabled, value=${categor.floatingPrice} ? 0.0 "/>
                                     </div>
                                     <div class="form-group">
                                         <label>Себестоимость</label>
@@ -229,9 +234,9 @@
                                                placeholder="Себестоимость"/>
                                     </div>
                                     <div class="panel panel-default">
-                                        <div class="panel-heading" role="tab" id="headingOne">
+                                        <div class="panel-heading" roles="tab" id="headingOne">
                                             <h4 class="panel-title">
-                                                <a role="button" data-toggle="collapse" data-parent="#accordion"
+                                                <a roles="button" data-toggle="collapse" data-parent="#accordion"
                                                    th:href="'#pan'+${categor.id}"
                                                    aria-expanded="true" aria-controls="collapseOne">
                                                     <i class="more-less glyphicon glyphicon-plus"></i>
@@ -239,7 +244,7 @@
                                                 </a>
                                             </h4>
                                         </div>
-                                        <div th:id="pan+${categor.id}" class="panel-collapse collapse" role="tabpanel"
+                                        <div th:id="pan+${categor.id}" class="panel-collapse collapse" roles="tabpanel"
                                              aria-labelledby="headingOne">
                                             <div class="panel-body">
                                                 <div id="hideTable">
@@ -281,7 +286,8 @@
                                     </div>
 
                                 </div>
-                                <button id="saveNewProductData" th:attr="data-id=${categor.id}" type="button" class="btn btn-lg btn-primary btn-block" name="add"
+                                <button id="saveNewProductData" th:attr="data-id=${categor.id}" type="button"
+                                        class="btn btn-lg btn-primary btn-block" name="add"
                                         th:value="${categor.id}">
                                     Сохранить
                                 </button>
@@ -294,10 +300,11 @@
                         </div>
 
                     </div>
-                    <form role="form" method="post" action="/boss/menu/deleteCat" style="margin: 10px auto; width: 50%">
+                    <form roles="form" method="post" action="/boss/menu/deleteCat"
+                          style="margin: 10px auto; width: 50%">
                         <div align="center" class="modal fade" th:id="'delCat'+${categor.id}" tabindex="-1"
-                             role="dialog" aria-labelledby="myModalLabel">
-                            <div class="modal-dialog" role="document">
+                             roles="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal-dialog" roles="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal"
@@ -330,10 +337,10 @@
                 </div>
             </div>
         </div>
-        <form role="form" method="post" action="/boss/menu/addCategory" style="margin: 10px auto; width: 50%">
-            <div align="center" class="modal fade" th:id="'addCat'" tabindex="-1" role="dialog"
+        <form roles="form" method="post" action="/boss/menu/addCategory" style="margin: 10px auto; width: 50%">
+            <div align="center" class="modal fade" th:id="'addCat'" tabindex="-1" roles="dialog"
                  aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog" roles="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -371,8 +378,8 @@
         </form>
         <div align="center" class="dima_modal modal" id="dima" style="display: none;"
              tabindex="-1"
-             role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
+             roles="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" roles="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"

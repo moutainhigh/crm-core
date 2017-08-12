@@ -1,6 +1,6 @@
 package com.cafe.crm.controllers.boss.settings;
 
-import com.cafe.crm.models.property.PropertyWrapper;
+import com.cafe.crm.dto.PropertyWrapper;
 import com.cafe.crm.services.interfaces.property.PropertyService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +15,15 @@ import java.util.List;
 @Controller
 @RequestMapping("/boss/settings/general-setting")
 public class GeneralSettingController {
-	@Autowired
-	private PropertyService propertyService;
+
+	private final PropertyService propertyService;
+	private final TimeManager timeManager;
 
 	@Autowired
-	private TimeManager timeManager;
+	public GeneralSettingController(TimeManager timeManager, PropertyService propertyService) {
+		this.timeManager = timeManager;
+		this.propertyService = propertyService;
+	}
 
 	@ModelAttribute(value = "wrapper")
 	public PropertyWrapper addClass() {

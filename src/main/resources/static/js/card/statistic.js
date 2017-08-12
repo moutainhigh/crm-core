@@ -18,7 +18,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $(".clickable-row").click(function() {
+    $(".clickable-row").click(function () {
         window.location = '/boss/card/statistic/' + $(this).data('id');
     });
 });

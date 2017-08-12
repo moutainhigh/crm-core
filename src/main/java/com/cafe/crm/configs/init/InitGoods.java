@@ -1,6 +1,5 @@
 package com.cafe.crm.configs.init;
 
-import com.cafe.crm.models.goods.Goods;
 import com.cafe.crm.models.goods.GoodsCategory;
 import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
 import com.cafe.crm.services.interfaces.goods.GoodsService;
@@ -11,23 +10,20 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalDate;
-import java.time.ZoneId;
 
 
 @Component
 public class InitGoods {
+
 	private final GoodsService goodsService;
-
 	private final GoodsCategoryService goodsCategoryService;
-
 	private final TimeManager timeManager;
 
 	@Value("${cost-category-name.salary-for-shift}")
 	private String categoryNameSalaryForShift;
 
 	@Autowired
-	public InitGoods(GoodsCategoryService goodsCategoryService, GoodsService goodsService , TimeManager timeManager) {
+	public InitGoods(GoodsCategoryService goodsCategoryService, GoodsService goodsService, TimeManager timeManager) {
 		this.goodsCategoryService = goodsCategoryService;
 		this.goodsService = goodsService;
 		this.timeManager = timeManager;

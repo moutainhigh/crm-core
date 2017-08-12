@@ -12,8 +12,12 @@ import java.util.List;
 @Service
 public class LayerProductServiceImpl implements LayerProductService {
 
+	private final LayerProductRepository layerProductRepository;
+
 	@Autowired
-	private LayerProductRepository layerProductRepository;
+	public LayerProductServiceImpl(LayerProductRepository layerProductRepository) {
+		this.layerProductRepository = layerProductRepository;
+	}
 
 	@Override
 	public void save(LayerProduct layerProduct) {

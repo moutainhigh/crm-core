@@ -19,8 +19,12 @@ import javax.validation.Valid;
 @RequestMapping("boss/menu/ingredients")
 public class IngredientsController {
 
+	private final IngredientsService ingredientsService;
+
 	@Autowired
-	private IngredientsService ingredientsService;
+	public IngredientsController(IngredientsService ingredientsService) {
+		this.ingredientsService = ingredientsService;
+	}
 
 	@ModelAttribute("ingredients")
 	public Ingredients get() {

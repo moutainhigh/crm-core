@@ -3,6 +3,7 @@ package com.cafe.crm.models.client;
 import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.discount.Discount;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
@@ -13,7 +14,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "client")
+@Table(name = "clients")
 public class Client {
 	@Id
 	@GeneratedValue
@@ -27,28 +28,11 @@ public class Client {
 
 	private boolean pausedIndex = false;     // true - if was pause
 
-	public boolean isPause() {
-		return isPause;
-	}
-
-	public void setPause(boolean pause) {
-		isPause = pause;
-	}
-
-	public boolean isPausedIndex() {
-		return pausedIndex;
-	}
-
-	public void setPausedIndex(boolean pausedIndex) {
-		this.pausedIndex = pausedIndex;
-	}
-
 	private LocalDateTime timeStart;
 
 	private boolean state = true;// Open or Closed
 
 	private boolean deleteState = false;// Open or Closed
-
 	@NotNull
 	@Max(100)
 	private Long discount = 0L;//связанный обьект отдает скидку в это поле
@@ -84,6 +68,22 @@ public class Client {
 	private Discount discountObj;
 
 	public Client() {
+	}
+
+	public boolean isPause() {
+		return isPause;
+	}
+
+	public void setPause(boolean pause) {
+		isPause = pause;
+	}
+
+	public boolean isPausedIndex() {
+		return pausedIndex;
+	}
+
+	public void setPausedIndex(boolean pausedIndex) {
+		this.pausedIndex = pausedIndex;
 	}
 
 	public Discount getDiscountObj() {

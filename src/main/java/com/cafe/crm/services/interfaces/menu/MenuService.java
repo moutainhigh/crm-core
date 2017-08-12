@@ -6,6 +6,4 @@ public interface MenuService {
 
 	Menu getOne(Long id);
 
-
-
 }

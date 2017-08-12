@@ -1,0 +1,49 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script th:src="@{/js/filter.js}"></script>
+
+</head>
+
+<body>
+<div class="table" style="border-radius:5px" th:fragment="userList">
+    <table class="table table-striped">
+        <tr>
+            <th> Имя</th>
+            <th> Фамилия</th>
+            <th> Должность</th>
+            <th> Email</th>
+            <th> Номер телефона</th>
+            <th> Оклад за смену</th>
+            <th> Количество смен</th>
+            <th> Зарплата</th>
+            <th> Бонус</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tbody class="searchableWorker">
+        <tr th:each="user : ${allUsers}">
+            <td th:text="${user.firstName}"></td>
+            <td th:text="${user.lastName}"></td>
+            <td th:text="${user.positions}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.phone}"></td>
+            <td th:text="${user.shiftSalary}"></td>
+            <td th:text="${user.shifts.size()}"></td>
+            <td th:text="${user.salary}"></td>
+            <td th:text="${user.bonus}"></td>
+            <td class="col-lg-2">
+                <div th:replace="userAccounting/fragments/modal/modalEditUserForAllUsersPanel :: editUser"
+                     th:remove="tag"></div>
+            </td>
+            <td class="col-lg-2">
+                <div th:replace="userAccounting/fragments/modal/modalDeleteUserForAllUsersPanel :: deleteUser"
+                     th:remove="tag"></div>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

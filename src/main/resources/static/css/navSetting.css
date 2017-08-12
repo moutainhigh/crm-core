@@ -1,4 +1,4 @@
-.navsvoi >li >a{
+.navsvoi > li > a {
     position: relative;
     display: block;
     padding-top: 15px;
@@ -9,8 +9,7 @@
 
 }
 
-
-.nav >li:hover >a{
+.nav > li:hover > a {
     color: black;
 }
 

@@ -27,9 +27,7 @@ import java.util.List;
 public class CardStatisticController {
 
 	private final CardService cardService;
-
 	private final CalculateService calculateService;
-
 	private final ClientService clientService;
 
 	@Autowired

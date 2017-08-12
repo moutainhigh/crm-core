@@ -5,8 +5,7 @@ import com.cafe.crm.configs.property.AdvertisingCustomSettings;
 import com.cafe.crm.configs.property.AdvertisingProperties;
 import com.cafe.crm.configs.property.BalanceInfoProperties;
 import com.cafe.crm.models.card.Card;
-import com.cafe.crm.models.worker.Boss;
-import com.cafe.crm.models.worker.Worker;
+import com.cafe.crm.models.user.User;
 import com.cafe.crm.services.interfaces.email.EmailService;
 import com.cafe.crm.services.interfaces.email.HtmlService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +22,9 @@ import java.util.Collection;
 public class EmailServiceImpl implements EmailService {
 
 	private final HtmlService htmlService;
-
 	private final AdvertisingProperties properties;
-
 	private final JavaMailSender javaMailSender;
-
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
 	private final BalanceInfoProperties balanceInfoProperties;
 
 	@Value("${vk.mail.invalid-token.view}")
@@ -167,12 +162,11 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	public void sendCloseShiftInfoFromText(Double cashBox, Double cache, Double bankKart, Double payWithCard,
-										   Double allPrice, Collection<? extends Boss> boss, Double shortage) {
-		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[boss.size()];
+	public void sendCloseShiftInfoFromText(Double cashBox, Double cache, Double bankKart, Double payWithCard, Double allPrice, Collection<? extends User> users, Double shortage) {
+		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[users.size()];
 		int messageNum = 0;
-		for (Boss bosses : boss) {
-			String email = bosses.getEmail();
+		for (User user : users) {
+			String email = user.getEmail();
 			if (email == null) {
 				continue;
 			}
@@ -181,8 +175,7 @@ public class EmailServiceImpl implements EmailService {
 				messageHelper.setFrom(properties.getMail().getSender());
 				messageHelper.setTo(email);
 				messageHelper.setSubject(closeShiftSubject);
-				String html = htmlService.getCloseShiftFromText(closeShiftText, cashBox, cache, bankKart, payWithCard,
-						allPrice, closeShiftView, shortage);
+				String html = htmlService.getCloseShiftFromText(closeShiftText, cashBox, cache, bankKart, payWithCard, allPrice, closeShiftView, users, shortage);
 				messageHelper.setText(html, true);
 			};
 		}
@@ -193,11 +186,11 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	public void sendInvalidTokenNotification(Collection<? extends Worker> workers) {
-		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[workers.size()];
+	public void sendInvalidTokenNotification(Collection<? extends User> users) {
+		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[users.size()];
 		int messageNum = 0;
-		for (Worker worker : workers) {
-			String email = worker.getEmail();
+		for (User user : users) {
+			String email = user.getEmail();
 			if (email == null) {
 				continue;
 			}
@@ -205,7 +198,8 @@ public class EmailServiceImpl implements EmailService {
 				MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
 				messageHelper.setFrom(properties.getMail().getSender());
 				messageHelper.setTo(email);
-				messageHelper.setSubject(invalidTokenSubject);;
+				messageHelper.setSubject(invalidTokenSubject);
+				;
 				String html = htmlService.getInvalidToken(invalidTokenView);
 				messageHelper.setText(html, true);
 			};

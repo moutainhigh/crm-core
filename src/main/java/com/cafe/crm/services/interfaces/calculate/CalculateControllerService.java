@@ -24,6 +24,6 @@ public interface CalculateControllerService {
 
 	Long addCardOnClient(Long calculateId, Long clientId, Long cardId);
 
-	 void deleteClients(long[] clientsId, Long calculateId);
+	void deleteClients(long[] clientsId, Long calculateId);
 
 }

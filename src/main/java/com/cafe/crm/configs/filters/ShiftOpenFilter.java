@@ -17,8 +17,12 @@ import java.io.IOException;
 
 public class ShiftOpenFilter extends GenericFilterBean {
 
-	@Autowired
 	private ShiftService shiftService;
+
+	@Autowired
+	public void setShiftService(ShiftService shiftService) {
+		this.shiftService = shiftService;
+	}
 
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -26,7 +30,7 @@ public class ShiftOpenFilter extends GenericFilterBean {
 		String requestURI = request.getRequestURI();
 		if (requestURI.startsWith("/manager") && (!requestURI.equals("/manager/shift/") && !requestURI.equals("/manager/shift/begin"))) {
 			Shift lastShift = shiftService.getLast();
-			if (lastShift == null || !lastShift.getOpen()) {
+			if (lastShift == null || !lastShift.isOpen()) {
 				HttpServletResponse response = (HttpServletResponse) servletResponse;
 				response.sendRedirect("/manager/shift/");
 				return;

@@ -19,20 +19,22 @@ import java.util.Set;
 @RequestMapping("/manager")
 public class MenuCalculateController {
 
-	@Autowired
-	private ClientService clientService;
+	private final ClientService clientService;
+	private final CalculateService calculateService;
+	private final MenuCalculateControllerService menuCalculateService;
 
 	@Autowired
-	private CalculateService calculateService;
-
-	@Autowired
-	private MenuCalculateControllerService menuCalculateService;
+	public MenuCalculateController(CalculateService calculateService, ClientService clientService, MenuCalculateControllerService menuCalculateService) {
+		this.calculateService = calculateService;
+		this.clientService = clientService;
+		this.menuCalculateService = menuCalculateService;
+	}
 
 	@RequestMapping(value = {"/create-layer-product"}, method = RequestMethod.POST)
 	@ResponseBody
 	public LayerProduct createLayerProduct(@RequestParam("calculateId") long calculateId,
-	                                       @RequestParam("clientsId") long[] clientsId,
-	                                       @RequestParam("productId") long productId) {
+										   @RequestParam("clientsId") long[] clientsId,
+										   @RequestParam("productId") long productId) {
 		return menuCalculateService.createLayerProduct(calculateId, clientsId, productId);
 	}
 
@@ -48,16 +50,16 @@ public class MenuCalculateController {
 	@RequestMapping(value = {"/add-client-on-layer-product"}, method = RequestMethod.POST)
 	@ResponseBody
 	public LayerProduct addClientOnLayerProduct(@RequestParam("calculateId") long calculateId,
-	                                            @RequestParam("clientsId") long[] clientsId,
-	                                            @RequestParam("productId") long layerProductId) {
+												@RequestParam("clientsId") long[] clientsId,
+												@RequestParam("productId") long layerProductId) {
 		return menuCalculateService.addClientOnLayerProduct(calculateId, clientsId, layerProductId);
 	}
 
 	@RequestMapping(value = {"/delete-product-with-client"}, method = RequestMethod.POST)
 	@ResponseBody
 	public LayerProduct deleteProductOnClient(@RequestParam("calculateId") long calculateId,
-	                                          @RequestParam("clientsId") long[] clientsId,
-	                                          @RequestParam("productId") long layerProductId) {
+											  @RequestParam("clientsId") long[] clientsId,
+											  @RequestParam("productId") long layerProductId) {
 		return menuCalculateService.deleteProductOnClient(calculateId, clientsId, layerProductId);
 	}
 

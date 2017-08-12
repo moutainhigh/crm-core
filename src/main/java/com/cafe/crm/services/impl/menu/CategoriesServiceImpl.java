@@ -14,8 +14,12 @@ import java.util.List;
 @Service
 public class CategoriesServiceImpl implements CategoriesService {
 
+	private final CategoryRepository categoryRepository;
+
 	@Autowired
-	private CategoryRepository categoryRepository;
+	public CategoriesServiceImpl(CategoryRepository categoryRepository) {
+		this.categoryRepository = categoryRepository;
+	}
 
 	@Override
 	public List<Category> findAll() {
@@ -47,7 +51,7 @@ public class CategoriesServiceImpl implements CategoriesService {
 				int result;
 				result = product2.getRating() - product1.getRating();
 				if (result == 0) {
-					result =  product1.getName().compareTo(product2.getName());
+					result = product1.getName().compareTo(product2.getName());
 				}
 				return result;
 			});

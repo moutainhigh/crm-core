@@ -27,16 +27,12 @@ import java.util.Set;
 public class CostsController {
 
 	private final TimeManager timeManager;
-
 	private final GoodsService goodsService;
-
 	private final GoodsCategoryService goodsCategoryService;
-
 	private final ShiftService shiftService;
 
 	@Autowired
-	public CostsController(GoodsService goodsService, GoodsCategoryService goodsCategoryService, TimeManager timeManager,
-	                       ShiftService shiftService) {
+	public CostsController(GoodsService goodsService, GoodsCategoryService goodsCategoryService, TimeManager timeManager, ShiftService shiftService) {
 		this.goodsService = goodsService;
 		this.goodsCategoryService = goodsCategoryService;
 		this.timeManager = timeManager;
@@ -65,10 +61,10 @@ public class CostsController {
 
 	@RequestMapping(value = "/costs", method = RequestMethod.POST)
 	public String showCostsPageWithParameters(@RequestParam(name = "fromDate") String fromDate,
-	                                          @RequestParam(name = "toDate") String toDate,
-	                                          @RequestParam(name = "goodsName") String goodsName,
-	                                          @RequestParam(name = "categoryName") String categoryName,
-	                                          Model model) {
+											  @RequestParam(name = "toDate") String toDate,
+											  @RequestParam(name = "goodsName") String goodsName,
+											  @RequestParam(name = "categoryName") String categoryName,
+											  Model model) {
 		LocalDate today = getShiftDate();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 

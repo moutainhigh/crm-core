@@ -1,6 +1,10 @@
 package com.cafe.crm.services.interfaces.email;
 
 
+import com.cafe.crm.models.user.User;
+
+import java.util.Collection;
+
 public interface HtmlService {
 
 	String getAdvertisingFromImage(String advertisingUrl, String view, String urlToLink, Long id, String token);
@@ -14,7 +18,7 @@ public interface HtmlService {
 	String getBalanceInfoAfterRefill(Double newBalance, Double refillAmount, String view);
 
 	String getCloseShiftFromText(String Text, Double cashBox, Double cache, Double bankKart, Double payWithCard,
-								 Double allPrice, String view, Double shortage);
+								 Double allPrice, String view, Collection<? extends User> recipients, Double shortage);
 
 	String getInvalidToken(String view);
 

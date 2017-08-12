@@ -3,7 +3,7 @@ package com.cafe.crm.controllers.boss;
 import com.cafe.crm.models.menu.Category;
 import com.cafe.crm.models.menu.Ingredients;
 import com.cafe.crm.models.menu.Product;
-import com.cafe.crm.models.menu.WrapperOfProduct;
+import com.cafe.crm.dto.WrapperOfProduct;
 import com.cafe.crm.services.interfaces.menu.CategoriesService;
 import com.cafe.crm.services.interfaces.menu.IngredientsService;
 import com.cafe.crm.services.interfaces.menu.MenuService;
@@ -27,17 +27,18 @@ import java.util.Map;
 @RequestMapping("/boss/menu")
 public class MenuController {
 
-	@Autowired
-	private MenuService menuService;
+	private final MenuService menuService;
+	private final CategoriesService categoriesService;
+	private final ProductService productService;
+	private final IngredientsService ingredientsService;
 
 	@Autowired
-	private CategoriesService categoriesService;
-
-	@Autowired
-	private ProductService productService;
-
-	@Autowired
-	private IngredientsService ingredientsService;
+	public MenuController(CategoriesService categoriesService, ProductService productService, IngredientsService ingredientsService, MenuService menuService) {
+		this.categoriesService = categoriesService;
+		this.productService = productService;
+		this.ingredientsService = ingredientsService;
+		this.menuService = menuService;
+	}
 
 	@ModelAttribute(value = "product")
 	public Product newProduct() {
@@ -69,8 +70,8 @@ public class MenuController {
 
 	@RequestMapping(value = "/updCategory", method = RequestMethod.POST)
 	public String updCategory(@RequestParam(name = "upd") Long id,
-	                          @RequestParam(name = "name") String name,
-	                          @RequestParam(name = "dirtyProfit", required = false, defaultValue = "true") String dirtyProfit) {
+							  @RequestParam(name = "name") String name,
+							  @RequestParam(name = "dirtyProfit", required = false, defaultValue = "true") String dirtyProfit) {
 		Boolean isDirty = Boolean.valueOf(dirtyProfit);
 		Category category = categoriesService.getOne(id);
 		if (category != null) {
@@ -117,8 +118,8 @@ public class MenuController {
 
 	@RequestMapping(value = "/addCategory", method = RequestMethod.POST)
 	public String addCategories(@RequestParam(name = "name") String name,
-	                            @RequestParam(name = "dirtyProfit", required = false, defaultValue = "true") String dirtyProfit,
-	                            @RequestParam(name = "floatingPrice", required = false, defaultValue = "false") String floatingPrice) {
+								@RequestParam(name = "dirtyProfit", required = false, defaultValue = "true") String dirtyProfit,
+								@RequestParam(name = "floatingPrice", required = false, defaultValue = "false") String floatingPrice) {
 		Boolean isDirty = Boolean.valueOf(dirtyProfit);
 		Boolean isFloatingPrice = Boolean.valueOf(floatingPrice);
 		Category category = new Category(name);
@@ -175,7 +176,6 @@ public class MenuController {
 		Map<Ingredients, Integer> recipe = ingredientsService.createRecipe(wrapper);
 
 		if (product != null) {
-
 			product.setSelfCost(ingredientsService.getRecipeCost(recipe));
 			product.setRecipe(recipe);
 			productService.saveAndFlush(product);

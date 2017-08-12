@@ -9,7 +9,7 @@ function testB() {
         }
         $.ajax({
             type: "POST",
-            url: "/boss/changePassword",
+            url: "/boss/user/changePassword",
             data: formData,
             success: function (result) {
                 $('.form-group').html('Смена пароля прошла успешно.');
@@ -41,7 +41,7 @@ function changeBossPassword() {
         }
         $.ajax({
             type: "POST",
-            url: "/boss/changePassword",
+            url: "/boss/user/changePassword",
             data: formData,
             success: function (result) {
                 $("#successModal").modal('show')

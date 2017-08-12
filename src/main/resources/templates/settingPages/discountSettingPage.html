@@ -29,10 +29,10 @@
         <tr th:id="'discountTR' + ${discount.id}" style="font-size: 20px">
             <td><p th:align="center" th:text="${discount.description}"></p></td>
             <td><p th:align="center" th:text="${discount.discount}"></p></td>
-            <td class="col-lg-2" >
+            <td class="col-lg-2">
                 <center>
                     <form method="post" action="/boss/settings/discount-setting/delete">
-                        <input type="hidden" name = "id" th:value="${discount.id}"/>
+                        <input type="hidden" name="id" th:value="${discount.id}"/>
                         <button type="submit"
                                 class="btn btn-primary btn-danger" name="del">Удалить
                         </button>
@@ -42,11 +42,12 @@
         </tr>
 
         </tbody>
-        <form role="form" method="post" style="margin: 10px auto; width: 50%; padding-bottom:40px;" action="/boss/settings/discount-setting/new">
+        <form roles="form" method="post" style="margin: 10px auto; width: 50%; padding-bottom:40px;"
+              action="/boss/settings/discount-setting/new">
             <div th:object="${discount}" align="center" class="modal fade" th:id="'newDiscount'"
                  tabindex="-1"
-                 role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
+                 roles="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" roles="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal"

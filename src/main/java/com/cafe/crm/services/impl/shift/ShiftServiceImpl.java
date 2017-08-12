@@ -7,14 +7,14 @@ import com.cafe.crm.models.client.LayerProduct;
 import com.cafe.crm.models.goods.Goods;
 import com.cafe.crm.models.goods.GoodsCategory;
 import com.cafe.crm.models.shift.Shift;
-import com.cafe.crm.models.shift.ShiftView;
-import com.cafe.crm.models.worker.Worker;
+import com.cafe.crm.dto.ShiftView;
+import com.cafe.crm.models.user.User;
 import com.cafe.crm.repositories.shift.ShiftRepository;
-import com.cafe.crm.repositories.worker.WorkerRepository;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
 import com.cafe.crm.services.interfaces.goods.GoodsService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
+import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,41 +24,37 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Transactional
 @Service
 public class ShiftServiceImpl implements ShiftService {
 
-	@Autowired
-	private ShiftRepository shiftRepository;
-
-	@Autowired
-	private WorkerRepository workerRepository;
-
-	@Autowired
-	private GoodsCategoryService goodsCategoryService;
-
-	@Autowired
+	private final ShiftRepository shiftRepository;
+	private final UserService userService;
+	private final GoodsCategoryService goodsCategoryService;
+	private final CalculateService calculateService;
+	private final TimeManager timeManager;
+	private final SessionRegistry sessionRegistry;
 	private GoodsService goodsService;
-
-	@Autowired
-	private ShiftService shiftService;
-
-	@Autowired
-	private CalculateService calculateService;
-
-	@Autowired
-	private TimeManager timeManager;
 
 	@Value("${cost-category-name.salary-for-shift}")
 	private String categoryNameSalaryForShift;
 
 	@Autowired
-	private SessionRegistry sessionRegistry;
+	public ShiftServiceImpl(CalculateService calculateService, TimeManager timeManager, GoodsCategoryService goodsCategoryService, ShiftRepository shiftRepository, UserService userService, SessionRegistry sessionRegistry) {
+		this.calculateService = calculateService;
+		this.timeManager = timeManager;
+		this.goodsCategoryService = goodsCategoryService;
+		this.shiftRepository = shiftRepository;
+		this.userService = userService;
+		this.sessionRegistry = sessionRegistry;
+	}
+
+	@Autowired
+	public void setGoodsService(GoodsService goodsService) {
+		this.goodsService = goodsService;
+	}
 
 	@Override
 	public void saveAndFlush(Shift shift) {
@@ -66,67 +62,61 @@ public class ShiftServiceImpl implements ShiftService {
 	}
 
 	@Override
-	public Shift newShift(Double cashBox, Double bankCashBox, long... box) {
-		Set<Worker> users = new HashSet<>();
-		for (int i = 0; i < box.length; i++) {
-			Worker worker = workerRepository.getOne(box[i]);
-			users.add(worker);
-		}
+	public Shift crateNewShift(Double cashBox, Double bankCashBox, long... usersIdsOnShift) {
+		List<User> users = userService.findByIdIn(usersIdsOnShift);
 		Shift shift = new Shift(timeManager.getDate(), users, bankCashBox);
 		shift.setOpen(true);
-		for (Worker worker : users) {
-			worker.getAllShifts().add(shift);
+		for (User user : users) {
+			user.getShifts().add(shift);
 		}
-		if (cashBox == null) {
-			Shift lastShift = shiftRepository.getLast();
-			shift.setCashBox(lastShift.getCashBox());
-		} else {
-			shift.setCashBox(cashBox);
-			shift.setBankCashBox(bankCashBox);
-		}
+		shift.setCashBox(cashBox);
+		shift.setBankCashBox(bankCashBox);
 		shiftRepository.saveAndFlush(shift);
 		return shift;
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public Shift findOne(Long L) {
-		return shiftRepository.findOne(L);
+	public Shift findOne(Long id) {
+		return shiftRepository.findOne(id);
 	}
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<Worker> findAllUsers() {
-		return workerRepository.getAllActiveWorker();
-	}
-
-	@Override
-	public List<Worker> getWorkers() {    // Рабочие не добавленные в открытую  смену
-
-		List<Worker> workers = workerRepository.getAllActiveWorker();
-		workers.removeAll(shiftRepository.getLast().getUsers());
-		return workers;
+	public List<User> getUsersNotOnShift() {
+		List<User> users = userService.findAll();
+		Shift lastShift = shiftRepository.getLast();
+		if (lastShift != null) {
+			users.removeAll(lastShift.getUsers());
+		}
+		return users;
 	}
 
 	@Transactional(readOnly = true)
-	@Override   // Рабочие добавленные в открытую  смену
-	public Set<Worker> getAllActiveWorkers() {
-		return shiftRepository.getLast().getUsers();
+	@Override
+	public List<User> getUsersOnShift() {
+		Shift lastShift = shiftRepository.getLast();
+		if (lastShift != null) {
+			return lastShift.getUsers();
+		}
+		return new ArrayList<>();
 	}
 
 	@Override
-	public void deleteWorkerFromShift(String name) {
+	public void deleteUserFromShift(Long userId) {
 		Shift shift = shiftRepository.getLast();
-		Worker worker = workerRepository.getWorkerByNameForShift(name);
-		shift.getUsers().remove(worker);
+		User user = userService.findById(userId);
+		shift.getUsers().remove(user);
+		user.getShifts().remove(shift);
 		shiftRepository.saveAndFlush(shift);
 	}
 
 	@Override
-	public void addWorkerFromShift(String name) {
+	public void addUserToShift(Long userId) {
 		Shift shift = shiftRepository.getLast();
-		Worker worker = workerRepository.getWorkerByNameForShift(name);
-		shift.getUsers().add(worker);
+		User user = userService.findById(userId);
+		shift.getUsers().add(user);
+		user.getShifts().add(shift);
 		shiftRepository.saveAndFlush(shift);
 	}
 
@@ -144,37 +134,31 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Transactional
 	@Override
-	public Shift closeShift(Double totalCashBox, Map<Long, Long> workerIdBonusMap, Double allPrice, Double cashe, Double bankKart, String comment) {
+	public Shift closeShift(Map<Long, Integer> mapOfUsersIdsAndBonuses, Double allPrice, Double cash, Double bankKart, String comment) {
 		GoodsCategory goodsCategory = goodsCategoryService.findByNameIgnoreCase(categoryNameSalaryForShift);
 		Shift shift = shiftRepository.getLast();
-		for (Map.Entry<Long, Long> entry : workerIdBonusMap.entrySet()) {
-			Worker worker = workerRepository.findOne(entry.getKey());
-			Long shiftSalaryWorker = worker.getShiftSalary();// оклад сотрудника
-			Long salaryWorker = worker.getSalary();
-			salaryWorker = salaryWorker + shiftSalaryWorker;
-			worker.setSalary(salaryWorker);
-			Long bonusValue = (entry.getValue());
-			Long bonus = worker.getBonus();
-			bonus = bonus + bonusValue;
-			worker.setBonus(bonus);
-			Long salaryCost = shiftSalaryWorker + bonusValue;
-			Goods goodsSalaryWorker = new Goods(worker.getFirstName() + " " + worker.getLastName(),
+		for (Map.Entry<Long, Integer> entry : mapOfUsersIdsAndBonuses.entrySet()) {
+			User user = userService.findById(entry.getKey());
+			user.setSalary(user.getSalary() + user.getShiftSalary());
+			user.setBonus(user.getBonus() + entry.getValue());
+			int salaryCost = user.getShiftSalary() + entry.getValue();
+			Goods goodsSalaryWorker = new Goods(user.getFirstName() + " " + user.getLastName(),
 					salaryCost, 1,
 					goodsCategory, LocalDate.now());
 			goodsService.save(goodsSalaryWorker);
-			workerRepository.saveAndFlush(worker);
+			userService.save(user);
 		}
 		shift.setBankCashBox(bankKart);
-		shift.setCashBox(cashe);
+		shift.setCashBox(cash);
 		shift.setProfit(allPrice);
 		shift.setComment(comment);
 		shift.setOpen(false);
 		shiftRepository.saveAndFlush(shift);
-		closeAllWorkerSessions();
+		closeAllUserSessions();
 		return shift;
 	}
 
-	private void closeAllWorkerSessions() {
+	private void closeAllUserSessions() {
 		for (Object principal : sessionRegistry.getAllPrincipals()) {
 			sessionRegistry.getAllSessions(principal, false).forEach(SessionInformation::expireNow);
 		}
@@ -188,18 +172,18 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Override
 	public ShiftView createShiftView(Shift shift) {
-		Set<Worker> allActiveWorker = shiftService.getAllActiveWorkers();// добавленные воркеры на смену
-		Set<Client> clients = shiftService.findOne(shift.getId()).getClients(); //клиенты на смене
-		List<Calculate> activeCalculate = calculateService.getAllOpen(); //открытые счета
-		Set<Calculate> allCalculate = shift.getAllCalculate(); //все счета за смену
-		Double cashBox = shift.getCashBox(); //касса смены без учета расходов
-		Double bankCashBox = shift.getBankCashBox(); //деньги на банковской карте
-		Double totalCashBox = 0D; //итоговая касса
-		Long salaryWorker = 0L; //зп сотрудников
-		Double card = 0D; //оплата по клубным картам
-		Double allPrice = 0D; //прибыль грязными
-		for (Worker worker : allActiveWorker) {
-			salaryWorker = salaryWorker + worker.getShiftSalary();
+		List<User> usersOnShift = getUsersOnShift();
+		Set<Client> clients = findOne(shift.getId()).getClients();
+		List<Calculate> activeCalculate = calculateService.getAllOpen();
+		Set<Calculate> allCalculate = shift.getCalculates();
+		double cashBox = shift.getCashBox();
+		double bankCashBox = shift.getBankCashBox();
+		Double totalCashBox;
+		int usersTotalShiftSalary = 0;
+		Double card = 0D;
+		Double allPrice = 0D;
+		for (User user : usersOnShift) {
+			usersTotalShiftSalary += user.getShiftSalary();
 		}
 		Set<LayerProduct> layerProducts = new HashSet<>();
 		for (Client client : clients) {
@@ -212,23 +196,23 @@ public class ShiftServiceImpl implements ShiftService {
 				allPrice += layerProduct.getCost();
 			}
 		}
-		for (Debt debt : shift.getDebtList()) {
+		for (Debt debt : shift.getDebts()) {
 			allPrice += debt.getDebtAmount();
 		}
-		LocalDate shiftDate = shift.getDateShift();
-		List<Goods> goodsWithoutWorkersSalary = goodsService.findByShiftIdAndCategoryNameNot(shift.getId(), categoryNameSalaryForShift);
-		Double otherCosts = 0D;
-		for (Goods goods : goodsWithoutWorkersSalary) {
-			otherCosts = otherCosts + (goods.getPrice() * goods.getQuantity());
+		LocalDate shiftDate = shift.getShiftDate();
+		List<Goods> goodsWithoutUsersSalaries = goodsService.findByShiftIdAndCategoryNameNot(shift.getId(), categoryNameSalaryForShift);
+		double otherCosts = 0d;
+		for (Goods goods : goodsWithoutUsersSalaries) {
+			otherCosts += (goods.getPrice() * goods.getQuantity());
 		}
-		totalCashBox = (cashBox + bankCashBox + allPrice) - (salaryWorker + otherCosts);
-		return new ShiftView(allActiveWorker, clients, activeCalculate, allCalculate,
-				cashBox, totalCashBox, salaryWorker, card, allPrice, shiftDate, otherCosts, bankCashBox);
+		totalCashBox = (cashBox + bankCashBox + allPrice) - (usersTotalShiftSalary + otherCosts);
+		return new ShiftView(usersOnShift, clients, activeCalculate, allCalculate,
+				cashBox, totalCashBox, usersTotalShiftSalary, card, allPrice, shiftDate, otherCosts, bankCashBox);
 	}
 
 	@Override
 	public Shift findByDateShift(LocalDate date) {
-		return shiftRepository.findByDateShift(date);
+		return shiftRepository.findByShiftDate(date);
 	}
 
 }

@@ -2,7 +2,7 @@ package com.cafe.crm.services.interfaces.menu;
 
 
 import com.cafe.crm.models.menu.Ingredients;
-import com.cafe.crm.models.menu.WrapperOfProduct;
+import com.cafe.crm.dto.WrapperOfProduct;
 
 import java.util.List;
 import java.util.Map;

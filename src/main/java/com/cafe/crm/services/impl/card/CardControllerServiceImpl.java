@@ -15,11 +15,14 @@ import java.util.List;
 @Transactional
 public class CardControllerServiceImpl implements CardControllerService {
 
-	@Autowired
-	private CardService cardService;
+	private final CardService cardService;
+	private final CalculateService calculateService;
 
 	@Autowired
-	private CalculateService calculateService;
+	public CardControllerServiceImpl(CardService cardService, CalculateService calculateService) {
+		this.cardService = cardService;
+		this.calculateService = calculateService;
+	}
 
 	@Override
 	public void addCardToCalculate(Long idCard, Long idCalculate) {

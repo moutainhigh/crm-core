@@ -20,7 +20,9 @@
                                style="width:250px;margin-left:150px;float: left;margin-top: 5px"
                                type="text" placeholder="Поиск продуктов" autocomplete="off"/>
 
-                        <progress  th:id="'progress' + ${calculate.id}" style="width:100px;float: left;margin-left: 20px;height: 33px;margin-top: 5px;" max="100" value="0">
+                        <progress th:id="'progress' + ${calculate.id}"
+                                  style="width:100px;float: left;margin-left: 20px;height: 33px;margin-top: 5px;"
+                                  max="100" value="0">
                         </progress>
                         <input th:id="'checked1' + ${calculate.id}" type="checkbox"
                                th:onchange="'check1(\'' + ${calculate.id} + '\')'"
@@ -80,9 +82,13 @@
                                             </td>
                                             <td>
                                                 <div th:if="${product.category.floatingPrice}">
-                                                    <input type="number" style="width: 6em;" step="0.01" class="form-control input-sm"  placeholder="цена" th:id="'inputPriceInAll' + ${product.id}" required="required"/>
+                                                    <input type="number" style="width: 6em;" step="0.01"
+                                                           class="form-control input-sm" placeholder="цена"
+                                                           th:id="'inputPriceInAll' + ${product.id}"
+                                                           required="required"/>
                                                 </div>
-                                                <div th:unless="${product.category.floatingPrice}" th:text="${product.cost} + 'р'"></div>
+                                                <div th:unless="${product.category.floatingPrice}"
+                                                     th:text="${product.cost} + 'р'"></div>
                                             </td>
                                             <td>
                                                 <button th:if="${product.category.floatingPrice}"
@@ -144,9 +150,13 @@
                                             </td>
                                             <td>
                                                 <div th:if="${cat.floatingPrice}">
-                                                    <input type="number" style="width: 6em;" step="0.01" class="form-control input-sm"  placeholder="цена" th:id="'inputPriceInCategory' + ${prod.id}" required="required"/>
+                                                    <input type="number" style="width: 6em;" step="0.01"
+                                                           class="form-control input-sm" placeholder="цена"
+                                                           th:id="'inputPriceInCategory' + ${prod.id}"
+                                                           required="required"/>
                                                 </div>
-                                                <div th:unless="${cat.floatingPrice}" th:text="${prod.cost} + 'р'"></div>
+                                                <div th:unless="${cat.floatingPrice}"
+                                                     th:text="${prod.cost} + 'р'"></div>
                                             </td>
                                             <td>
                                                 <button th:if="${cat.floatingPrice}" th:id="'butProd' + ${prod.id}"

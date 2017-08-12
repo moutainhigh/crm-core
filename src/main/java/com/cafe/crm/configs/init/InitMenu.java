@@ -1,5 +1,6 @@
 package com.cafe.crm.configs.init;
 
+import com.cafe.crm.models.board.Board;
 import com.cafe.crm.models.menu.Category;
 import com.cafe.crm.models.menu.Ingredients;
 import com.cafe.crm.models.menu.Menu;
@@ -7,6 +8,7 @@ import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.repositories.menu.CategoryRepository;
 import com.cafe.crm.repositories.menu.MenuRepository;
 import com.cafe.crm.repositories.menu.ProductRepository;
+import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.menu.IngredientsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,17 +22,20 @@ import java.util.Set;
 @Component
 public class InitMenu {
 
-	@Autowired
-	private MenuRepository repository;
+	private final MenuRepository repository;
+	private final CategoryRepository category;
+	private final ProductRepository productRepository;
+	private final IngredientsService ingredientsService;
+	private final BoardService boardService;
 
 	@Autowired
-	private CategoryRepository category;
-
-	@Autowired
-	private ProductRepository productRepository;
-
-	@Autowired
-	private IngredientsService ingredientsService;
+	public InitMenu(MenuRepository repository, CategoryRepository category, ProductRepository productRepository, IngredientsService ingredientsService, BoardService boardService) {
+		this.repository = repository;
+		this.category = category;
+		this.productRepository = productRepository;
+		this.ingredientsService = ingredientsService;
+		this.boardService = boardService;
+	}
 
 	@PostConstruct
 	public void init() {
@@ -176,9 +181,11 @@ public class InitMenu {
 		myMenu.add(category4);
 
 		menu.setCategories(myMenu);
-
-
 		repository.saveAndFlush(menu);
+
+		Board board = new Board();
+		board.setName("Стол");
+		boardService.save(board);
 
 	}
 }

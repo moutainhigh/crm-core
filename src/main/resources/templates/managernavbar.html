@@ -18,10 +18,11 @@
         <div style="font-size: 17px;margin-top: 5px;">
             <ul class="nav navbar-nav">
                 <li sec:authorize="hasAuthority('BOSS')">
-                    <a class="glyphicon glyphicon-refresh" th:href="@{/boss/menu}" style="padding-left: 10px;    padding-top: 8px;"></a>
+                    <a class="glyphicon glyphicon-refresh" th:href="@{/boss/menu}"
+                       style="padding-left: 10px;    padding-top: 8px;"></a>
                 </li>
                 <li><a href="/manager">Счета</a></li>
-                <li><a href="/manager/shift/edit">Настройки</a></li>
+                <li><a href="/manager/shift/settings">Настройки</a></li>
                 <li><a href="/manager/costs">Расходы</a></li>
                 <li><a href="/manager/tableDebt">Долги</a></li>
                 <li><a data-toggle="modal" th:href="'#newPass'">Пароль</a></li>

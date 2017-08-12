@@ -2,7 +2,6 @@ package com.cafe.crm.services.interfaces.goods;
 
 
 import com.cafe.crm.models.goods.Goods;
-import com.cafe.crm.models.shift.Shift;
 
 import java.time.LocalDate;
 import java.util.List;

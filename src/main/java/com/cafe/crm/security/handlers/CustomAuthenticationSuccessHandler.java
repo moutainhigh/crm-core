@@ -1,16 +1,12 @@
 package com.cafe.crm.security.handlers;
 
-import com.cafe.crm.models.worker.Role;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,9 +19,8 @@ import java.util.Collection;
 @Service
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-
 	public final Integer SESSION_TIMEOUT_IN_SECONDS = 60 * 1200;
+	private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
@@ -43,24 +38,19 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 		redirectStrategy.sendRedirect(request, response, targetUrl);
 	}
 
-	protected String determineTargetUrl(Authentication authentication) {
+	private String determineTargetUrl(Authentication authentication) {
 
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-
-		if (authorities.contains(new Role("BOSS"))) {
+		if (authorities.contains(new SimpleGrantedAuthority("BOSS"))) {
 			return "/boss/menu";
-
-		} else if (authorities.contains(new Role("MANAGER"))) {
-
+		} else if (authorities.contains(new SimpleGrantedAuthority("MANAGER"))) {
 			return "/manager/shift/";
-
 		} else {
-
-			throw new IllegalStateException();
+			return "/home";
 		}
 	}
 
-	protected void clearAuthenticationAttributes(HttpServletRequest request) {
+	private void clearAuthenticationAttributes(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 
 		if (session == null) {

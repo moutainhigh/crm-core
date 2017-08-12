@@ -9,7 +9,7 @@ function testA() {
         }
         $.ajax({
             type: "POST",
-            url: "/manager/changePassword",
+            url: "/manager/user/changePassword",
             data: formData,
             success: function (result) {
                 $('.form-group').html('Смена пароля прошла успешно.');

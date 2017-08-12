@@ -1,7 +1,7 @@
 package com.cafe.crm.services.impl.menu;
 
 import com.cafe.crm.models.menu.Ingredients;
-import com.cafe.crm.models.menu.WrapperOfProduct;
+import com.cafe.crm.dto.WrapperOfProduct;
 import com.cafe.crm.repositories.menu.IngredientsRepository;
 import com.cafe.crm.services.interfaces.menu.IngredientsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +14,12 @@ import java.util.Map;
 @Service
 public class IngredientsServiceImpl implements IngredientsService {
 
-	@Autowired
-	private IngredientsRepository ingredientsRepository;
+	private final IngredientsRepository ingredientsRepository;
 
+	@Autowired
+	public IngredientsServiceImpl(IngredientsRepository ingredientsRepository) {
+		this.ingredientsRepository = ingredientsRepository;
+	}
 
 	@Override
 	public List<Ingredients> getAll() {

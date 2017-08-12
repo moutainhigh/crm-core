@@ -12,12 +12,13 @@
     </div>
     <div class="row">
         <hr/>
-        <form role="form" th:method="post" action="/boss/statistics/search">
-            <div class="col-md-3" style="margin-left: 20%"><p style="color: #5bc0de; font-size: 150%"> Дата начала поиска : <input name="start" th:value="${date}"
-                                                                                                          th:type="date"
-                                                                                                          id="start"
-                                                                                                          placeholder="Введите дату"
-                                                                                                          required=""/>
+        <form roles="form" th:method="post" action="/boss/statistics/search">
+            <div class="col-md-3" style="margin-left: 20%"><p style="color: #5bc0de; font-size: 150%"> Дата начала
+                поиска : <input name="start" th:value="${date}"
+                                th:type="date"
+                                id="start"
+                                placeholder="Введите дату"
+                                required=""/>
             </p></div>
 
             <div class="col-md-3 "><p style="color: #5bc0de; font-size: 150%">Дата окончания : <input name="end"
@@ -48,12 +49,13 @@
             <tbody class="searchable" th:each="shift,iter:${shifts}">
             <tr>
                 <td><p th:text="${shift.id}"></p></td>
-                <td><p th:text="${shift.dateShift}"></p></td>
+                <td><p th:text="${shift.shiftDate}"></p></td>
                 <td><p th:text="${shift.getUsersNames()}"></p></td>
                 <td><p th:text="${shift.cashBox}"></p></td>
                 <td><p th:text="${shift.profit}"></p></td>
-                <td class="col-lg-2"><a  class="btn btn-primary btn-info"
-                                         th:href="'/boss/statistics/search/shiftDetail/' + ${shift.id}">Подробнее</a></td>
+                <td class="col-lg-2"><a class="btn btn-primary btn-info"
+                                        th:href="'/boss/statistics/search/shiftDetail/' + ${shift.id}">Подробнее</a>
+                </td>
             </tr>
             </tbody>
         </table>

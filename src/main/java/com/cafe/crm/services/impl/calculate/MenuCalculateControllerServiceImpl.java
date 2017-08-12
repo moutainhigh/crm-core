@@ -22,17 +22,18 @@ import java.util.Set;
 @Transactional
 public class MenuCalculateControllerServiceImpl implements MenuCalculateControllerService {
 
-	@Autowired
-	private LayerProductService layerProductService;
+	private final LayerProductService layerProductService;
+	private final ClientService clientService;
+	private final ProductService productService;
+	private final CalculateService calculateService;
 
 	@Autowired
-	private ClientService clientService;
-
-	@Autowired
-	private ProductService productService;
-
-	@Autowired
-	private CalculateService calculateService;
+	public MenuCalculateControllerServiceImpl(ProductService productService, ClientService clientService, LayerProductService layerProductService, CalculateService calculateService) {
+		this.productService = productService;
+		this.clientService = clientService;
+		this.layerProductService = layerProductService;
+		this.calculateService = calculateService;
+	}
 
 	@Override
 	public LayerProduct createLayerProduct(long calculateId, long[] clientsId, long productId) {

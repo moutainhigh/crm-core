@@ -20,8 +20,10 @@ public class Property {
 	@NotNull
 	@NotEmpty
 	private String name;
+
 	@NotNull
 	private Double value;
+
 	@NotNull
 	private String unit;
 

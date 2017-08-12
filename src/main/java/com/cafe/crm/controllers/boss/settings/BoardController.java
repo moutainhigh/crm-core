@@ -18,11 +18,14 @@ import java.util.List;
 @RequestMapping("/boss/settings/board-setting")
 public class BoardController {
 
-	@Autowired
-	private BoardService boardService;
+	private final BoardService boardService;
+	private final CalculateService calculateService;
 
 	@Autowired
-	private CalculateService calculateService;
+	public BoardController(BoardService boardService, CalculateService calculateService) {
+		this.boardService = boardService;
+		this.calculateService = calculateService;
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView bardSettingPage() {

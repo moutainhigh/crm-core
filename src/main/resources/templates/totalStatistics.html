@@ -7,21 +7,22 @@
 <div th:replace="bossnavbar :: bossNavbar"></div><!--/.navbar -->
 <div class="container" style="margin-top:50px">
     <div class="row">
-        <h3 align="center"><h1 th:align="center" style="color: #5bc0de;">Общая статистика за: <span th:text="${date}"></span></h1></h3>
+        <h3 align="center"><h1 th:align="center" style="color: #5bc0de;">Общая статистика за: <span
+                th:text="${date}"></span></h1></h3>
     </div>
 </div>
 <hr></hr>
 <div class="container" style="width: 70%">
     <div class="col-md-2" style="margin-left: 10%">
         <h4 style="color: #5bc0de;">Касса</h4>
-        <span style="color: white;font-size: 30px" th:text="${cashBox}" ></span>
+        <span style="color: white;font-size: 30px" th:text="${cashBox}"></span>
         <br></br>
     </div>
-        <div class="col-md-2 ">
-            <h4 style="color: #5bc0de;">Прибыль грязными</h4>
-            <span style="color: white;font-size: 30px" th:text="${totalStat.profit}" ></span>
-            <br></br>
-        </div>
+    <div class="col-md-2 ">
+        <h4 style="color: #5bc0de;">Прибыль грязными</h4>
+        <span style="color: white;font-size: 30px" th:text="${totalStat.profit}"></span>
+        <br></br>
+    </div>
     <div class="col-md-2 ">
         <h4 style="color: #5bc0de;">Прочие расходы</h4>
         <span style="color: white;font-size: 30px" th:text="${totalStat.otherCosts}"></span>
@@ -29,24 +30,25 @@
     </div>
     <div class="col-md-2 ">
         <h4 style="color: #5bc0de;">Зарплатные расходы</h4>
-        <span style="color: white;font-size: 30px" th:text="${totalStat.costSalary}"></span>
+        <span style="color: white;font-size: 30px" th:text="${totalStat.salariesCosts}"></span>
         <br></br>
     </div>
 
 
-        <div class="col-md-2 ">
-            <h4 style="color: #5bc0de;">Количество клиентов</h4>
-            <span style="color: white;font-size: 30px" th:text="${totalStat.clients.size()}"></span>
-            <br></br>
-        </div>
+    <div class="col-md-2 ">
+        <h4 style="color: #5bc0de;">Количество клиентов</h4>
+        <span style="color: white;font-size: 30px" th:text="${totalStat.clients.size()}"></span>
+        <br></br>
+    </div>
 </div>
 <hr></hr>
 <h3 align="center"><h1 th:align="center" style="color: #5bc0de;">Фильтр поиска</h1></h3>
 <div class="container" style="width: 70%">
     <div class="row" style="margin-left: 100px">
-        <form role="form" th:method="post" action="/boss/totalStatistics/searchByDate">
-            <div class="col-md-3" style="margin-left: 30%"><p style="color: #5bc0de; font-size: 150%"> Дата начала поиска : <input name="start" th:value="${date}"
-                                                                                                          th:type="date" id="start" placeholder="Введите дату" required=""/>
+        <form roles="form" th:method="post" action="/boss/totalStatistics/searchByDate">
+            <div class="col-md-3" style="margin-left: 30%"><p style="color: #5bc0de; font-size: 150%"> Дата начала
+                поиска : <input name="start" th:value="${date}"
+                                th:type="date" id="start" placeholder="Введите дату" required=""/>
             </p></div>
             <div class="col-md-2 col-md-offset-0">
                 <button class="btn btn-default btn-lg" style="margin-top: 25px" name="del" th:type="submit">
@@ -67,7 +69,7 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th> Общий чек </th>
+                        <th> Общий чек</th>
                         <th> Оплата наличными</th>
                         <th> Оплата по клубной карте</th>
                         <th> Стоимость меню</th>
@@ -89,34 +91,31 @@
     </div>
 
 
-
     <div class="col-md-6">
         <div class="table" style="border-radius:5px">
-        <h2 class="sub-header" align="center" style="color: #5bc0de;">Смены</h2>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th> Дата </th>
-                    <th> Касса</th>
-                    <th> Прибыль грязными</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="shift : ${shift}">
-                    <td th:text="${shift.dateShift}"></td>
-                    <td th:text="${shift.cashBox}"></td>
-                    <td th:text="${shift.profit}"></td>
-                </tr>
-                </tbody>
-            </table>
+            <h2 class="sub-header" align="center" style="color: #5bc0de;">Смены</h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th> Дата</th>
+                        <th> Касса</th>
+                        <th> Прибыль грязными</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="shift : ${shift}">
+                        <td th:text="${shift.shiftDate}"></td>
+                        <td th:text="${shift.cashBox}"></td>
+                        <td th:text="${shift.profit}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
     </div>
 </div>
 <hr></hr>
-
-
 
 
 <div class="container" style="width: 80%">
@@ -127,7 +126,7 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th> ФИО </th>
+                        <th> ФИО</th>
                         <th> Должность</th>
                         <th> Зарплата</th>
                         <th> Бонус</th>
@@ -136,20 +135,19 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="worker : ${totalStat.workers}">
-                        <td th:text="${worker.firstName + ' '+ worker.lastName}"></td>
-                        <td th:text="${worker.allPosition}"></td>
-                        <td th:text="${worker.salary}"></td>
-                        <td th:text="${worker.bonus}"></td>
-                        <td th:text="${worker.shiftSalary}"></td>
-                        <td th:text="${worker.allShifts.size()}"></td>
+                    <tr th:each="user : ${totalStat.users}">
+                        <td th:text="${user.firstName + ' '+ user.lastName}"></td>
+                        <td th:text="${user.positions}"></td>
+                        <td th:text="${user.salary}"></td>
+                        <td th:text="${user.bonus}"></td>
+                        <td th:text="${user.shiftSalary}"></td>
+                        <td th:text="${user.shifts.size()}"></td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-
 
 
     <div class="col-md-6">
@@ -159,18 +157,18 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th> Дата </th>
-                        <th> Описание </th>
-                        <th> Цена </th>
+                        <th> Дата</th>
+                        <th> Описание</th>
+                        <th> Цена</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="salaryGoods : ${totalStat.salaryGoods}">
-                        <td th:text="${salaryGoods.date}"></td>
-                        <td th:text="${salaryGoods.name}"></td>
-                        <td th:text="${salaryGoods.price * salaryGoods.quantity} % 1 == 0
-                 ? ${#numbers.formatDecimal((salaryGoods.price * salaryGoods.quantity), 0, 0)}
-                 : ${#numbers.formatDecimal((salaryGoods.price * salaryGoods.quantity), 0, 2)}"></td>
+                    <tr th:each="salariesGoods : ${totalStat.salariesGoods}">
+                        <td th:text="${salariesGoods.date}"></td>
+                        <td th:text="${salariesGoods.name}"></td>
+                        <td th:text="${salariesGoods.price * salariesGoods.quantity} % 1 == 0
+                 ? ${#numbers.formatDecimal((salariesGoods.price * salariesGoods.quantity), 0, 0)}
+                 : ${#numbers.formatDecimal((salariesGoods.price * salariesGoods.quantity), 0, 2)}"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -181,45 +179,44 @@
 <hr></hr>
 
 
-
 <div class="container" style="width: 80%">
-<div class="col-md-12">
-    <div class="table" style="border-radius:5px">
-        <h2 class="sub-header" align="center" style="color: #5bc0de;">Прочие расходы</h2>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th> Дата </th>
-                    <th> Описание </th>
-                    <th> Категория </th>
-                    <th> Цена </th>
-                    <th> Количество </th>
-                    <th> Сумма</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="allGoods : ${totalStat.otherGoods}">
-                    <td th:text="${allGoods.date}"></td>
-                    <td th:text="${allGoods.name}"></td>
-                    <td th:text="${allGoods.category.name}"></td>
-                    <td th:text="${allGoods.price} % 1 == 0
+    <div class="col-md-12">
+        <div class="table" style="border-radius:5px">
+            <h2 class="sub-header" align="center" style="color: #5bc0de;">Прочие расходы</h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th> Дата</th>
+                        <th> Описание</th>
+                        <th> Категория</th>
+                        <th> Цена</th>
+                        <th> Количество</th>
+                        <th> Сумма</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="allGoods : ${totalStat.otherGoods}">
+                        <td th:text="${allGoods.date}"></td>
+                        <td th:text="${allGoods.name}"></td>
+                        <td th:text="${allGoods.category.name}"></td>
+                        <td th:text="${allGoods.price} % 1 == 0
                  ? ${#numbers.formatDecimal(allGoods.price, 0, 0)}
                  : ${#numbers.formatDecimal(allGoods.price, 0, 2)}">
-                    </td>
-                    <td th:text="${allGoods.quantity} % 1 == 0
+                        </td>
+                        <td th:text="${allGoods.quantity} % 1 == 0
                  ? ${#numbers.formatDecimal(allGoods.quantity, 0, 0)}
                  : ${#numbers.formatDecimal(allGoods.quantity, 0, 2)}">
-                    </td>
-                    <td th:text="${allGoods.price * allGoods.quantity} % 1 == 0
+                        </td>
+                        <td th:text="${allGoods.price * allGoods.quantity} % 1 == 0
                  ? ${#numbers.formatDecimal((allGoods.price * allGoods.quantity), 0, 0)}
                  : ${#numbers.formatDecimal((allGoods.price * allGoods.quantity), 0, 2)}"></td>
-                </tr>
-                </tbody>
-            </table>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 </div>
 <hr></hr>
 

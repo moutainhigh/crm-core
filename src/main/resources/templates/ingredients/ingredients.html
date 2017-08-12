@@ -17,7 +17,7 @@
     <div class="panel panel-default">
         <fieldset style=" background-color:gray;">
             <div class="row ">
-                <form id="signin" class="navbar-form" th:object="${ingredients}" th:method="POST" role="form"
+                <form id="signin" class="navbar-form" th:object="${ingredients}" th:method="POST" roles="form"
                       th:action="@{/boss/menu/ingredients/}">
                     <div class="col-md-1 ">
                         <h4>Наименование</h4>
@@ -70,10 +70,10 @@
                 <th>Удалить</th>
             </tr>
             </thead>
-            <tbody class="searchableIng" >
+            <tbody class="searchableIng">
             <tr th:each="ingr:${list}">
                 <td th:text="${ingr.id}"></td>
-                <td  th:text="${ingr.name}"></td>
+                <td th:text="${ingr.name}"></td>
                 <td th:text="${ingr.amount}"></td>
                 <td th:text="${ingr.dimension}"></td>
                 <td th:text="${ingr.price * ingr.amount}"></td>
@@ -81,14 +81,14 @@
                 <td>
                     <form action="/boss/menu/ingredients/add" th:method="POST">
                         <input th:type="hidden" name="id" th:value="${ingr.id}"/>
-                        <input required="" name="add" style="width:75px" th:type="number" min="1" max="2147483647" />
-                        <button >Добавить</button>
+                        <input required="" name="add" style="width:75px" th:type="number" min="1" max="2147483647"/>
+                        <button>Добавить</button>
                     </form>
                 </td>
                 <td>
                     <form action="/boss/menu/ingredients/deduct" th:method="POST">
-                        <input th:type="hidden" name="id" th:value="${ingr.id}" />
-                        <input required="" name="deduct" style="width:75px"  th:type="number" min="1" max="2147483647" />
+                        <input th:type="hidden" name="id" th:value="${ingr.id}"/>
+                        <input required="" name="deduct" style="width:75px" th:type="number" min="1" max="2147483647"/>
                         <button>Вычесть</button>
                     </form>
                 </td>

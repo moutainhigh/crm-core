@@ -15,8 +15,12 @@ import java.util.Set;
 @Service
 public class ClientServiceImpl implements ClientService {
 
+	private final ClientRepository clientRepository;
+
 	@Autowired
-	private ClientRepository clientRepository;
+	public ClientServiceImpl(ClientRepository clientRepository) {
+		this.clientRepository = clientRepository;
+	}
 
 	@Override
 	public void save(Client client) {

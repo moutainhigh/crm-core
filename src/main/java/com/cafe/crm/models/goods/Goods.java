@@ -43,7 +43,7 @@ public class Goods {
 	public Goods() {
 	}
 
-	public Goods(String name, double price, int quantity, GoodsCategory category, LocalDate date) {
+	public Goods(String name, double price, double quantity, GoodsCategory category, LocalDate date) {
 		this.name = name;
 		this.price = price;
 		this.quantity = quantity;

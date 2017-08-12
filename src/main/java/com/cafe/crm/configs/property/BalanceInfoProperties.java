@@ -10,6 +10,22 @@ public class BalanceInfoProperties {
 	private Deduction deduction;
 	private Refill refill;
 
+	public Deduction getDeduction() {
+		return deduction;
+	}
+
+	public void setDeduction(Deduction deduction) {
+		this.deduction = deduction;
+	}
+
+	public Refill getRefill() {
+		return refill;
+	}
+
+	public void setRefill(Refill refill) {
+		this.refill = refill;
+	}
+
 	public static class Deduction {
 		private String view;
 		private String subject;
@@ -50,21 +66,5 @@ public class BalanceInfoProperties {
 		public void setSubject(String subject) {
 			this.subject = subject;
 		}
-	}
-
-	public Deduction getDeduction() {
-		return deduction;
-	}
-
-	public void setDeduction(Deduction deduction) {
-		this.deduction = deduction;
-	}
-
-	public Refill getRefill() {
-		return refill;
-	}
-
-	public void setRefill(Refill refill) {
-		this.refill = refill;
 	}
 }

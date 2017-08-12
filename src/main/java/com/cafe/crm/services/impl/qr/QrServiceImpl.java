@@ -22,8 +22,12 @@ import java.nio.charset.Charset;
 @Service
 public class QrServiceImpl implements QrService {
 
+	private final AmazonServiceImpl amazonService;
+
 	@Autowired
-	private AmazonServiceImpl amazonService;
+	public QrServiceImpl(AmazonServiceImpl amazonService) {
+		this.amazonService = amazonService;
+	}
 
 	@Override
 	public File generateQrImage(String link) {

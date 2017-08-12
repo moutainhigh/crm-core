@@ -27,11 +27,8 @@ import java.util.List;
 public class AdvertisingServiceImpl implements AdvertisingService {
 
 	private final CloudService cloudService;
-
 	private final EmailService emailService;
-
 	private final CardService cardService;
-
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Autowired

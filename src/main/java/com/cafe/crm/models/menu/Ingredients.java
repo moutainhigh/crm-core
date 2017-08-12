@@ -77,6 +77,10 @@ public class Ingredients {
 		return amount;
 	}
 
+	public void setAmount(Integer amount) {
+		this.amount = amount;
+	}
+
 	public Double getPrice() {
 		return price;
 	}
@@ -104,10 +108,6 @@ public class Ingredients {
 		result = 31 * result + (name != null ? name.hashCode() : 0);
 		result = 31 * result + (dimension != null ? dimension.hashCode() : 0);
 		return result;
-	}
-
-	public void setAmount(Integer amount) {
-		this.amount = amount;
 	}
 
 	@Override

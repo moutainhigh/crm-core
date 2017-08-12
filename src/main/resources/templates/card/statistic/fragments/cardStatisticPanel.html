@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8"/>
     <title>Title</title>
@@ -40,9 +40,12 @@
                                 <li class="list-group-item" th:text="'Скидка - ' + ${card.discount} + '%'">Скидка -
                                     10%
                                 </li>
-                                <li class="list-group-item" th:text="'Общая сумма платежей - ' + ${totalPaid} + ' р.'"></li>
-                                <li class="list-group-item" th:if="${card.visitDate}" th:text="'Дата последнего визита - ' + ${card.visitDate}"></li>
-                                <li class="list-group-item" th:unless="${card.visitDate}" th:text="'Посещений с этой картой не было'"></li>
+                                <li class="list-group-item"
+                                    th:text="'Общая сумма платежей - ' + ${totalPaid} + ' р.'"></li>
+                                <li class="list-group-item" th:if="${card.visitDate}"
+                                    th:text="'Дата последнего визита - ' + ${card.visitDate}"></li>
+                                <li class="list-group-item" th:unless="${card.visitDate}"
+                                    th:text="'Посещений с этой картой не было'"></li>
                             </strong>
                         </ul>
                     </div>

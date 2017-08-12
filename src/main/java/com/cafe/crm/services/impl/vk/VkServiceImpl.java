@@ -6,11 +6,11 @@ import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.goods.Goods;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.template.Template;
-import com.cafe.crm.models.worker.Boss;
+import com.cafe.crm.models.user.User;
 import com.cafe.crm.services.interfaces.email.EmailService;
 import com.cafe.crm.services.interfaces.template.TemplateService;
+import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.services.interfaces.vk.VkService;
-import com.cafe.crm.services.interfaces.worker.BossService;
 import org.cloudinary.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,29 +30,25 @@ import java.util.*;
 public class VkServiceImpl implements VkService {
 
 	private static final String DAILY_REPORT_URL = "https://api.vk.com/method/messages.send?chat_id={chat_id}&message={message}&access_token={access_token}&v={v}";
-
+	private static final String EMAIL_RECIPIENT_ROLE_IN_CASE_ERROR = "BOSS";
 	private static final int ERROR_CODE_INVALID_TOKEN = 5;
 
 	private final TemplateService templateService;
-
 	private final RestTemplate restTemplate;
-
 	private final VkProperties vkProperties;
-
 	private final EmailService emailService;
-
-	private final BossService bossService;
+	private final UserService userService;
 
 	@Value("${cost-category-name.salary-for-shift}")
 	private String categoryNameSalaryForShift;
 
 	@Autowired
-	public VkServiceImpl(TemplateService templateService, RestTemplate restTemplate, VkProperties vkProperties, EmailService emailService, BossService bossService) {
+	public VkServiceImpl(TemplateService templateService, RestTemplate restTemplate, VkProperties vkProperties, EmailService emailService, UserService userService) {
 		this.templateService = templateService;
 		this.restTemplate = restTemplate;
 		this.vkProperties = vkProperties;
 		this.emailService = emailService;
-		this.bossService = bossService;
+		this.userService = userService;
 	}
 
 	@Override
@@ -78,8 +74,10 @@ public class VkServiceImpl implements VkService {
 		if (jsonObject.has("error")) {
 			int code = jsonObject.getJSONObject("error").getInt("error_code");
 			if (code == ERROR_CODE_INVALID_TOKEN) {
-				List<Boss> bosses = bossService.findAll();
-				emailService.sendInvalidTokenNotification(bosses);
+				List<User> users = userService.findByRoleName(EMAIL_RECIPIENT_ROLE_IN_CASE_ERROR);
+				if (!users.isEmpty()) {
+					emailService.sendInvalidTokenNotification(users);
+				}
 			}
 		}
 	}
@@ -93,8 +91,8 @@ public class VkServiceImpl implements VkService {
 		double totalCosts = formatCostsAndGetTotalCosts(shift.getGoodses(), salaryCosts, otherCosts);
 
 
-		params[0] = getDayOfWeek(shift.getDateShift());
-		params[1] = getDate(shift.getDateShift());
+		params[0] = getDayOfWeek(shift.getShiftDate());
+		params[1] = getDate(shift.getShiftDate());
 		params[2] = df.format(shift.getProfit());
 		params[3] = getAmountOfClients(shift.getClients());
 		params[4] = shift.getClients().size();
@@ -182,7 +180,7 @@ public class VkServiceImpl implements VkService {
 		return timeStart.isAfter(after) && timeStart.isBefore(before);
 	}
 
-	private boolean isBeforeMidnight(LocalTime timeStart){
+	private boolean isBeforeMidnight(LocalTime timeStart) {
 		int cmp = Integer.compare(timeStart.getHour(), 24);
 		if (cmp == 0) {
 			cmp = Integer.compare(timeStart.getMinute(), 0);

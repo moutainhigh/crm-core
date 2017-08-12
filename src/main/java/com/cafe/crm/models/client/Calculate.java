@@ -34,6 +34,9 @@ public class Calculate {
 	@ManyToMany
 	private List<Card> cards;
 
+	public Calculate() {
+	}
+
 	public boolean isPause() {
 		return isPause;
 	}
@@ -41,10 +44,6 @@ public class Calculate {
 	public void setPause(boolean pause) {
 		isPause = pause;
 	}
-
-	public Calculate() {
-	}
-
 
 	public boolean isRoundState() {
 		return roundState;

@@ -5,7 +5,7 @@ import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.models.goods.Goods;
-import com.cafe.crm.models.worker.Worker;
+import com.cafe.crm.models.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -15,49 +15,40 @@ import java.util.Set;
 
 
 @Entity
-@Table(name = "Shift")
+@Table(name = "shifts")
 public class Shift {
 
 	@Id
 	@GeneratedValue
-	@Column(name = "id")
 	private Long id;
 
-	@Column(name = "isOpen")
-	private Boolean isOpen;
+	private boolean opened;
 
-	@Column(name = "dateShift")
-	private LocalDate dateShift;
+	@Column(name = "shift_date")
+	private LocalDate shiftDate;
 
 	@Column(name = "checkValue")
 	private Integer checkValue;// after change on set<>
 
 	@OneToMany
-	private Set<Calculate> allCalculate;
+	private Set<Calculate> calculates;
 
 	@OneToMany
 	private Set<Client> clients;
 
-	@Column(name = "cashBox")
-	private Double cashBox = 0D;
+	@Column(name = "cash_box")
+	private double cashBox;
 
-	@Column(name = "profit")
-	private Double profit = 0D;
+	private double profit;
 
-	@Column(name = "bankCashBox")
-	private Double bankCashBox = 0D;
+	@Column(name = "bank_cash_box")
+	private double bankCashBox;
 
-	@ManyToMany(fetch = FetchType.EAGER, targetEntity = Worker.class)
-	@JoinTable(name = "permissions_allShifts",
-			joinColumns = {@JoinColumn(name = "shift_id")},
-			inverseJoinColumns = {@JoinColumn(name = "worker_id")})
-	private Set<Worker> users;
+	@ManyToMany(mappedBy = "shifts", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	private List<User> users;
 
-	@OneToMany(fetch = FetchType.LAZY, targetEntity = Debt.class)
-	@JoinTable(name = "debts_close_on_shift",
-			joinColumns = {@JoinColumn(name = "shift_id")},
-			inverseJoinColumns = {@JoinColumn(name = "debt_id")})
-	private List<Debt> debtList = new ArrayList<>();
+	@OneToMany(fetch = FetchType.LAZY)
+	private List<Debt> debts = new ArrayList<>();
 
 	@OneToMany(mappedBy = "shift")
 	private List<Goods> goodses;
@@ -65,8 +56,8 @@ public class Shift {
 	// TODO: 26.07.2017 Подумать над размером
 	private String comment;
 
-	public Shift(LocalDate dateShift, Set<Worker> users, Double bankCashBox) {
-		this.dateShift = dateShift;
+	public Shift(LocalDate shiftDate, List<User> users, double bankCashBox) {
+		this.shiftDate = shiftDate;
 		this.users = users;
 		this.bankCashBox = bankCashBox;
 	}
@@ -74,54 +65,52 @@ public class Shift {
 	public Shift() {
 	}
 
-	public Double getBankCashBox() {
+	public double getBankCashBox() {
 		return bankCashBox;
 	}
 
-	public void setBankCashBox(Double bankCashBox) {
+	public void setBankCashBox(double bankCashBox) {
 		this.bankCashBox = bankCashBox;
 	}
 
-	public Set<Worker> getUsers() {
+	public List<User> getUsers() {
 		return users;
 	}
 
-	public void setUsers(Set<Worker> users) {
+	public void setUsers(List<User> users) {
 		this.users = users;
 	}
 
-	public String getUsersNames() {   // return only names of workers of shift
-
-		String names = "";
-		for (Worker worker : users) {
-			names += worker.getFirstName() + " ";
-
+	public String getUsersNames() {
+		StringBuilder usersNames = new StringBuilder();
+		for (User user : users) {
+			usersNames.append(user.getFirstName()).append(" ");
 		}
-		return names;
+		return usersNames.toString();
 	}
 
-	public Double getCashBox() {
+	public double getCashBox() {
 		return cashBox;
 	}
 
-	public void setCashBox(Double cashBox) {
+	public void setCashBox(double cashBox) {
 		this.cashBox = cashBox;
 	}
 
-	public Double getProfit() {
+	public double getProfit() {
 		return profit;
 	}
 
-	public void setProfit(Double profit) {
+	public void setProfit(double profit) {
 		this.profit = profit;
 	}
 
-	public Set<Calculate> getAllCalculate() {
-		return allCalculate;
+	public Set<Calculate> getCalculates() {
+		return calculates;
 	}
 
-	public void setAllCalculate(Set<Calculate> allCalculate) {
-		this.allCalculate = allCalculate;
+	public void setCalculates(Set<Calculate> calculates) {
+		this.calculates = calculates;
 	}
 
 	public Set<Client> getClients() {
@@ -140,12 +129,12 @@ public class Shift {
 		this.id = id;
 	}
 
-	public LocalDate getDateShift() {
-		return dateShift;
+	public LocalDate getShiftDate() {
+		return shiftDate;
 	}
 
-	public void setDateShift(LocalDate dateShift) {
-		this.dateShift = dateShift;
+	public void setShiftDate(LocalDate shiftDate) {
+		this.shiftDate = shiftDate;
 	}
 
 	public Integer getCheckValue() {
@@ -156,20 +145,20 @@ public class Shift {
 		this.checkValue = checkValue;
 	}
 
-	public Boolean getOpen() {
-		return isOpen;
+	public boolean isOpen() {
+		return opened;
 	}
 
-	public void setOpen(Boolean open) {
-		isOpen = open;
+	public void setOpen(boolean open) {
+		opened = open;
 	}
 
-	public List<Debt> getDebtList() {
-		return debtList;
+	public List<Debt> getDebts() {
+		return debts;
 	}
 
 	public void addDebtToList(Debt debt) {
-		this.debtList.add(debt);
+		this.debts.add(debt);
 	}
 	public List<Goods> getGoodses() {
 		return goodses;
@@ -194,18 +183,18 @@ public class Shift {
 
 		Shift shift = (Shift) o;
 
+		if (opened != shift.opened) return false;
 		if (id != null ? !id.equals(shift.id) : shift.id != null) return false;
-		if (dateShift != null ? !dateShift.equals(shift.dateShift) : shift.dateShift != null) return false;
-		if (checkValue != null ? !checkValue.equals(shift.checkValue) : shift.checkValue != null) return false;
-		return isOpen != null ? isOpen.equals(shift.isOpen) : shift.isOpen == null;
+		if (shiftDate != null ? !shiftDate.equals(shift.shiftDate) : shift.shiftDate != null) return false;
+		return checkValue != null ? checkValue.equals(shift.checkValue) : shift.checkValue == null;
 	}
 
 	@Override
 	public int hashCode() {
 		int result = id != null ? id.hashCode() : 0;
-		result = 31 * result + (dateShift != null ? dateShift.hashCode() : 0);
+		result = 31 * result + (opened ? 1 : 0);
+		result = 31 * result + (shiftDate != null ? shiftDate.hashCode() : 0);
 		result = 31 * result + (checkValue != null ? checkValue.hashCode() : 0);
-		result = 31 * result + (isOpen != null ? isOpen.hashCode() : 0);
 		return result;
 	}
 
@@ -213,9 +202,8 @@ public class Shift {
 	public String toString() {
 		return "Shift{" +
 				"id=" + id +
-				", dateShift=" + dateShift +
-				", isOpen=" + isOpen +
-				", users=" + users +
+				", shiftDate=" + shiftDate +
+				", opened=" + opened +
 				'}';
 	}
 }

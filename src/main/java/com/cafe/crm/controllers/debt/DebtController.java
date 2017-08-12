@@ -24,13 +24,10 @@ import java.util.List;
 @RequestMapping(value = "/manager/tableDebt")
 public class DebtController {
 
-	private DebtService debtService;
-
-	private TimeManager timeManager;
-
-	private ShiftService shiftService;
-
-	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	private final DebtService debtService;
+	private final TimeManager timeManager;
+	private final ShiftService shiftService;
 
 	@Autowired
 	PasswordEncoder encoder;
@@ -50,6 +47,8 @@ public class DebtController {
 		LocalDate today = timeManager.getDate();
 		List<Debt> debtList = debtService.findByVisibleIsTrueAndDateBetween(today, today.plusYears(100));
 		Double totalDebtAmount = getTotalPrice(debtList);
+		Shift shift = shiftService.getLast();
+
 		ModelAndView modelAndView = new ModelAndView("/debt/debt");
 		modelAndView.addObject("debtsList", debtList);
 		modelAndView.addObject("totalDebtAmount", totalDebtAmount);
@@ -58,19 +57,22 @@ public class DebtController {
 		modelAndView.addObject("today", today);
 		modelAndView.addObject("fromDate", today);
 		modelAndView.addObject("toDate", null);
+		modelAndView.addObject("closeShiftView", shiftService.createShiftView(shift));
+
 		return modelAndView;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView updatePageAfterSearch(@RequestParam(name = "fromDate") String fromDate,
-	                                          @RequestParam(name = "toDate") String toDate,
-	                                          @RequestParam(name = "debtorName") String debtorName) {
+											  @RequestParam(name = "toDate") String toDate,
+											  @RequestParam(name = "debtorName") String debtorName) {
 		LocalDate today = timeManager.getDate();
 		List<Debt> debtList = filter(debtorName, fromDate, toDate);
 		Double totalDebtAmount = getTotalPrice(debtList);
 
 		LocalDate from = (fromDate == null || fromDate.isEmpty()) ? null : LocalDate.parse(fromDate, formatter);
 		LocalDate to = (toDate == null || toDate.isEmpty()) ? null : LocalDate.parse(toDate, formatter);
+		Shift shift = shiftService.getLast();
 
 		ModelAndView modelAndView = new ModelAndView("/debt/debt");
 		modelAndView.addObject("debtsList", debtList);
@@ -80,6 +82,7 @@ public class DebtController {
 		modelAndView.addObject("today", today);
 		modelAndView.addObject("fromDate", from);
 		modelAndView.addObject("toDate", to);
+		modelAndView.addObject("closeShiftView", shiftService.createShiftView(shift));
 
 		return modelAndView;
 	}
