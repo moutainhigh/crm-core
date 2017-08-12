@@ -3,11 +3,13 @@ package com.cafe.crm.models.shift;
 
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.models.goods.Goods;
 import com.cafe.crm.models.worker.Worker;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -50,6 +52,12 @@ public class Shift {
 			joinColumns = {@JoinColumn(name = "shift_id")},
 			inverseJoinColumns = {@JoinColumn(name = "worker_id")})
 	private Set<Worker> users;
+
+	@OneToMany(fetch = FetchType.LAZY, targetEntity = Debt.class)
+	@JoinTable(name = "debts_close_on_shift",
+			joinColumns = {@JoinColumn(name = "shift_id")},
+			inverseJoinColumns = {@JoinColumn(name = "debt_id")})
+	private List<Debt> debtList = new ArrayList<>();
 
 	@OneToMany(mappedBy = "shift")
 	private List<Goods> goodses;
@@ -156,6 +164,13 @@ public class Shift {
 		isOpen = open;
 	}
 
+	public List<Debt> getDebtList() {
+		return debtList;
+	}
+
+	public void addDebtToList(Debt debt) {
+		this.debtList.add(debt);
+	}
 	public List<Goods> getGoodses() {
 		return goodses;
 	}

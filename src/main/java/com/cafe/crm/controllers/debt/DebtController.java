@@ -1,11 +1,16 @@
 package com.cafe.crm.controllers.debt;
 
 import com.cafe.crm.models.client.Debt;
+import com.cafe.crm.models.property.AllSystemProperty;
+import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.services.interfaces.debt.DebtService;
+import com.cafe.crm.services.interfaces.property.SystemPropertyService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
+@RequestMapping(value = "/manager/tableDebt")
 public class DebtController {
 
 	private DebtService debtService;
@@ -27,13 +33,19 @@ public class DebtController {
 	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 	@Autowired
+	PasswordEncoder encoder;
+
+	@Autowired
+	SystemPropertyService systemPropertyService;
+
+	@Autowired
 	public DebtController(DebtService debtService, TimeManager timeManager, ShiftService shiftService) {
 		this.debtService = debtService;
 		this.timeManager = timeManager;
 		this.shiftService = shiftService;
 	}
 
-	@RequestMapping(value = "/manager/tableDebt", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView showDebtPage() {
 		LocalDate today = timeManager.getDate();
 		List<Debt> debtList = debtService.findByVisibleIsTrueAndDateBetween(today, today.plusYears(100));
@@ -46,11 +58,10 @@ public class DebtController {
 		modelAndView.addObject("today", today);
 		modelAndView.addObject("fromDate", today);
 		modelAndView.addObject("toDate", null);
-		modelAndView.addObject("closeShiftView", shiftService.createShiftView(shiftService.getLast()));
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "/manager/tableDebt", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView updatePageAfterSearch(@RequestParam(name = "fromDate") String fromDate,
 	                                          @RequestParam(name = "toDate") String toDate,
 	                                          @RequestParam(name = "debtorName") String debtorName) {
@@ -95,7 +106,7 @@ public class DebtController {
 				.stream().mapToDouble(Debt::getDebtAmount).sum();
 	}
 
-	@RequestMapping(value = "/manager/tableDebt/addDebt", method = RequestMethod.POST)
+	@RequestMapping(value = "/addDebt", method = RequestMethod.POST)
 	public String saveGoods(@ModelAttribute @Valid Debt debt) {
 
 		debtService.save(debt);
@@ -103,12 +114,55 @@ public class DebtController {
 		return "redirect:";
 	}
 
-	@RequestMapping(value = "/manager/tableDebt/delete", method = RequestMethod.POST)
+	@RequestMapping(value = "/repay", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> deleteGoods(@RequestParam(name = "debtId") Long id) {
+	public ResponseEntity<?> repayDebts(@RequestParam(name = "debtId") Long id) {
 
-		debtService.delete(id);
+		Shift lastShift = shiftService.getLast();
+		Debt debt = debtService.get(id);
 
-		return ResponseEntity.ok("Товар успешно удален!");
+		lastShift.addDebtToList(debt);
+		shiftService.saveAndFlush(lastShift);
+		debtService.offVisibleStatus(id);
+
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
+
+	@RequestMapping(value = "/deleteBoss", method = RequestMethod.POST)
+	public ResponseEntity<?> deleteDebtsBoss(@RequestParam(name = "debtId") Long id) {
+
+		Debt debt = debtService.get(id);
+
+		if (debt != null) {
+			debtService.delete(debt);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/deleteManager", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> deleteDebtsManager(@RequestParam(name = "debtId") Long id,
+	                                            @RequestParam(name = "masterKey") String masterKey) {
+
+		Debt debt = debtService.get(id);
+		AllSystemProperty property = systemPropertyService.findOne("masterKey");
+		String dbMasterKey;
+
+		if (property != null) {
+			dbMasterKey = property.getProperty();
+		} else {
+			return ResponseEntity.badRequest().body("Введен неверный мастер ключ");
+		}
+
+
+		if (debt != null && encoder.matches(masterKey, dbMasterKey)) {
+			debtService.delete(debt);
+			return ResponseEntity.ok("Долг успешно удален");
+		} else {
+			return ResponseEntity.badRequest().body("Введен неверный мастер ключ");
+		}
+
+	}
+
 }

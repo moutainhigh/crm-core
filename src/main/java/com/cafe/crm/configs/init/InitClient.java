@@ -22,24 +22,34 @@ public class InitClient {
 	public void init() {
 
 		Board board = new Board();
-		board.setName("Стол1");
+		board.setName("Белый диван");
 		board.setIsOpen(true);
 		boardService.save(board);
 
 		Board board1 = new Board();
-		board1.setName("Стол2");
+		board1.setName("Xbox бочки");
 		board1.setIsOpen(true);
 		boardService.save(board1);
 
 		Board board2 = new Board();
-		board2.setName("Стол3");
+		board2.setName("Бар");
 		board2.setIsOpen(true);
 		boardService.save(board2);
 
 		Board board3 = new Board();
-		board3.setName("Стол4");
+		board3.setName("Пожарка");
 		board3.setIsOpen(true);
 		boardService.save(board3);
+
+		Board board4 = new Board();
+		board4.setName("Постер");
+		board4.setIsOpen(true);
+		boardService.save(board4);
+
+		Board board5 = new Board();
+		board5.setName("Белый Xbox");
+		board5.setIsOpen(true);
+		boardService.save(board5);
 
 
 		Card card = new Card();

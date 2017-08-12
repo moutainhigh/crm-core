@@ -159,6 +159,7 @@ public class ShiftController {
 			}
 
 			ShiftView shiftView = shiftService.createShiftView(lastShift);
+			lastShift.getDebtList().clear();//очищаем список возвращенных долгов для этой смены
 			Double primaryCashBox = shiftView.getCashBox();
 			Double allPrice = shiftView.getAllPrice();
 			Long salaryWorkerOnShift = shiftView.getSalaryWorker();
