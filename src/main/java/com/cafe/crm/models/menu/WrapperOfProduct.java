@@ -6,6 +6,8 @@ import java.util.List;
 
 public class WrapperOfProduct implements Serializable {  // wrapper for menuController
 
+	private Long productId;
+
 	private List<String> names;
 
 	private List<Integer> amount;
@@ -18,8 +20,18 @@ public class WrapperOfProduct implements Serializable {  // wrapper for menuCont
 
 	private Double cost;
 
+	private Double selfCost;
+
 	public WrapperOfProduct() {
 
+	}
+
+	public Long getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Long productId) {
+		this.productId = productId;
 	}
 
 	public Long getId() {
@@ -54,6 +66,13 @@ public class WrapperOfProduct implements Serializable {  // wrapper for menuCont
 		this.cost = cost;
 	}
 
+	public Double getSelfCost() {
+		return selfCost;
+	}
+
+	public void setSelfCost(Double selfCost) {
+		this.selfCost = selfCost;
+	}
 
 	public List<String> getNames() {
 		return names;

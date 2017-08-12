@@ -38,6 +38,12 @@
                            th:errors="*{amount}">error message</p>
                     </div>
                     <div class="col-md-1  col-md-offset-2">
+                        <h4>Стоимость</h4>
+                        <input th:type="number" min="0" max="2147483647" value="0" th:field="*{price}"/>
+                        <p style="color: black ; font-weight:bold" th:if="${#fields.hasErrors('price')}"
+                           th:errors="*{price}">error message</p>
+                    </div>
+                    <div class="col-md-1  col-md-offset-5">
                         <button style="margin-top: 30px;" type="submit" class="btn btn-success btn-lg col-md-offset-5">
                             Создать
                         </button>
@@ -57,6 +63,8 @@
                 <th>Наименование</th>
                 <th>Количество</th>
                 <th>Размерность</th>
+                <th>Стоимость</th>
+                <th>Цена за единицу</th>
                 <th>Добавить</th>
                 <th>Вычесть</th>
                 <th>Удалить</th>
@@ -68,6 +76,8 @@
                 <td  th:text="${ingr.name}"></td>
                 <td th:text="${ingr.amount}"></td>
                 <td th:text="${ingr.dimension}"></td>
+                <td th:text="${ingr.price * ingr.amount}"></td>
+                <td th:text="${ingr.price}"></td>
                 <td>
                     <form action="/boss/menu/ingredients/add" th:method="POST">
                         <input th:type="hidden" name="id" th:value="${ingr.id}"/>

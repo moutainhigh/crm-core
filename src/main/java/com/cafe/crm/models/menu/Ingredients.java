@@ -18,25 +18,29 @@ public class Ingredients {
 	private Long id;
 
 	@NotBlank(message = "Заполните поле")
-	@Size(max = 30,message = "Максимальный размер 30 символов")
+	@Size(max = 30, message = "Максимальный размер 30 символов")
 	private String name;
 
 	@NotBlank(message = "Заполните поле")
-	@Size(max = 20,message = "Максимальный размер 20 символов")
+	@Size(max = 20, message = "Максимальный размер 20 символов")
 	private String dimension;
 
 	@NotNull(message = "Заполните поле")
 	private Integer amount = 0;
 
+	private Double price = 0D;
+
 	public Ingredients() {
 
 	}
 
-	public Ingredients(String name, String dimension, Integer amount) {
+	public Ingredients(String name, String dimension, Integer amount, Double price) {
 		this.name = name;
 		this.dimension = dimension;
 		this.amount = amount;
+		this.price = price;
 	}
+
 	public Ingredients(Long id, String name, String dimension, Integer amount) {
 		this.id = id;
 		this.name = name;
@@ -71,6 +75,14 @@ public class Ingredients {
 
 	public Integer getAmount() {
 		return amount;
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		this.price = price;
 	}
 
 	@Override

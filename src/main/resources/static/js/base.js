@@ -8,6 +8,7 @@ function editProdModal() {
         name: $("#d_name").val(),
         description: $("#d_des").val(),
         cost: $("#d_cost").val(),
+        selfCost: $("#d_selfCost").val()
     }
 
     var cst = $("#d_cost").val();
@@ -26,9 +27,11 @@ function editProdModal() {
                     $("#b" + id).html(result.name);
                     $("#c" + id).html(result.description);
                     $("#d" + id).html(result.cost);
+                    $("#e" + id).html(result.selfCost);
                     $("#allB" + id).html(result.name);
                     $("#allC" + id).html(result.description);
                     $("#allD" + id).html(result.cost);
+                    $("#allE" + id).html(result.selfCost);
                     closeModal()
                 },
                 error: function (e) {

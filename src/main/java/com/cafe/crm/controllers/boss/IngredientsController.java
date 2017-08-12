@@ -43,6 +43,7 @@ public class IngredientsController {
 			return "ingredients/ingredients";
 		}
 		if (ingredients.getAmount() >= 0) {
+			ingredients.setPrice(ingredients.getPrice() / ingredients.getAmount());
 			ingredientsService.save(ingredients);
 		}
 		return "redirect:/boss/menu/ingredients";

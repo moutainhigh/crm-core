@@ -19,4 +19,6 @@ public interface ProductService {
 
 	List<Product> findAllOrderByRatingDesc();
 
+	void reduceIngredientAmount(Product product);
+
 }

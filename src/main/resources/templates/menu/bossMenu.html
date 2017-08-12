@@ -62,6 +62,7 @@
                                 <th>Наименование</th>
                                 <th>Описание</th>
                                 <th>Цена</th>
+                                <th>Себестоимость</th>
                                 <th>Редактировать</th>
                                 <th>Рецепт</th>
                                 <th>Удалить</th>
@@ -72,9 +73,10 @@
                                 <td th:id="'b' + ${prod.id}"><p th:text="${prod.name}"></p></td>
                                 <td th:id="'c' + ${prod.id}"><p th:text="${prod.description}"></p></td>
                                 <td th:id="'d' + ${prod.id}"><p th:text="${!prod.category.floatingPrice} ? ${prod.cost} : 'Плавающая'"></p></td>
+                                <td th:id="'e' + ${prod.id}"><p th:text="${prod.selfCost}"></p></td>
                                 <td class="col-lg-2"><a id="ins" class="btn btn-primary btn-info"
                                                         th:href="'#p'+${prod.id}"
-                                                        data-toggle="modal">Редактировать </a></td>
+                                                        data-toggle="modal">Редактировать</a></td>
                                 <td>
 
                                     <button form="getRecipePage" name="id" class="btn btn-primary btn-info" th:value="${prod.id}" th:type="submit">
@@ -219,6 +221,13 @@
                                                name="cost"
                                                th:placeholder="${!categor.floatingPrice} ? 'Цена' : 'Плавающая'" th:attrappend="disabled=${categor.floatingPrice} ? disabled, value=${categor.floatingPrice} ? 0.0 "/>
                                     </div>
+                                    <div class="form-group">
+                                        <label>Себестоимость</label>
+                                        <input type="text" class="form-control" th:id="addSelfCost+${categor.id}"
+                                               autocomplete="off"
+                                               name="selfCost"
+                                               placeholder="Себестоимость"/>
+                                    </div>
                                     <div class="panel panel-default">
                                         <div class="panel-heading" role="tab" id="headingOne">
                                             <h4 class="panel-title">
@@ -250,7 +259,7 @@
                                                                     <div th:each="ing : ${ingredients}">
                                                                         <option th:class="optionClass"
                                                                                 th:value="${ing.name}"
-                                                                                th:text="${ing.name}+ '   -   ' +  ${ing.dimension}  "></option>
+                                                                                th:text="${ing.name}+ '   -   ' +  ${ing.dimension} + '   -   ' + ${ing.price} + 'p'"></option>
                                                                     </div>
                                                                 </select></td>
                                                             <td><input th:class="inputClassTest" th:value="0"
@@ -386,7 +395,6 @@
                             <input type="text" class="form-control" autocomplete="off"
                                    id="d_des"
                                    name="description"
-
                             ></input>
                         </div>
                         <div class="form-group">
@@ -394,8 +402,13 @@
                             <input type="text" class="form-control"
                                    id="d_cost"
                                    pattern="\d+" title="только цифры" autocomplete="off"
-
                             ></input>
+                        </div>
+                        <div class="form-group">
+                            <h4><label>Себестоимость</label></h4>
+                            <input type="text" class="form-control"
+                                   id="d_selfCost"
+                                   pattern="\d+" title="только цифры" autocomplete="off"/>
                         </div>
                     </div>
                     <button type="button" name="upd"

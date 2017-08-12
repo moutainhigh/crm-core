@@ -42,12 +42,13 @@
                 <tr>
                     <th>Ингридиент</th>
                     <th>Количество</th>
-
+                    <th>Стоимость</th>
                 </tr>
                 <tbody th:each="instance : ${recipe}">
                 <tr>
                     <td th:text="${instance.key.name}"></td>
                     <td th:text="${instance.value}"></td>
+                    <td th:text="${instance.key.price * instance.value}"></td>
                 </tr>
                 </tbody>
             </table>
@@ -67,16 +68,18 @@
                 <tr id="firstRow">
                     <td>
                         <select th:id="selectId" name="multiple[]"
-                                class="form-control mySelect">
+                                class="form-control mySelect" onchange="putPriceIng">
                             <div th:each="ing : ${ingredients}">
                                 <option th:class="optionClass"
                                         th:value="${ing.name}"
-                                        th:text="${ing.name}+ '   -   ' +  ${ing.dimension}  "></option>
+                                        th:text="${ing.name}+ '   -   ' +  ${ing.dimension} + '   -   ' + ${ing.price} + 'p'"></option>
                             </div>
-                        </select></td>
-                    <td><input required="" th:class="inputClassTest" th:value="0"
-                               style="width: 150px"
-                               th:type="number" min="0"/></td>
+                        </select>
+                    </td>
+                    <td>
+                        <input required="" th:class="inputClassTest" th:value="0" style="width: 150px"
+                               th:type="number" min="0"/>
+                    </td>
                 </tr>
                 </tbody>
             </table>

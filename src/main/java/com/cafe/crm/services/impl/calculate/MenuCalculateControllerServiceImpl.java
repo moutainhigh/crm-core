@@ -1,9 +1,9 @@
 package com.cafe.crm.services.impl.calculate;
 
-import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.LayerProduct;
+import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.calculate.MenuCalculateControllerService;
 import com.cafe.crm.services.interfaces.client.ClientService;
@@ -48,6 +48,7 @@ public class MenuCalculateControllerServiceImpl implements MenuCalculateControll
 		if (!product.getCategory().isDirtyProfit()) {
 			layerProduct.setDirtyProfit(false);
 		}
+		productService.reduceIngredientAmount(product);
 		layerProductService.save(layerProduct);
 		calculatePriceMenu(calculateId);
 		return layerProduct;

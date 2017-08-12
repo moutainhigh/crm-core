@@ -29,6 +29,9 @@ public class Product {
 	@Column(name = "cost")
 	private Double cost;
 
+	@NotNull(message = "Укажите себестоимость")
+	private Double selfCost = 0D;
+
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Category.class)
 	@JoinTable(name = "product_and_categories", joinColumns = {@JoinColumn(name = "category_id")}, inverseJoinColumns = {@JoinColumn(name = "product_id")})
 	private Category category;
@@ -36,7 +39,7 @@ public class Product {
 	@ElementCollection
 	@MapKeyJoinColumn(name = "ingredient")
 	@Column(name = "amount")
-	private Map<Ingredients, Integer> recipe ;
+	private Map<Ingredients, Integer> recipe;
 
 	private int rating;
 
@@ -87,6 +90,14 @@ public class Product {
 
 	public void setCost(Double cost) {
 		this.cost = cost;
+	}
+
+	public Double getSelfCost() {
+		return selfCost;
+	}
+
+	public void setSelfCost(Double selfCost) {
+		this.selfCost = selfCost;
 	}
 
 	public Category getCategory() {

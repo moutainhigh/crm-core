@@ -20,6 +20,7 @@
                 <th>Наименование</th>
                 <th>Описание</th>
                 <th>Цена</th>
+                <th>Себестоимость</th>
                 <th>Редактировать</th>
                 <th>Рецепт</th>
                 <th>Удалить</th>
@@ -30,6 +31,7 @@
                 <td th:id="'allB' + ${prod.id}"><p th:text="${prod.name}"></p></td>
                 <td th:id="'allC' + ${prod.id}"><p th:text="${prod.description}"></p></td>
                 <td th:id="'allD' + ${prod.id}"><p th:text="${!prod.category.floatingPrice} ? ${prod.cost} : 'Плавающая'"></p></td>
+                <td th:id="'allE' + ${prod.id}"><p th:text="${prod.selfCost}"></p></td>
                 <td class="col-lg-2"><a id="ins" class="btn btn-primary btn-info"
                                         th:href="'#allP'+${prod.id}"
                                         data-toggle="modal">Редактировать </a>
