@@ -134,7 +134,7 @@ public class ShiftController {
 			totalBonusSum = totalBonusSum + userBonus;
 		}
 		Double totalCashBox = shiftView.getTotalCashBox() - totalBonusSum;
-		Double shortage = totalCashBox - (cache + bankKart); //недосдача
+		Double shortage = totalCashBox - (cache + bankKart);
 
 		if (shortage > 0) {
 			Shift shift = shiftService.closeShift(mapOfUsersIdsAndBonuses, allPrice, cache, bankKart, comment);

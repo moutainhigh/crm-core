@@ -135,13 +135,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="worker : ${totalStat.users}">
-                        <td th:text="${worker.firstName + ' '+ worker.lastName}"></td>
-                        <td th:text="${worker.allPosition}"></td>
-                        <td th:text="${worker.salary}"></td>
-                        <td th:text="${worker.bonus}"></td>
-                        <td th:text="${worker.shiftSalary}"></td>
-                        <td th:text="${worker.allShifts.size()}"></td>
+                    <tr th:each="user : ${totalStat.users}">
+                        <td th:text="${user.firstName + ' '+ user.lastName}"></td>
+                        <td th:text="${user.positions}"></td>
+                        <td th:text="${user.salary}"></td>
+                        <td th:text="${user.bonus}"></td>
+                        <td th:text="${user.shiftSalary}"></td>
+                        <td th:text="${user.shifts.size()}"></td>
                     </tr>
                     </tbody>
                 </table>

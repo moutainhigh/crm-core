@@ -1,6 +1,7 @@
 package com.cafe.crm.models.user;
 
 import com.cafe.crm.models.shift.Shift;
+import com.cafe.crm.utils.PatternStorage;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -25,12 +26,11 @@ public class User {
 	@Column(nullable = false)
 	private String lastName;
 
-	@Pattern(regexp = "^([a-zA-Z0-9_\\.\\-])+\\@(([a-zA-Z0-9\\-])+\\.)+([a-zA-Z0-9]{2,4})+$", message = "Поле \"email\" должно соответствовать шаблону (пример mail@mail.ru)")
+	@Pattern(regexp = PatternStorage.EMAIL, message = "Поле \"email\" должно соответствовать шаблону (пример mail@mail.ru)")
 	@Column(unique = true)
 	private String email;
 
-	// TODO: 01.08.2017 Поставить патерн
-	@NotBlank(message = "Поле \"phone\" должно соответствовать шаблону")
+	@Pattern(regexp = PatternStorage.PHONE, message = "Поле \"phone\" должно соответствовать шаблону")
 	@Column(unique = true)
 	private String phone;
 

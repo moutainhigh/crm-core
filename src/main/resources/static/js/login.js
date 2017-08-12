@@ -4,7 +4,7 @@ function validateEmail(email) { //Validates the email address
 }
 
 function validatePhone(phone) { //Validates the phone number
-    var phoneRegex = /^(8|\+7)?[\d]{10}$/;
+    var phoneRegex = /^(8){1}[\d]+$/;
     return phoneRegex.test(phone);
 }
 

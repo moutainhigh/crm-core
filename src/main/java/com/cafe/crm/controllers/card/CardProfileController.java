@@ -8,6 +8,7 @@ import com.cafe.crm.services.interfaces.card.CardControllerService;
 import com.cafe.crm.services.interfaces.card.CardService;
 import com.cafe.crm.services.interfaces.email.EmailService;
 import com.cafe.crm.services.interfaces.property.PropertyService;
+import com.cafe.crm.utils.PatternStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,7 @@ public class CardProfileController {
 
 	private final Logger logger = LoggerFactory.getLogger(CardProfileController.class);
 
-	private final Pattern VALID_EMAIL_ADDRESS_REGEX =
-			Pattern.compile("^([a-zA-Z0-9_\\.\\-])+\\@(([a-zA-Z0-9\\-])+\\.)+([a-zA-Z0-9]{2,4})+$");
+	private final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile(PatternStorage.EMAIL);
 
 	private final CardService cardService;
 	private final CalculateService calculateService;

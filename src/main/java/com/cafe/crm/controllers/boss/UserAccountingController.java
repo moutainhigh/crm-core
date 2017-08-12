@@ -66,13 +66,16 @@ public class UserAccountingController {
 	@RequestMapping(value = {"/edit"}, method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> editUser(@ModelAttribute @Valid User user, BindingResult bindingResult,
+									  @RequestParam(name = "oldPassword") String oldPassword,
+									  @RequestParam(name = "newPassword") String newPassword,
+									  @RequestParam(name = "repeatedPassword") String repeatedPassword,
 									  @RequestParam(name = "positionsIds") String positionsIds,
 									  @RequestParam(name = "rolesIds") String rolesIds) {
 		if (bindingResult.hasErrors()) {
 			String fieldError = bindingResult.getFieldError().getDefaultMessage();
 			throw new UserDataException("Не удалось изменить данные пользователя!\n" + fieldError);
 		}
-		userService.update(user, positionsIds, rolesIds);
+		userService.update(user, oldPassword, newPassword, repeatedPassword, positionsIds, rolesIds);
 		return ResponseEntity.ok("Пользователь успешно обновлен!");
 	}
 

@@ -12,6 +12,7 @@ import com.cafe.crm.services.interfaces.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -99,10 +100,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void update(User user, String positionsIds, String rolesIds) {
+	public void update(User user, String oldPassword, String newPassword, String repeatedPassword, String positionsIds, String rolesIds) {
 		checkForNotNew(user);
 		checkForUniqueEmailAndPhone(user);
-		checkForChangingPassword(user);
+		if (isValidPasswordsData(user, oldPassword, newPassword, repeatedPassword)) {
+			user.setPassword(passwordEncoder.encode(newPassword));
+		}
 		setPositionsToUser(user, positionsIds);
 		setRolesToUser(user, rolesIds);
 		userRepository.saveAndFlush(user);
@@ -142,11 +145,18 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	private void checkForChangingPassword(User user) {
-		User userInDb = userRepository.findOne(user.getId());
-		if (!user.getPassword().equals(userInDb.getPassword())) {
-			throw new UserDataException("Был изменен пароль!");
+	private boolean isValidPasswordsData(User user, String oldPassword, String newPassword, String repeatedPassword) {
+		if (StringUtils.isEmpty(oldPassword) || StringUtils.isEmpty(newPassword) || StringUtils.isEmpty(repeatedPassword)) {
+			return false;
 		}
+		if (!newPassword.equals(repeatedPassword)) {
+			throw new UserDataException("Новый пароль и повтор не совпадают!");
+		}
+		User userInDatabase = userRepository.findOne(user.getId());
+		if (!passwordEncoder.matches(oldPassword, userInDatabase.getPassword())) {
+			throw new UserDataException("Старый пароль не верный!");
+		}
+		return true;
 	}
 
 	private Long[] parseIds(String ids) {

@@ -53,7 +53,7 @@ public class InitUser {
 		manager.setFirstName("Anna");
 		manager.setLastName("Jons");
 		manager.setEmail("manager@mail.ru");
-		manager.setPhone("9233456789");
+		manager.setPhone("89233456789");
 		manager.setPositions(adminPositionsList);
 		manager.setRoles(managerRoles);
 
@@ -63,7 +63,7 @@ public class InitUser {
 		boss.setFirstName("Герман");
 		boss.setLastName("Севостьянов");
 		boss.setEmail("boss@mail.ru");
-		boss.setPhone("9123456789");
+		boss.setPhone("89123456789");
 		boss.setPositions(bossPositionsList);
 		boss.setRoles(bossRoles);
 
@@ -73,7 +73,7 @@ public class InitUser {
 		worker.setFirstName("Ахмад");
 		worker.setLastName("Чай");
 		worker.setEmail("worker@mail.ru");
-		worker.setPhone("9111111111");
+		worker.setPhone("89111111111");
 		worker.setPositions(workerPositionsList);
 		worker.setRoles(workerRoles);
 

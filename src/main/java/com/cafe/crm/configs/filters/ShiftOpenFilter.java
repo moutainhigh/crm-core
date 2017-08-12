@@ -17,10 +17,12 @@ import java.io.IOException;
 
 public class ShiftOpenFilter extends GenericFilterBean {
 
-	@Autowired
 	private ShiftService shiftService;
 
-	public ShiftOpenFilter() {}
+	@Autowired
+	public void setShiftService(ShiftService shiftService) {
+		this.shiftService = shiftService;
+	}
 
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

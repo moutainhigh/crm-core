@@ -28,7 +28,7 @@ public interface UserService {
 
 	Map<Position, List<User>> findAndSortUserByPosition();
 
-	void update(User user, String positionsIds, String rolesIds);
+	void update(User user, String oldPassword, String newPassword, String repeatedPassword, String positionsIds, String rolesIds);
 
 	List<User> findByEmailOrPhone(String email, String phone);
 

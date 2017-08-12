@@ -71,8 +71,8 @@ public class PositionServiceImpl implements PositionService {
 	}
 
 	private void checkForUniqueName(Position position) {
-		Position positionInDb = findByName(position.getName());
-		if ((positionInDb != null) && !positionInDb.getId().equals(position.getId())) {
+		Position positionInDatabase = findByName(position.getName());
+		if ((positionInDatabase != null) && !positionInDatabase.getId().equals(position.getId())) {
 			throw new PositionDataException("Должность с таким названием уже существует!");
 		}
 	}
