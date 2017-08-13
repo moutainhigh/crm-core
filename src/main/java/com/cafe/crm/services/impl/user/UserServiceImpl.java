@@ -10,6 +10,7 @@ import com.cafe.crm.services.interfaces.position.PositionService;
 import com.cafe.crm.services.interfaces.role.RoleService;
 import com.cafe.crm.services.interfaces.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -25,6 +26,9 @@ public class UserServiceImpl implements UserService {
 	private final RoleService roleService;
 	private final PasswordEncoder passwordEncoder;
 	private PositionService positionService;
+
+	@Value("${user.default-password}")
+	private String defaultPassword;
 
 	@Autowired
 	public UserServiceImpl(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder) {
@@ -44,12 +48,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void save(User user, String positionsIds, String rolesIds) {
+	public void save(User user, String positionsIds, String rolesIds, String isDefaultPassword) {
 		checkForUniqueEmailAndPhone(user);
 		setPositionsToUser(user, positionsIds);
 		setRolesToUser(user, rolesIds);
-		String encodedPassword = passwordEncoder.encode(user.getPassword());
-		user.setPassword(encodedPassword);
+		setPasswordToUser(user, isDefaultPassword);
 		userRepository.saveAndFlush(user);
 	}
 
@@ -203,5 +206,12 @@ public class UserServiceImpl implements UserService {
 			List<Role> roles = roleService.findByIdIn(longRolesIds);
 			user.setRoles(roles);
 		}
+	}
+
+	private void setPasswordToUser(User user, String isDefaultPassword) {
+		Boolean isDefault = Boolean.valueOf(isDefaultPassword);
+		String password;
+		password = isDefault ? passwordEncoder.encode(defaultPassword) : passwordEncoder.encode(user.getPassword());
+		user.setPassword(password);
 	}
 }

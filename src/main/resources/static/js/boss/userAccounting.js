@@ -97,10 +97,12 @@ $(document).ready(function () {
     $('.formAddUser').on('submit', function (event) {
         event.preventDefault();
         $('.errorMessage').html('').hide();
-        if ($('.addUserFirstPassword').val() != $('.addUserSecondPassword').val()) {
-            var errorMessage = '<h4 style="color:red;" align="center">Пароли не совпадают</h4>';
-            $('.errorMessage').html(errorMessage).show();
-            return false;
+        if (!$('#isDefaultPassword').is(':checked')) {
+            if ($('.addUserFirstPassword').val() != $('.addUserSecondPassword').val()) {
+                var errorMessage = '<h4 style="color:red;" align="center">Пароли не совпадают</h4>';
+                $('.errorMessage').html(errorMessage).show();
+                return false;
+            }
         }
         var positionsIds = $('.addUser-PositionCheckbox input:checkbox:checked').map(function () {
             return $(this).val();
@@ -163,4 +165,21 @@ $(document).ready(function () {
             }
         })
     });
+});
+
+$(document).ready(function () {
+    $('#isDefaultPassword').on('click', function () {
+        if ($(this).is(':checked')) {
+            $(".addUserFirstPassword").val('default').removeAttr('required');
+            $(".addUserSecondPassword").val('default').removeAttr('required');
+            $("#addUserFirstPasswordAllForm").hide();
+            $("#addUserSecondPasswordAllForm").hide();
+
+        } else {
+            $(".addUserFirstPassword").val('').attr('required','required');
+            $(".addUserSecondPassword").val('').attr('required','required');
+            $("#addUserFirstPasswordAllForm").show();
+            $("#addUserSecondPasswordAllForm").show();
+        }
+    })
 });

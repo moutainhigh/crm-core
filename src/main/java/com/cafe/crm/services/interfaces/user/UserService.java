@@ -10,7 +10,7 @@ import java.util.Map;
 public interface UserService {
 	void save(User user);
 
-	void save(User user, String positionsIds, String rolesIds);
+	void save(User user, String positionsIds, String rolesIds, String isDefaultPassword);
 
 	List<User> findAll();
 

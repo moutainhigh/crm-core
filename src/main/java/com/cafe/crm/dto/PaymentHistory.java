@@ -83,25 +83,15 @@ public class PaymentHistory {
 	public static class PaymentHistoryBuilder {
 
 		private Long calculateId;
-
 		private String calculateDescription;
-
 		private String clientDescription;
-
 		private Double totalPrice;
-
 		private Double menuPrice;
-
 		private Double timePrice;
-
 		private Long cafeDiscount;
-
 		private Long cardDiscount;
-
 		private Double payWithCard;
-
 		private LocalDateTime dateStart;
-
 		private LocalTime spentTime;
 
 		public PaymentHistory build() {

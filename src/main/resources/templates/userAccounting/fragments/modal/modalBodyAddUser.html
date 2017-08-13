@@ -52,19 +52,25 @@
                                    placeholder="Оклад"/>
                     </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="addUserFirstPasswordAllForm">
                         <label class="control-label col-sm-2">Пароль</label>
                         <div class="col-md-6">
                             <input type="password" class="form-control addUserFirstPassword" required="required"
-                                   placeholder="Пароль для доступа в систему" autofocus="" name="password"/>
+                                   placeholder="Пароль для доступа в систему" name="password"/>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="addUserSecondPasswordAllForm">
                         <label class="control-label col-sm-2">Повтор</label>
                         <div class="col-md-6">
                             <input type="password" class="form-control addUserSecondPassword"
-                                   placeholder="Подтвердите пароль" autofocus="" required="required"/>
+                                   placeholder="Подтвердите пароль" required="required"/>
                         </div>
+                    </div>
+                    <div class="col-md-offset-1" align="left">
+                        <label>
+                            <input type="checkbox" value="true" name="isDefaultPassword" id="isDefaultPassword">
+                            Использовать пароль по умолчанию</input>
+                        </label>
                     </div>
                     <div class="row">
                         <div class="col-md-6">

@@ -57,6 +57,9 @@ advertising:
 site:
   address: localhost:8080
 
+user:
+  default-password: hookahpacman
+
 balance-info:
   mail:
     deduction:

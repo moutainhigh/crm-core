@@ -59,12 +59,13 @@ public class UserAccountingController {
 	@ResponseBody
 	public ResponseEntity<?> addUser(@ModelAttribute @Valid User user, BindingResult bindingResult,
 									 @RequestParam(name = "positionsIds") String positionsIds,
-									 @RequestParam(name = "rolesIds") String rolesIds) {
+									 @RequestParam(name = "rolesIds") String rolesIds,
+									 @RequestParam(name = "isDefaultPassword", required = false) String isDefaultPassword) {
 		if (bindingResult.hasErrors()) {
 			String fieldError = bindingResult.getFieldError().getDefaultMessage();
 			throw new UserDataException("Не удалось добавить пользователя!\n" + fieldError);
 		}
-		userService.save(user, positionsIds, rolesIds);
+		userService.save(user, positionsIds, rolesIds, isDefaultPassword);
 		return ResponseEntity.ok("Пользователь успешно обновлен!");
 	}
 
