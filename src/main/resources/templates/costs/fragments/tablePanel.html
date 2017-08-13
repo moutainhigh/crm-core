@@ -19,10 +19,19 @@
                         <input type="text" class="form-control" aria-label="Название" placeholder="Все товары"
                                th:value="${goodsName} ? ${goodsName} : '' " th:name="goodsName" id="searchGoods"/>
                     </div>
-                    <div class="col-md-3">
-                        <input type="text" class="form-control" aria-label="Название" placeholder="Все категории"
-                               th:value="${categoryName} ? ${categoryName} : '' " th:name="categoryName"
-                               id="searchCategory"/>
+                    <div class="dropdown col-md-3">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="searchCategoryDropdownMenu"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <th:block th:text="${categoryName} ? ${categoryName} : 'Все категории' ">Все категории</th:block>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="searchCategoryDropdownMenu" id="seatchCategoryDropList">
+                            <li><a>Все категории</a></li>
+                            <li th:each="category : ${goodsCategories}"><a th:text="${category.name}">Action</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3" hidden="hidden" >
+                        <input type="text" class="form-control" aria-label="Название"  th:value="${categoryName} ? ${categoryName} : 'Все категории'" th:name="categoryName" id="searchCategory"/>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">

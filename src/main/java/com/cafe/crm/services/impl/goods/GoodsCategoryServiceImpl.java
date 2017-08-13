@@ -6,8 +6,7 @@ import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Service
 public class GoodsCategoryServiceImpl implements GoodsCategoryService {
@@ -25,8 +24,8 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
 	}
 
 	@Override
-	public Set<GoodsCategory> getAll() {
-		return new HashSet<>(goodsCategoryRepository.findAll());
+	public List<GoodsCategory> findAll() {
+		return goodsCategoryRepository.findAll();
 	}
 
 	@Override
@@ -35,7 +34,7 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
 	}
 
 	@Override
-	public Set<GoodsCategory> findByNameStartingWith(String startName) {
+	public List<GoodsCategory> findByNameStartingWith(String startName) {
 		return goodsCategoryRepository.findByNameStartingWith(startName);
 	}
 

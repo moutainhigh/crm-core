@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import static org.springframework.util.StringUtils.*;
+
 @Controller
 @RequestMapping(value = "/manager")
 public class CostsController {
@@ -43,10 +45,12 @@ public class CostsController {
 	public String showCostsPage(Model model) {
 		LocalDate today = getShiftDate();
 		List<Goods> goodsList = goodsService.findByDateBetween(today, today.plusYears(100));
+		List<GoodsCategory> goodsCategories = goodsCategoryService.findAll();
 		Double totalPrice = getTotalPrice(goodsList);
 		Shift shift = shiftService.getLast();
 
 		model.addAttribute("goodsList", goodsList);
+		model.addAttribute("goodsCategories", goodsCategories);
 		model.addAttribute("categoryName", null);
 		model.addAttribute("goodsName", null);
 		model.addAttribute("totalPrice", totalPrice);
@@ -69,6 +73,7 @@ public class CostsController {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 		List<Goods> goodsList = getGoodses(goodsName, categoryName, fromDate, toDate, formatter);
+		List<GoodsCategory> goodsCategories = goodsCategoryService.findAll();
 		double totalPrice = getTotalPrice(goodsList);
 
 		LocalDate from = (fromDate == null || fromDate.isEmpty()) ? null : LocalDate.parse(fromDate, formatter);
@@ -76,6 +81,7 @@ public class CostsController {
 		Shift shift = shiftService.getLast();
 
 		model.addAttribute("goodsList", goodsList);
+		model.addAttribute("goodsCategories", goodsCategories);
 		model.addAttribute("goodsName", goodsName);
 		model.addAttribute("categoryName", categoryName);
 		model.addAttribute("totalPrice", totalPrice);
@@ -107,19 +113,19 @@ public class CostsController {
 
 	private List<Goods> getGoodses(String goodsName, String categoryName, String fromDate, String toDate, DateTimeFormatter formatter) {
 		goodsName = (goodsName == null) ? null : goodsName.trim();
-		categoryName = (categoryName == null) ? null : categoryName.trim();
+		categoryName = (categoryName == null) || categoryName.equals("Все категории") ? null : categoryName.trim();
 
 		LocalDate today = timeManager.getDate();
-		LocalDate from = (fromDate == null || fromDate.isEmpty())
+		LocalDate from = (isEmpty(fromDate))
 				? today.minusYears(100) : LocalDate.parse(fromDate, formatter);
-		LocalDate to = (toDate == null || toDate.isEmpty())
+		LocalDate to = (isEmpty(toDate))
 				? today.plusYears(100) : LocalDate.parse(toDate, formatter);
 
-		if ((goodsName == null || goodsName.isEmpty()) && (categoryName == null || categoryName.isEmpty())) {
+		if (isEmpty(goodsName) && isEmpty(categoryName)) {
 			return goodsService.findByDateBetween(from, to);
-		} else if (goodsName == null || goodsName.isEmpty()) {
+		} else if (isEmpty(goodsName)) {
 			return goodsService.findByCategoryNameAndDateBetween(categoryName, from, to);
-		} else if (categoryName == null || categoryName.isEmpty()) {
+		} else if (isEmpty(categoryName)) {
 			return goodsService.findByNameAndDateBetween(goodsName, from, to);
 		}
 		return goodsService.findByNameAndCategoryNameAndDateBetween(goodsName, categoryName, from, to);
@@ -129,7 +135,8 @@ public class CostsController {
 	@ResponseBody
 	public ResponseEntity<?> saveGoods(@ModelAttribute @Valid Goods goods, BindingResult result) {
 		if (result.hasErrors()) {
-			return ResponseEntity.badRequest().body("Не удалось добавить товар!");
+			String fieldError = result.getFieldError().getDefaultMessage();
+			return ResponseEntity.badRequest().body("Не удалось добавить товар!\n" + fieldError);
 		}
 		goodsService.save(goods);
 
@@ -172,7 +179,7 @@ public class CostsController {
 	@RequestMapping(value = "/costs/search/category", method = RequestMethod.GET)
 	@ResponseBody
 	public String[] getCategoryStartWith(@RequestParam(name = "name") String startName) {
-		Set<GoodsCategory> categories = goodsCategoryService.findByNameStartingWith(startName);
+		List<GoodsCategory> categories = goodsCategoryService.findByNameStartingWith(startName);
 
 		return categories.stream().map(GoodsCategory::getName).toArray(String[]::new);
 	}

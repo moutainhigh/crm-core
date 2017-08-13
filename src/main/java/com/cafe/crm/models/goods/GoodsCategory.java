@@ -2,10 +2,7 @@ package com.cafe.crm.models.goods;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "goods_category")
@@ -15,6 +12,7 @@ public class GoodsCategory {
 	private Long id;
 
 	@NotBlank(message = "Поле \"Название\" не может быть пустым")
+	@Column(unique = true)
 	private String name;
 
 	public GoodsCategory() {
