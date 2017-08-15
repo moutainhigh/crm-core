@@ -117,8 +117,8 @@ public class ShiftController {
 	@RequestMapping(value = "/shift/end", method = RequestMethod.POST)
 	public String closeShift(@RequestParam(name = "usersBonus") Integer[] usersBonuses,
 							 @RequestParam(name = "usersIds") Long[] usersIds,
-							 @RequestParam(name = "cache") Double cache,
-							 @RequestParam(name = "bankKart") Double bankKart,
+							 @RequestParam(name = "cashBox") Double cashBox,
+							 @RequestParam(name = "bankCashBox") Double bankCashBox,
 							 @RequestParam(name = "comment") String comment) {
 		Shift lastShift = shiftService.getLast();
 		Map<Long, Integer> mapOfUsersIdsAndBonuses = new HashMap<>();
@@ -135,15 +135,15 @@ public class ShiftController {
 			totalBonusSum = totalBonusSum + userBonus;
 		}
 		Double totalCashBox = shiftView.getTotalCashBox() - totalBonusSum;
-		Double shortage = totalCashBox - (cache + bankKart);
+		Double shortage = totalCashBox - (cashBox + bankCashBox);
 
-		if (shortage > 0) {
-			Shift shift = shiftService.closeShift(mapOfUsersIdsAndBonuses, allPrice, cache, bankKart, comment);
+		if (shortage < 0) {
+			Shift shift = shiftService.closeShift(mapOfUsersIdsAndBonuses, allPrice, cashBox, bankCashBox, comment);
 			vkService.sendDailyReportToConference(shift);
 		} else {
 			List<User> users = userService.findByRoleName(EMAIL_RECIPIENT_ROLE_IN_CASE_SHORTAGE);
-			emailService.sendCloseShiftInfoFromText(totalCashBox, cache, bankKart, payWithCard, allPrice, users, shortage);
-			Shift shift = shiftService.closeShift(mapOfUsersIdsAndBonuses, allPrice, cache, bankKart, comment);
+			emailService.sendCloseShiftInfoFromText(totalCashBox, cashBox, bankCashBox, payWithCard, allPrice, users, shortage);
+			Shift shift = shiftService.closeShift(mapOfUsersIdsAndBonuses, allPrice, cashBox, bankCashBox, comment);
 			vkService.sendDailyReportToConference(shift);
 		}
 
@@ -167,7 +167,5 @@ public class ShiftController {
 		result.add(totalCashBox);
 		return result;
 	}
-
-
 }
 

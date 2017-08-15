@@ -83,26 +83,29 @@ public class VkServiceImpl implements VkService {
 	}
 
 	private String formatMessage(Shift shift, String raw) {
-		Object[] params = new Object[12];
+		Object[] params = new Object[13];
 		DecimalFormat df = new DecimalFormat("#.##");
 
 		StringBuilder salaryCosts = new StringBuilder();
 		StringBuilder otherCosts = new StringBuilder();
 		double totalCosts = formatCostsAndGetTotalCosts(shift.getGoodses(), salaryCosts, otherCosts);
 
+		if (shift.getProfit() - totalCosts > shift.getCashBox() + shift.getBankCashBox()) {
+			params[0] = "НЕДОСТАЧА!";
+		}
 
-		params[0] = getDayOfWeek(shift.getShiftDate());
-		params[1] = getDate(shift.getShiftDate());
-		params[2] = df.format(shift.getProfit());
-		params[3] = getAmountOfClients(shift.getClients());
-		params[4] = shift.getClients().size();
-		params[5] = salaryCosts.toString();
-		params[6] = otherCosts.toString();
-		params[7] = df.format(totalCosts);
-		params[8] = df.format(shift.getCashBox());
-		params[9] = df.format(shift.getBankCashBox());
-		params[10] = df.format(shift.getBankCashBox() + shift.getCashBox());
-		params[11] = getComment(shift.getComment());
+		params[1] = getDayOfWeek(shift.getShiftDate());
+		params[2] = getDate(shift.getShiftDate());
+		params[3] = df.format(shift.getProfit());
+		params[4] = getAmountOfClients(shift.getClients());
+		params[5] = shift.getClients().size();
+		params[6] = salaryCosts.toString();
+		params[7] = otherCosts.toString();
+		params[8] = df.format(totalCosts);
+		params[9] = df.format(shift.getCashBox());
+		params[10] = df.format(shift.getBankCashBox());
+		params[11] = df.format(shift.getBankCashBox() + shift.getCashBox());
+		params[12] = getComment(shift.getComment());
 
 		return MessageFormat.format(raw, params);
 	}

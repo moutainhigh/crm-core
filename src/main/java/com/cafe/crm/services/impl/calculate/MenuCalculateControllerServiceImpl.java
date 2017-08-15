@@ -104,7 +104,10 @@ public class MenuCalculateControllerServiceImpl implements MenuCalculateControll
 		}
 		calculatePriceMenu(calculateId);
 		layerProduct.setClients(forDelClients);//for json
-		Product product = productService.findByNameAndDescriptionAndCost(layerProduct.getName(), layerProduct.getDescription(), layerProduct.getCost());
+		String name = layerProduct.getName();
+		String description = layerProduct.getDescription();
+		Double cost = layerProduct.isDirtyProfit() ? layerProduct.getCost() : 0d;
+		Product product = productService.findByNameAndDescriptionAndCost(name, description, cost);
 		int oldRating = product.getRating();
 		product.setRating(--oldRating);
 		productService.saveAndFlush(product);

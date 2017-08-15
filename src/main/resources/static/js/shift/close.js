@@ -8,18 +8,18 @@ function test(id) {
 
 
 function test2() {
-    var cashBox = parseFloat($("#totalCashBox").val());
-    var cache = parseFloat($("#cache").val());
+    var totalCashBox = parseFloat($("#totalCashBox").val());
+    var cashBox = parseFloat($("#cashBox").val());
     var payWithCard = parseFloat($("#payWithCard").val());
-    var bankKart = parseFloat($("#bankKart").val());
-    var budget = cache + payWithCard + bankKart;
-    if (budget < cashBox) {
-        $("#cache").css('border', 'red 3px solid');
-        $("#bankKart").css('border', 'red 3px solid');
+    var bankCashBox = parseFloat($("#bankCashBox").val());
+    var budget = cashBox + bankCashBox;
+    if (budget < totalCashBox) {
+        $("#cashBox").css('border', 'red 3px solid');
+        $("#bankCashBox").css('border', 'red 3px solid');
         $('#errorBlock').html('Сверка бюджета не прошла!');
         $("#closeShiftButtonShortage").css('visibility', 'visible');
-        $("#budget").css('visibility', 'hidden');
-    } else if (budget >= cashBox) {
+        // $("#budget").css('visibility', 'hidden');
+    } else if (budget >= totalCashBox) {
         $('#budget').attr('type', 'submit');
     }
 }

@@ -148,14 +148,13 @@
 
                                 <div class="col-md-3" style="margin-left: 100px;margin-top: 1px">
                                     <h4 style="font-size: 15px">Наличные: </h4>
-                                    <input type="text" class="form-control" id="cache" name="cache" value="0"
-                                           placeholder="Наличные"/>
+                                    <input type="number" class="form-control" id="cashBox" name="cashBox" placeholder="Наличные" required="required"/>
                                     <br></br>
                                 </div>
                                 <div class="col-md-3">
                                     <h4 style="font-size: 15px;margin-top: -1px">Деньги на банковской карте : </h4>
-                                    <input type="text" style="margin-top: -4px" class="form-control" id="bankKart"
-                                           name="bankKart" th:value="0" placeholder="Деньги с банковской карты"/>
+                                    <input type="number" style="margin-top: -4px" class="form-control" id="bankCashBox"
+                                           name="bankCashBox" placeholder="Деньги с банковской карты" required="required"/>
                                 </div>
                                 <br></br>
                                 <div class="col-md-3">
@@ -164,21 +163,25 @@
                                            name="payWithCard" th:value="${closeShiftView.card}"
                                            placeholder="Деньги с карты"/>
                                 </div>
-                                <br></br>
+                                <br/>
+                                <div class="col-md-offset-3 col-md-6" >
+                                    <button id="collapseText" type="button" class="btn btn-primary btn-block" data-toggle="collapse"
+                                            data-target="#comment" aria-expanded="false" >Оставить комментарий
+                                    </button>
+                                    <br/>
+                                    <div id="comment" class="form-group collapse">
+                                        <br/>
+                                        <textarea id="commentText" type="text" rows="5" class="form-control"
+                                                  placeholder="Оставте комментарий" name="comment"/>
+                                    </div>
+                                </div>
                                 <button type="button" id="budget" onclick="test2()"
                                         class="btn btn-lg btn-primary btn-block">Закрыть смену
                                 </button>
+                                <br/>
                                 <button style="visibility: hidden" id="closeShiftButtonShortage"
                                         class="btn btn-lg btn-danger btn-block" type="submit">Закрыть смену с недосдачей
                                 </button>
-                                <button id="collapseText" type="button" class="btn btn-primary" data-toggle="collapse"
-                                        data-target="#comment" aria-expanded="false">Оставить комментарий
-                                </button>
-                                <div id="comment" class="form-group collapse">
-                                    <br/>
-                                    <textarea id="commentText" type="text" rows="5" class="form-control"
-                                              placeholder="Оставте комментарий" name="comment"/>
-                                </div>
                             </div>
 
 

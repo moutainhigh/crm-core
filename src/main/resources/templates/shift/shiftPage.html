@@ -95,9 +95,7 @@
                     </table>
                     <div th:if="${shiftCashBox}==null">
                         <h3>Введите количество денег в кассе</h3>
-                        <input type="text" class="form-control" value="" placeholder="Введите количество денег в кассе"
-                               required="" autofocus=""
-                               name="cashBox"/>
+                        <input type="number" class="form-control" value="" placeholder="Введите количество денег в кассе" required="" autofocus="" name="cashBox" min="0"/>
                     </div>
 
                     <div th:if="${shiftCashBox}!=null">
@@ -109,8 +107,7 @@
                     <div th:if="${bankCashBox}==null">
                         <h3>Введите количество денег на банковской карте</h3>
                         <input type="number" class="form-control" value=""
-                               placeholder="Введите количество денег на банковской карте" required="" autofocus=""
-                               name="bankCashBox"/>
+                               placeholder="Введите количество денег на банковской карте" required="" autofocus="" name="bankCashBox" min="0"/>
                     </div>
 
                     <div th:if="${bankCashBox}!=null">

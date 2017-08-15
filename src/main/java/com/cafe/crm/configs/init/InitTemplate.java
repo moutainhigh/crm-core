@@ -62,20 +62,21 @@ public class InitTemplate {
 		Template exampleCloseShift = new Template("closeShiftEmailShortage", exampleCloseShiftAfterDebitingContext);
 
 		StringBuilder dailyReportMessage = new StringBuilder();
-		dailyReportMessage.append("{0} {1}\n");
-		dailyReportMessage.append("Грязными: {2}\n\n");
+		dailyReportMessage.append("{0}\n");
+		dailyReportMessage.append("{1} {2}\n");
+		dailyReportMessage.append("Грязными: {3}\n\n");
 		dailyReportMessage.append("Количество гостей:\n");
-		dailyReportMessage.append("{3}\n");
-		dailyReportMessage.append("Всего: {4}\n\n");
+		dailyReportMessage.append("{4}\n");
+		dailyReportMessage.append("Всего: {5}\n\n");
 		dailyReportMessage.append("Зарплата Сотрудников:\n");
-		dailyReportMessage.append("{5}\n");
-		dailyReportMessage.append("Прочее расходы:\n");
 		dailyReportMessage.append("{6}\n");
-		dailyReportMessage.append("Всего расходов за день - {7}\n\n");
-		dailyReportMessage.append("Наличными - {8}\n");
-		dailyReportMessage.append("Карта - {9}\n");
-		dailyReportMessage.append("Общая Сумма - {10}\n");
-		dailyReportMessage.append("{11}");
+		dailyReportMessage.append("Прочее расходы:\n");
+		dailyReportMessage.append("{7}\n");
+		dailyReportMessage.append("Всего расходов за день - {8}\n\n");
+		dailyReportMessage.append("Наличными - {9}\n");
+		dailyReportMessage.append("Карта - {10}\n");
+		dailyReportMessage.append("Общая Сумма - {11}\n");
+		dailyReportMessage.append("{12}");
 		byte[] byteOfDailyMessage = dailyReportMessage.toString().getBytes("UTF-8");
 		Template dailyReportForVk = new Template("daily-report", byteOfDailyMessage);
 
