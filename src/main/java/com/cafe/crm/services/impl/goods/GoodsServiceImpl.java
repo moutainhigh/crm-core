@@ -20,23 +20,14 @@ import java.util.Set;
 public class GoodsServiceImpl implements GoodsService {
 
 	private final GoodsRepository goodsRepository;
-	@Autowired
-	private ShiftService shiftService;
-	private GoodsCategoryService goodsCategoryService;
+	private final ShiftService shiftService;
+	private final GoodsCategoryService goodsCategoryService;
 
 
 	@Autowired
-	public GoodsServiceImpl(GoodsRepository goodsRepository) {
+	public GoodsServiceImpl(GoodsRepository goodsRepository, ShiftService shiftService, GoodsCategoryService goodsCategoryService) {
 		this.goodsRepository = goodsRepository;
-	}
-
-//	@Autowired
-//	public void setShiftService(ShiftService shiftService) {
-//		this.shiftService = shiftService;
-//	}
-
-	@Autowired
-	public void setGoodsCategoryService(GoodsCategoryService goodsCategoryService) {
+		this.shiftService = shiftService;
 		this.goodsCategoryService = goodsCategoryService;
 	}
 

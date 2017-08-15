@@ -22,7 +22,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/boss/totalStatistics")
-public class TotalStatistic {
+public class StatisticController {
 
 	private final ShiftService shiftService;
 	private final TimeManager timeManager;
@@ -32,7 +32,7 @@ public class TotalStatistic {
 	private String categoryNameSalaryForShift;
 
 	@Autowired
-	public TotalStatistic(GoodsService goodsService, ShiftService shiftService, TimeManager timeManager) {
+	public StatisticController(GoodsService goodsService, ShiftService shiftService, TimeManager timeManager) {
 		this.goodsService = goodsService;
 		this.shiftService = shiftService;
 		this.timeManager = timeManager;
@@ -86,7 +86,7 @@ public class TotalStatistic {
 		clients.addAll(shift.getClients());
 		salaryGoods.addAll(goodsService.findByDateAndCategoryNameAndVisibleTrue(shift.getShiftDate(),
 				categoryNameSalaryForShift));
-		otherGoods.addAll(goodsService.findByDateAndVisibleTrue(shift.getShiftDate()));
+		otherGoods.addAll(goodsService.findByShiftId(shift.getId()));
 		otherGoods.removeAll(salaryGoods);
 		for (Goods goods : salaryGoods) {
 			totalShiftSalary += (goods.getPrice() * goods.getQuantity());

@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
+    <link rel="stylesheet" th:href="@{/css/costs.css}" type="text/css"/>
 </head>
 <body>
 <div th:replace="bossnavbar :: bossNavbar">
@@ -15,22 +16,24 @@
         <div>
             <h3 align="center"><h1 th:align="center" style="color: #5bc0de;">Поиск</h1></h3>
             <input id="filter" style="margin-bottom: 10px" type="text" class="form-control"
-                   placeholder="Поиск по полям"></input>
+                   placeholder="Поиск по полям"/>
         </div>
 
     </div>
 
     <div class="row">
         <hr/>
-        <table id="myTable" data-page-length='25' class="table table-striped table-bordered table-hover">
+
+        <table id="myTable" data-page-length='25' class="table table-striped">
+            <thead>
             <tr>
                 <th>Номер</th>
                 <th>Имя владельца</th>
                 <th>Баланс</th>
                 <th>Скидка</th>
                 <th>Дата последнего визита</th>
-
             </tr>
+            </thead>
             <tbody class="searchable" th:each="shift,iter:${cards}">
             <tr class='clickable-row' th:attr="data-id=${shift.id}">
                 <td><p th:text="${shift.id}"></p></td>
@@ -40,6 +43,15 @@
                 <td><p th:text="${shift.visitDate}"></p></td>
             </tr>
             </tbody>
+            <tfoot>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tfoot>
         </table>
     </div>
 </div>

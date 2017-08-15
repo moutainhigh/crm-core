@@ -17,6 +17,23 @@ body {
     position: relative;
 }
 
+
+.container {
+    margin-top: 10px;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu {
+    background-color: #000;
+}
+
+.dropdown-menu>li>a {
+    color: #ffffff;
+}
+
 .nav > li > a {
     position: relative;
     display: block;
@@ -68,6 +85,11 @@ body {
     -webkit-border-radius: 6px 0 6px 6px;
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
+}
+
+.navbar-inverse {
+    background-color: #000;
+    border-color: #080808;
 }
 
 @media (max-width: 900px) {
