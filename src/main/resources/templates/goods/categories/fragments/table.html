@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<table class="table table-striped" id="sortedTable" th:fragment="categoryTable">
+    <thead>
+    <tr>
+        <th>№</th>
+        <th>Категория</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="category : ${categoryList}" th:id="'category' + ${category.id}">
+        <td th:text="${category.id}" class="id">1</td>
+        <td th:text="${category.name}" class="name">Масло</td>
+
+        <td>
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalEditCategory"
+                    th:onclick="'javascript:categoryEditModal(\'' + ${category.id} + '\');'">Редактировать
+            </button>
+        </td>
+        <td>
+            <button type="button" class="btn btn-danger"
+                    th:onclick="'javascript:removeCategory(\'' + ${category.id} + '\');'">Удалить
+            </button>
+        </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    </tfoot>
+</table>
+</body>
+</html>

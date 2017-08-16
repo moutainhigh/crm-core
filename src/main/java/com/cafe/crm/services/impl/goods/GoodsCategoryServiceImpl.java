@@ -30,6 +30,11 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
 	}
 
 	@Override
+	public GoodsCategory find(Long id) {
+		return goodsCategoryRepository.findOne(id);
+	}
+
+	@Override
 	public GoodsCategory findByNameIgnoreCase(String name) {
 		return goodsCategoryRepository.findByNameIgnoreCase(name);
 	}
@@ -39,4 +44,8 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
 		return goodsCategoryRepository.findByNameStartingWith(startName);
 	}
 
+	@Override
+	public void delete(Long id) {
+		goodsCategoryRepository.delete(id);
+	}
 }

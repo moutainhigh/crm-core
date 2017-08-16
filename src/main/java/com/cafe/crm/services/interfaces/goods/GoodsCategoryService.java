@@ -10,8 +10,11 @@ public interface GoodsCategoryService {
 
 	Set<GoodsCategory> getAll();
 
+	GoodsCategory find(Long id);
+
 	GoodsCategory findByNameIgnoreCase(String name);
 
 	Set<GoodsCategory> findByNameStartingWith(String startName);
 
+	void delete(Long id);
 }
