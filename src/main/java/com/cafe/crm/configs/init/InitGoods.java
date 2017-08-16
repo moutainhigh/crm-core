@@ -30,7 +30,7 @@ public class InitGoods {
 	}
 
 	@Transactional
-	@PostConstruct
+//	@PostConstruct
 	public void init() {
 		GoodsCategory category1 = new GoodsCategory("Продукты питания");
 		GoodsCategory category2 = new GoodsCategory("Спиртные напитки");

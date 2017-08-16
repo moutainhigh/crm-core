@@ -19,7 +19,7 @@ $(document).ready(function () {
 });
 
 function removeCategory(id) {
-    var url = '/boss/category/delete';
+    var url = '/boss/cost/category/delete';
 
     var request = $.post(url, {id: id}, function () {
         location.reload();

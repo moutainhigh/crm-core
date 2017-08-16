@@ -1,4 +1,4 @@
-package com.cafe.crm.controllers.goods.category;
+package com.cafe.crm.controllers.cost;
 
 import com.cafe.crm.models.goods.GoodsCategory;
 import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
@@ -14,15 +14,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Controller
-@RequestMapping(value = "/boss/category")
-public class CategoryController {
+@RequestMapping(value = "/boss/cost/category")
+public class CostCategoryController {
 
 	private final GoodsCategoryService categoryService;
-
 	private final TimeManager timeManager;
 
 	@Autowired
-	public CategoryController(GoodsCategoryService categoryService, TimeManager timeManager) {
+	public CostCategoryController(GoodsCategoryService categoryService, TimeManager timeManager) {
 		this.categoryService = categoryService;
 		this.timeManager = timeManager;
 	}
@@ -31,11 +30,11 @@ public class CategoryController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String showCategoryPage(Model model) {
 		LocalDate today = getShiftDate();
-		model.addAttribute("categoryList", categoryService.getAll());
+		model.addAttribute("categoryList", categoryService.findAll());
 		model.addAttribute("formCategory", new GoodsCategory());
 		model.addAttribute("today", today);
 
-		return "/goods/categories/category";
+		return "/costs/categories/category";
 	}
 
 	private LocalDate getShiftDate() {
@@ -52,7 +51,7 @@ public class CategoryController {
 
 		categoryService.save(category);
 
-		return "redirect:/boss/category";
+		return "redirect:/boss/cost/category";
 	}
 
 	@RequestMapping(value = "/edit")
@@ -62,7 +61,7 @@ public class CategoryController {
 			editedCategory.setName(category.getName());
 			categoryService.save(editedCategory);
 		}
-		return "redirect:/boss/category";
+		return "redirect:/boss/cost/category";
 	}
 
 	@RequestMapping(value = "/delete")

@@ -26,7 +26,7 @@ import static org.springframework.util.StringUtils.*;
 
 @Controller
 @RequestMapping(value = "/manager")
-public class CostsController {
+public class CostController {
 
 	private final TimeManager timeManager;
 	private final GoodsService goodsService;
@@ -34,7 +34,7 @@ public class CostsController {
 	private final ShiftService shiftService;
 
 	@Autowired
-	public CostsController(GoodsService goodsService, GoodsCategoryService goodsCategoryService, TimeManager timeManager, ShiftService shiftService) {
+	public CostController(GoodsService goodsService, GoodsCategoryService goodsCategoryService, TimeManager timeManager, ShiftService shiftService) {
 		this.goodsService = goodsService;
 		this.goodsCategoryService = goodsCategoryService;
 		this.timeManager = timeManager;
