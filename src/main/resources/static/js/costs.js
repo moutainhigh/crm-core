@@ -19,22 +19,6 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $('#searchCategory, #addCategory, #editCategory').autocomplete({
-        minLength: 1,
-        source: function (request, response) {
-            $.ajax({
-                type: 'GET',
-                url: '/manager/costs/search/category?name=' + request.term,
-                success: function (data) {
-                    response(data.length === 0 ? [] : data);
-                }
-            })
-        }
-    });
-});
-
-
-$(document).ready(function () {
     $('#searchGoods, #editName, #addName').autocomplete({
         minLength: 1,
         source: function (request, response) {
@@ -63,6 +47,12 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#formAddGoods').submit(function (e) {
         e.preventDefault();
+        $('.messageAd').html('').hide();
+        if ($('#addCategory').val() == "") {
+            var errorMessage = '<h4 style="color:red;" align="center">Не указана категория расхода</h4>';
+            $('.messageAd').html(errorMessage).show();
+            return false;
+        }
         var url = '/manager/costs/add';
         var formData = $('#formAddGoods').serialize();
 
@@ -89,6 +79,12 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#formEditGoods').submit(function (e) {
         e.preventDefault();
+        $('.messageAd').html('').hide();
+        if ($('#editCategory').val() == "") {
+            var errorMessage = '<h4 style="color:red;" align="center">Не указана категория расхода</h4>';
+            $('.messageAd').html(errorMessage).show();
+            return false;
+        }
         var url = '/manager/costs/edit';
         var formData = $('#formEditGoods').serialize();
 
@@ -167,7 +163,7 @@ function populateGoodsEditModal(rowIdx) {
 
             $('#editId').val(id);
             $('#editName').val(name);
-            $('#editCategory').val(category);
+            $('#editCostDropdownMenuCategory').html(category + ' <span class="caret"></span>');
             $('#editPrice').val(price);
             $('#editQuantity').val(quantity);
             $('#editDate').val(date);
@@ -176,3 +172,24 @@ function populateGoodsEditModal(rowIdx) {
         }
     }
 }
+
+$(document).ready(function () {
+    $('#addCostDropListCategory').find('li').on('click', function () {
+        $('#addCostDropdownMenuCategory').html($(this).text() + ' <span class="caret"></span>');
+        $('#addCategory').val($(this).text());
+    })
+});
+
+$(document).ready(function () {
+    $('#editCostDropListCategory').find('li').on('click', function () {
+        $('#editCostDropdownMenuCategory').html($(this).text() + ' <span class="caret"></span>');
+        $('#editCategory').val($(this).text());
+    })
+});
+
+$(document).ready(function () {
+    $('#seatchCategoryDropList').find('li').on('click', function () {
+        $('#searchCategoryDropdownMenu').html($(this).text() + ' <span class="caret"></span>');
+        $('#searchCategory').val($(this).text());
+    })
+});
