@@ -1,5 +1,6 @@
 package com.cafe.crm.services.impl.goods;
 
+import com.cafe.crm.exceptions.cost.category.CostCategoryDataException;
 import com.cafe.crm.models.goods.GoodsCategory;
 import com.cafe.crm.repositories.goods.GoodsCategoryRepository;
 import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
@@ -20,8 +21,22 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
 
 	@Override
 	public void save(GoodsCategory goodsCategory) {
+		checkForUniqueName(goodsCategory);
 		goodsCategoryRepository.save(goodsCategory);
 	}
+
+	@Override
+	public void update(GoodsCategory goodsCategory) {
+		checkForUniqueName(goodsCategory);
+		GoodsCategory editedCategory = goodsCategoryRepository.findOne(goodsCategory.getId());
+		if (editedCategory != null) {
+			editedCategory.setName(goodsCategory.getName());
+			goodsCategoryRepository.save(editedCategory);
+		} else {
+			throw new CostCategoryDataException("Вы пытаетесь обновить несуществующую категорию!");
+		}
+	}
+
 
 	@Override
 	public List<GoodsCategory> findAll() {
@@ -34,7 +49,7 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
 	}
 
 	@Override
-	public GoodsCategory findByNameIgnoreCase(String name) {
+	public GoodsCategory find(String name) {
 		return goodsCategoryRepository.findByNameIgnoreCase(name);
 	}
 
@@ -46,5 +61,12 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
 	@Override
 	public void delete(Long id) {
 		goodsCategoryRepository.delete(id);
+	}
+
+	private void checkForUniqueName(GoodsCategory goodsCategory) {
+		GoodsCategory goodsCategoryInDataBase = find(goodsCategory.getName());
+		if (goodsCategoryInDataBase != null) {
+			throw new CostCategoryDataException("Категория с таким названием уже существует!");
+		}
 	}
 }

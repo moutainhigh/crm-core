@@ -135,7 +135,7 @@ public class ShiftServiceImpl implements ShiftService {
 	@Transactional
 	@Override
 	public Shift closeShift(Map<Long, Integer> mapOfUsersIdsAndBonuses, Double allPrice, Double cashBox, Double bankCashBox, String comment) {
-		GoodsCategory goodsCategory = goodsCategoryService.findByNameIgnoreCase(categoryNameSalaryForShift);
+		GoodsCategory goodsCategory = goodsCategoryService.find(categoryNameSalaryForShift);
 		Shift shift = shiftRepository.getLast();
 		for (Map.Entry<Long, Integer> entry : mapOfUsersIdsAndBonuses.entrySet()) {
 			User user = userService.findById(entry.getKey());

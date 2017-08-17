@@ -8,11 +8,13 @@ public interface GoodsCategoryService {
 
 	void save(GoodsCategory goodsCategory);
 
+	void update(GoodsCategory goodsCategory);
+
 	List<GoodsCategory> findAll();
 
 	GoodsCategory find(Long id);
 
-	GoodsCategory findByNameIgnoreCase(String name);
+	GoodsCategory find(String name);
 
 	List<GoodsCategory> findByNameStartingWith(String startName);
 
