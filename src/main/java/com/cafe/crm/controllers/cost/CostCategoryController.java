@@ -1,5 +1,7 @@
 package com.cafe.crm.controllers.cost;
 
+import com.cafe.crm.exceptions.cost.category.CostCategoryException;
+import com.cafe.crm.exceptions.user.UserDataException;
 import com.cafe.crm.models.goods.GoodsCategory;
 import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
 import com.cafe.crm.utils.TimeManager;
@@ -10,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -47,21 +50,30 @@ public class CostCategoryController {
 	}
 
 	@RequestMapping(value = "/add")
-	public String addCategory(@ModelAttribute @Valid GoodsCategory category) {
+	@ResponseBody
+	public ResponseEntity<?> addCategory(@ModelAttribute @Valid GoodsCategory category) {
+		GoodsCategory existingCategory = categoryService.findByNameIgnoreCase(category.getName());
+		if (existingCategory == null) {
+			categoryService.save(category);
+			return ResponseEntity.ok("Категория успешно добавлена!");
+		} else {
+			throw new CostCategoryException("Категория с таким именем уже существует");
+		}
 
-		categoryService.save(category);
-
-		return "redirect:/boss/cost/category";
 	}
 
 	@RequestMapping(value = "/edit")
-	public String editCategory(@ModelAttribute GoodsCategory category) {
+	@ResponseBody
+	public ResponseEntity<?> editCategory(@ModelAttribute GoodsCategory category) {
 		GoodsCategory editedCategory = categoryService.find(category.getId());
 		if (editedCategory != null) {
 			editedCategory.setName(category.getName());
 			categoryService.save(editedCategory);
+			return ResponseEntity.ok("Категория успешно обновлена!");
+		} else {
+			throw new CostCategoryException("Вы пытаетесь обновить несуществующую категорию!");
 		}
-		return "redirect:/boss/cost/category";
+
 	}
 
 	@RequestMapping(value = "/delete")
@@ -69,4 +81,10 @@ public class CostCategoryController {
 		categoryService.delete(id);
 		return ResponseEntity.ok("Категория успешно удалена!");
 	}
+
+	@ExceptionHandler(value = CostCategoryException.class)
+	public ResponseEntity<?> handleUserUpdateException(CostCategoryException ex) {
+		return ResponseEntity.badRequest().body(ex.getMessage());
+	}
+
 }

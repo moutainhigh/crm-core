@@ -41,3 +41,69 @@ function categoryEditModal(rowIdx) {
         }
     }
 }
+
+$(document).ready(function () {
+    $('#formEditCategory').submit(function (e) {
+        e.preventDefault();
+        $('.messageAd').html('').hide();
+        if ($('#editCategory').val() == "") {
+            var errorMessage = '<h4 style="color:red;" align="center">Не указана категория расхода</h4>';
+            $('.messageAd').html(errorMessage).show();
+            return false;
+        }
+        var url = '/boss/cost/category/edit';
+        var formData = $('#formEditCategory').serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            success: function (data) {
+                var successMessage = '<h4 style="color:green;" align="center">' + data + '</h4>';
+                $('.messageAd').html(successMessage).show();
+                window.setTimeout(function () {
+                    location.reload()
+                }, 1000);
+            },
+            error: function (error) {
+                var errorMessage = '<h4 style="color:red;" align="center">' + error.responseText + '</h4>';
+                $('.messageAd').html(errorMessage).show();
+            }
+
+        });
+    });
+});
+
+
+
+$(document).ready(function () {
+    $('#formAddCategory').submit(function (e) {
+        e.preventDefault();
+        $('.messageAd').html('').hide();
+        if ($('#addCategory').val() == "") {
+            var errorMessage = '<h4 style="color:red;" align="center">Не указана категория расхода</h4>';
+            $('.messageAd').html(errorMessage).show();
+            return false;
+        }
+        var url = '/boss/cost/category/add';
+        var formData = $('#formAddCategory').serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            success: function (data) {
+                var successMessage = '<h4 style="color:green;" align="center">' + data + '</h4>';
+                $('.messageAd').html(successMessage).show();
+                window.setTimeout(function () {
+                    location.reload()
+                }, 1000);
+            },
+            error: function (error) {
+                var errorMessage = '<h4 style="color:red;" align="center">' + error.responseText + '</h4>';
+                $('.messageAd').html(errorMessage).show();
+            }
+
+        });
+    });
+});
