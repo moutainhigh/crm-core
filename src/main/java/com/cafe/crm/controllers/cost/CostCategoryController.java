@@ -3,7 +3,6 @@ package com.cafe.crm.controllers.cost;
 import com.cafe.crm.exceptions.cost.category.CostCategoryDataException;
 import com.cafe.crm.models.goods.GoodsCategory;
 import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
-import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,8 +11,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Controller
 @RequestMapping(value = "/boss/cost/category")
@@ -42,8 +39,8 @@ public class CostCategoryController {
 			String fieldError = bindingResult.getFieldError().getDefaultMessage();
 			throw new CostCategoryDataException("Не удалось добавить товар " + fieldError);
 		}
-			categoryService.save(category);
-			return ResponseEntity.ok("Категория успешно добавлена!");
+		categoryService.save(category);
+		return ResponseEntity.ok("Категория успешно добавлена!");
 	}
 
 	@RequestMapping(value = "/edit")
@@ -52,8 +49,8 @@ public class CostCategoryController {
 		if (bindingResult.hasErrors()) {
 			return ResponseEntity.badRequest().body("Не удалось обновить категорию");
 		}
-			categoryService.update(category);
-			return ResponseEntity.ok("Категория успешно обновлена!");
+		categoryService.update(category);
+		return ResponseEntity.ok("Категория успешно обновлена!");
 	}
 
 	@RequestMapping(value = "/delete")
