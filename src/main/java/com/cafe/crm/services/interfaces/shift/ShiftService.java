@@ -43,4 +43,8 @@ public interface ShiftService {
 
 	Shift findByDateShift(LocalDate date);
 
+	void transferFromCard(Double transfer);
+	void transferFromCasse (Double transfer);
+
+
 }

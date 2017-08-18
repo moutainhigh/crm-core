@@ -228,4 +228,34 @@ public class ShiftServiceImpl implements ShiftService {
 		return shiftRepository.findByDateShift(date);
 	}
 
+	@Transactional
+	@Override
+	public void transferFromCard(Double transfer) {
+		Shift lastShift = shiftService.getLast();
+		Double cash = 0D;
+		Double card = 0D;
+
+		card = lastShift.getBankCashBox() + transfer;
+		cash = lastShift.getCashBox() - transfer;
+
+		lastShift.setCashBox(cash);
+		lastShift.setBankCashBox(card);
+		shiftService.saveAndFlush(lastShift);
+	}
+
+	@Transactional
+	@Override
+	public void transferFromCasse(Double transfer) {
+		Shift lastShift = shiftService.getLast();
+		Double cash = 0D;
+		Double card = 0D;
+
+		card = lastShift.getBankCashBox() - transfer;
+		cash = lastShift.getCashBox() + transfer;
+
+		lastShift.setCashBox(cash);
+		lastShift.setBankCashBox(card);
+		shiftService.saveAndFlush(lastShift);
+	}
+
 }
