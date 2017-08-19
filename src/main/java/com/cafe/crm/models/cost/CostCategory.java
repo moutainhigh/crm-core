@@ -1,12 +1,12 @@
-package com.cafe.crm.models.goods;
+package com.cafe.crm.models.cost;
 
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "goods_category")
-public class GoodsCategory {
+@Table(name = "cost_category")
+public class CostCategory {
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -15,10 +15,10 @@ public class GoodsCategory {
 	@Column(unique = true)
 	private String name;
 
-	public GoodsCategory() {
+	public CostCategory() {
 	}
 
-	public GoodsCategory(String name) {
+	public CostCategory(String name) {
 		this.name = name;
 	}
 
@@ -43,7 +43,7 @@ public class GoodsCategory {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		GoodsCategory that = (GoodsCategory) o;
+		CostCategory that = (CostCategory) o;
 
 		return name != null ? name.equals(that.name) : that.name == null;
 
@@ -56,7 +56,7 @@ public class GoodsCategory {
 
 	@Override
 	public String toString() {
-		return "GoodsCategory{" +
+		return "CostCategory{" +
 				"name='" + name + '\'' +
 				'}';
 	}

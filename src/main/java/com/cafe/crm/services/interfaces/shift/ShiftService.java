@@ -14,7 +14,7 @@ public interface ShiftService {
 
 	void saveAndFlush(Shift shift);
 
-	Shift crateNewShift(Double cashBox, Double bankCashBox, long... workersId);
+	Shift crateNewShift(Double cashBox, Double bankCashBox, long... usersId);
 
 	Shift findOne(Long L);
 

@@ -3,7 +3,7 @@ package com.cafe.crm.services.impl.vk;
 
 import com.cafe.crm.configs.property.VkProperties;
 import com.cafe.crm.models.client.Client;
-import com.cafe.crm.models.goods.Goods;
+import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.template.Template;
 import com.cafe.crm.models.user.User;
@@ -88,6 +88,7 @@ public class VkServiceImpl implements VkService {
 			return;
 		}
 		String message = formatMessage(shift, new String(messageTemplate.getContent(), Charset.forName("UTF-8")));
+		System.out.println(message);
 		Map<String, String> variables = new HashMap<>();
 		variables.put("chat_id", vkProperties.getChatId());
 		variables.put("message", message);
@@ -116,10 +117,10 @@ public class VkServiceImpl implements VkService {
 
 		StringBuilder salaryCosts = new StringBuilder();
 		StringBuilder otherCosts = new StringBuilder();
-		double totalCosts = formatCostsAndGetTotalCosts(shift.getGoodses(), salaryCosts, otherCosts);
+		double totalCosts = formatCostsAndGetTotalCosts(shift.getCosts(), salaryCosts, otherCosts);
 		double shortage = shift.getProfit() - totalCosts - shift.getCashBox() - shift.getBankCashBox();
 
-		params[0] = shortage < 0d ? "" : "НЕДОСТАЧА!";
+		params[0] = shortage <= 0d ? "" : "НЕДОСТАЧА!";
 		params[1] = getDayOfWeek(shift.getShiftDate());
 		params[2] = getDate(shift.getShiftDate());
 		params[3] = df.format(shift.getProfit());
@@ -144,20 +145,20 @@ public class VkServiceImpl implements VkService {
 		return result;
 	}
 
-	private double formatCostsAndGetTotalCosts(List<Goods> goodses, StringBuilder salaries, StringBuilder otherCosts) {
+	private double formatCostsAndGetTotalCosts(List<Cost> costs, StringBuilder salaries, StringBuilder otherCosts) {
 		DecimalFormat df = new DecimalFormat("#.##");
 		double totalCosts = 0d;
-		for (Goods goods : goodses) {
-			totalCosts += goods.getPrice() * goods.getQuantity();
-			if (goods.getCategory().getName().equals(categoryNameSalaryForShift)) {
+		for (Cost cost : costs) {
+			totalCosts += cost.getPrice() * cost.getQuantity();
+			if (cost.getCategory().getName().equals(categoryNameSalaryForShift)) {
 				salaries
-						.append(goods.getName())
-						.append(" - ").append(df.format(goods.getPrice() * goods.getQuantity()))
+						.append(cost.getName())
+						.append(" - ").append(df.format(cost.getPrice() * cost.getQuantity()))
 						.append(System.getProperty("line.separator"));
 			} else {
 				otherCosts
-						.append(goods.getName())
-						.append(" - ").append(df.format(goods.getPrice() * goods.getQuantity()))
+						.append(cost.getName())
+						.append(" - ").append(df.format(cost.getPrice() * cost.getQuantity()))
 						.append(System.getProperty("line.separator"));
 			}
 		}

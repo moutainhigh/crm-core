@@ -1,4 +1,4 @@
-package com.cafe.crm.models.goods;
+package com.cafe.crm.models.cost;
 
 import com.cafe.crm.models.shift.Shift;
 import org.hibernate.validator.constraints.NotBlank;
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
-public class Goods {
+public class Cost {
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -31,8 +31,8 @@ public class Goods {
 	@Valid
 	@NotNull(message = "Поле \"Категория\" не может быть пустым")
 	@ManyToOne
-	@JoinColumn(name = "goods_category_id")
-	private GoodsCategory category;
+	@JoinColumn(name = "cost_category_id")
+	private CostCategory category;
 
 	private boolean visible = true;
 
@@ -40,10 +40,10 @@ public class Goods {
 	@JoinColumn(name = "shift_id", nullable = false)
 	private Shift shift;
 
-	public Goods() {
+	public Cost() {
 	}
 
-	public Goods(String name, double price, double quantity, GoodsCategory category, LocalDate date) {
+	public Cost(String name, double price, double quantity, CostCategory category, LocalDate date) {
 		this.name = name;
 		this.price = price;
 		this.quantity = quantity;
@@ -67,11 +67,11 @@ public class Goods {
 		this.name = name;
 	}
 
-	public GoodsCategory getCategory() {
+	public CostCategory getCategory() {
 		return category;
 	}
 
-	public void setCategory(GoodsCategory category) {
+	public void setCategory(CostCategory category) {
 		this.category = category;
 	}
 
@@ -120,7 +120,7 @@ public class Goods {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		Goods goods = (Goods) o;
+		Cost goods = (Cost) o;
 
 		if (Double.compare(goods.price, price) != 0) return false;
 		if (name != null ? !name.equals(goods.name) : goods.name != null) return false;

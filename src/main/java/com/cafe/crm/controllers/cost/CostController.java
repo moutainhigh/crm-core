@@ -1,10 +1,10 @@
 package com.cafe.crm.controllers.cost;
 
-import com.cafe.crm.models.goods.Goods;
-import com.cafe.crm.models.goods.GoodsCategory;
+import com.cafe.crm.models.cost.Cost;
+import com.cafe.crm.models.cost.CostCategory;
 import com.cafe.crm.models.shift.Shift;
-import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
-import com.cafe.crm.services.interfaces.goods.GoodsService;
+import com.cafe.crm.services.interfaces.cost.CostCategoryService;
+import com.cafe.crm.services.interfaces.cost.CostService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,36 +25,36 @@ import java.util.Set;
 import static org.springframework.util.StringUtils.*;
 
 @Controller
-@RequestMapping(value = "/manager")
+@RequestMapping(value = "/manager/cost")
 public class CostController {
 
 	private final TimeManager timeManager;
-	private final GoodsService goodsService;
-	private final GoodsCategoryService goodsCategoryService;
+	private final CostService costService;
+	private final CostCategoryService costCategoryService;
 	private final ShiftService shiftService;
 
 	@Autowired
-	public CostController(GoodsService goodsService, GoodsCategoryService goodsCategoryService, TimeManager timeManager, ShiftService shiftService) {
-		this.goodsService = goodsService;
-		this.goodsCategoryService = goodsCategoryService;
+	public CostController(CostService costService, CostCategoryService costCategoryService, TimeManager timeManager, ShiftService shiftService) {
+		this.costService = costService;
+		this.costCategoryService = costCategoryService;
 		this.timeManager = timeManager;
 		this.shiftService = shiftService;
 	}
 
-	@RequestMapping(value = "/costs", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	public String showCostsPage(Model model) {
 		LocalDate today = getShiftDate();
-		List<Goods> goodsList = goodsService.findByDateBetween(today, today.plusYears(100));
-		List<GoodsCategory> goodsCategories = goodsCategoryService.findAll();
-		Double totalPrice = getTotalPrice(goodsList);
+		List<Cost> costs = costService.findByDateBetween(today, today.plusYears(100));
+		List<CostCategory> costCategories = costCategoryService.findAll();
+		Double totalPrice = getTotalPrice(costs);
 		Shift shift = shiftService.getLast();
 
-		model.addAttribute("goodsList", goodsList);
-		model.addAttribute("goodsCategories", goodsCategories);
+		model.addAttribute("costs", costs);
+		model.addAttribute("costCategories", costCategories);
 		model.addAttribute("categoryName", null);
-		model.addAttribute("goodsName", null);
+		model.addAttribute("costName", null);
 		model.addAttribute("totalPrice", totalPrice);
-		model.addAttribute("formGoods", new Goods());
+		model.addAttribute("formCost", new Cost());
 		model.addAttribute("today", today);
 		model.addAttribute("fromDate", today);
 		model.addAttribute("toDate", null);
@@ -63,29 +63,29 @@ public class CostController {
 		return "costs/costs";
 	}
 
-	@RequestMapping(value = "/costs", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public String showCostsPageWithParameters(@RequestParam(name = "fromDate") String fromDate,
 											  @RequestParam(name = "toDate") String toDate,
-											  @RequestParam(name = "goodsName") String goodsName,
+											  @RequestParam(name = "costName") String costName,
 											  @RequestParam(name = "categoryName") String categoryName,
 											  Model model) {
 		LocalDate today = getShiftDate();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-		List<Goods> goodsList = getGoodses(goodsName, categoryName, fromDate, toDate, formatter);
-		List<GoodsCategory> goodsCategories = goodsCategoryService.findAll();
-		double totalPrice = getTotalPrice(goodsList);
+		List<Cost> costs = getCosts(costName, categoryName, fromDate, toDate, formatter);
+		List<CostCategory> costCategories = costCategoryService.findAll();
+		double totalPrice = getTotalPrice(costs);
 
 		LocalDate from = (fromDate == null || fromDate.isEmpty()) ? null : LocalDate.parse(fromDate, formatter);
 		LocalDate to = (toDate == null || toDate.isEmpty()) ? null : LocalDate.parse(toDate, formatter);
 		Shift shift = shiftService.getLast();
 
-		model.addAttribute("goodsList", goodsList);
-		model.addAttribute("goodsCategories", goodsCategories);
-		model.addAttribute("goodsName", goodsName);
+		model.addAttribute("costs", costs);
+		model.addAttribute("costCategories", costCategories);
+		model.addAttribute("costName", costName);
 		model.addAttribute("categoryName", categoryName);
 		model.addAttribute("totalPrice", totalPrice);
-		model.addAttribute("formGoods", new Goods());
+		model.addAttribute("formCost", new Cost());
 		model.addAttribute("today", today);
 		model.addAttribute("fromDate", from);
 		model.addAttribute("toDate", to);
@@ -103,16 +103,16 @@ public class CostController {
 		return timeManager.getDate();
 	}
 
-	private double getTotalPrice(List<Goods> goodsList) {
+	private double getTotalPrice(List<Cost> costs) {
 		double totalPrice = 0d;
-		for (Goods goods : goodsList) {
-			totalPrice += goods.getPrice() * goods.getQuantity();
+		for (Cost cost : costs) {
+			totalPrice += cost.getPrice() * cost.getQuantity();
 		}
 		return totalPrice;
 	}
 
-	private List<Goods> getGoodses(String goodsName, String categoryName, String fromDate, String toDate, DateTimeFormatter formatter) {
-		goodsName = (goodsName == null) ? null : goodsName.trim();
+	private List<Cost> getCosts(String costName, String categoryName, String fromDate, String toDate, DateTimeFormatter formatter) {
+		costName = (costName == null) ? null : costName.trim();
 		categoryName = (categoryName == null) || categoryName.equals("Все категории") ? null : categoryName.trim();
 
 		LocalDate today = timeManager.getDate();
@@ -121,54 +121,54 @@ public class CostController {
 		LocalDate to = (isEmpty(toDate))
 				? today.plusYears(100) : LocalDate.parse(toDate, formatter);
 
-		if (isEmpty(goodsName) && isEmpty(categoryName)) {
-			return goodsService.findByDateBetween(from, to);
-		} else if (isEmpty(goodsName)) {
-			return goodsService.findByCategoryNameAndDateBetween(categoryName, from, to);
+		if (isEmpty(costName) && isEmpty(categoryName)) {
+			return costService.findByDateBetween(from, to);
+		} else if (isEmpty(costName)) {
+			return costService.findByCategoryNameAndDateBetween(categoryName, from, to);
 		} else if (isEmpty(categoryName)) {
-			return goodsService.findByNameAndDateBetween(goodsName, from, to);
+			return costService.findByNameAndDateBetween(costName, from, to);
 		}
-		return goodsService.findByNameAndCategoryNameAndDateBetween(goodsName, categoryName, from, to);
+		return costService.findByNameAndCategoryNameAndDateBetween(costName, categoryName, from, to);
 	}
 
-	@RequestMapping(value = "/costs/add", method = RequestMethod.POST)
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> saveGoods(@ModelAttribute @Valid Goods goods, BindingResult result) {
+	public ResponseEntity<?> add(@ModelAttribute @Valid Cost cost, BindingResult result) {
 		if (result.hasErrors()) {
 			String fieldError = result.getFieldError().getDefaultMessage();
 			return ResponseEntity.badRequest().body("Не удалось добавить товар!\n" + fieldError);
 		}
-		goodsService.save(goods);
+		costService.save(cost);
 
 		return ResponseEntity.ok("Товар успешно добавлен!");
 	}
 
-	@RequestMapping(value = "/costs/edit", method = RequestMethod.POST)
+	@RequestMapping(value = "/edit", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> updateGoods(@ModelAttribute @Valid Goods goods, BindingResult result) {
+	public ResponseEntity<?> update(@ModelAttribute @Valid Cost cost, BindingResult result) {
 		if (result.hasErrors()) {
 			return ResponseEntity.badRequest().body("Не удалось изменить товар!");
 		}
-		goodsService.update(goods);
+		costService.update(cost);
 
 		return ResponseEntity.ok("Товар успешно изменен!");
 	}
 
-	@RequestMapping(value = "/costs/delete", method = RequestMethod.POST)
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> deleteGoods(@RequestParam(name = "goodsId") Long id) {
-		goodsService.offVisibleStatus(id);
+	public ResponseEntity<?> delete(@RequestParam(name = "costId") Long id) {
+		costService.offVisibleStatus(id);
 
 		return ResponseEntity.ok("Товар успешно удален!");
 	}
 
-	@RequestMapping(value = "costs/delete/all", method = RequestMethod.POST)
+	@RequestMapping(value = "/delete/all", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> deleteAllGoods(@RequestParam(name = "ids") String ids) {
+	public ResponseEntity<?> deleteAll(@RequestParam(name = "ids") String ids) {
 		String[] strIds = ids.replace("[", "").replace("]", "").replace("\"", "").split(",");
 		try {
 			long[] longIds = Arrays.stream(strIds).mapToLong(Long::parseLong).toArray();
-			goodsService.offVisibleStatus(longIds);
+			costService.offVisibleStatus(longIds);
 		} catch (NumberFormatException ex) {
 			return ResponseEntity.badRequest().body("Не удалось удалить товары!");
 		}
@@ -176,20 +176,20 @@ public class CostController {
 		return ResponseEntity.ok("Товары успешно удалены!");
 	}
 
-	@RequestMapping(value = "/costs/search/category", method = RequestMethod.GET)
+	@RequestMapping(value = "/search/category", method = RequestMethod.GET)
 	@ResponseBody
 	public String[] getCategoryStartWith(@RequestParam(name = "name") String startName) {
-		List<GoodsCategory> categories = goodsCategoryService.findByNameStartingWith(startName);
+		List<CostCategory> categories = costCategoryService.findByNameStartingWith(startName);
 
-		return categories.stream().map(GoodsCategory::getName).toArray(String[]::new);
+		return categories.stream().map(CostCategory::getName).toArray(String[]::new);
 	}
 
-	@RequestMapping(value = "/costs/search/goods", method = RequestMethod.GET)
+	@RequestMapping(value = "/search/cost", method = RequestMethod.GET)
 	@ResponseBody
-	public String[] getGoodsStartWith(@RequestParam(name = "name") String startName) {
-		Set<Goods> goodsList = goodsService.findByNameStartingWith(startName);
+	public String[] getCostStartWith(@RequestParam(name = "name") String startName) {
+		Set<Cost> costs = costService.findByNameStartingWith(startName);
 
-		return goodsList.stream().map(Goods::getName).toArray(String[]::new);
+		return costs.stream().map(Cost::getName).toArray(String[]::new);
 	}
 
 }

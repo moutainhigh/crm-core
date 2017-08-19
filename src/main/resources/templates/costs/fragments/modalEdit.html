@@ -5,9 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-<div class="modal fade" tabindex="-1" roles="dialog" id="modalEditGoods" th:fragment="modalEdit">
-    <form class="form-horizontal" id="formEditGoods" method="post" th:action="@{/manager/costs/edit}"
-          th:object="${formGoods}">
+<div class="modal fade" tabindex="-1" roles="dialog" id="modalEditCost" th:fragment="modalEdit">
+    <form class="form-horizontal" id="formEditCost" method="post" th:action="@{/manager/cost/edit}"
+          th:object="${formCost}">
         <div class="modal-dialog" roles="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -38,7 +38,7 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="addCostDropdownMenuCategory" id="editCostDropListCategory">
-                                <li th:each="category : ${goodsCategories}"><a th:text="${category.name}">Action</a></li>
+                                <li th:each="category : ${costCategories}"><a th:text="${category.name}">Action</a></li>
                             </ul>
                         </div>
                         <div class="col-md-6"  hidden="hidden">
@@ -48,7 +48,7 @@
                         </div>&lt;!&ndash; /.col-lg-6 &ndash;&gt;-->
                         <div class="dropdown col-md-6">
                             <select class="form-control" th:field="*{category.name}" name="editCategory" id="editCategory">
-                                <option th:each="category : ${goodsCategories}" th:value="${category.name}" th:text="${category.name}"></option>
+                                <option th:each="category : ${costCategories}" th:value="${category.name}" th:text="${category.name}"></option>
                             </select>
                         </div>
                     </div>

@@ -2,7 +2,7 @@ package com.cafe.crm.dto;
 
 
 import com.cafe.crm.models.client.Client;
-import com.cafe.crm.models.goods.Goods;
+import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.user.User;
 
 import java.util.List;
@@ -14,18 +14,18 @@ public class TotalStatisticView {
 	private double otherCosts;
 	private List<User> users;
 	private List<Client> clients;
-	private List<Goods> salariesGoods;
-	private List<Goods> otherGoods;
+	private List<Cost> listOfSalariesCosts;
+	private List<Cost> listOfOtherCosts;
 
 	public TotalStatisticView(double profit, double salariesCosts, double otherCosts, List<User> users,
-							  List<Client> clients, List<Goods> salariesGoods, List<Goods> otherGoods) {
+							  List<Client> clients, List<Cost> listOfSalariesCosts, List<Cost> listOfOtherCosts) {
 		this.profit = profit;
 		this.salariesCosts = salariesCosts;
 		this.otherCosts = otherCosts;
 		this.users = users;
 		this.clients = clients;
-		this.salariesGoods = salariesGoods;
-		this.otherGoods = otherGoods;
+		this.listOfSalariesCosts = listOfSalariesCosts;
+		this.listOfOtherCosts = listOfOtherCosts;
 	}
 
 	public double getProfit() {
@@ -68,19 +68,19 @@ public class TotalStatisticView {
 		this.clients = clients;
 	}
 
-	public List<Goods> getSalariesGoods() {
-		return salariesGoods;
+	public List<Cost> getListOfSalariesCosts() {
+		return listOfSalariesCosts;
 	}
 
-	public void setSalariesGoods(List<Goods> salariesGoods) {
-		this.salariesGoods = salariesGoods;
+	public void setListOfSalariesCosts(List<Cost> listOfSalariesCosts) {
+		this.listOfSalariesCosts = listOfSalariesCosts;
 	}
 
-	public List<Goods> getOtherGoods() {
-		return otherGoods;
+	public List<Cost> getListOfOtherCosts() {
+		return listOfOtherCosts;
 	}
 
-	public void setOtherGoods(List<Goods> otherGoods) {
-		this.otherGoods = otherGoods;
+	public void setListOfOtherCosts(List<Cost> listOfOtherCosts) {
+		this.listOfOtherCosts = listOfOtherCosts;
 	}
 }

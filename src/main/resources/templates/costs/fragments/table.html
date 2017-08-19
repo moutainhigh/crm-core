@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<table class="table table-striped" id="sortedTable" th:fragment="goodsTable">
+<table class="table table-striped" id="sortedTable" th:fragment="costTable">
     <thead>
     <tr>
         <th>№</th>
@@ -24,31 +24,31 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="goods : ${goodsList}" th:id="'goods' + ${goods.id}">
-        <td th:text="${goods.id}" class="id">1</td>
-        <td th:text="${goods.name}" class="name">Масло</td>
-        <td th:text="${goods.category.name}" class="category">Продукты</td>
-        <td th:text="${goods.price} % 1 == 0
-                 ? ${#numbers.formatDecimal(goods.price, 0, 0)}
-                 : ${#numbers.formatDecimal(goods.price, 0, 2)}" class="price">120
+    <tr th:each="cost : ${costs}" th:id="'cost' + ${cost.id}">
+        <td th:text="${cost.id}" class="id">1</td>
+        <td th:text="${cost.name}" class="name">Масло</td>
+        <td th:text="${cost.category.name}" class="category">Продукты</td>
+        <td th:text="${cost.price} % 1 == 0
+                 ? ${#numbers.formatDecimal(cost.price, 0, 0)}
+                 : ${#numbers.formatDecimal(cost.price, 0, 2)}" class="price">120
         </td>
-        <td th:text="${goods.quantity} % 1 == 0
-                 ? ${#numbers.formatDecimal(goods.quantity, 0, 0)}
-                 : ${#numbers.formatDecimal(goods.quantity, 0, 2)}" class="quantity">10
+        <td th:text="${cost.quantity} % 1 == 0
+                 ? ${#numbers.formatDecimal(cost.quantity, 0, 0)}
+                 : ${#numbers.formatDecimal(cost.quantity, 0, 2)}" class="quantity">10
         </td>
-        <td th:text="${goods.price * goods.quantity} % 1 == 0
-                 ? ${#numbers.formatDecimal((goods.price * goods.quantity), 0, 0)}
-                 : ${#numbers.formatDecimal((goods.price * goods.quantity), 0, 2)}" class="sum">1200
+        <td th:text="${cost.price * cost.quantity} % 1 == 0
+                 ? ${#numbers.formatDecimal((cost.price * cost.quantity), 0, 0)}
+                 : ${#numbers.formatDecimal((cost.price * cost.quantity), 0, 2)}" class="sum">1200
         </td>
-        <td th:text="${#temporals.format(goods.date, 'dd-MM-yyyy')}" class="date">20.20.2000</td>
+        <td th:text="${#temporals.format(cost.date, 'dd-MM-yyyy')}" class="date">20.20.2000</td>
         <td>
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalEditGoods"
-                    th:onclick="'javascript:populateGoodsEditModal(\'' + ${goods.id} + '\');'">Редактировать
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalEditCost"
+                    th:onclick="'javascript:populateCostEditModal(\'' + ${cost.id} + '\');'">Редактировать
             </button>
         </td>
         <td>
             <button type="button" class="btn btn-danger"
-                    th:onclick="'javascript:removeGoods(\'' + ${goods.id} + '\');'">Удалить
+                    th:onclick="'javascript:removeCost(\'' + ${cost.id} + '\');'">Удалить
             </button>
         </td>
     </tr>

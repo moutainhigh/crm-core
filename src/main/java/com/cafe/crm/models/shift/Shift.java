@@ -4,7 +4,7 @@ package com.cafe.crm.models.shift;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.Debt;
-import com.cafe.crm.models.goods.Goods;
+import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.user.User;
 
 import javax.persistence.*;
@@ -51,7 +51,7 @@ public class Shift {
 	private List<Debt> debts = new ArrayList<>();
 
 	@OneToMany(mappedBy = "shift")
-	private List<Goods> goodses;
+	private List<Cost> costs;
 
 	// TODO: 26.07.2017 Подумать над размером
 	private String comment;
@@ -160,12 +160,13 @@ public class Shift {
 	public void addDebtToList(Debt debt) {
 		this.debts.add(debt);
 	}
-	public List<Goods> getGoodses() {
-		return goodses;
+
+	public List<Cost> getCosts() {
+		return costs;
 	}
 
-	public void setGoodses(List<Goods> goodses) {
-		this.goodses = goodses;
+	public void setCosts(List<Cost> costs) {
+		this.costs = costs;
 	}
 
 	public String getComment() {

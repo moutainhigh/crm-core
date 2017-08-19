@@ -2,10 +2,10 @@ package com.cafe.crm.controllers.boss;
 
 import com.cafe.crm.dto.TotalStatisticView;
 import com.cafe.crm.models.client.Client;
-import com.cafe.crm.models.goods.Goods;
+import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.user.User;
-import com.cafe.crm.services.interfaces.goods.GoodsService;
+import com.cafe.crm.services.interfaces.cost.CostService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +28,14 @@ public class StatisticController {
 
 	private final ShiftService shiftService;
 	private final TimeManager timeManager;
-	private final GoodsService goodsService;
+	private final CostService costService;
 
 	@Value("${cost-category-name.salary-for-shift}")
 	private String categoryNameSalaryForShift;
 
 	@Autowired
-	public StatisticController(GoodsService goodsService, ShiftService shiftService, TimeManager timeManager) {
-		this.goodsService = goodsService;
+	public StatisticController(CostService costService, ShiftService shiftService, TimeManager timeManager) {
+		this.costService = costService;
 		this.shiftService = shiftService;
 		this.timeManager = timeManager;
 	}
@@ -95,31 +95,31 @@ public class StatisticController {
 		double otherCosts = 0D;
 		List<User> users = new ArrayList<>();
 		List<Client> clients = new ArrayList<>();
-		List<Goods> salaryGoods = new ArrayList<>();
-		List<Goods> otherGoods = new ArrayList<>();
+		List<Cost> salaryCost = new ArrayList<>();
+		List<Cost> otherCost = new ArrayList<>();
 
 		if (shifts == null) {
-			return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clients, salaryGoods, otherGoods);
+			return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clients, salaryCost, otherCost);
 		}
 		for (Shift shift : shifts) {
 			users.addAll(shift.getUsers());
 			clients.addAll(shift.getClients());
-			otherGoods.addAll(goodsService.findByShiftId(shift.getId()));
+			otherCost.addAll(costService.findByShiftId(shift.getId()));
 		}
 
-		salaryGoods.addAll(goodsService.findByCategoryNameAndDateBetween(categoryNameSalaryForShift, from, to));
-		otherGoods.removeAll(salaryGoods);
-		for (Goods goods : salaryGoods) {
-			if (goods.getCategory().getName().equalsIgnoreCase(categoryNameSalaryForShift)) {
-				totalShiftSalary += (goods.getPrice() * goods.getQuantity());
+		salaryCost.addAll(costService.findByCategoryNameAndDateBetween(categoryNameSalaryForShift, from, to));
+		otherCost.removeAll(salaryCost);
+		for (Cost cost : salaryCost) {
+			if (cost.getCategory().getName().equalsIgnoreCase(categoryNameSalaryForShift)) {
+				totalShiftSalary += (cost.getPrice() * cost.getQuantity());
 			} else {
-				otherCosts += (goods.getPrice() * goods.getQuantity());
+				otherCosts += (cost.getPrice() * cost.getQuantity());
 			}
 		}
 		for (Client client : clients) {
 			profit += client.getAllPrice();
 		}
-		return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clients, salaryGoods, otherGoods);
+		return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clients, salaryCost, otherCost);
 	}
 
 }
