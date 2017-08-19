@@ -88,13 +88,13 @@
                             <thead>
 
                             <tr style="font-size: 17px">
-                                <th style="text-align: center;">Карта</th>
+                                <th style="text-align: center;" th:if="${cardEnable}">Карта</th>
                                 <th style="text-align: center;">Описание</th>
                                 <th style="text-align: center;">Старт</th>
                                 <th style="text-align: center;"></th>
 
                                 <th style="text-align: center;">Скидка</th>
-                                <th style="text-align: center;"> ₽ с карты</th>
+                                <th style="text-align: center;" th:if="${cardEnable}"> ₽ с карты</th>
                                 <th style="text-align: center;">Сумма</th>
                                 <th th:id="${calculate.id}">
                                     <input th:id="'checked' + ${calculate.id}" type="checkbox"
@@ -114,7 +114,7 @@
                                 <tr>
 
 
-                                    <td>
+                                    <td th:if="${cardEnable}">
                                         <!-- Выбор карт-->
                                         <form th:id="'cardSel' + ${client.id}" method="post"
                                               action="/manager/add-card-on-client">
@@ -172,7 +172,7 @@
                                 </td>
                                 <td>
                                     <p th:id="'dopDiscount' + ${client.id}" style="float: left;"
-                                       th:text="${client.discountWithCard} + '% + '"></p>
+                                       th:text="${client.discountWithCard} + '% + '" th:if="${cardEnable}"></p>
 
 
                                     <select th:id="'two' + ${client.id}" autocomplete="off"
@@ -191,7 +191,7 @@
                                     </select>
 
                                 </td>
-                                <td>
+                                <td th:if="${cardEnable}">
 
                                     <input autocomplete="off" th:id="'three' + ${client.id}"
                                            th:onblur="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'"

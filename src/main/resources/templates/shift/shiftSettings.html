@@ -101,10 +101,10 @@
                                 <tr>
                                     <th>Описание</th>
                                     <th>Скидка</th>
-                                    <th>Скидка по карте</th>
+                                    <th th:if="${cardEnable}">Скидка по карте</th>
                                     <th>Общий чек</th>
                                     <th>Оплата наличными</th>
-                                    <th>Оплата клубной картой</th>
+                                    <th th:if="${cardEnable}">Оплата клубной картой</th>
                                     <th>Время посадки</th>
                                     <th>Проведенное время</th>
                                     <th>Стоимость времени</th>
@@ -122,10 +122,10 @@
                                     </td>
 
                                     <td><p th:text="${client.discount}+'%'"></p></td>
-                                    <td><p th:text="${client.discountWithCard}+'%'"></p></td>
+                                    <td th:if="${cardEnable}"><p th:text="${client.discountWithCard}+'%'"></p></td>
                                     <td><p th:text="${client.allPrice}"></p></td>
                                     <td><p th:text="${client.cache}"></p></td>
-                                    <td><p th:text="${client.payWithCard}"></p></td>
+                                    <td th:if="${cardEnable}"><p th:text="${client.payWithCard}"></p></td>
                                     <td><p th:text="${client.timeStart}"></p></td>
                                     <td><p th:text="${client.passedTime}"></p></td>
                                     <td><p th:text="${client.priceTime}"></p></td>

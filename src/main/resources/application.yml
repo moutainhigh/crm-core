@@ -88,3 +88,6 @@ vk:
 
 cost-category-name:
   salary-for-shift: Зарплата сотрудников # Название расхода
+
+card:
+ enable: false  # Включить, отключить рекламу (true false)

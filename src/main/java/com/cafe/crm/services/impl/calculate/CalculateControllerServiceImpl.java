@@ -233,6 +233,9 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 	@Override
 	public void deleteClients(long[] clientsId, Long calculateId) {
+		if (clientsId == null) {
+			return;
+		}
 		List<Client> clients = clientService.findByIdIn(clientsId);
 		for (Client client : clients) {
 			client.setDeleteState(true);

@@ -188,7 +188,7 @@ public class ShiftServiceImpl implements ShiftService {
 		Set<LayerProduct> layerProducts = new HashSet<>();
 		for (Client client : clients) {
 			layerProducts.addAll(client.getLayerProducts());
-			card = card + client.getPayWithCard();
+			card += client.getPayWithCard();
 			allPrice += client.getPriceTime();
 		}
 		for (LayerProduct layerProduct : layerProducts) {
@@ -205,6 +205,7 @@ public class ShiftServiceImpl implements ShiftService {
 		for (Goods goods : goodsWithoutUsersSalaries) {
 			otherCosts += (goods.getPrice() * goods.getQuantity());
 		}
+		allPrice -= card;
 		totalCashBox = (cashBox + bankCashBox + allPrice) - (usersTotalShiftSalary + otherCosts);
 		return new ShiftView(usersOnShift, clients, activeCalculate, allCalculate,
 				cashBox, totalCashBox, usersTotalShiftSalary, card, allPrice, shiftDate, otherCosts, bankCashBox);

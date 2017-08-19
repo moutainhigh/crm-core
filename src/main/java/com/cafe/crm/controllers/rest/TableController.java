@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class TableRestController {
+public class TableController {
+
+	private final BoardService boardService;
 
 	@Autowired
-	BoardService boardService;
+	public TableController(BoardService boardService) {
+		this.boardService = boardService;
+	}
 
 	@RequestMapping(value = "/manager/rest/Table", method = RequestMethod.GET)
 	@ResponseBody

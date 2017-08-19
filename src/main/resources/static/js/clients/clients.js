@@ -58,7 +58,7 @@ function ajaxCardDiscount(id, calcId) {
 }
 
 
-function ajaxModal(id) {
+function ajaxModal(id, cardEnable) {
     $.ajax({
         type: "POST",
         url: "/manager/output-clients",
@@ -71,22 +71,32 @@ function ajaxModal(id) {
                 var allpr = 0;
                 var payWithCard = 0;
                 var str = "";
-                var strForAlert = ''
+                var strForAlert = '';
                 var flag = false;
                 for (var i = 0; i < data.length; i++) {
-
-
                     var hours = +data[i].passedTime.hour < 10 ? ('0' + data[i].passedTime.hour) : data[i].passedTime.hour;
                     var min = +data[i].passedTime.minute < 10 ? ('0' + data[i].passedTime.minute) : data[i].passedTime.minute;
                     var time = hours + ':' + min;
                     var order = "";
-                    str += '<tr><td class="cent">' + ((data[i].card == null) ? 'Нет' : data[i].card.name) + '</td><td class="cent">' + data[i].description + '</td><td class="cent">' + time + '</td><td class="cent">' + data[i].priceTime + '</td><td class="cent"><div  class="dropdown"><button onclick="getLayerProductAjax(' + data[i].id + ')"   class="btn btn-primary" data-toggle="dropdown" style="width: 100px;font-size: 20px;height:30px;margin-right: 5px;margin-top: 5px;padding: 0px">' + data[i].priceMenu + 'р' + '</button><div id = "clientDropMenu' + data[i].id + '"  style="width: 250px;font-size: 20px" class="dropdown-menu dropdown-menu-right">' + order + '</div></div></div> </td><td class="cent">' + ((+data[i].discount) + (+data[i].discountWithCard)) + '</td><td class="cent">' + data[i].payWithCard + '</td><td class="cent">' + data[i].cache + '</td></tr>';
-                    payWithCard += data[i].payWithCard;
-                    allpr += data[i].cache;
-                    if (data[i].card != null && data[i].card.balance < data[i].payWithCard) {
-                        strForAlert += (data[i].card.name + ', ');
-                        flag = true;
+
+                    var cardNull = (cardEnable == 'true') ? '<td class="cent">' + ((data[i].card == null) ? 'Нет' : data[i].card.name) + '</td>' : '';
+                    var description = '<td class="cent">' + data[i].description + '</td>';
+                    var timeHM = '<td class="cent">' + time + '</td>';
+                    var priceTime = '<td class="cent">' + data[i].priceTime + '</td>';
+                    var priceMenu = '<td class="cent"><div  class="dropdown"><button onclick="getLayerProductAjax(' + data[i].id + ')"   class="btn btn-primary" data-toggle="dropdown" style="width: 100px;font-size: 20px;height:30px;margin-right: 5px;margin-top: 5px;padding: 0px">' + data[i].priceMenu + 'р' + '</button><div id = "clientDropMenu' + data[i].id + '"  style="width: 250px;font-size: 20px" class="dropdown-menu dropdown-menu-right">' + order + '</div></div></div> </td>';
+                    var discount = '<td class="cent">' + ((+data[i].discount) + (+data[i].discountWithCard)) + '</td>';
+                    var withCard = (cardEnable == 'true') ? '<td class="cent">' + data[i].payWithCard + '</td>' : '';
+                    var cache = '<td class="cent">' + data[i].cache + '</td>';
+                    str +='<tr>' + cardNull + description + timeHM + priceTime + priceMenu + discount + withCard + cache + '</tr>';
+
+                    if (cardEnable == 'true') {
+                        payWithCard += data[i].payWithCard;
+                        if (data[i].card != null && data[i].card.balance < data[i].payWithCard) {
+                            strForAlert += (data[i].card.name + ', ');
+                            flag = true;
+                        }
                     }
+                    allpr += data[i].cache;
                 }
 
                 if (flag) {
@@ -99,8 +109,9 @@ function ajaxModal(id) {
                 }
 
 
-                $('#head' + id).html($('#head1' + id).text())
-                $('#all' + id).html(payWithCard + 'р<br/>' + allpr + 'р');
+                $('#head' + id).html($('#head1' + id).text());
+                var allText = (cardEnable == 'true') ? payWithCard + 'р<br/>' + allpr + 'р' : allpr;
+                $('#all' + id).html(allText);
                 $('#tb' + id).html(str);
             }
         },

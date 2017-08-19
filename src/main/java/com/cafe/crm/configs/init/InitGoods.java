@@ -30,17 +30,17 @@ public class InitGoods {
 	}
 
 	@Transactional
-//	@PostConstruct
+	@PostConstruct
 	public void init() {
-		GoodsCategory category1 = new GoodsCategory("Продукты питания");
-		GoodsCategory category2 = new GoodsCategory("Спиртные напитки");
-		GoodsCategory category3 = new GoodsCategory("Безалкогольные напитки");
-		GoodsCategory category4 = new GoodsCategory("Бытовые продукты");
+//		GoodsCategory category1 = new GoodsCategory("Продукты питания");
+//		GoodsCategory category2 = new GoodsCategory("Спиртные напитки");
+//		GoodsCategory category3 = new GoodsCategory("Безалкогольные напитки");
+//		GoodsCategory category4 = new GoodsCategory("Бытовые продукты");
 		GoodsCategory category5 = new GoodsCategory(categoryNameSalaryForShift);
-		goodsCategoryService.save(category1);
-		goodsCategoryService.save(category2);
-		goodsCategoryService.save(category3);
-		goodsCategoryService.save(category4);
+//		goodsCategoryService.save(category1);
+//		goodsCategoryService.save(category2);
+//		goodsCategoryService.save(category3);
+//		goodsCategoryService.save(category4);
 		goodsCategoryService.save(category5);
 
 //		ZoneId zoneId = ZoneId.of("Europe/Moscow");

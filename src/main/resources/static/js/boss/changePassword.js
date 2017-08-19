@@ -2,6 +2,12 @@ function testB() {
     var new_pass_1 = $('#new').val();
     var new_pass_2 = $('#secondNew').val();
     if (new_pass_1 === new_pass_2) {
+        if (new_pass_1.length === 0 || new_pass_1.trim() === "") { //check for empty
+            $('#new, #secondNew').val('').attr("placeholder", "");
+            var json = '<h4 style="color:red">Новый пароль не может быть пустым!</h4>';
+            $('.modal-title').html(json);
+            return false;
+        }
         var formData = {
             new: $('#new').val(),
             old: $('#old').val(),
@@ -9,7 +15,7 @@ function testB() {
         }
         $.ajax({
             type: "POST",
-            url: "/boss/user/changePassword",
+            url: "/boss/changePassword",
             data: formData,
             success: function (result) {
                 $('.form-group').html('Смена пароля прошла успешно.');
@@ -34,6 +40,11 @@ function changeBossPassword() {
     var new_pass_1 = $('#new').val();
     var new_pass_2 = $('#secondNew').val();
     if (new_pass_1 === new_pass_2) {
+        if (new_pass_1.length === 0 || new_pass_1.trim() === "") { //check for empty
+            $('#new, #secondNew').val('').attr("placeholder", "");
+            $("#wrongModal").modal('show');
+            return false;
+        }
         var formData = {
             new: $('#new').val(),
             old: $('#old').val(),
@@ -41,7 +52,7 @@ function changeBossPassword() {
         }
         $.ajax({
             type: "POST",
-            url: "/boss/user/changePassword",
+            url: "/boss/changePassword",
             data: formData,
             success: function (result) {
                 $("#successModal").modal('show')
