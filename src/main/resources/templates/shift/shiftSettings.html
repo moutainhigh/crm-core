@@ -201,53 +201,67 @@
 
                         <h1 th:align="center" style="color: #5bc0de;">Перевод средств</h1>
                         <div class="row">
+                            <div class="messageAd"></div>
                         </div>
                         <div class="table" style="border-radius:5px;" data-page="bossview.html">
-                            <table class="table table-striped table-bordered table-hover">
-                                <tr>
-                                    <th><p th:align="center">#Доступные средства в кассе</p></th>
-                                    <th><p th:align="center">#Доступные средства на карте</p></th>
-                                </tr>
+                            <div class="col-md-6 col-md-offset-3">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th><p th:align="center">Доступные средства в кассе</p></th>
+                                        <th><p th:align="center">Доступные средства на карте</p></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                                 <tr>
                                     <th><p th:align="center" th:text="${closeShiftView.cashBox}" id="cashBox" name="cashBox"></p></th>
                                     <th><p th:align="center" th:text="${closeShiftView.bankCashBox}" id="bankCashBox" name="bankCashBox"></p></th>
                                 </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>
+                                            <form id="transferToCard" method="post" action="/manager/shift/edit/transferCashToBankCashBox" th:align="center">
+                                                <table class="table table-striped table-bordered table-hover">
+                                                    <tr>
+                                                        <th>
+                                                            <input type="text" class="form-control" value=""
+                                                                   placeholder="Введите сумму перевода на карту"
+                                                                   autofocus=""
+                                                                   id="transferBankCashBox" name="transferBankCashBox"/>
+                                                        </th>
+                                                    </tr>
+                                                </table>
+                                                <button type="submit" class="btn btn-buy-l btn-lg" th:align="center"
+                                                        name="transferCashToBankCashBoxButton" style="margin-bottom: 10px">
+                                                    Перевести
+                                                </button>
+                                            </form>
+                                        </th>
+                                        <th>
+                                            <form id="transferToCasse" method="post" action="/manager/shift/edit/transferCashToCashBox" th:align="center">
+                                                <table class="table table-striped table-bordered table-hover">
+                                                    <tr>
+                                                        <th>
+                                                            <input type="text" class="form-control" value=""
+                                                                   placeholder="Введите сумму перевода в кассу"
+                                                                   autofocus=""
+                                                                   name="transferCashBox" id="transferCashBox"/>
+                                                        </th>
+                                                    </tr>
+                                                </table>
+                                                <button type="submit" class="btn btn-buy btn-lg" th:align="center"
+                                                        name="transferCashToCashBoxButton">
+                                                    Перевести
+                                                </button>
+                                            </form>
+                                        </th>
+
+                                    </tr>
+                                </tfoot>
                             </table>
-                            <hr/>
-                            <div class="messageAd"></div>
-                            <form id="transferToCard" method="post" action="/manager/shift/edit/transferCashToBankCashBox" th:align="center">
-                                <table class="table table-striped table-bordered table-hover">
-                                    <tr>
-                                        <th>
-                                            <input type="text" class="form-control" value=""
-                                                   placeholder="Введите сумму перевода на карту"
-                                                   autofocus=""
-                                                   id="transferBankCashBox" name="transferBankCashBox"/>
-                                        </th>
-                                    </tr>
-                                </table>
-                                <button type="submit" class="btn btn-buy-l btn-lg" th:align="center"
-                                        name="transferCashToBankCashBoxButton" style="margin-bottom: 10px">
-                                    Перевести
-                                </button>
-                            </form>
-                            <div class="messageAd2"></div>
-                            <form id="transferToCasse" method="post" action="/manager/shift/edit/transferCashToCashBox" th:align="center">
-                                <table class="table table-striped table-bordered table-hover">
-                                    <tr>
-                                        <th>
-                                            <input type="text" class="form-control" value=""
-                                                   placeholder="Введите сумму перевода в кассу"
-                                                   autofocus=""
-                                                   name="transferCashBox" id="transferCashBox"/>
-                                        </th>
-                                    </tr>
-                                </table>
-                                <button type="submit" class="btn btn-buy btn-lg" th:align="center"
-                                        name="transferCashToCashBoxButton">
-                                    Перевести
-                                </button>
-                            </form>
+                            </div>
+
                         </div>
                     </div>
                 </div>
