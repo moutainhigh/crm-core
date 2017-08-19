@@ -24,6 +24,7 @@ body {
     cursor: pointer;
     transition: background-color .3s;
     font-size: large;
+    color: floralwhite;
 }
 
 .tabbed > label:hover,

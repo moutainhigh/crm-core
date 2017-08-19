@@ -39,9 +39,9 @@ public class ShiftStatisticController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getAdminPage() {
 		ModelAndView mv = new ModelAndView("shift/shiftStatistics");
-		List<Shift> dates = shiftService.findAll();
+		List<Shift> allShifts = shiftService.findAll();
 		LocalDate date = timeManager.getDate();
-		mv.addObject("shifts", dates);
+		mv.addObject("shifts", allShifts);
 		mv.addObject("date", date);
 		return mv;
 	}

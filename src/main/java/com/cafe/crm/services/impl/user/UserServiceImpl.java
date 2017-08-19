@@ -106,12 +106,20 @@ public class UserServiceImpl implements UserService {
 	public void update(User user, String oldPassword, String newPassword, String repeatedPassword, String positionsIds, String rolesIds) {
 		checkForNotNew(user);
 		checkForUniqueEmailAndPhone(user);
+
 		if (isValidPasswordsData(user, oldPassword, newPassword, repeatedPassword)) {
 			user.setPassword(passwordEncoder.encode(newPassword));
 		}
 		setPositionsToUser(user, positionsIds);
 		setRolesToUser(user, rolesIds);
-		userRepository.saveAndFlush(user);
+		User userFromDB = userRepository.findOne(user.getId());
+		if (user.getShiftSalary() > 0 && user.getShiftSalary() < Integer.MAX_VALUE) {
+			userFromDB.setShiftSalary(user.getShiftSalary());
+			userRepository.saveAndFlush(userFromDB);
+		} else {
+			throw new UserDataException("Указана неверная зарплата сотрудника! " + user.getShiftSalary());
+		}
+
 	}
 
 	@Override

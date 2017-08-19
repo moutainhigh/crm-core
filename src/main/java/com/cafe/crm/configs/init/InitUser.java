@@ -52,6 +52,7 @@ public class InitUser {
 		manager.setActivated(true);
 		manager.setFirstName("Anna");
 		manager.setLastName("Jons");
+		manager.setShiftSalary(1500);
 		manager.setEmail("manager@mail.ru");
 		manager.setPhone("89233456789");
 		manager.setPositions(adminPositionsList);
@@ -62,6 +63,7 @@ public class InitUser {
 		boss.setActivated(true);
 		boss.setFirstName("Герман");
 		boss.setLastName("Севостьянов");
+		boss.setShiftSalary(2000);
 		boss.setEmail("boss@mail.ru");
 		boss.setPhone("89123456789");
 		boss.setPositions(bossPositionsList);
@@ -72,6 +74,7 @@ public class InitUser {
 		worker.setActivated(true);
 		worker.setFirstName("Ахмад");
 		worker.setLastName("Чай");
+		worker.setShiftSalary(1000);
 		worker.setEmail("worker@mail.ru");
 		worker.setPhone("89111111111");
 		worker.setPositions(workerPositionsList);

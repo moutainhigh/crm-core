@@ -18,7 +18,7 @@
         <center>
         <div class="row" style="margin-top: 5%">
                 <h1 style="color: #5bc0de;">
-                    Статистика за: <span th:text="${date}"></span></h1>
+                    Статистика за период с: <span th:text="${from} + ' по ' + ${to}"></span></h1>
         </div>
         </center>
         <hr/>
@@ -63,11 +63,15 @@
         <div class="row">
             <center>
                 <form class="form-inline" role="form" th:method="post" action="/boss/totalStatistics/searchByDate">
-                    <label for="start" class="control-label" style="color: #5bc0de;font-size: 30px">Дата смены : </label>
-                    <input name="start" th:value="${date}" class="form-control"
-                           th:type="date" id="start" required=""/>
+                    <label for="from" class="control-label" style="color: #5bc0de;font-size: 30px">Дата смены с : </label>
+                    <input name="from" th:value="${from}" class="form-control"
+                           th:type="date" id="from" required=""/>
 
-                    <button class="btn btn-default" name="del" th:type="submit">Показать
+                    <label for="to" class="control-label" style="color: #5bc0de;font-size: 30px">по : </label>
+                    <input name="to" th:value="${to}" class="form-control"
+                           th:type="date" id="to" required=""/>
+
+                    <button class="btn btn-default" name="del" type="submit">Показать
                     </button>
                 </form>
             </center>
@@ -87,7 +91,6 @@
         <label for="tab-nav-5">Прочие расходы</label>
 
         <div class="tabs">
-            <div class="col-md-12">
                 <div class="table">
                     <div class="table-responsive">
                         <table class="table table-striped">
@@ -121,8 +124,6 @@
                         </table>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-12">
                 <div class="table">
                     <div class="table-responsive">
                         <table class="table table-striped">
@@ -136,7 +137,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="shift : ${shift}">
+                            <tr th:each="shift : ${shifts}">
                                 <td th:text="${shift.shiftDate}"></td>
                                 <td></td>
                                 <td th:text="${shift.cashBox}"></td>
@@ -156,8 +157,6 @@
                         </table>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-12">
                 <div class="table">
                     <div class="table-responsive">
                         <table class="table table-striped">
@@ -194,8 +193,6 @@
                         </table>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-12">
                 <div class="table">
                     <div class="table-responsive">
                         <table class="table table-striped">
@@ -225,8 +222,6 @@
                         </table>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-12">
                 <div class="table">
                     <div class="table-responsive">
                         <table class="table table-striped">
@@ -271,7 +266,6 @@
                         </table>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 </div>
