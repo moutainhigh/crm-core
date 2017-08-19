@@ -80,7 +80,7 @@ vk:
   message-name: daily-report # name of template in db
   chat-id:  # id of conference
   access-token:
-  api-version: 5.67 # vk api version
+  api-version: 5.68 # vk api version
   mail: # Notification to email
     invalid-token:
       view: db:invalid-token

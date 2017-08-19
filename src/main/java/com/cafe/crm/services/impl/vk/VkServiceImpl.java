@@ -26,6 +26,36 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+/**
+ * Служба для взаимодействия с Vk API.
+ *
+ * Первоначально нужно зарегестрировать свое приложение по это ссылке (@link https://vk.com/editapp?act=create) .
+ *
+ * Перед выполнением запросов к API необходимо получить ключ доступа access_token.
+ * Необходимо перенаправить браузер пользователя по адресу https://oauth.vk.com/authorize.
+ * Пример запроса:
+ * (@link https://oauth.vk.com/authorize?client_id=1&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=messages,offline&response_type=token&v=5.68&state=123456}
+ * Где, client_id - идентификатор вашего приложения,
+ * 		display - тип отображения страницы авторизации,
+ * 		redirect_uri - адрес, на который будет переадресован пользователь после прохождения авторизации,
+ * 			по умолчанию: https://oauth.vk.com/blank.html,
+ * 		scope - битовая маска настроек доступа приложения(для не ограниченного по времени токена указать offline),
+ * 		response_type - тип ответа, который необходимо получить,
+ * 		v - версия API,
+ * 		state - произвольная строка, которая будет возвращена вместе с результатом авторизации.
+ * 	Для возможности отправлять сообщения в scope должен быть параметр messages.
+ *
+ * После успешного входа на сайт пользователю будет предложено авторизовать приложение,
+ * разрешив доступ к необходимым настройкам, запрошенным при помощи параметра scope.
+ * После успешной авторизации приложения браузер пользователя будет перенаправлен по адресу redirect_uri,
+ * указанному при открытии диалога авторизации.
+ * При этом ключ доступа к API access_token и другие параметры будут переданы в URL-фрагменте ссылки.
+ *
+ * 	В свойствах приложения (application.yml или ему подбное) должны обязательно присутствовать:
+ * 		chat-id - id конференции,
+ * 		access-token - токен доступа,
+ * 		api-version - версия Vk Api
+ */
 @Service
 public class VkServiceImpl implements VkService {
 
@@ -58,8 +88,6 @@ public class VkServiceImpl implements VkService {
 			return;
 		}
 		String message = formatMessage(shift, new String(messageTemplate.getContent(), Charset.forName("UTF-8")));
-		// TODO: 05.08.2017 Убрать sout при релизе новой версии
-		System.out.println(message);
 		Map<String, String> variables = new HashMap<>();
 		variables.put("chat_id", vkProperties.getChatId());
 		variables.put("message", message);
