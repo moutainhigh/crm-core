@@ -163,7 +163,7 @@ function populateGoodsEditModal(rowIdx) {
 
             $('#editId').val(id);
             $('#editName').val(name);
-            $('#editCostDropdownMenuCategory').html(category + ' <span class="caret"></span>');
+            $('#editCategory').val(category);
             $('#editPrice').val(price);
             $('#editQuantity').val(quantity);
             $('#editDate').val(date);
