@@ -136,7 +136,7 @@ public class ShiftController {
 		Double totalCashBox = shiftView.getTotalCashBox() - totalBonusSum;
 		Double shortage = totalCashBox - (cashBox + bankCashBox);
 
-		if (shortage < 0) {
+		if (shortage <= 0) {
 			Shift shift = shiftService.closeShift(mapOfUsersIdsAndBonuses, allPrice, cashBox, bankCashBox, comment);
 			vkService.sendDailyReportToConference(shift);
 		} else {

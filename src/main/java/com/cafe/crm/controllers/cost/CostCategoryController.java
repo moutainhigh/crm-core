@@ -1,8 +1,8 @@
 package com.cafe.crm.controllers.cost;
 
 import com.cafe.crm.exceptions.cost.category.CostCategoryDataException;
-import com.cafe.crm.models.goods.GoodsCategory;
-import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
+import com.cafe.crm.models.cost.CostCategory;
+import com.cafe.crm.services.interfaces.cost.CostCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,10 +16,10 @@ import javax.validation.Valid;
 @RequestMapping(value = "/boss/cost/category")
 public class CostCategoryController {
 
-	private final GoodsCategoryService categoryService;
+	private final CostCategoryService categoryService;
 
 	@Autowired
-	public CostCategoryController(GoodsCategoryService categoryService) {
+	public CostCategoryController(CostCategoryService categoryService) {
 		this.categoryService = categoryService;
 	}
 
@@ -27,14 +27,14 @@ public class CostCategoryController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String showCategoryPage(Model model) {
 		model.addAttribute("categoryList", categoryService.findAll());
-		model.addAttribute("formCategory", new GoodsCategory());
+		model.addAttribute("formCategory", new CostCategory());
 
 		return "/costs/categories/category";
 	}
 
 	@RequestMapping(value = "/add")
 	@ResponseBody
-	public ResponseEntity<?> addCategory(@ModelAttribute @Valid GoodsCategory category, BindingResult bindingResult) {
+	public ResponseEntity<?> add(@ModelAttribute @Valid CostCategory category, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			String fieldError = bindingResult.getFieldError().getDefaultMessage();
 			throw new CostCategoryDataException("Не удалось добавить товар " + fieldError);
@@ -45,7 +45,7 @@ public class CostCategoryController {
 
 	@RequestMapping(value = "/edit")
 	@ResponseBody
-	public ResponseEntity<?> editCategory(@ModelAttribute GoodsCategory category, BindingResult bindingResult) {
+	public ResponseEntity<?> edit(@ModelAttribute CostCategory category, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return ResponseEntity.badRequest().body("Не удалось обновить категорию");
 		}
@@ -54,7 +54,7 @@ public class CostCategoryController {
 	}
 
 	@RequestMapping(value = "/delete")
-	public ResponseEntity<?> deleteCategory(@RequestParam(name = "id") Long id) {
+	public ResponseEntity<?> delete(@RequestParam(name = "id") Long id) {
 		categoryService.delete(id);
 		return ResponseEntity.ok("Категория успешно удалена!");
 	}

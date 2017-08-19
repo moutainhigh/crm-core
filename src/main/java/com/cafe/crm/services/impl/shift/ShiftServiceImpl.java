@@ -4,15 +4,15 @@ import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.models.client.LayerProduct;
-import com.cafe.crm.models.goods.Goods;
-import com.cafe.crm.models.goods.GoodsCategory;
+import com.cafe.crm.models.cost.Cost;
+import com.cafe.crm.models.cost.CostCategory;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.dto.ShiftView;
 import com.cafe.crm.models.user.User;
 import com.cafe.crm.repositories.shift.ShiftRepository;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
-import com.cafe.crm.services.interfaces.goods.GoodsCategoryService;
-import com.cafe.crm.services.interfaces.goods.GoodsService;
+import com.cafe.crm.services.interfaces.cost.CostCategoryService;
+import com.cafe.crm.services.interfaces.cost.CostService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.utils.TimeManager;
@@ -32,28 +32,28 @@ public class ShiftServiceImpl implements ShiftService {
 
 	private final ShiftRepository shiftRepository;
 	private final UserService userService;
-	private final GoodsCategoryService goodsCategoryService;
+	private final CostCategoryService costCategoryService;
 	private final CalculateService calculateService;
 	private final TimeManager timeManager;
 	private final SessionRegistry sessionRegistry;
-	private GoodsService goodsService;
+	private CostService costService;
 
 	@Value("${cost-category-name.salary-for-shift}")
 	private String categoryNameSalaryForShift;
 
 	@Autowired
-	public ShiftServiceImpl(CalculateService calculateService, TimeManager timeManager, GoodsCategoryService goodsCategoryService, ShiftRepository shiftRepository, UserService userService, SessionRegistry sessionRegistry) {
+	public ShiftServiceImpl(CalculateService calculateService, TimeManager timeManager, CostCategoryService costCategoryService, ShiftRepository shiftRepository, UserService userService, SessionRegistry sessionRegistry) {
 		this.calculateService = calculateService;
 		this.timeManager = timeManager;
-		this.goodsCategoryService = goodsCategoryService;
+		this.costCategoryService = costCategoryService;
 		this.shiftRepository = shiftRepository;
 		this.userService = userService;
 		this.sessionRegistry = sessionRegistry;
 	}
 
 	@Autowired
-	public void setGoodsService(GoodsService goodsService) {
-		this.goodsService = goodsService;
+	public void setCostService(CostService costService) {
+		this.costService = costService;
 	}
 
 	@Override
@@ -135,17 +135,17 @@ public class ShiftServiceImpl implements ShiftService {
 	@Transactional
 	@Override
 	public Shift closeShift(Map<Long, Integer> mapOfUsersIdsAndBonuses, Double allPrice, Double cashBox, Double bankCashBox, String comment) {
-		GoodsCategory goodsCategory = goodsCategoryService.find(categoryNameSalaryForShift);
+		CostCategory costCategory = costCategoryService.find(categoryNameSalaryForShift);
 		Shift shift = shiftRepository.getLast();
 		for (Map.Entry<Long, Integer> entry : mapOfUsersIdsAndBonuses.entrySet()) {
 			User user = userService.findById(entry.getKey());
 			user.setSalary(user.getSalary() + user.getShiftSalary());
 			user.setBonus(user.getBonus() + entry.getValue());
 			int salaryCost = user.getShiftSalary() + entry.getValue();
-			Goods goodsSalaryWorker = new Goods(user.getFirstName() + " " + user.getLastName(),
+			Cost costSalaryUser = new Cost(user.getFirstName() + " " + user.getLastName(),
 					salaryCost, 1,
-					goodsCategory, LocalDate.now());
-			goodsService.save(goodsSalaryWorker);
+					costCategory, LocalDate.now());
+			costService.save(costSalaryUser);
 			userService.save(user);
 		}
 		shift.setBankCashBox(bankCashBox);
@@ -200,10 +200,10 @@ public class ShiftServiceImpl implements ShiftService {
 			allPrice += debt.getDebtAmount();
 		}
 		LocalDate shiftDate = shift.getShiftDate();
-		List<Goods> goodsWithoutUsersSalaries = goodsService.findByShiftIdAndCategoryNameNot(shift.getId(), categoryNameSalaryForShift);
+		List<Cost> costWithoutUsersSalaries = costService.findByShiftIdAndCategoryNameNot(shift.getId(), categoryNameSalaryForShift);
 		double otherCosts = 0d;
-		for (Goods goods : goodsWithoutUsersSalaries) {
-			otherCosts += (goods.getPrice() * goods.getQuantity());
+		for (Cost cost : costWithoutUsersSalaries) {
+			otherCosts += (cost.getPrice() * cost.getQuantity());
 		}
 		allPrice -= card;
 		totalCashBox = (cashBox + bankCashBox + allPrice) - (usersTotalShiftSalary + otherCosts);

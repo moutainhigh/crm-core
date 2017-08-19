@@ -28,12 +28,12 @@
     </div>
     <div class="col-md-2 ">
         <h4 style="color: #5bc0de;">Прочие расходы</h4>
-        <span style="color: white;font-size: 30px" th:text="${allOtherGoods}"></span>
+        <span style="color: white;font-size: 30px" th:text="${allOtherCost}"></span>
         <br></br>
     </div>
     <div class="col-md-2 ">
         <h4 style="color: #5bc0de;">Зарплатные расходы</h4>
-        <span style="color: white;font-size: 30px" th:text="${allSalaryGoods}"></span>
+        <span style="color: white;font-size: 30px" th:text="${allSalaryCost}"></span>
         <br></br>
     </div>
 
@@ -145,11 +145,11 @@
                     <th> Зарплата</th>
                 </tr>
                 </thead>
-                <tbody th:each="salariesGoods : ${salaryWorkerGoods}">
+                <tbody th:each="listOfSalariesCosts : ${salaryUserCost}">
                 <tr>
-                    <td th:text="${salariesGoods.date}"></td>
-                    <td th:text="${salariesGoods.name}"></td>
-                    <td th:text="${salariesGoods.price}"></td>
+                    <td th:text="${listOfSalariesCosts.date}"></td>
+                    <td th:text="${listOfSalariesCosts.name}"></td>
+                    <td th:text="${listOfSalariesCosts.price}"></td>
                 </tr>
                 </tbody>
                 <tfoot>
@@ -179,15 +179,15 @@
                     <th> Сумма</th>
                 </tr>
                 </thead>
-                <tbody th:each="otherGoods : ${otherGoods}">
+                <tbody th:each="listOfOtherCosts : ${listOfOtherCosts}">
                 <tr>
-                    <td th:text="${otherGoods.date}"></td>
-                    <td th:text="${otherGoods.name}"></td>
-                    <td th:text="${otherGoods.price}"></td>
-                    <td th:text="${otherGoods.quantity}"></td>
-                    <td th:text="${otherGoods.price * otherGoods.quantity} % 1 == 0
-                 ? ${#numbers.formatDecimal((otherGoods.price * otherGoods.quantity), 0, 0)}
-                 : ${#numbers.formatDecimal((otherGoods.price * otherGoods.quantity), 0, 2)}">
+                    <td th:text="${listOfOtherCosts.date}"></td>
+                    <td th:text="${listOfOtherCosts.name}"></td>
+                    <td th:text="${listOfOtherCosts.price}"></td>
+                    <td th:text="${listOfOtherCosts.quantity}"></td>
+                    <td th:text="${listOfOtherCosts.price * listOfOtherCosts.quantity} % 1 == 0
+                 ? ${#numbers.formatDecimal((listOfOtherCosts.price * listOfOtherCosts.quantity), 0, 0)}
+                 : ${#numbers.formatDecimal((listOfOtherCosts.price * listOfOtherCosts.quantity), 0, 2)}">
                     </td>
                 </tr>
                 </tbody>

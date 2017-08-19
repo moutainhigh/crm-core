@@ -5,9 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-<div class="modal fade" tabindex="-1" roles="dialog" id="modalAddGoods" th:fragment="modalAdd">
-    <form class="form-horizontal" id="formAddGoods" method="post" th:action="@{/manager/costs/add}"
-          th:object="${formGoods}">
+<div class="modal fade" tabindex="-1" roles="dialog" id="modalAddCost" th:fragment="modalAdd">
+    <form class="form-horizontal" id="formAddCost" method="post" th:action="@{/manager/cost/add}"
+          th:object="${formCost}">
         <div class="modal-dialog" roles="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -32,10 +32,10 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="addCostDropdownMenuCategory" id="addCostDropListCategory">
-                                <li th:each="category : ${goodsCategories}"><a th:text="${category.name}">Action</a></li>
+                                <li th:each="category : ${costCategories}"><a th:text="${category.name}">Action</a></li>
                             </ul>
                             <select class="form-control" name="addCategory" id="addCategory">
-                                <div th:each="category : ${goodsCategories}">
+                                <div th:each="category : ${costCategories}">
                                     <option th:class="optionClass"  th:value="${category.name}"
                                             th:text="${category.name}"></option>
                                 </div>
@@ -49,7 +49,7 @@
                         </div>--><!-- /.col-lg-6 -->
                         <div class="dropdown col-md-6">
                             <select class="form-control" th:field="*{category.name}" name="addCategory" id="addCategory">
-                                <option th:each="category : ${goodsCategories}" th:value="${category.name}" th:text="${category.name}"></option>
+                                <option th:each="category : ${costCategories}" th:value="${category.name}" th:text="${category.name}"></option>
                             </select>
                         </div>
                     </div>

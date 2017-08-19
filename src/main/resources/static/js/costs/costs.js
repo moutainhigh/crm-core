@@ -19,12 +19,12 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $('#searchGoods, #editName, #addName').autocomplete({
+    $('#searchCost, #editName, #addName').autocomplete({
         minLength: 1,
         source: function (request, response) {
             $.ajax({
                 type: 'GET',
-                url: '/manager/costs/search/goods?name=' + request.term,
+                url: '/manager/cost/search/cost?name=' + request.term,
                 success: function (data) {
                     response(data.length === 0 ? [] : data);
                 }
@@ -45,7 +45,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $('#formAddGoods').submit(function (e) {
+    $('#formAddCost').submit(function (e) {
         e.preventDefault();
         $('.messageAd').html('').hide();
         if ($('#addCategory').val() == "") {
@@ -53,8 +53,8 @@ $(document).ready(function () {
             $('.messageAd').html(errorMessage).show();
             return false;
         }
-        var url = '/manager/costs/add';
-        var formData = $('#formAddGoods').serialize();
+        var url = '/manager/cost/add';
+        var formData = $('#formAddCost').serialize();
 
         $.ajax({
             type: 'POST',
@@ -77,7 +77,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $('#formEditGoods').submit(function (e) {
+    $('#formEditCost').submit(function (e) {
         e.preventDefault();
         $('.messageAd').html('').hide();
         if ($('#editCategory').val() == "") {
@@ -85,8 +85,8 @@ $(document).ready(function () {
             $('.messageAd').html(errorMessage).show();
             return false;
         }
-        var url = '/manager/costs/edit';
-        var formData = $('#formEditGoods').serialize();
+        var url = '/manager/cost/edit';
+        var formData = $('#formEditCost').serialize();
 
         $.ajax({
             type: 'POST',
@@ -109,7 +109,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $('#deleteAllGoods').click(function () {
+    $('#deleteAllCosts').click(function () {
         var table = $('#sortedTable').DataTable();
         var numberOfRows = table.data().length;
         if (numberOfRows === 0) {
@@ -127,7 +127,7 @@ $(document).ready(function () {
             idArray.push(data[0]);
         }
 
-        var url = '/manager/costs/delete/all';
+        var url = '/manager/cost/delete/all';
         data = JSON.stringify(idArray);
         var request = $.post(url, {ids: data}, function (data) {
             var successMessage = '<h4 style="color:green;" align="center">' + data + '</h4>';
@@ -139,15 +139,15 @@ $(document).ready(function () {
     });
 });
 
-function removeGoods(id) {
-    var url = '/manager/costs/delete';
+function removeCost(id) {
+    var url = '/manager/cost/delete';
 
-    var request = $.post(url, {goodsId: id}, function () {
+    var request = $.post(url, {costId: id}, function () {
         location.reload();
     });
 }
 
-function populateGoodsEditModal(rowIdx) {
+function populateCostEditModal(rowIdx) {
     var table = $('#sortedTable').DataTable();
     var numberOfRows = table.data().length;
 
@@ -188,7 +188,7 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $('#seatchCategoryDropList').find('li').on('click', function () {
+    $('#searchCategoryDropList').find('li').on('click', function () {
         $('#searchCategoryDropdownMenu').html($(this).text() + ' <span class="caret"></span>');
         $('#searchCategory').val($(this).text());
     })

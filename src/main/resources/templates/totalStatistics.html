@@ -204,12 +204,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="salariesGoods : ${totalStat.salariesGoods}">
-                                <td th:text="${salariesGoods.date}"></td>
-                                <td th:text="${salariesGoods.name}"></td>
-                                <td th:text="${salariesGoods.price * salariesGoods.quantity} % 1 == 0
-                     ? ${#numbers.formatDecimal((salariesGoods.price * salariesGoods.quantity), 0, 0)}
-                     : ${#numbers.formatDecimal((salariesGoods.price * salariesGoods.quantity), 0, 2)}"></td>
+                            <tr th:each="listOfSalariesCosts : ${totalStat.listOfSalariesCosts}">
+                                <td th:text="${listOfSalariesCosts.date}"></td>
+                                <td th:text="${listOfSalariesCosts.name}"></td>
+                                <td th:text="${listOfSalariesCosts.price * listOfSalariesCosts.quantity} % 1 == 0
+                     ? ${#numbers.formatDecimal((listOfSalariesCosts.price * listOfSalariesCosts.quantity), 0, 0)}
+                     : ${#numbers.formatDecimal((listOfSalariesCosts.price * listOfSalariesCosts.quantity), 0, 2)}"></td>
                             </tr>
                             </tbody>
                             <tfoot>
@@ -236,21 +236,21 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="allGoods : ${totalStat.otherGoods}">
-                                <td th:text="${allGoods.date}"></td>
-                                <td th:text="${allGoods.name}"></td>
-                                <td th:text="${allGoods.category.name}"></td>
-                                <td th:text="${allGoods.price} % 1 == 0
-                 ? ${#numbers.formatDecimal(allGoods.price, 0, 0)}
-                 : ${#numbers.formatDecimal(allGoods.price, 0, 2)}">
+                            <tr th:each="allCost : ${totalStat.listOfOtherCosts}">
+                                <td th:text="${allCost.date}"></td>
+                                <td th:text="${allCost.name}"></td>
+                                <td th:text="${allCost.category.name}"></td>
+                                <td th:text="${allCost.price} % 1 == 0
+                 ? ${#numbers.formatDecimal(allCost.price, 0, 0)}
+                 : ${#numbers.formatDecimal(allCost.price, 0, 2)}">
                                 </td>
-                                <td th:text="${allGoods.quantity} % 1 == 0
-                 ? ${#numbers.formatDecimal(allGoods.quantity, 0, 0)}
-                 : ${#numbers.formatDecimal(allGoods.quantity, 0, 2)}">
+                                <td th:text="${allCost.quantity} % 1 == 0
+                 ? ${#numbers.formatDecimal(allCost.quantity, 0, 0)}
+                 : ${#numbers.formatDecimal(allCost.quantity, 0, 2)}">
                                 </td>
-                                <td th:text="${allGoods.price * allGoods.quantity} % 1 == 0
-                 ? ${#numbers.formatDecimal((allGoods.price * allGoods.quantity), 0, 0)}
-                 : ${#numbers.formatDecimal((allGoods.price * allGoods.quantity), 0, 2)}"></td>
+                                <td th:text="${allCost.price * allCost.quantity} % 1 == 0
+                 ? ${#numbers.formatDecimal((allCost.price * allCost.quantity), 0, 0)}
+                 : ${#numbers.formatDecimal((allCost.price * allCost.quantity), 0, 2)}"></td>
                             </tr>
                             </tbody>
                             <tfoot>

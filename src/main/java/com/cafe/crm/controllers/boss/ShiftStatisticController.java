@@ -1,9 +1,9 @@
 package com.cafe.crm.controllers.boss;
 
 import com.cafe.crm.dto.ShiftView;
-import com.cafe.crm.models.goods.Goods;
+import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.shift.Shift;
-import com.cafe.crm.services.interfaces.goods.GoodsService;
+import com.cafe.crm.services.interfaces.cost.CostService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +23,19 @@ import java.util.Set;
 @Controller
 @RequestMapping("/boss/statistics")
 public class ShiftStatisticController {
-	@Value("${cost-category-name.salary-for-shift}")
-	private String categoryNameSalaryForShift;
+
 	private final ShiftService shiftService;
-	private final GoodsService goodsService;
+	private final CostService costService;
 	private final TimeManager timeManager;
 
+	@Value("${cost-category-name.salary-for-shift}")
+	private String categoryNameSalaryForShift;
+
+
 	@Autowired
-	public ShiftStatisticController(ShiftService shiftService, GoodsService goodsService, TimeManager timeManager) {
+	public ShiftStatisticController(ShiftService shiftService, CostService costService, TimeManager timeManager) {
 		this.shiftService = shiftService;
-		this.goodsService = goodsService;
+		this.costService = costService;
 		this.timeManager = timeManager;
 	}
 
@@ -58,25 +61,25 @@ public class ShiftStatisticController {
 	@RequestMapping(value = "/search/shiftDetail/{id}", method = RequestMethod.GET)
 	public ModelAndView shiftDetail(@PathVariable("id") Long id) throws IOException {
 		ModelAndView mv = new ModelAndView("shift/shiftDetail");
-		Double allSalaryGoods = 0D;
-		Double allOtherGoods = 0D;
+		Double allSalaryCost = 0D;
+		Double allOtherCost = 0D;
 		Shift shift = shiftService.findOne(id);
 		ShiftView shiftView = shiftService.createShiftView(shift);
-		List<Goods> salaryWorkerGoods = goodsService.findByDateAndCategoryNameAndVisibleTrue(shift.getShiftDate(),
+		List<Cost> salaryUserCost = costService.findByDateAndCategoryNameAndVisibleTrue(shift.getShiftDate(),
 				categoryNameSalaryForShift);
-		List<Goods> otherGoods = goodsService.findByDateAndVisibleTrue(shift.getShiftDate());
-		otherGoods.removeAll(salaryWorkerGoods);
-		for (Goods salaryWorkerGood : salaryWorkerGoods) {
-			allSalaryGoods = allSalaryGoods + salaryWorkerGood.getPrice() * salaryWorkerGood.getQuantity();
+		List<Cost> otherCost = costService.findByDateAndVisibleTrue(shift.getShiftDate());
+		otherCost.removeAll(salaryUserCost);
+		for (Cost salaryWorkerGood : salaryUserCost) {
+			allSalaryCost = allSalaryCost + salaryWorkerGood.getPrice() * salaryWorkerGood.getQuantity();
 		}
-		for (Goods otherGood : otherGoods) {
-			allOtherGoods = allOtherGoods + otherGood.getPrice() * otherGood.getQuantity();
+		for (Cost otherGood : otherCost) {
+			allOtherCost = allOtherCost + otherGood.getPrice() * otherGood.getQuantity();
 		}
 		mv.addObject("shiftView", shiftView);
-		mv.addObject("salaryWorkerGoods", salaryWorkerGoods);
-		mv.addObject("allSalaryGoods", allSalaryGoods);
-		mv.addObject("allOtherGoods", allOtherGoods);
-		mv.addObject("otherGoods", otherGoods);
+		mv.addObject("salaryUserCost", salaryUserCost);
+		mv.addObject("allSalaryCost", allSalaryCost);
+		mv.addObject("allOtherCost", allOtherCost);
+		mv.addObject("otherCost", otherCost);
 		return mv;
 	}
 }
