@@ -1,8 +1,9 @@
 package com.cafe.crm.controllers.shift;
 
 
-import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.dto.ShiftView;
+import com.cafe.crm.exceptions.transferDataException.TransferException;
+import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.user.User;
 import com.cafe.crm.services.interfaces.email.EmailService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
@@ -10,13 +11,11 @@ import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.services.interfaces.vk.VkService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -166,6 +165,41 @@ public class ShiftController {
 		result.add(salaryWorkerOnShift);
 		result.add(totalCashBox);
 		return result;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/shift/edit/transferCashToBankCashBox", method = RequestMethod.POST)
+	public List<Object> transferToBankCashBox(@RequestParam(name = "transferBankCashBox") Double transferBankCashBox) {
+		Shift lastShift = shiftService.getLast();
+		if (transferBankCashBox > lastShift.getCashBox()) {
+			throw new TransferException("Сумма превышает допустимое значение средств в кассе!");
+		} else {
+			shiftService.transferFromBankToCashBox(transferBankCashBox);
+			List<Object> shiftRecalculationType = new ArrayList<>();
+			shiftRecalculationType.add(lastShift.getCashBox());
+			shiftRecalculationType.add(lastShift.getBankCashBox());
+			return shiftRecalculationType;
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/shift/edit/transferCashToCashBox", method = RequestMethod.POST)
+	public List<Object> transferToCashBox(@RequestParam(name = "transferCashBox") Double transferCashBox) {
+		Shift lastShift = shiftService.getLast();
+		if (transferCashBox > lastShift.getBankCashBox()) {
+			throw new TransferException("Сумма превышает допустимое значение средств  на карте!");
+		} else {
+			shiftService.transferFromCashBoxToBank(transferCashBox);
+			List<Object> shiftRecalculationType = new ArrayList<>();
+			shiftRecalculationType.add(lastShift.getCashBox());
+			shiftRecalculationType.add(lastShift.getBankCashBox());
+			return shiftRecalculationType;
+		}
+	}
+
+	@ExceptionHandler(value = TransferException.class)
+	public ResponseEntity<?> handleTransferException(TransferException ex) {
+		return ResponseEntity.badRequest().body(ex.getMessage());
 	}
 }
 

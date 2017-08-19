@@ -1,0 +1,117 @@
+.btn-buy-l {
+    display: block;
+    color: #fff;
+    border-radius: 0em; /* Обнулить округлости */
+    -moz-border-radius: 0em; /* Обнулить округлости */
+    -webkit-border-radius: 0em; /* Обнулить округлости */
+    background: #265d94;
+    border: none;
+    text-shadow: -1px -1px 0px rgba(0,0,0,.2);
+    border-bottom: 2px solid #153a65;
+    position: relative;
+
+    margin: 0 auto; /* Это просто для выравнивания кнопки посередине */
+}
+.btn-buy-l:after, .btn-buy-l:before {
+    left: 100%;
+    top: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+}
+.btn-buy-l:after {
+    border-color: rgba(136, 183, 213, 0);
+    border-left-color: #265d94;
+    border-width: 22px;
+    margin-top: -22px;
+}
+.btn-buy-l:before {
+    border-color: rgba(194, 225, 245, 0);
+    border-left-color: #153a65;
+    border-width: 22px;
+    margin-top: -22px;
+}
+.btn-buy-l:hover,
+.btn-buy-l:focus,
+.btn-buy-l:active,
+.btn-buy-l.active,
+.open .dropdown-toggle.btn-buy-l {
+    color: #fff;
+    outline: none;
+    background: #2e6eae;
+    border-bottom: 2px solid #1b4a80;
+}
+.btn-buy-l:hover:after,
+.btn-buy-l:focus:after,
+.btn-buy-l:active:after,
+.btn-buy-l.active:after {
+    border-left-color: #2e6eae;
+}
+.btn-buy-l:active,
+.btn-buy-l.active,
+.open .dropdown-toggle.btn-buy-l {
+    background: #265d94;
+    color: #fff;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+}
+.btn-buy-l:active:after,
+.btn-buy-l.active:after,
+.open .dropdown-toggle.btn-buy-l:after {
+    border-left-color: #265d94;
+}
+.btn-buy-l:after, .btn-buy-l:before {
+    left: 100%;
+    top: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+}
+.btn-buy-l:after {
+    border-color: rgba(136, 183, 213, 0);
+    border-left-color: #265d94;
+    border-width: 22px;
+    margin-top: -22px;
+}
+.btn-buy-l:before {
+    border-color: rgba(194, 225, 245, 0);
+    border-left-color: #153a65;
+    border-width: 22px;
+    margin-top: -22px;
+}
+.btn-buy-l:hover,
+.btn-buy-l:focus,
+.btn-buy-l:active,
+.btn-buy-l.active,
+.open .dropdown-toggle.btn-buy-l {
+    color: #fff;
+    outline: none;
+    background: #2e6eae;
+    border-bottom: 2px solid #1b4a80;
+}
+.btn-buy-l:hover:after,
+.btn-buy-l:focus:after,
+.btn-buy-l:active:after,
+.btn-buy-l.active:after {
+    border-left-color: #2e6eae;
+}
+.btn-buy-l:active,
+.btn-buy-l.active,
+.open .dropdown-toggle.btn-buy-l {
+    background: #265d94;
+    outline: none;
+    color: #fff;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+}
+.btn-buy-l:active:after,
+.btn-buy-l.active:after,
+.open .dropdown-toggle.btn-buy-l:after {
+    border-left-color: #265d94;
+}

@@ -38,4 +38,9 @@ public interface ShiftService {
 
 	Shift findByDateShift(LocalDate date);
 
+	void transferFromBankToCashBox(Double transfer);
+
+	void transferFromCashBoxToBank(Double transfer);
+
+
 }
