@@ -16,6 +16,7 @@ import com.cafe.crm.services.interfaces.menu.ProductService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -130,6 +131,7 @@ public class CalculateController {
 		return "redirect:/manager";
 	}
 
+	@ConditionalOnProperty(name = "card.enable", havingValue = "true")
 	@RequestMapping(value = {"/add-card-on-client"}, method = RequestMethod.POST)
 	@ResponseBody
 	public Long addCardOnClient(@RequestParam("calculateId") Long calculateId,
@@ -155,9 +157,9 @@ public class CalculateController {
 
 	@RequestMapping(value = {"/update-fields-client"}, method = RequestMethod.POST)
 	@ResponseBody
-	public String UpdateFieldsClient(@RequestParam("clientId") Long clientId,
+	public String updateClientFields(@RequestParam("clientId") Long clientId,
 									 @RequestParam("discountId") Long discountId,
-									 @RequestParam("payWithCard") Double payWithCard,
+									 @RequestParam(name = "payWithCard", required = false) Double payWithCard,
 									 @RequestParam("description") String description) {
 		Client client = clientService.getOne(clientId);
 		if (discountId == -1) {
@@ -168,7 +170,8 @@ public class CalculateController {
 			client.setDiscount(discount.getDiscount());
 			client.setDiscountObj(discount);
 		}
-		client.setPayWithCard(payWithCard);
+		Double newPayWithCard = (payWithCard != null) ? payWithCard : client.getPayWithCard();
+		client.setPayWithCard(newPayWithCard);
 		client.setDescription(description);
 		clientService.save(client);
 		return description;

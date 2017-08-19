@@ -30,14 +30,12 @@ public class UserAccountingController {
 	private final UserService userService;
 	private final PositionService positionService;
 	private final RoleService roleService;
-	private final SessionRegistry sessionRegistry;
 
 	@Autowired
-	public UserAccountingController(UserService userService, PositionService positionService, RoleService roleService, SessionRegistry sessionRegistry) {
+	public UserAccountingController(UserService userService, PositionService positionService, RoleService roleService) {
 		this.userService = userService;
 		this.positionService = positionService;
 		this.roleService = roleService;
-		this.sessionRegistry = sessionRegistry;
 	}
 
 	@RequestMapping(value = {"/boss/user/accounting"}, method = RequestMethod.GET)
@@ -89,22 +87,6 @@ public class UserAccountingController {
 	public String deleteUser(@PathVariable("id") Long id) throws IOException {
 		userService.delete(id);
 		return "redirect:/boss/user/accounting";
-	}
-
-	@RequestMapping(path = {"/manager/user/changePassword", "/boss/user/changePassword"}, method = RequestMethod.POST)
-	@ResponseBody
-	public ResponseEntity<?> changePassword(@RequestParam(name = "old") String oldPassword,
-											@RequestParam(name = "new") String newPassword,
-											@RequestParam(name = "secondNew") String repeatedPassword, Principal principal) {
-		if (!newPassword.equals(repeatedPassword)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-		}
-		String username = principal.getName();
-		userService.changePassword(username, oldPassword, newPassword, repeatedPassword);
-		for (Object elem : sessionRegistry.getAllPrincipals()) {
-			sessionRegistry.getAllSessions(elem, false).forEach(org.springframework.security.core.session.SessionInformation::expireNow);
-		}
-		return ResponseEntity.ok("Пароль успешно изменен!");
 	}
 
 	@RequestMapping(value = {"/boss/user/position/add"}, method = RequestMethod.POST)

@@ -17,11 +17,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/boss/settings/masterKey")
 public class MasterKeyController {
 
-	@Autowired
-	SystemPropertyService propertyService;
+	private final SystemPropertyService propertyService;
+	private final PasswordEncoder encoder;
 
 	@Autowired
-	PasswordEncoder encoder;
+	public MasterKeyController(SystemPropertyService propertyService, PasswordEncoder encoder) {
+		this.propertyService = propertyService;
+		this.encoder = encoder;
+	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String showMasterKeySettingsPage() {
@@ -33,14 +36,11 @@ public class MasterKeyController {
 	public ResponseEntity addMasterKey(@RequestParam(name = "old") String oldPassword,
 	                                   @RequestParam(name = "new") String newMasterKey,
 	                                   Authentication auth) {
-
 		UserDetails userDetails = (UserDetails) auth.getPrincipal();
 		String bossPassword = userDetails.getPassword();
 
 		if (encoder.matches(oldPassword, bossPassword)) {
-
 			propertyService.saveMasterKey(newMasterKey);
-
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 

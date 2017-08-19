@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Table(name = "layer_product")
+@Table(name = "layer_products")
 public class LayerProduct {
 
 	@Id

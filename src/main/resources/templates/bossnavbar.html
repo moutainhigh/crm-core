@@ -33,13 +33,13 @@
                 <ul class="dropdown-menu">
                     <li><a href="/boss/totalStatistics">Общая статистика</a></li>
                     <li><a href="/boss/statistics">Статистика по сменам</a></li>
-                    <li><a href="/boss/card/statistic/all">Статистика по картам</a></li>
+                    <li th:if="${cardEnable}"><a href="/boss/card/statistic/all">Статистика по картам</a></li>
                 </ul>
             </li>
             <li><a href="/boss/user/accounting">Учет сотрудников</a></li>
             <li><a href="/boss/settings/general-setting">Настройки</a></li>
-            <!--<li><a href="/boss/cardGenerationPage">Генерация карт</a></li>-->
-            <li><a data-toggle="modal" th:href="'#advertising'">Рассылка Рекламы</a></li>
+            <li th:if="${cardEnable}"><a href="/boss/cardGenerationPage">Генерация карт</a></li>
+            <li th:if="${cardEnable}"><a data-toggle="modal" th:href="'#advertising'">Рассылка Рекламы</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="/logout">Выход</a></li>

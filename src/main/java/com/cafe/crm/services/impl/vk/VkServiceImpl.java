@@ -89,11 +89,9 @@ public class VkServiceImpl implements VkService {
 		StringBuilder salaryCosts = new StringBuilder();
 		StringBuilder otherCosts = new StringBuilder();
 		double totalCosts = formatCostsAndGetTotalCosts(shift.getGoodses(), salaryCosts, otherCosts);
+		double shortage = shift.getProfit() - totalCosts - shift.getCashBox() - shift.getBankCashBox();
 
-		if (shift.getProfit() - totalCosts > shift.getCashBox() + shift.getBankCashBox()) {
-			params[0] = "НЕДОСТАЧА!";
-		}
-
+		params[0] = shortage < 0d ? "" : "НЕДОСТАЧА!";
 		params[1] = getDayOfWeek(shift.getShiftDate());
 		params[2] = getDate(shift.getShiftDate());
 		params[3] = df.format(shift.getProfit());
