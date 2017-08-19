@@ -1,12 +1,13 @@
 package com.cafe.crm.controllers.boss;
 
+import com.cafe.crm.dto.ShiftView;
 import com.cafe.crm.models.goods.Goods;
 import com.cafe.crm.models.shift.Shift;
-import com.cafe.crm.dto.ShiftView;
 import com.cafe.crm.services.interfaces.goods.GoodsService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,8 @@ import java.util.Set;
 @Controller
 @RequestMapping("/boss/statistics")
 public class ShiftStatisticController {
-
+	@Value("${cost-category-name.salary-for-shift}")
+	private String categoryNameSalaryForShift;
 	private final ShiftService shiftService;
 	private final GoodsService goodsService;
 	private final TimeManager timeManager;
@@ -37,9 +39,9 @@ public class ShiftStatisticController {
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getAdminPage() {
 		ModelAndView mv = new ModelAndView("shift/shiftStatistics");
-		List<Shift> dates = shiftService.findAll();
+		List<Shift> allShifts = shiftService.findAll();
 		LocalDate date = timeManager.getDate();
-		mv.addObject("shifts", dates);
+		mv.addObject("shifts", allShifts);
 		mv.addObject("date", date);
 		return mv;
 	}
@@ -61,7 +63,7 @@ public class ShiftStatisticController {
 		Shift shift = shiftService.findOne(id);
 		ShiftView shiftView = shiftService.createShiftView(shift);
 		List<Goods> salaryWorkerGoods = goodsService.findByDateAndCategoryNameAndVisibleTrue(shift.getShiftDate(),
-				"Зарплата сотрудников");
+				categoryNameSalaryForShift);
 		List<Goods> otherGoods = goodsService.findByDateAndVisibleTrue(shift.getShiftDate());
 		otherGoods.removeAll(salaryWorkerGoods);
 		for (Goods salaryWorkerGood : salaryWorkerGoods) {
