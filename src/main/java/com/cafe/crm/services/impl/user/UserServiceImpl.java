@@ -13,11 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.apache.commons.lang3.StringUtils.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -106,20 +107,13 @@ public class UserServiceImpl implements UserService {
 	public void update(User user, String oldPassword, String newPassword, String repeatedPassword, String positionsIds, String rolesIds) {
 		checkForNotNew(user);
 		checkForUniqueEmailAndPhone(user);
-
 		if (isValidPasswordsData(user, oldPassword, newPassword, repeatedPassword)) {
 			user.setPassword(passwordEncoder.encode(newPassword));
 		}
 		setPositionsToUser(user, positionsIds);
 		setRolesToUser(user, rolesIds);
-		User userFromDB = userRepository.findOne(user.getId());
-		if (user.getShiftSalary() > 0 && user.getShiftSalary() < Integer.MAX_VALUE) {
-			userFromDB.setShiftSalary(user.getShiftSalary());
-			userRepository.saveAndFlush(userFromDB);
-		} else {
-			throw new UserDataException("Указана неверная зарплата сотрудника! " + user.getShiftSalary());
-		}
-
+		setDataFromDatabaseToUser(user);
+		userRepository.saveAndFlush(user);
 	}
 
 	@Override
@@ -169,7 +163,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private boolean isValidPasswordsData(User user, String oldPassword, String newPassword, String repeatedPassword) {
-		if (StringUtils.isEmpty(oldPassword) || StringUtils.isEmpty(newPassword) || StringUtils.isEmpty(repeatedPassword)) {
+		if (isBlank(oldPassword) || isBlank(newPassword) || isBlank(repeatedPassword)) {
 			return false;
 		}
 		if (!newPassword.equals(repeatedPassword)) {
@@ -183,7 +177,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private Long[] parseIds(String ids) {
-		if (ids == null || ids.isEmpty()) {
+		if (isBlank(ids)) {
 			return null;
 		}
 		Long[] longIds;
@@ -221,5 +215,16 @@ public class UserServiceImpl implements UserService {
 		String password;
 		password = isDefault ? passwordEncoder.encode(defaultPassword) : passwordEncoder.encode(user.getPassword());
 		user.setPassword(password);
+	}
+
+	private void setDataFromDatabaseToUser(User user) {
+		User userInDatabase = userRepository.findOne(user.getId());
+		if (userInDatabase != null) {
+			user.setShifts(userInDatabase.getShifts());
+			user.setSalary(userInDatabase.getSalary());
+			user.setBonus(userInDatabase.getBonus());
+			user.setEnabled(userInDatabase.isEnabled());
+			user.setActivated(userInDatabase.isActivated());
+		}
 	}
 }

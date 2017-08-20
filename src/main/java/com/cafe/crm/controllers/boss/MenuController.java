@@ -144,7 +144,6 @@ public class MenuController {
 	@RequestMapping(value = "/updProd", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public WrapperOfProduct updProd(@RequestBody WrapperOfProduct wrapper) {
-
 		Product product = productService.findOne(wrapper.getId());
 		if (product != null) {
 			product.setName(wrapper.getName());

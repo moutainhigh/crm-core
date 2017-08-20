@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import static org.springframework.util.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.*;
 
 @Controller
 @RequestMapping(value = "/manager/cost")
@@ -76,8 +76,8 @@ public class CostController {
 		List<CostCategory> costCategories = costCategoryService.findAll();
 		double totalPrice = getTotalPrice(costs);
 
-		LocalDate from = (fromDate == null || fromDate.isEmpty()) ? null : LocalDate.parse(fromDate, formatter);
-		LocalDate to = (toDate == null || toDate.isEmpty()) ? null : LocalDate.parse(toDate, formatter);
+		LocalDate from = isBlank(fromDate) ? null : LocalDate.parse(fromDate, formatter);
+		LocalDate to = isBlank(toDate) ? null : LocalDate.parse(toDate, formatter);
 		Shift shift = shiftService.getLast();
 
 		model.addAttribute("costs", costs);
@@ -116,16 +116,16 @@ public class CostController {
 		categoryName = (categoryName == null) || categoryName.equals("Все категории") ? null : categoryName.trim();
 
 		LocalDate today = timeManager.getDate();
-		LocalDate from = (isEmpty(fromDate))
+		LocalDate from = (isBlank(fromDate))
 				? today.minusYears(100) : LocalDate.parse(fromDate, formatter);
-		LocalDate to = (isEmpty(toDate))
+		LocalDate to = (isBlank(toDate))
 				? today.plusYears(100) : LocalDate.parse(toDate, formatter);
 
-		if (isEmpty(costName) && isEmpty(categoryName)) {
+		if (isBlank(costName) && isBlank(categoryName)) {
 			return costService.findByDateBetween(from, to);
-		} else if (isEmpty(costName)) {
+		} else if (isBlank(costName)) {
 			return costService.findByCategoryNameAndDateBetween(categoryName, from, to);
-		} else if (isEmpty(categoryName)) {
+		} else if (isBlank(categoryName)) {
 			return costService.findByNameAndDateBetween(costName, from, to);
 		}
 		return costService.findByNameAndCategoryNameAndDateBetween(costName, categoryName, from, to);

@@ -66,20 +66,20 @@ $(document).ready(function () {
 });
 
 function isValidPasswordsData(oldPassword, newPassword, repeatedPassword) {
-    if (oldPassword == "" && newPassword == "" && repeatedPassword == "") {
+    if (isBlank(oldPassword) && isBlank(newPassword) && isBlank(repeatedPassword)) {
         return true;
     }
-    if (oldPassword == "") {
+    if (isBlank(oldPassword)) {
         var errorMessage = '<h4 style="color:red;" align="center">Не указан старый пароль</h4>';
         $('.errorMessage').html(errorMessage).show();
         return false;
     }
-    if (newPassword == "") {
+    if (isBlank(newPassword)) {
         var errorMessage = '<h4 style="color:red;" align="center">Не указан новый пароль</h4>';
         $('.errorMessage').html(errorMessage).show();
         return false;
     }
-    if (repeatedPassword == "") {
+    if (isBlank(repeatedPassword)) {
         var errorMessage = '<h4 style="color:red;" align="center">Не указан повторный пароль</h4>';
         $('.errorMessage').html(errorMessage).show();
         return false;
@@ -90,6 +90,10 @@ function isValidPasswordsData(oldPassword, newPassword, repeatedPassword) {
         return false;
     }
     return true;
+}
+
+function isBlank(str) {
+    return str.length === 0 || str.trim() === ""
 }
 
 

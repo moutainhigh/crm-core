@@ -14,8 +14,9 @@ import java.util.List;
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class User {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
+	@GeneratedValue
 	private Long id;
 
 	@NotBlank(message = "Поле \"firsName\" не может быть пустым")
@@ -66,7 +67,7 @@ public class User {
 	@Max(value = Integer.MAX_VALUE, message = "Поле \"bonus\" должно быть цифрой меньшей 2147483647!")
 	private int bonus;
 
-	private boolean activated;
+	private boolean activated = true;
 
 	private boolean enabled = true;
 
@@ -174,7 +175,7 @@ public class User {
 		this.bonus = bonus;
 	}
 
-	public boolean getEnabled() {
+	public boolean isEnabled() {
 		return enabled;
 	}
 
