@@ -11,6 +11,8 @@ public interface CostRepository extends JpaRepository<Cost, Long> {
 
 	List<Cost> findByCategoryNameIgnoreCaseAndVisibleIsTrueAndDateBetween(String name, LocalDate from, LocalDate to);
 
+	List<Cost> findByCategoryNameAndVisibleIsTrue(String name);
+
 	List<Cost> findByNameIgnoreCaseAndVisibleIsTrueAndDateBetween(String name, LocalDate from, LocalDate to);
 
 	List<Cost> findByNameIgnoreCaseAndCategoryNameIgnoreCaseAndVisibleIsTrueAndDateBetween(String name, String categoryName, LocalDate from, LocalDate to);

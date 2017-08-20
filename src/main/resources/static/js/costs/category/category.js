@@ -20,9 +20,23 @@ $(document).ready(function () {
 
 function removeCategory(id) {
     var url = '/boss/cost/category/delete';
+    var formData = {
+    id: id
+    };
 
-    var request = $.post(url, {id: id}, function () {
-        location.reload();
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: formData,
+        success: function (data) {
+            location.reload();
+        },
+        error: function (error) {
+            var errorMessage = '<h4 style="color:red;" align="center">' + error.responseText + '</h4>';
+            var modal = $('#errorModal');
+            modal.find('.messageAd').text(error.responseText);
+            modal.modal('show');
+        }
     });
 }
 

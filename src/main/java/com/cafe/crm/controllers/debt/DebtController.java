@@ -1,5 +1,7 @@
 package com.cafe.crm.controllers.debt;
 
+import com.cafe.crm.exceptions.cost.category.CostCategoryDataException;
+import com.cafe.crm.exceptions.debt.DebtDataException;
 import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.models.property.AllSystemProperty;
 import com.cafe.crm.models.shift.Shift;
@@ -110,24 +112,18 @@ public class DebtController {
 	}
 
 	@RequestMapping(value = "/addDebt", method = RequestMethod.POST)
-	public String saveGoods(@ModelAttribute @Valid Debt debt) {
+	public ResponseEntity<?> saveGoods(@ModelAttribute @Valid Debt debt) {
 
 		debtService.save(debt);
 
-		return "redirect:";
+		return ResponseEntity.ok("Долг успешно добавлен!");
 	}
 
 	@RequestMapping(value = "/repay", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> repayDebts(@RequestParam(name = "debtId") Long id) {
 
-		Shift lastShift = shiftService.getLast();
-		Debt debt = debtService.get(id);
-
-		lastShift.addDebtToList(debt);
-		shiftService.saveAndFlush(lastShift);
-		debtService.offVisibleStatus(id);
-
+		debtService.repayDebt(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -155,17 +151,21 @@ public class DebtController {
 		if (property != null) {
 			dbMasterKey = property.getProperty();
 		} else {
-			return ResponseEntity.badRequest().body("Введен неверный мастер ключ");
+			throw new DebtDataException("Мастер ключ не настроен");
 		}
-
 
 		if (debt != null && encoder.matches(masterKey, dbMasterKey)) {
 			debtService.delete(debt);
 			return ResponseEntity.ok("Долг успешно удален");
 		} else {
-			return ResponseEntity.badRequest().body("Введен неверный мастер ключ");
+			throw new DebtDataException("Введен неверный мастер ключ");
 		}
 
+	}
+
+	@ExceptionHandler(value = DebtDataException.class)
+	public ResponseEntity<?> handleUserUpdateException(DebtDataException ex) {
+		return ResponseEntity.badRequest().body(ex.getMessage());
 	}
 
 }

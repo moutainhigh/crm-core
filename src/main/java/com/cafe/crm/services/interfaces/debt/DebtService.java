@@ -20,7 +20,9 @@ public interface DebtService {
 
 	List<Debt> findByVisibleIsTrueAndDateBetween(LocalDate from, LocalDate to);
 
-	void offVisibleStatus(Long id);
+	void offVisibleStatus(Debt debt);
 
 	List<Debt> findByDebtorAndDateBetween(String debtor, LocalDate from, LocalDate to);
+
+	void repayDebt(Long id);
 }

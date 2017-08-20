@@ -35,4 +35,5 @@ public interface CostService {
 
 	List<Cost> findByShiftId(Long shiftId);
 
+	List<Cost> findByCategoryName(String name);
 }

@@ -118,4 +118,8 @@ public class CostServiceImpl implements CostService {
 		return costRepository.findByShiftIdAndVisibleIsTrue(shiftId);
 	}
 
+	@Override
+	public List<Cost> findByCategoryName(String name) {
+		return costRepository.findByCategoryNameAndVisibleIsTrue(name);
+	}
 }
