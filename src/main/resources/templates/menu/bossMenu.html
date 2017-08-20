@@ -127,7 +127,16 @@
                                                     <input type="number" step="0.01" class="form-control"
                                                            th:id="updCost + ${prod.id}" name="cost" required=""
                                                            title="только цифры"
+                                                           min="0"
                                                            th:attrappend="disabled=${prod.category.floatingPrice} ? disabled, value=${prod.category.floatingPrice} ? 0.0 : ${prod.cost}"/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Себестоимость</label>
+                                                    <input type="number" class="form-control"
+                                                           th:id="updSelfCost + ${prod.id}" name="selfCost"
+                                                           title="только цифры"
+                                                           min="0"
+                                                           th:value="${prod.selfCost}"/>
                                                 </div>
 
                                             </div>
@@ -376,7 +385,7 @@
                 </div>
             </div>
         </form>
-        <div align="center" class="dima_modal modal" id="dima" style="display: none;"
+        <!--<div align="center" class="dima_modal modal" id="dima" style="display: none;"
              tabindex="-1"
              roles="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" roles="document">
@@ -432,7 +441,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
     </div><!--/.container -->
 
     <div th:replace="fragments/bossChangePassword :: BossChangePassword"></div>

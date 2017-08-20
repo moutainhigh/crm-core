@@ -25,16 +25,12 @@
         <td>
             <button type="button" class="btn btn-danger" data-toggle="modal" th:href="'#repayDebt' +${debts.id}">Вернуть</button>
         </td>
-        <li sec:authorize="hasAuthority('BOSS')">
-        <td>
+        <td sec:authorize="hasAuthority('BOSS')">
             <button type="button" class="glyphicon glyphicon-remove" data-toggle="modal" th:href="'#debtDeleteBoss' +${debts.id}"></button>
         </td>
-        </li>
-        <li sec:authorize="hasAuthority('MANAGER')">
-        <td>
+        <td sec:authorize="hasAuthority('MANAGER')">
             <button type="button" class="glyphicon glyphicon-remove" data-toggle="modal" th:href="'#debtDeleteManager' +${debts.id}"></button>
         </td>
-        </li>
 
         <!--Modals-->
         <div class="modal fade" tabindex="-1" role="dialog" th:id="'debtDeleteManager'+${debts.id}" th:fragment="modalDeleteManager">

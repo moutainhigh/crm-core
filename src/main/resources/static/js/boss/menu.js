@@ -1,4 +1,4 @@
-function showModal(id) {
+/*function showModal(id) {
     var modal = $('.dima_modal');
     modal.find("#d_id").val(id);
     $.ajax({
@@ -21,7 +21,7 @@ function showModal(id) {
     });
 
     modal.fadeIn();
-}
+}*/
 
 $(document).on('click', '#saveNewProductData', function () {
     var id = $(this).data('id');
@@ -32,7 +32,7 @@ $(document).on('click', '#saveNewProductData', function () {
     var setCost = $("#addCost" + id).val();
 	var setSelfCost = $("#addSelfCost" + id).val();
 
-    if (!productDataValidating(setName, setCost)) {
+    if (!productDataValidating(setName, setCost, setSelfCost)) {
         var errorMessage = '<h4 style="color:red;" align="center">Неверный формат данных!</h4>';
         $('.messageAdd' + id).html(errorMessage).show();
         return false;
@@ -102,20 +102,25 @@ function closeModal() {
     modal.fadeOut();
 }
 
-function editProdModal() {
+/*function editProdModal() {
+    var id = $("#d_id").val();
+    var name = $("#d_name").val();
+    var description = $("#d_des").val();
+    var cost = $("#d_cost").val();
+    var selfCost = $("#d_selfCost").val();
+
+
     var formData = {
-        id: $("#d_id").val(),
-        name: $("#d_name").val(),
-        description: $("#d_des").val(),
-        cost: $("#d_cost").val(),
+        id: id,
+        name: name,
+        description: description,
+        cost: cost,
+        selfCost: selfCost
     }
 
-    var cst = $("#d_cost").val();
-    var nme = $("#d_name").val();
-    var id = $("#d_id").val();
 
-    if (!isNaN(+cst)) {
-        if ("" != nme) {
+
+    if (productDataValidating(name, cost)) {
             $.ajax({
                 type: "POST",
                 contentType: "application/json",
@@ -126,9 +131,11 @@ function editProdModal() {
                     $("#b" + id).html(result.name);
                     $("#c" + id).html(result.description);
                     $("#d" + id).html(result.cost);
+                    $("#e" + id).html(result.selfCost);
                     $("#allB" + id).html(result.name);
                     $("#allC" + id).html(result.description);
                     $("#allD" + id).html(result.cost);
+                    $("#allE" + id).html(result.selfCost);
                     closeModal()
                 },
                 error: function (e) {
@@ -136,14 +143,10 @@ function editProdModal() {
                 }
             });
         }
-        else {
-            alert("Неверный формат названия!")
-        }
-    }
     else {
-        alert("Неверный формат цены!")
+        alert("Неверный формат данных!")
     }
-}
+}*/
 
 function del(id) {
     var formData = {
@@ -179,8 +182,8 @@ function del2(id) {
     });
 }
 
-function productDataValidating(name, cost) {
-    if (name == "" || !$.isNumeric(cost)) {
+function productDataValidating(name, cost, selfCost) {
+    if (name == "" || !$.isNumeric(cost) || cost < 0 || selfCost < 0) {
         return false;
     }
     return true;
@@ -194,8 +197,9 @@ $(document).on('click', '#saveEditProductData', function () {
     var name = $("#updName" + id).val();
     var des = $("#updDes" + id).val();
     var cost = $("#updCost" + id).val();
+    var selfCost = $("#updSelfCost" + id).val();
 
-    if (!productDataValidating(name, cost)) {
+    if (!productDataValidating(name, cost, selfCost)) {
         var errorMessage = '<h4 style="color:red;" align="center">Неверный формат данных!</h4>';
         $('.messageEdit' + id).html(errorMessage).show();
         return false;
@@ -205,7 +209,8 @@ $(document).on('click', '#saveEditProductData', function () {
         id: prodId,
         name: name,
         description: des,
-        cost: cost
+        cost: cost,
+        selfCost: selfCost
     };
 
     $.ajax({
@@ -218,12 +223,15 @@ $(document).on('click', '#saveEditProductData', function () {
             $("#b" + id).html(result.name);
             $("#c" + id).html(result.description);
             $("#d" + id).html(result.cost);
+            $("#e" + id).html(result.selfCost);
             $("#allB" + id).html(result.name);
             $("#allC" + id).html(result.description);
             $("#allD" + id).html(result.cost);
+            $("#allE" + id).html(result.selfCost);
             $('#allName' + id).val(result.name);
             $('#allDes' + id).val(result.description);
             $('#allCost' + id).val(result.cost);
+            $('#selfCost' + id).val(result.cost);
 
             $("#p" + id).modal('hide');
         },
@@ -283,6 +291,7 @@ function showModal(id) {
             modal.find("#d_name").val(product.name);
             modal.find("#d_des").val(product.description);
             modal.find("#d_cost").val(product.cost);
+            modal.find("#d_selfCost").val(product.selfCost);
 
         },
         error: function (e) {
@@ -301,8 +310,9 @@ $(document).on('click', '#saveEditProductDataAll', function () {
     var name = $("#allName" + id).val();
     var des = $("#allDes" + id).val();
     var cost = $("#allCost" + id).val();
+    var selfCost = $("#selfCost" + id).val();
 
-    if (!productDataValidating(name, cost)) {
+    if (!productDataValidating(name, cost, selfCost)) {
         var errorMessage = '<h4 style="color:red;" align="center">Неверный формат данных!</h4>';
         $('.messageEditAll' + id).html(errorMessage).show();
         return false;
@@ -312,7 +322,8 @@ $(document).on('click', '#saveEditProductDataAll', function () {
         id: prodId,
         name: name,
         description: des,
-        cost: cost
+        cost: cost,
+        selfCost: selfCost
     };
 
     $.ajax({
@@ -325,9 +336,11 @@ $(document).on('click', '#saveEditProductDataAll', function () {
             $("#b" + id).html(result.name);
             $("#c" + id).html(result.description);
             $("#d" + id).html(result.cost);
+            $("#e" + id).html(result.selfCost);
             $('#allB' + id).html(result.name);
             $("#allC" + id).html(result.description);
             $("#allD" + id).html(result.cost);
+            $("#allE" + id).html(result.selfCost);
             $('#updName' + id).val(result.name);
             $('#updDes' + id).val(result.description);
             $('#updCost' + id).val(result.cost);
@@ -346,9 +359,7 @@ function closeModal() {
     modal.fadeOut();
 }
 $(document).ready(function () {
-
     (function ($) {
-
         $('#filter').keyup(function () {
 
             var rex = new RegExp($(this).val(), 'i');
@@ -359,6 +370,7 @@ $(document).ready(function () {
         })
     }(jQuery));
 });
+
 $(document).ready(function () {
     $("#myTab a").click(function (e) {
         e.preventDefault();
@@ -379,8 +391,7 @@ $('.super').click(function () {
 
 function sendLogLevel() {
     var levelMap = {level: $('#chooseLogLevel').val()};
-    if ($('#chooseLogLevel').val() == 'INFO' || $('#chooseLogLevel').val() == 'ERROR'
-        || $('#chooseLogLevel').val() == 'DEBUG' || $('#chooseLogLevel').val() == 'WARN') {
+    if (isLogLevel($('#chooseLogLevel').val())) {
         $.ajax({
             type: "POST",
             url: "/boss/property/logLevel",
@@ -399,6 +410,11 @@ function sendLogLevel() {
     }
 }
 
+function isLogLevel(log) {
+    return log == 'INFO' || log == 'ERROR'
+        || log == 'DEBUG' || log == 'WARN'
+}
+
 function newSMTPSettings() {
     var formData = {
         settingsName: $("#settingsName").val(),
@@ -411,11 +427,9 @@ function newSMTPSettings() {
         data: formData,
         success: function (result) {
             $("#successModal").modal('show')
-            alert("Получилось!")
         },
         error: function (e) {
             $("#errorModal").modal('show')
-            alert("Ошибка")
         }
     });
 }

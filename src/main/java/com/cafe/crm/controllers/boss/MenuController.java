@@ -1,5 +1,6 @@
 package com.cafe.crm.controllers.boss;
 
+import com.cafe.crm.dto.WrapperOfEditProduct;
 import com.cafe.crm.models.menu.Category;
 import com.cafe.crm.models.menu.Ingredients;
 import com.cafe.crm.models.menu.Product;
@@ -143,7 +144,8 @@ public class MenuController {
 
 	@RequestMapping(value = "/updProd", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public WrapperOfProduct updProd(@RequestBody WrapperOfProduct wrapper) {
+	public WrapperOfEditProduct updProd(@RequestBody WrapperOfEditProduct wrapper) {
+
 		Product product = productService.findOne(wrapper.getId());
 		if (product != null) {
 			product.setName(wrapper.getName());

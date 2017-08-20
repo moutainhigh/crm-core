@@ -7,6 +7,7 @@ public class WrapperOfEditProduct {  // wrapper for menuController
 	private String name;
 	private String description;
 	private Double cost;
+	private Double selfCost;
 
 
 	public WrapperOfEditProduct() {
@@ -42,5 +43,13 @@ public class WrapperOfEditProduct {  // wrapper for menuController
 
 	public void setCost(Double cost) {
 		this.cost = cost;
+	}
+
+	public Double getSelfCost() {
+		return selfCost;
+	}
+
+	public void setSelfCost(Double selfCost) {
+		this.selfCost = selfCost;
 	}
 }
