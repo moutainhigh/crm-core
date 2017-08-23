@@ -66,6 +66,9 @@ public class MenuCalculateControllerServiceImpl implements MenuCalculateControll
 		layerProduct.setName(product.getName());
 		layerProduct.setDescription(product.getDescription());
 		layerProduct.setClients(clients);
+		if (product.getCategory().isFloatingPrice()) {
+			layerProduct.setFloatingPrice(true);
+		}
 		if (!product.getCategory().isDirtyProfit()) {
 			layerProduct.setDirtyProfit(false);
 		}
@@ -106,7 +109,7 @@ public class MenuCalculateControllerServiceImpl implements MenuCalculateControll
 		layerProduct.setClients(forDelClients);//for json
 		String name = layerProduct.getName();
 		String description = layerProduct.getDescription();
-		Double cost = layerProduct.isDirtyProfit() ? layerProduct.getCost() : 0d;
+		Double cost = !layerProduct.isFloatingPrice() ? layerProduct.getCost() : 0d;
 		Product product = productService.findByNameAndDescriptionAndCost(name, description, cost);
 		int oldRating = product.getRating();
 		product.setRating(--oldRating);

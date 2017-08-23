@@ -26,6 +26,8 @@ public class LayerProduct {
 
 	private boolean dirtyProfit = true;
 
+	private boolean floatingPrice;
+
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JsonManagedReference
 	@JoinTable(name = "client_layer_product",
@@ -82,6 +84,14 @@ public class LayerProduct {
 
 	public void setClients(List<Client> clients) {
 		this.clients = clients;
+	}
+
+	public boolean isFloatingPrice() {
+		return floatingPrice;
+	}
+
+	public void setFloatingPrice(boolean floatingPrice) {
+		this.floatingPrice = floatingPrice;
 	}
 
 	@Override
