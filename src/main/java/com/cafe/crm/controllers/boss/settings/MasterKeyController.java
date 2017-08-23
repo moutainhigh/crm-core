@@ -1,6 +1,8 @@
 package com.cafe.crm.controllers.boss.settings;
 
+import com.cafe.crm.exceptions.user.UserDataException;
 import com.cafe.crm.services.interfaces.property.SystemPropertyService;
+import com.cafe.crm.services.interfaces.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,22 +10,21 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/boss/settings/masterKey")
 public class MasterKeyController {
 
 	private final SystemPropertyService propertyService;
-	private final PasswordEncoder encoder;
+	private final UserService userService;
 
 	@Autowired
-	public MasterKeyController(SystemPropertyService propertyService, PasswordEncoder encoder) {
+	public MasterKeyController(SystemPropertyService propertyService, UserService userService) {
 		this.propertyService = propertyService;
-		this.encoder = encoder;
+		this.userService = userService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -35,15 +36,17 @@ public class MasterKeyController {
 	@ResponseBody
 	public ResponseEntity addMasterKey(@RequestParam(name = "old") String oldPassword,
 	                                   @RequestParam(name = "new") String newMasterKey,
-	                                   Authentication auth) {
-		UserDetails userDetails = (UserDetails) auth.getPrincipal();
-		String bossPassword = userDetails.getPassword();
-
-		if (encoder.matches(oldPassword, bossPassword)) {
+	                                   Principal principal) {
+		if (userService.isValidPassword(principal.getName(), oldPassword)) {
 			propertyService.saveMasterKey(newMasterKey);
-			return new ResponseEntity<>(HttpStatus.OK);
+			return ResponseEntity.ok("Мастер ключ успешно добавлен!");
+		} else {
+			throw new UserDataException("Не получилось сохранить новый мастер - ключ!");
 		}
+	}
 
-		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	@ExceptionHandler(value = UserDataException.class)
+	public ResponseEntity<?> handleUserUpdateException(UserDataException ex) {
+		return ResponseEntity.badRequest().body(ex.getMessage());
 	}
 }
