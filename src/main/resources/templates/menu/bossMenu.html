@@ -266,17 +266,22 @@
                                                         </tr>
                                                         </thead>
                                                         <tbody>
-                                                        <tr id="Row2">
+                                                        <tr id="Row2" class="ingredients">
                                                             <td>
-                                                                <select th:id="selectId" name="multiple[]"
+                                                                <select
+                                                                        th:onchange="'calculateCostPrice(\'' + ${categor.id} + '\');'"
+                                                                        th:id="selectId" name="multiple[]"
                                                                         class="form-control mySelect">
                                                                     <div th:each="ing : ${ingredients}">
-                                                                        <option th:class="optionClass"
+                                                                        <option th:attr="data-price=${ing.price}"
+                                                                                th:class="optionClass"
                                                                                 th:value="${ing.name}"
                                                                                 th:text="${ing.name}+ '   -   ' +  ${ing.dimension} + '   -   ' + ${ing.price} + 'p'"></option>
                                                                     </div>
                                                                 </select></td>
-                                                            <td><input th:class="inputClassTest" th:value="0"
+                                                            <td><input
+                                                                    th:onchange="'calculateCostPrice(\'' + ${categor.id} + '\');'"
+                                                                    th:class="inputClassTest" th:value="0"
                                                                        style="width: 150px"
                                                                        th:type="number" min="0"/></td>
                                                         </tr>

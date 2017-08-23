@@ -467,8 +467,9 @@ function removeSettings(id) {
 }
 
 function addIng(id) {
-    first_row = $('#Row2');
+    var first_row = $('#recipeTable' + id).find('#Row2');
     first_row.clone().appendTo('#recipeTable' + id);
+    calculateCostPrice(id);
 };
 
 function deleteIng(id) {
@@ -481,6 +482,7 @@ function deleteIng(id) {
     if (inputs.length >= 2) {
         $('#recipeTable' + id + ' tr:last').remove();
     }
+    calculateCostPrice(id);
 };
 
 function test(id) {
@@ -499,3 +501,22 @@ function test(id) {
         map[ingredient[i]] = amount[i];
     }
 };
+
+function calculateCostPrice(categoryId) {
+    var totalCostPrice = 0;
+    var ingredients = $('#recipeTable'+categoryId).find('.ingredients');
+    for (var i = 0; i < ingredients.length; i++) {
+        var countIngredient = 0;
+        var priceIngredient = 0.0;
+        $(ingredients[i]).find('input,select').each(function (index, element) {
+            elType = element.nodeName.toLowerCase();
+            if (elType === 'input') {
+                countIngredient = parseInt(element.value);
+            } else if (elType === 'select') {
+                priceIngredient = parseFloat($(element).find(':selected').attr('data-price'));
+            }
+        });
+        totalCostPrice += countIngredient * priceIngredient;
+    }
+    $('#addSelfCost'+categoryId).val(totalCostPrice.toFixed(3));
+}
