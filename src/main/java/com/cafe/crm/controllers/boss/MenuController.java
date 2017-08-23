@@ -136,7 +136,6 @@ public class MenuController {
 	public String deleteCategories(@RequestParam(name = "del") Long id) {
 		Category category = categoriesService.getOne(id);
 		if (category != null) {
-			menuService.getOne(1L).getCategories().remove(categoriesService.getOne(id));
 			categoriesService.delete(id);
 		}
 		return "redirect:/boss/menu";

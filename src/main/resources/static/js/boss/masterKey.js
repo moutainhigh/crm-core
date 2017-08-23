@@ -12,11 +12,14 @@ function setMasterKey() {
             url: "/boss/settings/masterKey/addMasterKey",
             data: formData,
             success: function (result) {
-                $("#successModal").modal('show')
+                var modal = $('#successModal');
+                modal.find('.messageAd').text(result);
+                modal.modal('show');
             },
             error: function (e) {
-                $("#errorModal").modal('show')
-                $('#old').val('');
+                var modal = $('#errorModal');
+                modal.find('.messageAd').text(e.responseText);
+                modal.modal('show');
             }
         });
     } else {

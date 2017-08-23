@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -144,6 +144,22 @@ public class UserServiceImpl implements UserService {
 		if (isValidPasswordsData(user, oldPassword, newPassword, repeatedPassword)) {
 			user.setPassword(passwordEncoder.encode(newPassword));
 			userRepository.saveAndFlush(user);
+		}
+	}
+
+	public boolean isValidPassword(String email, String oldPassword) {
+		User userInDataBase = findByEmail(email);
+		if (isBlank(oldPassword)) {
+			return false;
+		}
+		if (userInDataBase == null) {
+			throw new UserDataException("Пользователь с таким e-mail не найден в базе!");
+		} else {
+			if (passwordEncoder.matches(oldPassword, userInDataBase.getPassword())) {
+				return true;
+			} else {
+				throw new UserDataException("Старый пароль не верный!");
+			}
 		}
 	}
 
