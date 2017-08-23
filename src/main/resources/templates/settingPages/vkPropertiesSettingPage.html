@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/navSetting.css}"/>
+</head>
+<body>
+<div th:replace="bossnavbar :: bossNavbar"></div>
+<div th:replace="settingPages/navSetting :: navSetting"></div>
+<div th:replace="media/advertisingDispatch :: advertising"></div>
+
+<div class="container" style="padding-top: 50px;">
+    <h1 th:align="center" style="color: #5bc0de;margin-bottom: 40px;">Настройки VK</h1>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-3" style="background-color: white;padding: 10px;margin-left: 75px;">
+            <form roles="form" th:object="${vk_properties}" method="post"
+                  action="#" th:action="@{/boss/settings/vk-properties-setting/edit}">
+
+                <input th:field="*{accessToken}" type="hidden"/>
+
+                <div class="form-group">
+                    <label>Application ID</label>
+                    <input th:field="*{applicationId}" type="text" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label>Application secret</label>
+                    <input th:field="*{applicationSecret}" type="text" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label>Message name</label>
+                    <input th:field="*{messageName}" type="text" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Chat ID</label>
+                    <input th:field="*{chatId}"  type="text" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label>API Version</label>
+                    <input th:field="*{apiVersion}" type="text" class="form-control" />
+                </div>
+
+                <button type="submit" class="btn btn-success center-block">Сохранить</button>
+
+            </form>
+        </div>
+        <div class="col-md-3"></div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/setting/page/nav-setting.js}"></script>
+</body>
+</html>
+
+

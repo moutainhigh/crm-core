@@ -61,4 +61,13 @@ public class VkProperties {
 	public void setApiVersion(String apiVersion) {
 		this.apiVersion = apiVersion;
 	}
+
+	public static void copy(VkProperties src, VkProperties dst) {
+		dst.setAccessToken(src.getAccessToken());
+		dst.setApiVersion(src.getApiVersion());
+		dst.setApplicationId(src.getApplicationId());
+		dst.setApplicationSecret(src.getApplicationSecret());
+		dst.setChatId(src.getChatId());
+		dst.setMessageName(src.getMessageName());
+	}
 }
