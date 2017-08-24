@@ -23,15 +23,15 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
-    <logger name="com.cafe.crm.controllers.card.CardProfileController" level="INFO">
+    <logger name="com.cafe.crm.controllers.card.CardProfileController" level="ERROR">
         <appender-ref ref="BALANCE"/>
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="org.springframework.web" level="INFO">
+    <logger name="org.springframework.web" level="ERROR">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="org.hibernate" level="INFO">
+    <logger name="org.hibernate" level="ERROR">
         <appender-ref ref="FILE"/>
         <appender-ref ref="STDOUT"/>
     </logger>

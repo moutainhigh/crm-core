@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +53,7 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
+	@Async
 	public void sendAdvertisingFromImage(String imageUrl, String subject, String urlToLink, Collection<? extends Card> cards) {
 		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[cards.size()];
 		int messageNum = 0;
@@ -79,6 +81,7 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
+	@Async
 	public void sendAdvertisingFromText(String text, String subject, Collection<? extends Card> cards) {
 		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[cards.size()];
 		int messageNum = 0;
@@ -106,6 +109,7 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
+	@Async
 	public void sendDispatchStatusNotification(Card card) {
 		if (card == null) {
 			return;
@@ -130,6 +134,7 @@ public class EmailServiceImpl implements EmailService {
 
 	// TODO: 25.06.2017 Сделать возможность добалять чек в письмо
 	@Override
+	@Async
 	public void sendBalanceInfoAfterDeduction(Double newBalance, Double deductionAmount, String email) {
 		if (email == null) {
 			return;
@@ -146,6 +151,7 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
+	@Async
 	public void sendBalanceInfoAfterRefill(Double newBalance, Double refillAmount, String email) {
 		if (email == null) {
 			return;
@@ -162,6 +168,7 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
+	@Async
 	public void sendCloseShiftInfoFromText(Double cashBox, Double cache, Double bankKart, Double payWithCard, Double allPrice, Collection<? extends User> users, Double shortage) {
 		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[users.size()];
 		int messageNum = 0;
@@ -186,6 +193,7 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
+	@Async
 	public void sendInvalidTokenNotification(Collection<? extends User> users) {
 		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[users.size()];
 		int messageNum = 0;
@@ -199,7 +207,6 @@ public class EmailServiceImpl implements EmailService {
 				messageHelper.setFrom(properties.getMail().getSender());
 				messageHelper.setTo(email);
 				messageHelper.setSubject(invalidTokenSubject);
-				;
 				String html = htmlService.getInvalidToken(invalidTokenView);
 				messageHelper.setText(html, true);
 			};
