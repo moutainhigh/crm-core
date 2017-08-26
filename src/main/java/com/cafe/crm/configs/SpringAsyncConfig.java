@@ -1,17 +1,22 @@
 package com.cafe.crm.configs;
 
-import com.cafe.crm.exceptions.async.CustomAsyncExceptionHandler;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.Executor;
 
-@Configuration
-@ComponentScan("com.cafe.crm")
-public class SpringAsyncConfig implements AsyncConfigurer{
+@Component
+public class SpringAsyncConfig implements AsyncConfigurer {
+
+	private final AsyncUncaughtExceptionHandler exceptionHandler;
+
+	@Autowired
+	public SpringAsyncConfig(AsyncUncaughtExceptionHandler exceptionHandler) {
+		this.exceptionHandler = exceptionHandler;
+	}
 
 	@Override
 	public Executor getAsyncExecutor() {
@@ -20,6 +25,6 @@ public class SpringAsyncConfig implements AsyncConfigurer{
 
 	@Override
 	public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-		return new CustomAsyncExceptionHandler();
+		return exceptionHandler;
 	}
 }
