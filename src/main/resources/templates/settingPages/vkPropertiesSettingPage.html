@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-3" style="background-color: white;padding: 10px;margin-left: 75px;">
-            <form roles="form" th:object="${vk_properties}" method="post"
+            <form roles="form" th:object="${vkProperties}" method="post"
                   action="#" th:action="@{/boss/settings/vk-properties-setting/edit}">
 
                 <input th:field="*{accessToken}" type="hidden"/>

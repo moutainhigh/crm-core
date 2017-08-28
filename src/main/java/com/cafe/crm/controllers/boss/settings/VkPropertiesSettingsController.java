@@ -15,9 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-/**
- * Created by homesandbox on 22.08.2017.
- */
 @Controller
 @RequestMapping("/boss/settings/vk-properties-setting")
 public class VkPropertiesSettingsController {
@@ -31,12 +28,12 @@ public class VkPropertiesSettingsController {
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView vkPropertiesSettingPage() throws IOException {
         ModelAndView modelAndView = new ModelAndView("/settingPages/vkPropertiesSettingPage");
-        modelAndView.addObject("vk_properties",getVkPropertiesFromDB());
+        modelAndView.addObject("vkProperties",getVkPropertiesFromDB());
         return modelAndView;
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
-    public String editVkProperties(@ModelAttribute(value="vk_properties") VkProperties newVkProperties,
+    public String editVkProperties(@ModelAttribute(value="vkProperties") VkProperties newVkProperties,
                                    HttpServletRequest request) throws JsonProcessingException {
 
         String jsonStrProperty = new ObjectMapper().writeValueAsString(newVkProperties);
