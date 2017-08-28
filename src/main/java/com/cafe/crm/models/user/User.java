@@ -2,6 +2,7 @@ package com.cafe.crm.models.user;
 
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.utils.PatternStorage;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@JsonIgnoreProperties({"password", "roles", "positions", "shifts", "shiftSalary", "salary", "bonus"})
 public class User {
 
 	@Id
