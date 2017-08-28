@@ -45,20 +45,25 @@ public class DiscountController {
 		String referrer = request.getHeader("Referer");
 		Discount discount = discountService.getOne(id);
 		List<Client> clientList = clientService.getAllOpen();
-		boolean flag = false;
+
+		boolean assignedToClient = false;
 		for (Client client : clientList) {
 			if (client.getDiscountObj() != null) {
 				if (client.getDiscountObj().equals(discount)) {
-					flag = true;
+					assignedToClient = true;
 					break;
 				}
 			}
 
 		}
-		if (!flag) {
+
+		if (assignedToClient) {
 			discount.setIsOpen(false);
 			discountService.save(discount);
+		} else {
+			discountService.delete(discount);
 		}
+
 		return "redirect:" + referrer;
 	}
 }
