@@ -16,7 +16,6 @@ import com.cafe.crm.services.interfaces.menu.ProductService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -131,8 +130,7 @@ public class CalculateController {
 		return "redirect:/manager";
 	}
 
-	@ConditionalOnProperty(name = "card.enable", havingValue = "true")
-	@RequestMapping(value = {"/add-card-on-client"}, method = RequestMethod.POST)
+	@RequestMapping(value = {"/card/add-card-on-client"}, method = RequestMethod.POST)
 	@ResponseBody
 	public Long addCardOnClient(@RequestParam("calculateId") Long calculateId,
 								@RequestParam("clientId") Long clientId,

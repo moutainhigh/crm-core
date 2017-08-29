@@ -8,7 +8,6 @@ import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.card.CardService;
 import com.cafe.crm.services.interfaces.client.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,7 +23,6 @@ import java.util.List;
 
 
 @Controller
-@ConditionalOnProperty(name = "card.enable", havingValue = "true")
 @RequestMapping(value = "/boss")
 public class CardStatisticController {
 

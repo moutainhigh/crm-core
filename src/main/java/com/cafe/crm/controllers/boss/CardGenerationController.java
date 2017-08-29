@@ -7,7 +7,6 @@ import com.cafe.crm.repositories.card.CardRepository;
 import com.cafe.crm.services.impl.amazon.AmazonServiceImpl;
 import com.cafe.crm.services.impl.qr.QrServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,8 +19,7 @@ import java.net.URL;
 import java.util.UUID;
 
 @Controller
-@ConditionalOnProperty(name = "card.enable", havingValue = "true")
-@RequestMapping("/boss")
+@RequestMapping("/boss/card")
 public class CardGenerationController {
 
 	private final QrServiceImpl qrService;
@@ -35,12 +33,12 @@ public class CardGenerationController {
 		this.amazonService = amazonService;
 	}
 
-	@RequestMapping(value = "/cardGenerationPage", method = RequestMethod.GET)
-	public String cardGenerationPage() throws IOException {
+	@RequestMapping(value = "/generationPage", method = RequestMethod.GET)
+	public String showCardGenerationPage() throws IOException {
 		return "cardGenerationPage";
 	}
 
-	@RequestMapping(value = "/generateCard", method = RequestMethod.POST)
+	@RequestMapping(value = "/generate", method = RequestMethod.POST)
 	public String generateCard(@RequestParam(value = "accessKey") String accessKey,
 							   @RequestParam(value = "secretKey") String secretKey,
 							   @RequestParam(value = "link") String link,

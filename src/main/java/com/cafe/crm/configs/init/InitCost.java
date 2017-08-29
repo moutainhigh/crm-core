@@ -13,19 +13,19 @@ import javax.annotation.PostConstruct;
 
 
 @Component
-public class InitGoods {
+public class InitCost {
 
-	private final CostService goodsService;
-	private final CostCategoryService goodsCategoryService;
+	private final CostService costService;
+	private final CostCategoryService costCategoryService;
 	private final TimeManager timeManager;
 
 	@Value("${cost-category-name.salary-for-shift}")
 	private String categoryNameSalaryForShift;
 
 	@Autowired
-	public InitGoods(CostCategoryService goodsCategoryService, CostService goodsService, TimeManager timeManager) {
-		this.goodsCategoryService = goodsCategoryService;
-		this.goodsService = goodsService;
+	public InitCost(CostCategoryService costCategoryService, CostService costService, TimeManager timeManager) {
+		this.costCategoryService = costCategoryService;
+		this.costService = costService;
 		this.timeManager = timeManager;
 	}
 
@@ -37,11 +37,11 @@ public class InitGoods {
 //		CostCategory category3 = new CostCategory("Безалкогольные напитки");
 //		CostCategory category4 = new CostCategory("Бытовые продукты");
 		CostCategory category5 = new CostCategory(categoryNameSalaryForShift);
-//		goodsCategoryService.save(category1);
-//		goodsCategoryService.save(category2);
-//		goodsCategoryService.save(category3);
-//		goodsCategoryService.save(category4);
-		goodsCategoryService.save(category5);
+//		costCategoryService.save(category1);
+//		costCategoryService.save(category2);
+//		costCategoryService.save(category3);
+//		costCategoryService.save(category4);
+		costCategoryService.save(category5);
 
 //		ZoneId zoneId = ZoneId.of("Europe/Moscow");
 //
@@ -55,15 +55,15 @@ public class InitGoods {
 //		Cost goods8 = new Cost("Кофе", 200d, 1, category3, LocalDate.now(zoneId));
 //		Cost goods9 = new Cost("Мыло", 90d, 3, category4, LocalDate.now(zoneId));
 //		Cost goods10 = new Cost("Веревка", 300d, 11, category4, LocalDate.now(zoneId));
-//		goodsService.save(goods1);
-//		goodsService.save(goods2);
-//		goodsService.save(goods3);
-//		goodsService.save(goods4);
-//		goodsService.save(goods5);
-//		goodsService.save(goods6);
-//		goodsService.save(goods7);
-//		goodsService.save(goods8);
-//		goodsService.save(goods9);
-//		goodsService.save(goods10);
+//		costService.save(goods1);
+//		costService.save(goods2);
+//		costService.save(goods3);
+//		costService.save(goods4);
+//		costService.save(goods5);
+//		costService.save(goods6);
+//		costService.save(goods7);
+//		costService.save(goods8);
+//		costService.save(goods9);
+//		costService.save(goods10);
 	}
 }

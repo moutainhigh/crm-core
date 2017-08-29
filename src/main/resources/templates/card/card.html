@@ -11,10 +11,10 @@
         <center>
             <label for="myFile">
                 <img alt="Выбрать фото" style="border-radius: 5px" class="picture"
-                     th:src="@{'/manager/image/'+${card.id}}" width="150" height="150"/><br/>
+                     th:src="@{'/manager/card/image/'+${card.id}}" width="150" height="150"/><br/>
             </label>
             <div>
-                <form method="POST" enctype="multipart/form-data" action="/manager/uploadPhoto">
+                <form method="POST" enctype="multipart/form-data" action="/manager/card/uploadPhoto">
                     <input id="myFile" class="hide" style="display:none" type="file" name="file"/>
                     <input id="id" class="hide2" type="hidden" name="id" th:value="${card.id}"/>
                     <button type="submit" class="btn btn-primary">Сохранить</button>
@@ -56,10 +56,10 @@
         <center>
             <label for="myFile">
                 <img alt="Выбрать фото" style="border-radius: 5px" class="picture"
-                     th:src="@{'/manager/image/'+${card.id}}" width="150" height="150"/><br/>
+                     th:src="@{'/manager/card/image/'+${card.id}}" width="150" height="150"/><br/>
             </label>
             <div>
-                <form method="POST" enctype="multipart/form-data" action="/manager/uploadPhoto">
+                <form method="POST" enctype="multipart/form-data" action="/manager/card/uploadPhoto">
                     <input id="myFile" class="hide" style="display:none" type="file" name="file"/>
                     <input id="id" class="hide2" type="hidden" name="id" th:value="${card.id}"/>
                     <button type="submit" class="btn btn-primary">Сохранить</button>
@@ -157,7 +157,7 @@
                     </div>
                     <div class="modal-body" style="width:300px;">
                         <div th:each="calculate : ${listCalculate}">
-                            <form method="post" action="/manager/add-card-to-calculate">
+                            <form method="post" action="/manager/card/add-card-to-calculate">
                                 <input type="hidden" name="idCard" th:value="${card.id}"/>
                                 <input type="hidden" name="idCalculate" th:value="${calculate.id}"/>
                                 <button type="submit" class="btn btn-default"
@@ -182,7 +182,7 @@
                     </div>
                     <div class="modal-body">
                         <h4> Описание</h4>
-                        <form id="formMod" action="/manager/add-calculate-with-card" method="post">
+                        <form id="formMod" action="/manager/card/add-calculate-with-card" method="post">
                             <input autocomplete="off" style="font-size: 20px" class="form-control" type="text"
                                    name="description" maxlength="30" required=""/>
                             <h4 style="margin-right: 50px; float: left">Кол-во человек</h4>

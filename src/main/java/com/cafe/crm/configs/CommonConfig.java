@@ -1,10 +1,11 @@
 package com.cafe.crm.configs;
 
+import com.cafe.crm.configs.filters.CardFilter;
 import com.cafe.crm.configs.filters.ShiftOpenFilter;
 import com.cafe.crm.configs.property.AdvertisingProperties;
-import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cloudinary.Cloudinary;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,15 +26,8 @@ import java.util.HashSet;
 @EnableAspectJAutoProxy
 public class CommonConfig {
 
-	private final AdvertisingProperties advertisingProperties;
-
-	@Autowired
-	public CommonConfig(AdvertisingProperties properties) {
-		this.advertisingProperties = properties;
-	}
-
 	@Bean
-	public Cloudinary cloudinary() {
+	public Cloudinary cloudinary(@Autowired AdvertisingProperties advertisingProperties) {
 		HashMap<String, String> config = new HashMap<>();
 		config.put("cloud_name", advertisingProperties.getCloud().getName());
 		config.put("api_key", advertisingProperties.getCloud().getKey());
@@ -86,14 +80,16 @@ public class CommonConfig {
 	}
 
 	@Bean
-	public ShiftOpenFilter shiftOpenFilter() {
-		return new ShiftOpenFilter();
+	public FilterRegistrationBean shiftOpenFilterRegistrationBean(@Autowired ShiftOpenFilter shiftOpenFilter) {
+		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(shiftOpenFilter);
+		filterRegistrationBean.setOrder(Integer.MAX_VALUE - 1);
+		return filterRegistrationBean;
 	}
 
 	@Bean
-	public FilterRegistrationBean filterRegistrationBean() {
-		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-		filterRegistrationBean.setFilter(shiftOpenFilter());
+	public FilterRegistrationBean cardFilterRegistrationBean(@Autowired CardFilter cardFilter, @Value("${card.enable}") String cardEnable) {
+		cardFilter.setEnable(!Boolean.valueOf(cardEnable));
+		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(cardFilter);
 		filterRegistrationBean.setOrder(Integer.MAX_VALUE);
 		return filterRegistrationBean;
 	}

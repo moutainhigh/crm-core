@@ -11,7 +11,11 @@ public class GlobalControllerAdvice {
 	private String cardEnable;
 
 	@ModelAttribute("cardEnable")
-	public Object isCardEnable() {
-		return Boolean.valueOf(cardEnable);
+	public String isCardEnable() {
+		return cardEnable;
+	}
+
+	public void setCardEnable(String cardEnable) {
+		this.cardEnable = cardEnable;
 	}
 }

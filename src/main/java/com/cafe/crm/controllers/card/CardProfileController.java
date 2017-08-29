@@ -12,7 +12,6 @@ import com.cafe.crm.utils.PatternStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,7 +32,6 @@ import java.util.regex.Pattern;
 
 
 @Controller
-@ConditionalOnProperty(name = "card.enable", havingValue = "true")
 @RequestMapping("/manager")
 public class CardProfileController {
 
@@ -69,7 +67,7 @@ public class CardProfileController {
 		return modelAndView;
 	}
 
-	@RequestMapping(value = {"/add-card-to-calculate"}, method = RequestMethod.POST)
+	@RequestMapping(value = {"/card/add-card-to-calculate"}, method = RequestMethod.POST)
 	public String addCardToCalculate(@RequestParam("idCard") Long idCard,
 									 @RequestParam("idCalculate") Long idCalculate) {
 		cardControllerService.addCardToCalculate(idCard, idCalculate);
@@ -148,7 +146,7 @@ public class CardProfileController {
 		return "redirect:" + referrer;
 	}
 
-	@RequestMapping(value = {"/add-calculate-with-card"}, method = RequestMethod.POST)
+	@RequestMapping(value = {"/card/add-calculate-with-card"}, method = RequestMethod.POST)
 	public String createCalculate(@RequestParam("boardId") Long id,
 								  @RequestParam("number") Double number,
 								  @RequestParam("description") String description,
@@ -159,7 +157,7 @@ public class CardProfileController {
 		return "redirect:" + referrer;
 	}
 
-	@RequestMapping(value = {"/uploadPhoto"}, method = RequestMethod.POST)
+	@RequestMapping(value = {"/card/uploadPhoto"}, method = RequestMethod.POST)
 	public String uploadPhoto(@RequestParam("file") MultipartFile file,
 							  @RequestParam("id") Long idCard,
 							  HttpServletRequest request) {
@@ -177,7 +175,7 @@ public class CardProfileController {
 	}
 
 	// controller for card's avatar
-	@RequestMapping(value = "/image/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
+	@RequestMapping(value = "/card/image/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
 	public ResponseEntity<byte[]> getImage(@PathVariable("id") Long id) throws IOException {
 
 		byte[] imageContent = cardService.getOne(id).getPhoto();

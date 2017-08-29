@@ -12,7 +12,7 @@ function check(cardId, e) {
             $("#checkLabel").attr('style', 'color:green ;');
             $("#checkLabel").html(card.name + " " + card.surname);
             $("#idInvited").val(card.id);
-            var imageURL = "/manager/image/" + card.id;
+            var imageURL = "/manager/card/image/" + card.id;
             $("#invitedAvatar").attr("src", imageURL).fadeIn();
             $("#invitedAvatar").attr('style', ' border-radius: 5px ');
         },
