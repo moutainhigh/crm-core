@@ -23,10 +23,10 @@
         <td th:text="${debts.debtAmount}" class="price">3000</td>
         <td th:text="${#temporals.format(debts.date, 'dd-MM-yyyy')}" class="date">20.20.2000</td>
         <td>
-            <button type="button" class="btn btn-danger" data-toggle="modal" th:href="'#repayDebt' +${debts.id}">Вернуть</button>
+            <button type="button" class="btn btn-info" data-toggle="modal" th:href="'#repayDebt' +${debts.id}">Вернуть</button>
         </td>
         <td sec:authorize="hasAuthority('BOSS')">
-            <button type="button" class="glyphicon glyphicon-remove" data-toggle="modal" th:href="'#debtDeleteBoss' +${debts.id}"></button>
+            <button type="button" class="btn btn-danger" data-toggle="modal" th:href="'#debtDeleteBoss' +${debts.id}"><span class="glyphicon glyphicon-trash"></span></button>
         </td>
         <td sec:authorize="hasAuthority('MANAGER')">
             <button type="button" class="glyphicon glyphicon-remove" data-toggle="modal" th:href="'#debtDeleteManager' +${debts.id}"></button>

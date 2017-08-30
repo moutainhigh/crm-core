@@ -11,7 +11,7 @@ $(document).ready(function () {
         // "ordering": false
         "order": [[0, "asc"]],
         "columnDefs": [{"targets": [], "visible": false},
-            {"targets": [4], "orderable": false}],
+            {"targets": [4,5], "orderable": false}],
         "oLanguage": {
             "sEmptyTable": "Нет доступных данных для таблицы!"
         },
