@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 
 @Service
+@Async
 public class EmailServiceImpl implements EmailService {
 
 	private final HtmlService htmlService;
@@ -53,7 +54,6 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	@Async
 	public void sendAdvertisingFromImage(String imageUrl, String subject, String urlToLink, Collection<? extends Card> cards) {
 		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[cards.size()];
 		int messageNum = 0;
@@ -81,7 +81,6 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	@Async
 	public void sendAdvertisingFromText(String text, String subject, Collection<? extends Card> cards) {
 		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[cards.size()];
 		int messageNum = 0;
@@ -109,7 +108,6 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	@Async
 	public void sendDispatchStatusNotification(Card card) {
 		if (card == null) {
 			return;
@@ -134,7 +132,6 @@ public class EmailServiceImpl implements EmailService {
 
 	// TODO: 25.06.2017 Сделать возможность добалять чек в письмо
 	@Override
-	@Async
 	public void sendBalanceInfoAfterDeduction(Double newBalance, Double deductionAmount, String email) {
 		if (email == null) {
 			return;
@@ -151,7 +148,6 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	@Async
 	public void sendBalanceInfoAfterRefill(Double newBalance, Double refillAmount, String email) {
 		if (email == null) {
 			return;
@@ -168,7 +164,6 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	@Async
 	public void sendCloseShiftInfoFromText(Double cashBox, Double cache, Double bankKart, Double payWithCard, Double allPrice, Collection<? extends User> users, Double shortage) {
 		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[users.size()];
 		int messageNum = 0;
@@ -193,7 +188,6 @@ public class EmailServiceImpl implements EmailService {
 	}
 
 	@Override
-	@Async
 	public void sendInvalidTokenNotification(Collection<? extends User> users) {
 		MimeMessagePreparator[] mimeMessages = new MimeMessagePreparator[users.size()];
 		int messageNum = 0;
