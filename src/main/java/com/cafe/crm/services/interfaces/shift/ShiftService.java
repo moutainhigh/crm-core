@@ -42,5 +42,8 @@ public interface ShiftService {
 
 	void transferFromCashBoxToBank(Double transfer);
 
+	double getDebtTotal();
+
+	void addDebtSum(double debtSum);
 
 }

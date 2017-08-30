@@ -10,6 +10,8 @@ public interface DebtService {
 
 	void save(Debt debt);
 
+	void saveAll(List<Debt> debtList);
+
 	void delete(Debt debt);
 
 	void delete(Long id);

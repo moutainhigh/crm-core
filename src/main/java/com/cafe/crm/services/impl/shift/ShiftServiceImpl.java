@@ -30,6 +30,7 @@ import java.util.*;
 @Service
 public class ShiftServiceImpl implements ShiftService {
 
+	private double debtTotal = 0.0d;
 	private final ShiftRepository shiftRepository;
 	private final UserService userService;
 	private final CostCategoryService costCategoryService;
@@ -206,6 +207,7 @@ public class ShiftServiceImpl implements ShiftService {
 			otherCosts += (cost.getPrice() * cost.getQuantity());
 		}
 		allPrice -= card;
+		allPrice -= getDebtTotal();
 		totalCashBox = (cashBox + bankCashBox + allPrice) - (usersTotalShiftSalary + otherCosts);
 		return new ShiftView(usersOnShift, clients, activeCalculate, allCalculate,
 				cashBox, totalCashBox, usersTotalShiftSalary, card, allPrice, shiftDate, otherCosts, bankCashBox);
@@ -236,6 +238,16 @@ public class ShiftServiceImpl implements ShiftService {
 		lastShift.setCashBox(cashBox);
 		lastShift.setBankCashBox(bankCashBox);
 		saveAndFlush(lastShift);
+	}
+
+	@Override
+	public double getDebtTotal() {
+		return debtTotal;
+	}
+
+	@Override
+	public void addDebtSum(double debtSum) {
+		debtTotal+=debtSum;
 	}
 
 }

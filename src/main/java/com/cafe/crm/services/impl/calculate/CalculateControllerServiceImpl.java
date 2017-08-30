@@ -5,12 +5,14 @@ import com.cafe.crm.models.board.Board;
 import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.calculate.CalculateControllerService;
 import com.cafe.crm.services.interfaces.calculate.CalculatePriceService;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.card.CardService;
 import com.cafe.crm.services.interfaces.client.ClientService;
+import com.cafe.crm.services.interfaces.debt.DebtService;
 import com.cafe.crm.services.interfaces.email.EmailService;
 import com.cafe.crm.services.interfaces.property.PropertyService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
@@ -20,10 +22,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -31,6 +30,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 	private final ClientService clientService;
 	private final CalculateService calculateService;
+	private final DebtService debtService;
 	private final BoardService boardService;
 	private final CardService cardService;
 	private final CalculatePriceService calculatePriceService;
@@ -41,7 +41,8 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	private final Logger logger;
 
 	@Autowired
-	public CalculateControllerServiceImpl(CalculatePriceService calculatePriceService, EmailService emailService, TimeManager timeManager, ClientService clientService, CalculateService calculateService, @Qualifier(value = "logger") Logger logger, BoardService boardService, PropertyService propertyService, ShiftService shiftService, CardService cardService) {
+	public CalculateControllerServiceImpl(DebtService debtService, CalculatePriceService calculatePriceService, EmailService emailService, TimeManager timeManager, ClientService clientService, CalculateService calculateService, @Qualifier(value = "logger") Logger logger, BoardService boardService, PropertyService propertyService, ShiftService shiftService, CardService cardService) {
+		this.debtService = debtService;
 		this.calculatePriceService = calculatePriceService;
 		this.emailService = emailService;
 		this.timeManager = timeManager;
@@ -150,7 +151,6 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 	@Override
 	public List<Client> calculatePrice(Long calculateId) {
-		long startTime = System.currentTimeMillis();/// для измерения скорости работы расчетов под ajax
 		Calculate calculate = calculateService.getAllOpenOnCalculate(calculateId);
 		List<Client> clients = calculate.getClient();
 		for (Client client : clients) {
@@ -167,7 +167,6 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 			}
 		}
 		clientService.saveAll(clients);
-		System.out.println(System.currentTimeMillis() - startTime);
 		return clients;
 	}
 
@@ -186,49 +185,81 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 	@Override
 	public void closeClient(long[] clientsId, Long calculateId) {
+
 		if (clientsId == null) {
 			return;
 		}
+
 		List<Client> listClient = clientService.findByIdIn(clientsId);
 		List<Card> listCard = new ArrayList<>();
 		Map<Long, Double> balanceBeforeDeduction = new HashMap<>();
+
 		clientService.findCardByClientIdIn(clientsId)
 				.forEach(card -> balanceBeforeDeduction.put(card.getId(), card.getBalance()));
+
 		for (Client client : listClient) {
 			client.setState(false);
 			Card clientCard = client.getCard();
-			if (clientCard != null) {               // referral bonus
-				if (clientCard.getWhoInvitedMe() != null && clientCard.getVisitDate() == null) {
-					Card invitedCard = cardService.getOne(clientCard.getWhoInvitedMe());
-					invitedCard.setBalance(invitedCard.getBalance() + propertyService.getOne(3L).getValue());
-					cardService.save(invitedCard);
-				}
-				clientCard.setVisitDate(timeManager.getDate());
-				cardService.save(clientCard);
+			if (clientCard == null) {
+				continue;
 			}
-			if (clientCard != null) {
-				clientCard.setBalance(clientCard.getBalance() - client.getPayWithCard());
-				listCard.add(clientCard);
-			}
+
+			setBalanceAndSaveInvitedCard(clientCard);
+
+			clientCard.setVisitDate(timeManager.getDate());
+			cardService.save(clientCard);
+
+			clientCard.setBalance(clientCard.getBalance() - client.getPayWithCard());
+			listCard.add(clientCard);
 		}
+
 		cardService.saveAll(listCard);
 		clientService.saveAll(listClient);
 
-		boolean flag = false;
+		findLeastOneOpenClientAndCloseCalculation(calculateId);
+		sendBalanceInfoAfterDeduction(listClient, balanceBeforeDeduction);
+	}
+
+	private void findLeastOneOpenClientAndCloseCalculation(Long calculateId) {
 		Calculate calculate = calculateService.getOne(calculateId);
 		List<Client> clients = calculate.getClient();
 		for (Client client : clients) {
 			if (client.isState() && !client.isDeleteState()) {
-				flag = true;
-				break;
+				calculate.setState(false);
+				calculateService.save(calculate);
+				return;
 			}
 		}
-		if (!flag) {
-			calculate.setState(false);
-			calculateService.save(calculate);
+	}
+
+	private void setBalanceAndSaveInvitedCard(Card clientCard) {
+		if (clientCard.getWhoInvitedMe() != null && clientCard.getVisitDate() == null) {
+			Card invitedCard = cardService.getOne(clientCard.getWhoInvitedMe());
+			invitedCard.setBalance(invitedCard.getBalance() + propertyService.getOne(3L).getValue());
+			cardService.save(invitedCard);
+		}
+	}
+
+	@Override
+	public void closeClientDebt(long[] clientsId, Long calculateId) {
+		if (clientsId == null) {
+			return;
 		}
 
-		sendBalanceInfoAfterDeduction(listClient, balanceBeforeDeduction);
+		List<Client> listClient = clientService.findByIdIn(clientsId);
+		List<Debt> debtList = new ArrayList<>();
+
+		listClient.forEach(client -> {
+			Debt debt = new Debt();
+			debt.setDate(timeManager.getDate());
+			debt.setDebtAmount(client.getAllPrice());
+			debt.setDebtor(client.getDescription());
+			debtList.add(debt);
+			shiftService.addDebtSum(client.getAllPrice());
+		});
+
+		findLeastOneOpenClientAndCloseCalculation(calculateId);
+		debtService.saveAll(debtList);
 	}
 
 	@Override

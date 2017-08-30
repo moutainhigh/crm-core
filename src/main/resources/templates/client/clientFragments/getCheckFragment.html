@@ -47,17 +47,36 @@
                             </tbody>
                         </table>
                     </div>
-                    <th:block th:if="${cardEnable}">
-                        <p style="font-size: 30px;margin-left: 700px;float: left">Карты:<br/>Кэш:</p>
-                    </th:block>
-                    <th:block th:unless="${cardEnable}">
-                        <p style="font-size: 30px;margin-left: 700px;float: left">Кэш:</p>
-                    </th:block>
-                    <p style="text-align:center;font-size: 30px;float: left" th:id="'all' + ${calculate.id}"></p>
+                    <div style="width: 968px;">
+                        <div class="row">
+                            <div class="col-md-1">
 
-                    <button type="submit" th:form="'formTest' + ${calculate.id}" formaction="/manager/close-client"
-                            style="font-size:20px;float: right;" class="btn btn-danger">Рассчитано
-                    </button>
+                                <button type="submit" th:form="'formTest' + ${calculate.id}" formaction="/manager/close-client-debt"
+                                        style="font-size:20px;" class="btn btn-danger">Рассчитать в долг
+                                </button>
+                            </div>
+
+                            <div class="col-md-1 col-md-offset-7">
+                                <th:block th:if="${cardEnable}">
+                                    <p style="font-size: 30px;">Карты:<br/>Кэш:</p>
+                                </th:block>
+
+                                <th:block th:unless="${cardEnable}">
+                                    <p style="font-size: 30px;">Кэш:</p>
+                                </th:block>
+                            </div>
+
+                            <div class="col-md-1 nopadding">
+                                <p style="font-size: 30px;" th:id="'all' + ${calculate.id}"></p>
+                            </div>
+
+                            <div class="col-md-1">
+                                <button type="submit" th:form="'formTest' + ${calculate.id}" formaction="/manager/close-client"
+                                        style="font-size:20px;" class="btn btn-danger">Рассчитать
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -22,6 +22,8 @@ public interface CalculateControllerService {
 
 	void closeClient(long[] clientsId, Long calculateId);
 
+	void closeClientDebt(long[] clientsId, Long calculateId);
+
 	Long addCardOnClient(Long calculateId, Long clientId, Long cardId);
 
 	void deleteClients(long[] clientsId, Long calculateId);
