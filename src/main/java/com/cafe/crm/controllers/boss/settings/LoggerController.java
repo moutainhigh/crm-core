@@ -17,13 +17,15 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/boss/settings/logger-setting")
 public class LoggerController {
-	@Autowired
-	@Qualifier(value = "logger")
-	private Logger log;
+
+	private final Logger log;
+	private final Logger hibLog;
 
 	@Autowired
-	@Qualifier(value = "hibLogger")
-	private Logger hibLog;
+	public LoggerController(@Qualifier(value = "logger") Logger log, @Qualifier(value = "hibLogger") Logger hibLog) {
+		this.log = log;
+		this.hibLog = hibLog;
+	}
 
 	@ModelAttribute(name = "logLevel")
 	public String logLevel() {

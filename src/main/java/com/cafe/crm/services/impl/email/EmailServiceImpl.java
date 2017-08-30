@@ -13,12 +13,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
 @Service
+@Async
 public class EmailServiceImpl implements EmailService {
 
 	private final HtmlService htmlService;
@@ -199,7 +201,6 @@ public class EmailServiceImpl implements EmailService {
 				messageHelper.setFrom(properties.getMail().getSender());
 				messageHelper.setTo(email);
 				messageHelper.setSubject(invalidTokenSubject);
-				;
 				String html = htmlService.getInvalidToken(invalidTokenView);
 				messageHelper.setText(html, true);
 			};

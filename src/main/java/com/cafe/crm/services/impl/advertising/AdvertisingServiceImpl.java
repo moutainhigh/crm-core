@@ -11,6 +11,7 @@ import com.cafe.crm.services.interfaces.card.CardService;
 import com.cafe.crm.services.interfaces.email.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-
+@Component
 @Service
 @Transactional
 public class AdvertisingServiceImpl implements AdvertisingService {
