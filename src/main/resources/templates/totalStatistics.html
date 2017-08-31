@@ -98,7 +98,7 @@
                             <tr>
                                 <th> Общий чек</th>
                                 <th> Оплата наличными</th>
-                                <th> Оплата по клубной карте</th>
+                                <th th:if="${cardEnable}"> Оплата по клубной карте</th>
                                 <th> Стоимость меню</th>
                                 <th> Стоимость времени</th>
                             </tr>
@@ -107,7 +107,7 @@
                             <tr th:each="client : ${totalStat.clients}">
                                 <td th:text="${client.allPrice}"></td>
                                 <td th:text="${client.cache}"></td>
-                                <td th:text="${client.payWithCard}"></td>
+                                <td th:text="${client.payWithCard}" th:if="${cardEnable}"></td>
                                 <td th:text="${client.priceMenu}"></td>
                                 <td th:text="${client.priceTime}"></td>
                             </tr>
@@ -116,7 +116,7 @@
                             <tr>
                                 <td></td>
                                 <td></td>
-                                <td></td>
+                                <td th:if="${cardEnable}"></td>
                                 <td></td>
                                 <td></td>
                             </tr>

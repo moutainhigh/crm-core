@@ -4,6 +4,7 @@ package com.cafe.crm.configs.filters;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
+@Component
 public class ShiftOpenFilter extends GenericFilterBean {
 
 	private ShiftService shiftService;

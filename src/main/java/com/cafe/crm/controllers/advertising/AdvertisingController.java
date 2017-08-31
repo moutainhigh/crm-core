@@ -3,7 +3,6 @@ package com.cafe.crm.controllers.advertising;
 import com.cafe.crm.exceptions.advertising.*;
 import com.cafe.crm.services.interfaces.advertising.AdvertisingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailPreparationException;
 import org.springframework.stereotype.Controller;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
-@ConditionalOnProperty(name = "card.enable", havingValue = "true")
 public class AdvertisingController {
 
 	private final AdvertisingService advertisingService;
@@ -47,7 +45,7 @@ public class AdvertisingController {
 		return ResponseEntity.ok("Реклама успешно разослана!");
 	}
 
-	@RequestMapping(path = "advertising/toggle", method = RequestMethod.GET)
+	@RequestMapping(path = "/advertising/toggle", method = RequestMethod.GET)
 	public String toggleAdvertisingDispatchStatus(@RequestParam("number") String id,
 												  @RequestParam("token") String token, Model model) {
 		boolean status = advertisingService.toggleAdvertisingDispatchStatus(id, token);

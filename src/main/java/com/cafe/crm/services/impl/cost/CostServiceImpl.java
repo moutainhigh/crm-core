@@ -20,15 +20,18 @@ import java.util.Set;
 public class CostServiceImpl implements CostService {
 
 	private final CostRepository costRepository;
-	private final ShiftService shiftService;
 	private final CostCategoryService costCategoryService;
-
+	private ShiftService shiftService;
 
 	@Autowired
-	public CostServiceImpl(CostRepository goodsRepository, ShiftService shiftService, CostCategoryService goodsCategoryService) {
+	public CostServiceImpl(CostRepository goodsRepository, CostCategoryService goodsCategoryService) {
 		this.costRepository = goodsRepository;
-		this.shiftService = shiftService;
 		this.costCategoryService = goodsCategoryService;
+	}
+
+	@Autowired
+	public void setShiftService(ShiftService shiftService) {
+		this.shiftService = shiftService;
 	}
 
 	@Override

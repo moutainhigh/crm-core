@@ -117,7 +117,7 @@
                                     <td th:if="${cardEnable}">
                                         <!-- Выбор карт-->
                                         <form th:id="'cardSel' + ${client.id}" method="post"
-                                              action="/manager/add-card-on-client">
+                                              action="/manager/card/add-card-on-client">
                                             <input type="hidden" name="clientId" th:value="${client.id}"/>
                                             <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
                                             <select th:onchange="'ajaxCardDiscount(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'"

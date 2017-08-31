@@ -42,7 +42,7 @@ function ajaxCardDiscount(id, calcId) {
 
     $.ajax({
         type: "POST",
-        url: "/manager/add-card-on-client",
+        url: "/manager/card/add-card-on-client",
         data: $('#cardSel' + id).serialize(),
 
         success: function (data) {
