@@ -6,6 +6,7 @@ import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.Debt;
+import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.calculate.CalculateControllerService;
 import com.cafe.crm.services.interfaces.calculate.CalculatePriceService;
@@ -248,6 +249,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 		List<Client> listClient = clientService.findByIdIn(clientsId);
 		List<Debt> debtList = new ArrayList<>();
+		Shift lastShift = shiftService.getLast();
 
 		listClient.forEach(client -> {
 			Debt debt = new Debt();
@@ -255,7 +257,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 			debt.setDebtAmount(client.getAllPrice());
 			debt.setDebtor(client.getDescription());
 			debtList.add(debt);
-			shiftService.addDebtSum(client.getAllPrice());
+			lastShift.addGivenDebtToList(debt);
 		});
 
 		findLeastOneOpenClientAndCloseCalculation(calculateId);

@@ -126,7 +126,7 @@ public class ShiftController {
 		}
 
 		ShiftView shiftView = shiftService.createShiftView(lastShift);
-		lastShift.getDebts().clear();
+		lastShift.getRepaidDebts().clear();
 		Double allPrice = shiftView.getAllPrice();
 		Double payWithCard = shiftView.getCard();
 		Integer totalBonusSum = 0;
