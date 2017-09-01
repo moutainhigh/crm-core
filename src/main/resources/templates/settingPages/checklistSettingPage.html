@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
+    <link rel="stylesheet" th:href="@{/css/createPassword.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/navSetting.css}"/>
+</head>
+<body>
+
+<div th:replace="bossnavbar :: bossNavbar"></div>
+<div th:replace="settingPages/navSetting :: navSetting"></div>
+<div th:replace="media/advertisingDispatch :: advertising"></div>
+<div class="container" style="padding: 2%">
+    <div class="col-md-6 col-md-offset-3">
+        <h1 th:align="center" style="color: #5bc0de;">Добавление чеклистов</h1>
+
+        <div align="center" style="margin: 2%">
+            <button class="btn btn-primary btn-lg" type="button" data-toggle="modal" data-target="#addToOpenModal">
+                Добавить новую запись
+            </button>
+        </div>
+        <div class="row">
+            <table class="table" style="background: white;border-radius: 5px;box-shadow: 0 0 2px 1px;">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th style="text-align: center">Описание</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody th:if="${not #lists.isEmpty(openChecklist)}">
+                <tr th:each="checklist:${openChecklist}">
+                    <td></td>
+                    <td th:text="${checklist.onOpenShiftText}"></td>
+                    <td align="center">
+                        <form method="post" th:action="'/boss/settings/checklists/delete/'+${checklist.id}">
+                            <button type="submit"
+                                    class="btn btn-primary btn-danger" name="del">
+                                Удалить
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody th:if="${#lists.isEmpty(openChecklist)}">
+                <tr>
+                    <td></td>
+                    <td style="text-align: center">Нет данных для отображения</td>
+                    <td></td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div align="center" style="margin: 2%">
+            <button class="btn btn-primary btn-lg" type="button" data-toggle="modal" data-target="#addToCloseModal">
+                Добавить новую запись
+            </button>
+        </div>
+        <div class="row">
+            <table class="table" style="background: white;border-radius: 5px;box-shadow: 0 0 2px 1px;">
+                <thead>
+                <tr>
+                    <th></th>
+                    <th style="text-align: center">Описание</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody th:if="${not #lists.isEmpty(closeChecklist)}">
+                <tr th:each="checklist:${closeChecklist}">
+                    <td></td>
+                    <td th:text="${checklist.onCloseShiftText}"></td>
+                    <td align="center">
+                        <form method="post" th:action="'/boss/settings/checklists/delete/'+${checklist.id}">
+                            <button type="submit"
+                                    class="btn btn-primary btn-danger" name="del">
+                                Удалить
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+                <tbody th:if="${#lists.isEmpty(closeChecklist)}">
+                <tr>
+                    <td></td>
+                    <td style="text-align: center">Нет данных для отображения</td>
+                    <td></td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<!--Модали-->
+<form method="post" action="/boss/settings/checklists/addOpen" th:object="${checklistForm}">
+    <div class="modal fade" id="addToOpenModal" tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title" align="center">Добавить новую запись</h3>
+                </div>
+                <div class="modal-content">
+                    <div class="panel-body">
+
+                        <input required="" type="hidden" class="form-control"
+                               name="id"/>
+                        <h4><label>Название</label></h4>
+                        <input type="text" class="form-control"
+                               name="text"
+                               required="" style="margin-bottom: 1%"/>
+
+                        <div class="col-md-6 col-md-offset-3">
+                            <button class="btn btn-primary btn-lg btn-block" type="submit">Добавить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<form method="post" action="/boss/settings/checklists/addClose" th:object="${checklistForm}">
+    <div class="modal fade" id="addToCloseModal" tabindex="-1" role="dialog"
+         aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title" align="center">Добавить новую запись</h3>
+                </div>
+                <div class="modal-content">
+                    <div class="panel-body">
+
+                        <input required="" type="hidden" class="form-control"
+                               name="id"/>
+                        <h4><label>Название</label></h4>
+                        <input type="text" class="form-control"
+                               name="text"
+                               required="" style="margin-bottom: 1%"/>
+
+                        <div class="col-md-6 col-md-offset-3">
+                            <button class="btn btn-primary btn-lg btn-block" type="submit">Добавить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script th:src="@{/js/mail.js}"></script>
+<script type="text/javascript" th:src="@{/js/setting/page/nav-setting.js}"></script>
+<script th:src="@{/js/boss/masterKey.js}"></script>
+</body>
+</html>

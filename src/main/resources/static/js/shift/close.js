@@ -38,3 +38,51 @@ function recalculation() {
         }
     });
 }
+
+$(document).ready(function () {
+    $('#checklistInputForm').submit(function (e) {
+        e.preventDefault();
+        var form = document.getElementById('checklistInputForm');
+        var inputs = form.getElementsByTagName('input');
+        var isChecked = false;
+        for(var x = 0; x < inputs.length; x++) {
+            if(inputs[x].type == 'checkbox') {
+               isChecked = inputs[x].checked;
+                if(!isChecked) {
+                    $('#checklistModal').find('.showMessage').text('Вы выбрали не все пункты');
+                    break;
+                }
+            }
+        }
+        if(isChecked) {
+            var checklistModal = $('#checklistModal');
+            var addShiftModal = $('#add');
+            addShiftModal.modal('show');
+            checklistModal.modal('hide');
+        }
+    });
+});
+
+$(document).ready(function () {
+    $('#checklistInputForm').submit(function (e) {
+        e.preventDefault();
+        var form = document.getElementById('checklistInputForm');
+        var inputs = form.getElementsByTagName('input');
+        var isChecked = false;
+        for(var x = 0; x < inputs.length; x++) {
+            if(inputs[x].type == 'checkbox') {
+                isChecked = inputs[x].checked;
+                if(!isChecked) {
+                    $('#checklistOnCloseModal').find('.showMessage').text('Вы выбрали не все пункты');
+                    break;
+                }
+            }
+        }
+        if(isChecked) {
+            var checklistModal = $('#checklistOnCloseModal');
+            var closeShiftModal = $('#closeShiftModalId');
+            closeShiftModal.modal('show');
+            checklistModal.modal('hide');
+        }
+    });
+});

@@ -5,6 +5,7 @@ import com.cafe.crm.exceptions.debt.DebtDataException;
 import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.models.property.AllSystemProperty;
 import com.cafe.crm.models.shift.Shift;
+import com.cafe.crm.services.interfaces.checklist.ChecklistService;
 import com.cafe.crm.services.interfaces.debt.DebtService;
 import com.cafe.crm.services.interfaces.property.SystemPropertyService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
@@ -30,6 +31,7 @@ public class DebtController {
 	private final DebtService debtService;
 	private final TimeManager timeManager;
 	private final ShiftService shiftService;
+	private final ChecklistService checklistService;
 
 	@Autowired
 	PasswordEncoder encoder;
@@ -38,10 +40,11 @@ public class DebtController {
 	SystemPropertyService systemPropertyService;
 
 	@Autowired
-	public DebtController(DebtService debtService, TimeManager timeManager, ShiftService shiftService) {
+	public DebtController(DebtService debtService, TimeManager timeManager, ShiftService shiftService, ChecklistService checklistService) {
 		this.debtService = debtService;
 		this.timeManager = timeManager;
 		this.shiftService = shiftService;
+		this.checklistService = checklistService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -60,6 +63,7 @@ public class DebtController {
 		modelAndView.addObject("fromDate", today);
 		modelAndView.addObject("toDate", null);
 		modelAndView.addObject("closeShiftView", shiftService.createShiftView(shift));
+		modelAndView.addObject("closeChecklist", checklistService.getAllForCloseShift());
 
 		return modelAndView;
 	}
