@@ -1,14 +1,18 @@
 package com.cafe.crm.controllers.boss.settings;
 
 import com.cafe.crm.dto.PropertyWrapper;
+import com.cafe.crm.models.property.Property;
 import com.cafe.crm.services.interfaces.property.PropertyService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,17 +37,21 @@ public class GeneralSettingController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView generalSettingPage() {
+	public ModelAndView showGeneralSettingPage() {
 		ModelAndView modelAndView = new ModelAndView("/settingPages/generalSettingPage");
 		modelAndView.addObject("properties", propertyService.findAll());
 		return modelAndView;
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)
-	public String editProperty(@ModelAttribute PropertyWrapper wrapper, HttpServletRequest request) {
-		propertyService.saveCollection(wrapper.getProperties());
-		String referrer = request.getHeader("Referer");
-		return "redirect:" + referrer;
+	@ResponseBody
+	public ResponseEntity<?> editProperty(@Valid Property property, BindingResult bindingResult, HttpServletRequest request) {
+		if (bindingResult.hasErrors()) {
+			String fieldError = bindingResult.getFieldError().getDefaultMessage();
+			return ResponseEntity.badRequest().body(fieldError);
+		}
+		propertyService.save(property);
+		return ResponseEntity.ok("");
 	}
 
 	@PostMapping("/get-server-time-date")

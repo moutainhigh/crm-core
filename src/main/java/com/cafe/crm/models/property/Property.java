@@ -1,12 +1,15 @@
 package com.cafe.crm.models.property;
 
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -17,12 +20,12 @@ public class Property {
 	@GeneratedValue
 	private Long id;
 
-	@NotNull
-	@NotEmpty
+	@NotBlank(message = "Поле \"name\" не может быть пустым")
 	private String name;
 
-	@NotNull
-	private Double value;
+	@Min(value = 0, message = "Поле \"value\" должно быть цифрой большей 0!")
+	@Max(value = Integer.MAX_VALUE, message = "Поле \"value\" должно быть цифрой меньшей 2147483647!")
+	private double value;
 
 	@NotNull
 	private String unit;
@@ -91,18 +94,20 @@ public class Property {
 
 		Property property = (Property) o;
 
+		if (Double.compare(property.value, value) != 0) return false;
 		if (id != null ? !id.equals(property.id) : property.id != null) return false;
 		if (name != null ? !name.equals(property.name) : property.name != null) return false;
-		if (value != null ? !value.equals(property.value) : property.value != null)
-			return false;
 		return enable != null ? enable.equals(property.enable) : property.enable == null;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = id != null ? id.hashCode() : 0;
+		int result;
+		long temp;
+		result = id != null ? id.hashCode() : 0;
 		result = 31 * result + (name != null ? name.hashCode() : 0);
-		result = 31 * result + (value != null ? value.hashCode() : 0);
+		temp = Double.doubleToLongBits(value);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
 		result = 31 * result + (enable != null ? enable.hashCode() : 0);
 		return result;
 	}
