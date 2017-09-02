@@ -242,26 +242,28 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	}
 
 	@Override
-	public void closeClientDebt(long[] clientsId, Long calculateId) {
+	public void closeClientDebt(String debtorName, long[] clientsId, Long calculateId) {
 		if (clientsId == null) {
 			return;
 		}
 
-		List<Client> listClient = clientService.findByIdIn(clientsId);
-		List<Debt> debtList = new ArrayList<>();
+		List<Client> clients = clientService.findByIdIn(clientsId);
 		Shift lastShift = shiftService.getLast();
 
-		listClient.forEach(client -> {
-			Debt debt = new Debt();
-			debt.setDate(timeManager.getDate());
-			debt.setDebtAmount(client.getAllPrice());
-			debt.setDebtor(client.getDescription());
-			debtList.add(debt);
-			lastShift.addGivenDebtToList(debt);
-		});
+		double totalDebtAmount = 0.0D;
+		for (Client client : clients) {
+			totalDebtAmount += client.getAllPrice();
+		}
+
+		Debt debt = new Debt();
+		debt.setDate(timeManager.getDate());
+		debt.setDebtor(debtorName);
+		debt.setDebtAmount(totalDebtAmount);
+
+		lastShift.addGivenDebtToList(debt);
 
 		findLeastOneOpenClientAndCloseCalculation(calculateId);
-		debtService.saveAll(debtList);
+		debtService.save(debt);
 	}
 
 	@Override

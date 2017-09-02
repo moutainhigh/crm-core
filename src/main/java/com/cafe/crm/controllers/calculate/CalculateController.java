@@ -211,8 +211,9 @@ public class CalculateController {
 
 	@RequestMapping(value = {"/close-client-debt"}, method = RequestMethod.POST)
 	public String closeClientDebt(@RequestParam(name = "clientsId", required = false) long[] clientsId,
-							  @RequestParam("calculateId") Long calculateId) {
-		calculateControllerService.closeClientDebt(clientsId, calculateId);
+							  @RequestParam("calculateId") Long calculateId,
+								  @RequestParam("debtorName") String debtorName) {
+		calculateControllerService.closeClientDebt(debtorName, clientsId, calculateId);
 		return "redirect:/manager";
 	}
 

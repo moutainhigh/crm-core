@@ -410,3 +410,21 @@ function roundState(calcId, state) {
         ajaxForCalculate(calcId)
     }, 500);
 }
+
+function closeClientDebt(calculateId) {
+    if ($('#debtorName' + calculateId).val().length == 0) {
+        $('#debtorNameError' + calculateId).show();
+        return;
+    }
+
+
+    $('#formTest'+calculateId).attr('action','/manager/close-client-debt');
+    $('<input />').attr('type', 'hidden')
+        .attr('name', "debtorName")
+        .attr('value',  $('#debtorName' + calculateId).val())
+        .appendTo('#formTest'+calculateId);
+    $('#formTest'+calculateId).submit();
+
+    $('#debtorNameError' + calculateId).hide();
+    $('#debtorName' + calculateId).val('');
+}

@@ -35,13 +35,6 @@ public class DebtServiceImpl implements DebtService {
 		}
 	}
 
-	@Override
-	public void saveAll(List<Debt> debtList) {
-		if(debtList.stream().anyMatch(debt -> debt.getDebtAmount() <= 0)) {
-			throw new DebtDataException("Введена недопустимая сумма долга");
-		}
-		repository.save(debtList);
-	}
 
 	@Override
 	public void delete(Debt debt) {
