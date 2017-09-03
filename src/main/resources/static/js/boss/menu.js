@@ -467,8 +467,8 @@ function removeSettings(id) {
 }
 
 function addIng(id) {
-    var first_row = $('#recipeTable' + id).find('#Row2');
-    first_row.clone().appendTo('#recipeTable' + id);
+    var firstRow = $('#recipeTable' + id).find('#Row2')[0];
+    $(firstRow).clone().appendTo('#recipeTable' + id);
     calculateCostPrice(id);
 };
 
