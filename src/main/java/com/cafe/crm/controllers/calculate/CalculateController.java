@@ -9,6 +9,7 @@ import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.calculate.CalculateControllerService;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.calculate.TimerOfPauseService;
+import com.cafe.crm.services.interfaces.checklist.ChecklistService;
 import com.cafe.crm.services.interfaces.client.ClientService;
 import com.cafe.crm.services.interfaces.discount.DiscountService;
 import com.cafe.crm.services.interfaces.menu.CategoriesService;
@@ -40,9 +41,10 @@ public class CalculateController {
 	private final CategoriesService categoriesService;
 	private final TimeManager timeManager;
 	private final TimerOfPauseService timerOfPauseService;
+	private final ChecklistService checklistService;
 
 	@Autowired
-	public CalculateController(TimeManager timeManager, ProductService productService, ClientService clientService, CategoriesService categoriesService, CalculateService calculateService, ShiftService shiftService, BoardService boardService, DiscountService discountService, CalculateControllerService calculateControllerService, TimerOfPauseService timerOfPauseService) {
+	public CalculateController(TimeManager timeManager, ProductService productService, ClientService clientService, CategoriesService categoriesService, CalculateService calculateService, ShiftService shiftService, BoardService boardService, DiscountService discountService, CalculateControllerService calculateControllerService, TimerOfPauseService timerOfPauseService, ChecklistService checklistService) {
 		this.timeManager = timeManager;
 		this.productService = productService;
 		this.clientService = clientService;
@@ -53,6 +55,7 @@ public class CalculateController {
 		this.discountService = discountService;
 		this.calculateControllerService = calculateControllerService;
 		this.timerOfPauseService = timerOfPauseService;
+		this.checklistService = checklistService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -65,6 +68,7 @@ public class CalculateController {
 		modelAndView.addObject("listBoard", boardService.getAllOpen());
 		modelAndView.addObject("listDiscounts", discountService.getAllOpen());
 		modelAndView.addObject("closeShiftView", shiftService.createShiftView(shift));
+		modelAndView.addObject("closeChecklist", checklistService.getAllForCloseShift());
 		return modelAndView;
 	}
 

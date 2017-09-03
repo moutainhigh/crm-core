@@ -12,6 +12,7 @@
 <body>
 <div th:replace="managernavbar :: managerNavbar"></div>
 <div th:replace="shift/shiftClose :: closeShift"></div>
+<div th:replace="shift/checklistOnCloseShift :: checklistOnClose"></div>
 <div class="container" style="margin-top: 50px">
     <h1 class="table-name" align="center">Таблица расходов</h1>
     <div th:replace="costs/fragments/tablePanel :: panel" th:remove="tag"></div>

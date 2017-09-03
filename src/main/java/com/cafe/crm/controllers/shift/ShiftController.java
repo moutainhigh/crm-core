@@ -5,6 +5,7 @@ import com.cafe.crm.dto.ShiftView;
 import com.cafe.crm.exceptions.transferDataException.TransferException;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.user.User;
+import com.cafe.crm.services.interfaces.checklist.ChecklistService;
 import com.cafe.crm.services.interfaces.email.EmailService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.services.interfaces.user.UserService;
@@ -36,14 +37,16 @@ public class ShiftController {
 	private final TimeManager timeManager;
 	private final EmailService emailService;
 	private final VkService vkService;
+	private final ChecklistService checklistService;
 
 	@Autowired
-	public ShiftController(ShiftService shiftService, TimeManager timeManager, EmailService emailService, VkService vkService, UserService userService) {
+	public ShiftController(ShiftService shiftService, TimeManager timeManager, EmailService emailService, VkService vkService, UserService userService, ChecklistService checklistService) {
 		this.shiftService = shiftService;
 		this.timeManager = timeManager;
 		this.emailService = emailService;
 		this.vkService = vkService;
 		this.userService = userService;
+		this.checklistService = checklistService;
 	}
 
 	@Transactional
@@ -60,6 +63,8 @@ public class ShiftController {
 		}
 		model.addAttribute("users", userService.findAll());
 		model.addAttribute("date", dateTimeFormatter.format(date));
+		model.addAttribute("openChecklist", checklistService.getAllForOpenShift());
+		model.addAttribute("closeChecklist", checklistService.getAllForCloseShift());
 		return "shift/shiftPage";
 	}
 
@@ -96,6 +101,7 @@ public class ShiftController {
 		model.addAttribute("closeShiftView", shiftService.createShiftView(lastShift));
 		model.addAttribute("calculates", lastShift.getCalculates());
 		model.addAttribute("clients", lastShift.getClients());
+		model.addAttribute("closeChecklist", checklistService.getAllForCloseShift());
 		return "shift/shiftSettings";
 	}
 

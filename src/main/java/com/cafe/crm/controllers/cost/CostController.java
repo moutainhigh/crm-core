@@ -3,6 +3,7 @@ package com.cafe.crm.controllers.cost;
 import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.cost.CostCategory;
 import com.cafe.crm.models.shift.Shift;
+import com.cafe.crm.services.interfaces.checklist.ChecklistService;
 import com.cafe.crm.services.interfaces.cost.CostCategoryService;
 import com.cafe.crm.services.interfaces.cost.CostService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
@@ -32,13 +33,15 @@ public class CostController {
 	private final CostService costService;
 	private final CostCategoryService costCategoryService;
 	private final ShiftService shiftService;
+	private final ChecklistService checklistService;
 
 	@Autowired
-	public CostController(CostService costService, CostCategoryService costCategoryService, TimeManager timeManager, ShiftService shiftService) {
+	public CostController(CostService costService, CostCategoryService costCategoryService, TimeManager timeManager, ShiftService shiftService, ChecklistService checklistService) {
 		this.costService = costService;
 		this.costCategoryService = costCategoryService;
 		this.timeManager = timeManager;
 		this.shiftService = shiftService;
+		this.checklistService = checklistService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -59,6 +62,7 @@ public class CostController {
 		model.addAttribute("fromDate", today);
 		model.addAttribute("toDate", null);
 		model.addAttribute("closeShiftView", shiftService.createShiftView(shift));
+		model.addAttribute("closeChecklist", checklistService.getAllForCloseShift());
 
 		return "costs/costs";
 	}
