@@ -64,9 +64,9 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $('#checklistInputForm').submit(function (e) {
+    $('#checklistOnCloseInputForm').submit(function (e) {
         e.preventDefault();
-        var form = document.getElementById('checklistInputForm');
+        var form = document.getElementById('checklistOnCloseInputForm');
         var inputs = form.getElementsByTagName('input');
         var isChecked = false;
         for(var x = 0; x < inputs.length; x++) {
