@@ -182,23 +182,32 @@ public class ShiftServiceImpl implements ShiftService {
 		int usersTotalShiftSalary = 0;
 		Double card = 0D;
 		Double allPrice = 0D;
+
 		for (User user : usersOnShift) {
 			usersTotalShiftSalary += user.getShiftSalary();
 		}
+
 		Set<LayerProduct> layerProducts = new HashSet<>();
 		for (Client client : clients) {
 			layerProducts.addAll(client.getLayerProducts());
 			card += client.getPayWithCard();
 			allPrice += client.getPriceTime();
 		}
+
 		for (LayerProduct layerProduct : layerProducts) {
 			if (layerProduct.isDirtyProfit()) {
 				allPrice += layerProduct.getCost();
 			}
 		}
-		for (Debt debt : shift.getDebts()) {
+
+		for (Debt debt : shift.getRepaidDebts()) {
 			allPrice += debt.getDebtAmount();
 		}
+
+		for (Debt debt : shift.getGivenDebts()) {
+			allPrice -= debt.getDebtAmount();
+		}
+
 		LocalDate shiftDate = shift.getShiftDate();
 		List<Cost> costWithoutUsersSalaries = costService.findByShiftIdAndCategoryNameNot(shift.getId(), categoryNameSalaryForShift);
 		double otherCosts = 0d;

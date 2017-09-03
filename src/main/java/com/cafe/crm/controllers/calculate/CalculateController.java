@@ -207,6 +207,14 @@ public class CalculateController {
 		return "redirect:/manager";
 	}
 
+	@RequestMapping(value = {"/close-client-debt"}, method = RequestMethod.POST)
+	public String closeClientDebt(@RequestParam(name = "clientsId", required = false) long[] clientsId,
+							  @RequestParam("calculateId") Long calculateId,
+								  @RequestParam("debtorName") String debtorName) {
+		calculateControllerService.closeClientDebt(debtorName, clientsId, calculateId);
+		return "redirect:/manager";
+	}
+
 	@RequestMapping(value = {"/change-round-state"}, method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void changeRoundState(@RequestParam("calculateId") Long calculateId) {

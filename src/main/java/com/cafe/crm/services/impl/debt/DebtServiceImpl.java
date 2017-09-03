@@ -35,6 +35,7 @@ public class DebtServiceImpl implements DebtService {
 		}
 	}
 
+
 	@Override
 	public void delete(Debt debt) {
 		repository.delete(debt);
@@ -75,7 +76,7 @@ public class DebtServiceImpl implements DebtService {
 	public void repayDebt(Long id) {
 		Shift lastShift = shiftService.getLast();
 		Debt debt = repository.findOne(id);
-		lastShift.addDebtToList(debt);
+		lastShift.addRepaidDebtToList(debt);
 		shiftService.saveAndFlush(lastShift);
 		offVisibleStatus(debt);
 	}

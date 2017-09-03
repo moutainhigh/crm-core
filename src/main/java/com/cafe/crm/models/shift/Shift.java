@@ -48,7 +48,10 @@ public class Shift {
 	private List<User> users;
 
 	@OneToMany(fetch = FetchType.LAZY)
-	private List<Debt> debts = new ArrayList<>();
+	private List<Debt> repaidDebts = new ArrayList<>();
+
+	@OneToMany(fetch = FetchType.LAZY)
+	private List<Debt> givenDebts = new ArrayList<>();
 
 	@OneToMany(mappedBy = "shift")
 	private List<Cost> costs;
@@ -153,12 +156,16 @@ public class Shift {
 		opened = open;
 	}
 
-	public List<Debt> getDebts() {
-		return debts;
+	public List<Debt> getRepaidDebts() {
+		return repaidDebts;
 	}
 
-	public void addDebtToList(Debt debt) {
-		this.debts.add(debt);
+	public void addRepaidDebtToList(Debt debt) {
+		this.repaidDebts.add(debt);
+	}
+
+	public void addGivenDebtToList(Debt debt) {
+		this.givenDebts.add(debt);
 	}
 
 	public List<Cost> getCosts() {
@@ -206,5 +213,13 @@ public class Shift {
 				", shiftDate=" + shiftDate +
 				", opened=" + opened +
 				'}';
+	}
+
+	public List<Debt> getGivenDebts() {
+		return givenDebts;
+	}
+
+	public void setGivenDebts(List<Debt> givenDebts) {
+		this.givenDebts = givenDebts;
 	}
 }

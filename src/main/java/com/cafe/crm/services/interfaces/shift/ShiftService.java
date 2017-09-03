@@ -42,5 +42,4 @@ public interface ShiftService {
 
 	void transferFromCashBoxToBank(Double transfer);
 
-
 }
