@@ -29,7 +29,7 @@
             <button type="button" class="btn btn-danger" data-toggle="modal" th:href="'#debtDeleteBoss' +${debts.id}"><span class="glyphicon glyphicon-trash"></span></button>
         </td>
         <td sec:authorize="hasAuthority('MANAGER')">
-            <button type="button" class="glyphicon glyphicon-remove" data-toggle="modal" th:href="'#debtDeleteManager' +${debts.id}"></button>
+            <button type="button" class="btn btn-danger" data-toggle="modal" th:href="'#debtDeleteManager' +${debts.id}"><span class="glyphicon glyphicon-trash"></span></button>
         </td>
 
         <!--Modals-->
