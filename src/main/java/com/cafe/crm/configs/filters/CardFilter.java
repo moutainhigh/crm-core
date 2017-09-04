@@ -21,6 +21,7 @@ public class CardFilter extends GenericFilterBean {
 	private final List<String> blockedPaths = new ArrayList<>();
 	private boolean enable;
 
+	//init method
 	@PostConstruct
 	private void init() {
 		blockedPaths.add("/manager/card");
