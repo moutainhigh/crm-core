@@ -18,3 +18,11 @@ function getServerTimeDateAjax() {
     });
 }
 
+function toggleAccessToken() {
+    if($("#accessToken").attr('type') === 'password') {
+        $("#accessToken").attr('type','text');
+    } else {
+        $("#accessToken").attr('type','password');
+    }
+}
+

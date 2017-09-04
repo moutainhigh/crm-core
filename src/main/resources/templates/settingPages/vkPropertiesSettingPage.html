@@ -17,7 +17,20 @@
             <form roles="form" th:object="${vkProperties}" method="post"
                   action="#" th:action="@{/boss/settings/vk-properties-setting/edit}">
 
-                <input th:field="*{accessToken}" type="hidden"/>
+                <div class="form-group">
+                    <label>Access token</label>
+                    <div class="col-md-11" style="margin: 0px;padding: 0px;">
+                        <input
+                                type="password"
+                                name="accessToken"
+                                id="accessToken"
+                                th:value="${vkProperties.accessToken}"
+                                class="form-control"/>
+                    </div>
+                    <div>
+                        <span onclick="toggleAccessToken()" class="glyphicon glyphicon-eye-open" style="cursor:pointer;margin-top: 7px;margin-left: 4px;"></span>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label>Application ID</label>
