@@ -226,11 +226,11 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		List<Client> clients = calculate.getClient();
 		for (Client client : clients) {
 			if (client.isState() && !client.isDeleteState()) {
-				calculate.setState(false);
-				calculateService.save(calculate);
 				return;
 			}
 		}
+		calculate.setState(false);
+		calculateService.save(calculate);
 	}
 
 	private void setBalanceAndSaveInvitedCard(Card clientCard) {
@@ -253,6 +253,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		double totalDebtAmount = 0.0D;
 		for (Client client : clients) {
 			totalDebtAmount += client.getAllPrice();
+			client.setState(false);
 		}
 
 		Debt debt = new Debt();
