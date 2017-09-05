@@ -1,27 +1,3 @@
-/*function showModal(id) {
-    var modal = $('.dima_modal');
-    modal.find("#d_id").val(id);
-    $.ajax({
-        type: "POST",
-        url: "/boss/menu/getProduct",
-        data: ({
-            id: id
-        }),
-        success: function (product) {
-
-            modal.find("#d_name").val(product.name);
-            modal.find("#d_des").val(product.description);
-            modal.find("#d_cost").val(product.cost);
-
-        },
-        error: function (e) {
-
-            alert("Error show modal ");
-        }
-    });
-
-    modal.fadeIn();
-}*/
 
 $(document).on('click', '#saveNewProductData', function () {
     var id = $(this).data('id');
@@ -73,15 +49,22 @@ $(document).on('click', '#saveNewProductData', function () {
         dataType: "json",
         data: JSON.stringify(wrapper),
         success: function (result) {
+            var isFloatingPrice = false;
             if ($("#addCost" + id)[0].hasAttribute('disabled')) {
                 setCost = 'Плавающая';
+                isFloatingPrice = true;
             }
+
+            $(getEditHtmlOnAddProduct('p',result,isFloatingPrice)).appendTo('body');
+            $(getEditHtmlOnAddProduct('All',result,isFloatingPrice)).appendTo('body');
             var trCount = $("#qwe" + id + " > tbody > tr").length;
             var recipeButton = '<button form="getRecipePage" name="id" class="btn btn-primary btn-info" value="' + result.productId + '" th:type="submit"   >Изменить рецепт </button>';
-            var editButton = '<a id="ins"  class="btn btn-primary btn-info" onclick="showModal(' + result.productId + ')"  data-toggle="modal" >Редактировать </a>';
-            var delButton = '<a id="del"  class="btn btn-primary btn-danger" onclick="del2(' + result.productId + ')"   >Удалить </a>';
-            var tr = '<tr id="tr' + result.productId + '"><td>' + trCount + '</td><td id="b' + result.productId + '"><p id="E' + result.productId + '">' + result.name + '</p></td><td id="c' + result.productId + '">' + result.description + '</td><td id="d' + result.productId + '">' + result.cost + '</td>><td id="e' + result.productId + '">' + result.selfCost + '</td><td>' + editButton + '</td><td>' + recipeButton + '</td><td>' + delButton + '</td></tr>';
-            var allTR = '<tr id="allTR' + result.productId + '"><td>#</td><td id="allB' + result.productId + '">' + result.name + '</td><td id="allC' + result.productId + '">' + result.description + '</td><td id="allD' + result.productId + '">' + result.cost + '</td><td id="allE' + result.productId + '">' + result.selfCost + '</td><td>' + editButton + '</td><td>' + recipeButton + '</td><td>' + delButton + '</td></tr>';
+            var editButtonTemplate = '<a id="ins"  class="btn btn-primary btn-info" href="PRODUCT_ID" data-toggle="modal" >Редактировать </a>';
+            var editButtonSingle = editButtonTemplate.replace('PRODUCT_ID', '#p'+result.productId);
+            var editButtonAll = editButtonTemplate.replace('PRODUCT_ID', '#allP'+result.productId);
+            var delButton = '<a id="del"  class="btn btn-primary btn-danger" onclick="del( '+result.productId+' )"   >Удалить </a>';
+            var tr = '<tr id="tr' + result.productId + '"><td>' + trCount + '</td><td id="b' + result.productId + '"><p id="E' + result.productId + '">' + result.name + '</p></td><td id="c' + result.productId + '">' + result.description + '</td><td id="d' + result.productId + '">' + result.cost + '</td>><td id="e' + result.productId + '">' + result.selfCost + '</td><td>' + editButtonSingle + '</td><td>' + recipeButton + '</td><td>' + delButton + '</td></tr>';
+            var allTR = '<tr id="allTR' + result.productId + '"><td>'+result.productId+'</td><td id="allB' + result.productId + '">' + result.name + '</td><td id="allC' + result.productId + '">' + result.description + '</td><td id="allD' + result.productId + '">' + result.cost + '</td><td id="allE' + result.productId + '">' + result.selfCost + '</td><td>' + editButtonAll + '</td><td>' + recipeButton + '</td><td>' + delButton + '</td></tr>';
             $('#qwe' + id + ' tr:last').after(tr);
             $('#allTable' + ' tr:last').after(allTR);
 
@@ -102,51 +85,6 @@ function closeModal() {
     modal.fadeOut();
 }
 
-/*function editProdModal() {
-    var id = $("#d_id").val();
-    var name = $("#d_name").val();
-    var description = $("#d_des").val();
-    var cost = $("#d_cost").val();
-    var selfCost = $("#d_selfCost").val();
-
-
-    var formData = {
-        id: id,
-        name: name,
-        description: description,
-        cost: cost,
-        selfCost: selfCost
-    }
-
-
-
-    if (productDataValidating(name, cost)) {
-            $.ajax({
-                type: "POST",
-                contentType: "application/json",
-                url: "/boss/menu/updProd",
-                data: JSON.stringify(formData),
-                dataType: 'json',
-                success: function (result) {
-                    $("#b" + id).html(result.name);
-                    $("#c" + id).html(result.description);
-                    $("#d" + id).html(result.cost);
-                    $("#e" + id).html(result.selfCost);
-                    $("#allB" + id).html(result.name);
-                    $("#allC" + id).html(result.description);
-                    $("#allD" + id).html(result.cost);
-                    $("#allE" + id).html(result.selfCost);
-                    closeModal()
-                },
-                error: function (e) {
-                    alert("Неверный формат данных!")
-                }
-            });
-        }
-    else {
-        alert("Неверный формат данных!")
-    }
-}*/
 
 function del(id) {
     var formData = {
@@ -519,4 +457,49 @@ function calculateCostPrice(categoryId) {
         totalCostPrice += countIngredient * priceIngredient;
     }
     $('#addSelfCost'+categoryId).val(totalCostPrice.toFixed(3));
+}
+
+function getEditHtmlOnAddProduct(hrefPrefix,product,isFloatingPrice) {
+    var divPrefix = hrefPrefix == 'p' ? '' : 'All';
+    var inputPrefix = hrefPrefix == 'p' ? 'upd' : 'all';
+    var selfCostId = (hrefPrefix == 'p' ? 'updSelfCost' : 'selfCost')+product.productId;
+    var modalDivId  = (hrefPrefix == 'p' ? 'p': 'allP')+product.productId;
+
+    return '<div  align="center" class="modal fade"id="'+modalDivId+'"tabindex="-1"'+
+        'roles="dialog" aria-labelledby="myModalLabel">'+
+        ' <div class="modal-dialog" roles="document">'+
+        ' <div class="modal-content">'+
+        ' <div class="modal-header">'+
+        ' <button type="button" class="close" data-dismiss="modal"aria-label="Close"><span'+
+        ' aria-hidden="true">&times;</span></button>'+
+        ' <h4 class="modal-title" id="myModalLabel">Редактирование </h4>'+
+        ' </div>'+
+        ' <div class="modal-body">'+
+        ' <div class="messageEdit' + divPrefix + product.productId + '"></div>'+
+        ' <div class="form-group">'+
+        ' <input required="" type="hidden" class="form-control" id="'+inputPrefix+'Id'+product.productId+'"'+
+        ' value="'+product.productId+'"/>'+
+        ' <label>Название</label>'+
+        ' <input type="text" class="form-control"'+
+        ' id="'+inputPrefix+'Name' + product.productId+'" name="name" value="'+product.name+'"/> </div>'+
+        ' <div class="form-group">'+
+        ' <label>Описание</label>'+
+        ' <input type="text" class="form-control" id="'+inputPrefix+'Des'+product.productId+'"'+
+        ' name="description" value="'+product.description+'"/> </div>'+
+        ' <div class="form-group">'+
+        ' <label>Цена</label>'+
+        ' <input type="text" class="form-control"'+
+        ' id="'+inputPrefix+'Cost'+product.productId+'" name="cost" required="" pattern="\d+" title="только цифры" '+
+        ' value="'+product.cost+'"'+ (isFloatingPrice===true?'disabled':'') +'"/>'+
+        ' </div>'+
+        ' <div class="form-group">'+
+        ' <label>Себестоимость</label>'+
+        ' <input pattern="\d+" type="text" class="form-control" id="'+selfCostId+'" name="selfCost"'+
+        ' title="только цифры" value="'+product.selfCost+'"/>'+
+        '</div> </div>'+
+        '<button id="saveEditProductData'+divPrefix+'" type="button" name="upd"'+
+        'class="btn btn-lg btn-primary btn-block" data-id="'+product.productId+'">Сохранить </button>'+
+        '<div class="modal-footer">'+
+        '<button id="close" type="button" name="upd" class="btn btn-default" data-dismiss="modal"> Отмена </button>'+
+        '</div> </div> </div> </div>';
 }

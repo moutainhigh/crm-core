@@ -24,8 +24,8 @@ public class CardSettingsController {
 	@RequestMapping(value = "/changeStatus", method = RequestMethod.POST)
 	public String changeCardEnableStatus(@RequestParam(name = "cardEnable", required = false) String cardEnable) {
 		Boolean newCardStatus = Boolean.valueOf(cardEnable);
-		cardFilter.setEnable(newCardStatus);
 		globalControllerAdvice.setCardEnable(newCardStatus.toString());
+		cardFilter.setEnable(!newCardStatus);
 
 		return "redirect:/boss/settings/general-setting";
 	}
