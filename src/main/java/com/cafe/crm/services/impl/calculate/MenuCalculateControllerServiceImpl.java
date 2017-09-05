@@ -42,6 +42,7 @@ public class MenuCalculateControllerServiceImpl implements MenuCalculateControll
 		int oldRating = product.getRating();
 		product.setRating(++oldRating);
 		LayerProduct layerProduct = new LayerProduct();
+		layerProduct.setProductId(productId);
 		layerProduct.setCost(product.getCost());
 		layerProduct.setName(product.getName());
 		layerProduct.setDescription(product.getDescription());
@@ -62,6 +63,7 @@ public class MenuCalculateControllerServiceImpl implements MenuCalculateControll
 		int oldRating = product.getRating();
 		product.setRating(++oldRating);
 		LayerProduct layerProduct = new LayerProduct();
+		layerProduct.setProductId(productId);
 		layerProduct.setCost(productPrice);
 		layerProduct.setName(product.getName());
 		layerProduct.setDescription(product.getDescription());

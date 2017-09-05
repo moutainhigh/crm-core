@@ -242,6 +242,58 @@
                                                name="selfCost"
                                                placeholder="Себестоимость"/>
                                     </div>
+
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading" roles="tab" id="headingTwo">
+                                            <h4 class="panel-title">
+                                                <a roles="button" data-toggle="collapse" data-parent="#accordion"
+                                                   th:href="'#positionPercent'+${categor.id}"
+                                                   aria-expanded="true" aria-controls="collapseOne">
+                                                    <i class="more-less glyphicon glyphicon-plus"></i>
+                                                    Добавить процент от продажи сотрудникам
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div th:id="positionPercent+${categor.id}" class="panel-collapse collapse" roles="tabpanel"
+                                             aria-labelledby="headingTwo">
+                                            <div class="panel-body">
+                                                <div th:id="positionPercentContainer+${categor.id}">
+
+                                                    <div style="display:none;" class="col-md-12 template">
+                                                        <div class="col-md-5">
+                                                            <select class="form-control mySelect">
+                                                                <div th:each="position : ${positions}">
+                                                                    <option th:class="optionClass"
+                                                                            th:value="${position.id}"
+                                                                            th:text="${position.name}">
+                                                                    </option>
+                                                                </div>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-2" style="margin-top: 5px;margin-right: -25px;">
+                                                            Процент
+                                                        </div>
+                                                        <div class="col-md-3" style="margin-top: 2px;">
+                                                            <input type="number" value="0" min="0" max="100" step="0.1"/>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <button onclick="delPositionPercent(this);"
+                                                                    type="button" class="btn btn-danger ">Удалить
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <button th:onclick="'addPositionPercent(\''+ ${categor.id} + '\');'"
+                                                            type="button" class="btn btn-success ">Добавить
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="panel panel-default">
                                         <div class="panel-heading" roles="tab" id="headingOne">
                                             <h4 class="panel-title">

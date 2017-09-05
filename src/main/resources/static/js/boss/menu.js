@@ -8,7 +8,7 @@ $(document).on('click', '#saveNewProductData', function () {
     var setCost = $("#addCost" + id).val();
 	var setSelfCost = $("#addSelfCost" + id).val();
 
-    if (!productDataValidating(setName, setCost, setSelfCost)) {
+    if (!productDataValidating(setName, setCost, setSelfCost) || !validateStaffPercent(id)) {
         var errorMessage = '<h4 style="color:red;" align="center">Неверный формат данных!</h4>';
         $('.messageAdd' + id).html(errorMessage).show();
         return false;
@@ -33,6 +33,8 @@ $(document).on('click', '#saveNewProductData', function () {
         myMap[ingredient[i]] = amount[i];
     }
 
+    var staffPercentObj = getStaffPercentObj(id);
+
     var wrapper = {
         idCat: id,
         name: setName,
@@ -40,8 +42,11 @@ $(document).on('click', '#saveNewProductData', function () {
         cost: setCost,
         names: ingredient,
         amount: amount,
-		selfCost: setSelfCost
+		selfCost: setSelfCost,
+        staffPercentPosition: staffPercentObj.position,
+        staffPercentPercent: staffPercentObj.percent
     };
+
     $.ajax({
         type: "POST",
         url: "/boss/menu/addProduct",
@@ -502,4 +507,59 @@ function getEditHtmlOnAddProduct(hrefPrefix,product,isFloatingPrice) {
         '<div class="modal-footer">'+
         '<button id="close" type="button" name="upd" class="btn btn-default" data-dismiss="modal"> Отмена </button>'+
         '</div> </div> </div> </div>';
+}
+
+function addPositionPercent(categoryId) {
+    var items = $('#positionPercentContainer'+categoryId+' > .item');
+    var template = $('#positionPercentContainer'+categoryId+' > .template');
+
+    var positions = $(template.find('select')).children('option');
+    if (positions.length  == items.length) {//невозможно добавить больше,чем должностей
+        return;
+    }
+
+    var newItem = template.clone().append('<br/><br/>');
+    newItem.addClass('item').removeClass('template');
+    newItem.show();
+    newItem.appendTo('#positionPercentContainer' + categoryId);
+}
+
+function delPositionPercent(item) {
+    $(item).parents('.item').remove();
+}
+
+function validateStaffPercent(categoryId) {
+    var items = $('#positionPercentContainer'+categoryId+' > .item');
+    var totalPercents = 0;
+    var selectedPositions = [];
+    var dublicatePosition = false;
+    items.find('input,select').each(function (index, element) {
+        elType = element.nodeName.toLowerCase();
+        if (elType === 'input') {
+            totalPercents += parseFloat(element.value);
+        } else if (elType === 'select') {
+            positionId = $(element).find(':selected').val();
+            if(selectedPositions.indexOf(positionId) >= 0) {
+                dublicatePosition = true;
+            } else {
+                selectedPositions.push(positionId);
+            }
+        }
+    });
+
+    return !dublicatePosition && totalPercents <= 100;
+}
+
+function getStaffPercentObj(categoryId) {
+    var obj = {"position":[],"percent":[]};
+    var items = $('#positionPercentContainer'+categoryId+' > .item');
+    items.find('input,select').each(function (index, element) {
+        elType = element.nodeName.toLowerCase();
+        if (elType === 'input') {
+            obj['percent'].push(element.value);
+        } else if (elType === 'select') {
+            obj['position'].push($(element).find(':selected').val());
+        }
+    });
+    return obj;
 }

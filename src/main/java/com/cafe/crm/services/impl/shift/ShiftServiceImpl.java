@@ -6,13 +6,16 @@ import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.models.client.LayerProduct;
 import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.cost.CostCategory;
+import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.dto.ShiftView;
+import com.cafe.crm.models.user.Position;
 import com.cafe.crm.models.user.User;
 import com.cafe.crm.repositories.shift.ShiftRepository;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.cost.CostCategoryService;
 import com.cafe.crm.services.interfaces.cost.CostService;
+import com.cafe.crm.services.interfaces.menu.ProductService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.utils.TimeManager;
@@ -37,18 +40,20 @@ public class ShiftServiceImpl implements ShiftService {
 	private final TimeManager timeManager;
 	private final SessionRegistry sessionRegistry;
 	private CostService costService;
+	private final ProductService productService;
 
 	@Value("${cost-category-name.salary-for-shift}")
 	private String categoryNameSalaryForShift;
 
 	@Autowired
-	public ShiftServiceImpl(CalculateService calculateService, TimeManager timeManager, CostCategoryService costCategoryService, ShiftRepository shiftRepository, UserService userService, SessionRegistry sessionRegistry) {
+	public ShiftServiceImpl(CalculateService calculateService, TimeManager timeManager, CostCategoryService costCategoryService, ShiftRepository shiftRepository, UserService userService, SessionRegistry sessionRegistry, ProductService productService) {
 		this.calculateService = calculateService;
 		this.timeManager = timeManager;
 		this.costCategoryService = costCategoryService;
 		this.shiftRepository = shiftRepository;
 		this.userService = userService;
 		this.sessionRegistry = sessionRegistry;
+		this.productService = productService;
 	}
 
 	@Autowired
@@ -208,6 +213,8 @@ public class ShiftServiceImpl implements ShiftService {
 			allPrice -= debt.getDebtAmount();
 		}
 
+		calcStaffPercent(layerProducts,shift.getUsers());
+
 		LocalDate shiftDate = shift.getShiftDate();
 		List<Cost> costWithoutUsersSalaries = costService.findByShiftIdAndCategoryNameNot(shift.getId(), categoryNameSalaryForShift);
 		double otherCosts = 0d;
@@ -247,4 +254,25 @@ public class ShiftServiceImpl implements ShiftService {
 		saveAndFlush(lastShift);
 	}
 
+	private void calcStaffPercent(Set<LayerProduct> layerProducts, List<User> staff) {
+		for (LayerProduct layerProduct: layerProducts) {
+
+			Long productId = layerProduct.getProductId();
+			Product product = productService.findOne(productId);
+			Map<Position, Integer> staffPercent = product.getStaffPercent();
+
+			for (User user: staff) {
+
+				List<Position> userPositions = user.getPositions();
+				for (Position position : userPositions) {
+
+					Integer percent = staffPercent.get(position);
+					if (percent != null) {
+						int percentFromProduct = (int) (layerProduct.getCost() * percent / 100);
+						user.setShiftSalary(user.getShiftSalary() + percentFromProduct);
+					}
+				}
+			}
+		}
+	}
 }
