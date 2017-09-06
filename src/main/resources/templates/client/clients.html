@@ -33,9 +33,9 @@
                             <select onchange="submit();"
                                     style="width:130px; float: left; height: 34px;font-size:18px;margin-top: 5px;margin-left: 6px "
                                     class="form-control" th:form="'formRef'+${calculate.id}" name="boardId">
-                                <option value="-1" th:selected="${listBoard} == null ? 'true' : 'false' ">
+                                <!--<option value="-1" th:selected="${listBoard} == null ? 'true' : 'false' ">
                                     Нет
-                                </option>
+                                </option>-->
                                 <p th:each="b : ${listBoard}">
                                     <option th:value="${b.id}"
                                             th:text="${b.name}"
