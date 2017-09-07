@@ -226,14 +226,16 @@
                             </button>
 
                         </form>
-                        <div th:id="'deleteModal' + ${calculate.id}" class="modal fade">
+                        <div th:id="'deleteModal' + ${calculate.id}" class="modal fade" th:onshow="'ajaxModalDel(\'' + ${calculate.id} + '\');'">
                             <div class="modal-dialog " style="width: 250px;margin-top: 150px" roles="document">
                                 <div class="modal-content">
                                     <div class="modal-body">
+                                        <div class="clientDel">
                                         <p style="font-size: 20px">Вы желаете удалить клиента/тов ?</p>
                                         <button th:form="'formTest' + ${calculate.id}" class="btn btn-danger">Да
                                         </button>
                                         <button class="btn btn-danger" type="button" data-dismiss="modal">Нет</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
