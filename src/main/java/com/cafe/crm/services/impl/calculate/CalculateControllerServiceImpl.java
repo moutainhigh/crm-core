@@ -1,6 +1,7 @@
 package com.cafe.crm.services.impl.calculate;
 
 import ch.qos.logback.classic.Logger;
+import com.cafe.crm.exceptions.debt.DebtDataException;
 import com.cafe.crm.models.board.Board;
 import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.client.Calculate;
@@ -242,29 +243,39 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	}
 
 	@Override
-	public void closeClientDebt(String debtorName, long[] clientsId, Long calculateId) {
+	public void closeClientDebt(String debtorName, long[] clientsId, Long calculateId, Double paidAmount) {
 		if (clientsId == null) {
-			return;
+			throw new DebtDataException("Ошибка передачи Id клиентов!");
 		}
 
 		List<Client> clients = clientService.findByIdIn(clientsId);
 		Shift lastShift = shiftService.getLast();
-
 		double totalDebtAmount = 0.0D;
-		for (Client client : clients) {
-			totalDebtAmount += client.getAllPrice();
-			client.setState(false);
+
+		if (clients != null && !clients.isEmpty()) {
+			for (Client client : clients) {
+				totalDebtAmount += client.getAllPrice();
+				client.setState(false);
+			}
+
+			if (paidAmount < 0) {
+				throw new DebtDataException("Нельзя указывать отрицательную сумму!");
+			} else if (paidAmount > totalDebtAmount) {
+				throw new DebtDataException("Вы возвращаете сумму большую чем долг");
+			} else if (paidAmount != 0 && paidAmount < totalDebtAmount){
+				totalDebtAmount = totalDebtAmount - paidAmount;
+			}
+
+			Debt debt = new Debt();
+			debt.setDate(lastShift.getShiftDate());
+			debt.setDebtor(debtorName);
+			debt.setDebtAmount(totalDebtAmount);
+			lastShift.addGivenDebtToList(debt);
+			findLeastOneOpenClientAndCloseCalculation(calculateId);
+			debtService.save(debt);
+		} else {
+			throw new DebtDataException("Не найдено ни одного клиента в базе!");
 		}
-
-		Debt debt = new Debt();
-		debt.setDate(timeManager.getDate());
-		debt.setDebtor(debtorName);
-		debt.setDebtAmount(totalDebtAmount);
-
-		lastShift.addGivenDebtToList(debt);
-
-		findLeastOneOpenClientAndCloseCalculation(calculateId);
-		debtService.save(debt);
 	}
 
 	@Override

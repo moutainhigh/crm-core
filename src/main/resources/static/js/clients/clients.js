@@ -412,19 +412,51 @@ function roundState(calcId, state) {
 }
 
 function closeClientDebt(calculateId) {
-    if ($('#debtorName' + calculateId).val().length == 0) {
-        $('#debtorNameError' + calculateId).show();
+    if (isBlank($('#debtorName' + calculateId).val())) {
+        var errorMessage = '<h4 style="color:red;" align="center">' + 'Обязательно укажите имя должника!' + '</h4>';
+        $('#debtorNameError' + calculateId).html(errorMessage).show();
         return;
+    } else {
+        var url = '/manager/close-client-debt';
+
+        $('<input />').attr('type', 'hidden')
+            .attr('name', "debtorName")
+            .attr('value',  $('#debtorName' + calculateId).val())
+            .appendTo('#formTest'+calculateId);
+        $('<input />').attr('type', 'hidden')
+            .attr('name', "paidAmount")
+            .attr('value',  $('#paidAmount' + calculateId).val())
+            .appendTo('#formTest'+calculateId);
+
+        var formData = $('#formTest' + calculateId).serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            success: function (data) {
+                var successMessage = '<h4 style="color:green;" align="center">' + data + '</h4>';
+                $('.messageAd').html(successMessage).show();
+                window.setTimeout(function () {
+                    location.reload()
+                }, 1000);
+            },
+            error: function (error) {
+                var errorMessage = '<h4 style="color:red;" align="center">' + error.responseText + '</h4>';
+                $('.messageAd').html(errorMessage).show();
+            }
+        });
     }
+}
 
+function isBlank(str) {
+    return str.length === 0 || str.trim() === ""
+}
 
-    $('#formTest'+calculateId).attr('action','/manager/close-client-debt');
-    $('<input />').attr('type', 'hidden')
-        .attr('name', "debtorName")
-        .attr('value',  $('#debtorName' + calculateId).val())
-        .appendTo('#formTest'+calculateId);
-    $('#formTest'+calculateId).submit();
+function removeDebtBoss(id) {
+    var url = '/manager/tableDebt/deleteBoss';
 
-    $('#debtorNameError' + calculateId).hide();
-    $('#debtorName' + calculateId).val('');
+    var request = $.post(url, {debtId: id}, function () {
+        location.reload();
+    });
 }
