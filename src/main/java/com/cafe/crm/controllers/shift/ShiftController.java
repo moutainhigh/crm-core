@@ -126,12 +126,16 @@ public class ShiftController {
 							 @RequestParam(name = "bankCashBox") Double bankCashBox,
 							 @RequestParam(name = "comment") String comment) {
 		Shift lastShift = shiftService.getLast();
+		ShiftView shiftView = shiftService.createShiftView(lastShift);
 		Map<Long, Integer> mapOfUsersIdsAndBonuses = new HashMap<>();
+
+		Map<Long, Integer> staffPercentBonuses = shiftView.getStaffPercentBonuses();
+
 		for (int i = 0; i < usersIds.length; i++) {
-			mapOfUsersIdsAndBonuses.put(usersIds[i], usersBonuses[i]);
+			Integer staffPercentBonus = staffPercentBonuses.get(usersIds[i]);
+			mapOfUsersIdsAndBonuses.put(usersIds[i], usersBonuses[i] + (staffPercentBonus == null?0:staffPercentBonus));
 		}
 
-		ShiftView shiftView = shiftService.createShiftView(lastShift);
 		lastShift.getRepaidDebts().clear();
 		Double allPrice = shiftView.getAllPrice();
 		Double payWithCard = shiftView.getCard();

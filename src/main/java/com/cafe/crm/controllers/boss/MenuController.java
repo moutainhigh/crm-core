@@ -176,6 +176,17 @@ public class MenuController {
 		return modelAndView;
 	}
 
+	@RequestMapping(value = "/get/staffPercent/", method = RequestMethod.GET)
+	public ModelAndView getStaffPercentForEdit(@RequestParam("id") Long idProduct) {
+
+		ModelAndView modelAndView = new ModelAndView("menu/editStaffPercent");
+		modelAndView.addObject("staffPercent", productService.findOne(idProduct).getStaffPercent());
+		modelAndView.addObject("positions",positionService.findAll());
+		modelAndView.addObject("product", productService.findOne(idProduct));
+
+		return modelAndView;
+	}
+
 	@RequestMapping(value = "/edit/recipe", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> editRecipe(@RequestBody WrapperOfProduct wrapper) {
@@ -185,6 +196,19 @@ public class MenuController {
 		if (product != null) {
 			product.setSelfCost(ingredientsService.getRecipeCost(recipe));
 			product.setRecipe(recipe);
+			productService.saveAndFlush(product);
+		}
+		return new ResponseEntity<>(1L, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/edit/staffPercent", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> editStaffPercent(@RequestBody WrapperOfProduct wrapper) {
+		Product product = productService.findOne(wrapper.getId()); // id product
+		Map<Position, Integer> staffPercent = productService.createStaffPercent(wrapper);
+
+		if (product != null) {
+			product.setStaffPercent(staffPercent);
 			productService.saveAndFlush(product);
 		}
 		return new ResponseEntity<>(1L, HttpStatus.OK);
@@ -202,4 +226,16 @@ public class MenuController {
 		String referrer = request.getHeader("Referer");
 		return "redirect:" + referrer;
 	}
+
+	@RequestMapping(value = "/delete/staffPercent/{id}", method = RequestMethod.POST)
+	public String deleteStaffPercent(@PathVariable(name = "id") Long id, HttpServletRequest request) {
+		Product product = productService.findOne(id);
+		if (product != null) {
+			product.getStaffPercent().clear();
+			productService.saveAndFlush(product);
+		}
+		String referrer = request.getHeader("Referer");
+		return "redirect:" + referrer;
+	}
+
 }

@@ -48,11 +48,12 @@
                             <!-- dropdown menu links -->
                             <li><a th:href="'#editCat'+${categor.id}" data-toggle="modal">Редактировать категорию</a>
                             </li>
-                            <li><a th:href="'#add'+${categor.id}" data-toggle="modal">Добавить продукт</a></li>
                             <li><a th:href="'#delCat'+${categor.id}" data-toggle="modal">Удалить категорию</a></li>
                         </ul>
                     </div>
                     <h1 th:align="center" style="color: #5bc0de;">Меню</h1>
+                    <button class="pull-right btn btn-primary" data-toggle="modal" th:href="'#add'+${categor.id}" >Добавить продукт</button>
+                    <br/> <br/>
                     <div class="row">
                     </div>
                     <div class="table" style="border-radius:5px;" data-page="bossview.html">
@@ -64,7 +65,6 @@
                                 <th>Цена</th>
                                 <th>Себестоимость</th>
                                 <th>Редактировать</th>
-                                <th>Рецепт</th>
                                 <th>Удалить</th>
                             </tr>
                             <tbody class="searchable" th:each="prod,iter:${categor.getProducts()}">
@@ -74,16 +74,28 @@
                                 <td th:id="'c' + ${prod.id}"><p th:text="${prod.description}"></p></td>
                                 <td th:id="'d' + ${prod.id}"><p th:text="${!prod.category.floatingPrice} ? ${prod.cost} : 'Плавающая'"></p></td>
                                 <td th:id="'e' + ${prod.id}"><p th:text="${prod.selfCost}"></p></td>
-                                <td class="col-lg-2"><a id="ins" class="btn btn-primary btn-info"
-                                                        th:href="'#p'+${prod.id}"
-                                                        data-toggle="modal">Редактировать</a></td>
-                                <td>
+                                <td class="col-lg-2">
 
-                                    <button form="getRecipePage" name="id" class="btn btn-primary btn-info" th:value="${prod.id}" th:type="submit">
-                                       Изменить рецепт
-                                    </button>
+                                    <div class="dropdown">
+                                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                            Редактировать<span class="caret"></span></button>
+                                        <ul class="dropdown-menu">
+                                            <li><a id="ins"
+                                                   th:href="'#p'+${prod.id}"
+                                                   data-toggle="modal">Редактировать</a></li>
+                                            <li>
+                                                <a  th:href="'/boss/menu/get/recipe/?id='+${prod.id}" >
+                                                Изменить рецепт
+                                            </a></li>
+                                            <li>
+                                                <a  th:href="'/boss/menu/get/staffPercent/?id='+${prod.id}" >
+                                                    Изменить процент сотрудникам
+                                                </a></li>
+                                        </ul>
+                                    </div>
 
-                                </td>
+                                    </td>
+
                                 <td>
 
                                     <button th:onclick="'del(\''+ ${prod.id} + '\');'"
@@ -259,7 +271,7 @@
                                             <div class="panel-body">
                                                 <div th:id="positionPercentContainer+${categor.id}">
 
-                                                    <div style="display:none;" class="col-md-12 template">
+                                                    <div class="col-md-12 item" style="margin-bottom: 10px;">
                                                         <div class="col-md-5">
                                                             <select class="form-control mySelect">
                                                                 <div th:each="position : ${positions}">
@@ -277,7 +289,7 @@
                                                             <input type="number" value="0" min="0" max="100" step="0.1"/>
                                                         </div>
                                                         <div class="col-md-2">
-                                                            <button onclick="delPositionPercent(this);"
+                                                            <button th:onclick="'delPositionPercent(this,\'' + ${categor.id} + '\');'"
                                                                     type="button" class="btn btn-danger ">Удалить
                                                             </button>
                                                         </div>
@@ -285,7 +297,7 @@
 
 
                                                 </div>
-                                                <div class="col-md-12">
+                                                <div class="col-md-1" style="margin-left:15px;">
                                                     <button th:onclick="'addPositionPercent(\''+ ${categor.id} + '\');'"
                                                             type="button" class="btn btn-success ">Добавить
                                                     </button>

@@ -1,5 +1,7 @@
 package com.cafe.crm.services.impl.shift;
 
+import com.cafe.crm.dto.PositionDTO;
+import com.cafe.crm.dto.UserDTO;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.Debt;
@@ -18,7 +20,10 @@ import com.cafe.crm.services.interfaces.cost.CostService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.services.interfaces.user.UserService;
+import com.cafe.crm.utils.DozerUtil;
 import com.cafe.crm.utils.TimeManager;
+import org.dozer.DozerBeanMapper;
+import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.session.SessionInformation;
@@ -177,7 +182,8 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Override
 	public ShiftView createShiftView(Shift shift) {
-		List<User> usersOnShift = getUsersOnShift();
+
+		List<UserDTO> usersOnShift = DozerUtil.map(getUsersOnShift(),UserDTO.class);
 		Set<Client> clients = findOne(shift.getId()).getClients();
 		List<Calculate> activeCalculate = calculateService.getAllOpen();
 		Set<Calculate> allCalculate = shift.getCalculates();
@@ -188,15 +194,17 @@ public class ShiftServiceImpl implements ShiftService {
 		Double card = 0D;
 		Double allPrice = 0D;
 
-		for (User user : usersOnShift) {
-			usersTotalShiftSalary += user.getShiftSalary();
-		}
-
 		Set<LayerProduct> layerProducts = new HashSet<>();
 		for (Client client : clients) {
 			layerProducts.addAll(client.getLayerProducts());
 			card += client.getPayWithCard();
 			allPrice += client.getPriceTime();
+		}
+
+		Map<Long, Integer> staffPercentBonusesMap = calcStaffPercentBonusesAndGetMap(layerProducts, usersOnShift);
+
+		for (UserDTO user : usersOnShift) {
+			usersTotalShiftSalary += user.getShiftSalary();
 		}
 
 		for (LayerProduct layerProduct : layerProducts) {
@@ -213,7 +221,6 @@ public class ShiftServiceImpl implements ShiftService {
 			allPrice -= debt.getDebtAmount();
 		}
 
-		calcStaffPercent(layerProducts,shift.getUsers());
 
 		LocalDate shiftDate = shift.getShiftDate();
 		List<Cost> costWithoutUsersSalaries = costService.findByShiftIdAndCategoryNameNot(shift.getId(), categoryNameSalaryForShift);
@@ -224,7 +231,7 @@ public class ShiftServiceImpl implements ShiftService {
 		allPrice -= card;
 		totalCashBox = (cashBox + bankCashBox + allPrice) - (usersTotalShiftSalary + otherCosts);
 		return new ShiftView(usersOnShift, clients, activeCalculate, allCalculate,
-				cashBox, totalCashBox, usersTotalShiftSalary, card, allPrice, shiftDate, otherCosts, bankCashBox);
+				cashBox, totalCashBox, usersTotalShiftSalary, card, allPrice, shiftDate, otherCosts, bankCashBox,staffPercentBonusesMap);
 	}
 
 	@Override
@@ -254,25 +261,33 @@ public class ShiftServiceImpl implements ShiftService {
 		saveAndFlush(lastShift);
 	}
 
-	private void calcStaffPercent(Set<LayerProduct> layerProducts, List<User> staff) {
+	private Map<Long,Integer> calcStaffPercentBonusesAndGetMap(Set<LayerProduct> layerProducts, List<UserDTO> staff) {
+		Map<Long,Integer> staffPercentBonusesMap = new HashMap<>();
+		Mapper mapper = new DozerBeanMapper();
+
 		for (LayerProduct layerProduct: layerProducts) {
 
 			Long productId = layerProduct.getProductId();
 			Product product = productService.findOne(productId);
 			Map<Position, Integer> staffPercent = product.getStaffPercent();
 
-			for (User user: staff) {
+			for (UserDTO user: staff) {
 
-				List<Position> userPositions = user.getPositions();
-				for (Position position : userPositions) {
+				List<PositionDTO> userPositions = DozerUtil.map(mapper,user.getPositions(),PositionDTO.class);
+				for (PositionDTO positionDTO : userPositions) {
 
-					Integer percent = staffPercent.get(position);
+					Integer percent = staffPercent.get(DozerUtil.map(mapper,positionDTO,Position.class));
 					if (percent != null) {
-						int percentFromProduct = (int) (layerProduct.getCost() * percent / 100);
-						user.setShiftSalary(user.getShiftSalary() + percentFromProduct);
+
+						int bonus = (int) (layerProduct.getCost() * percent / 100);
+						user.setShiftSalary(bonus + user.getShiftSalary());
+
+						Integer saveBonus = staffPercentBonusesMap.get(user.getId());
+						staffPercentBonusesMap.put(user.getId(), bonus + (saveBonus != null?saveBonus:0));
 					}
 				}
 			}
 		}
+		return staffPercentBonusesMap;
 	}
 }

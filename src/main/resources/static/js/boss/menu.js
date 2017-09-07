@@ -63,13 +63,18 @@ $(document).on('click', '#saveNewProductData', function () {
             $(getEditHtmlOnAddProduct('p',result,isFloatingPrice)).appendTo('body');
             $(getEditHtmlOnAddProduct('All',result,isFloatingPrice)).appendTo('body');
             var trCount = $("#qwe" + id + " > tbody > tr").length;
-            var recipeButton = '<button form="getRecipePage" name="id" class="btn btn-primary btn-info" value="' + result.productId + '" th:type="submit"   >Изменить рецепт </button>';
-            var editButtonTemplate = '<a id="ins"  class="btn btn-primary btn-info" href="PRODUCT_ID" data-toggle="modal" >Редактировать </a>';
+            var editButtonTemplate = '<div class="dropdown">'+
+                ' <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">'+
+                'Редактировать<span class="caret"></span></button>'+
+                '<ul class="dropdown-menu">'+
+                '<li><a id="ins" href="PRODUCT_ID" data-toggle="modal">Редактировать</a></li>'+
+                '<li> <a href="/boss/menu/get/recipe/?id='+result.productId+'" > Изменить рецепт </a></li> <li>'+
+                '<a href="/boss/menu/get/staffPercent/?id='+result.productId+'"> Изменить процент сотрудникам </a></li> </ul> </div>';
             var editButtonSingle = editButtonTemplate.replace('PRODUCT_ID', '#p'+result.productId);
             var editButtonAll = editButtonTemplate.replace('PRODUCT_ID', '#allP'+result.productId);
             var delButton = '<a id="del"  class="btn btn-primary btn-danger" onclick="del( '+result.productId+' )"   >Удалить </a>';
-            var tr = '<tr id="tr' + result.productId + '"><td>' + trCount + '</td><td id="b' + result.productId + '"><p id="E' + result.productId + '">' + result.name + '</p></td><td id="c' + result.productId + '">' + result.description + '</td><td id="d' + result.productId + '">' + result.cost + '</td>><td id="e' + result.productId + '">' + result.selfCost + '</td><td>' + editButtonSingle + '</td><td>' + recipeButton + '</td><td>' + delButton + '</td></tr>';
-            var allTR = '<tr id="allTR' + result.productId + '"><td>'+result.productId+'</td><td id="allB' + result.productId + '">' + result.name + '</td><td id="allC' + result.productId + '">' + result.description + '</td><td id="allD' + result.productId + '">' + result.cost + '</td><td id="allE' + result.productId + '">' + result.selfCost + '</td><td>' + editButtonAll + '</td><td>' + recipeButton + '</td><td>' + delButton + '</td></tr>';
+            var tr = '<tr id="tr' + result.productId + '"><td>' + trCount + '</td><td id="b' + result.productId + '"><p id="E' + result.productId + '">' + result.name + '</p></td><td id="c' + result.productId + '">' + result.description + '</td><td id="d' + result.productId + '">' + result.cost + '</td>><td id="e' + result.productId + '">' + result.selfCost + '</td><td>' + editButtonSingle + '</td><td>' + delButton + '</td></tr>';
+            var allTR = '<tr id="allTR' + result.productId + '"><td>'+result.productId+'</td><td id="allB' + result.productId + '">' + result.name + '</td><td id="allC' + result.productId + '">' + result.description + '</td><td id="allD' + result.productId + '">' + result.cost + '</td><td id="allE' + result.productId + '">' + result.selfCost + '</td><td>' + editButtonAll + '</td><td>' + delButton + '</td></tr>';
             $('#qwe' + id + ' tr:last').after(tr);
             $('#allTable' + ' tr:last').after(allTR);
 
@@ -511,21 +516,18 @@ function getEditHtmlOnAddProduct(hrefPrefix,product,isFloatingPrice) {
 
 function addPositionPercent(categoryId) {
     var items = $('#positionPercentContainer'+categoryId+' > .item');
-    var template = $('#positionPercentContainer'+categoryId+' > .template');
-
-    var positions = $(template.find('select')).children('option');
+    var positions = $(items.find('select')[0]).children('option');
     if (positions.length  == items.length) {//невозможно добавить больше,чем должностей
         return;
     }
-
-    var newItem = template.clone().append('<br/><br/>');
-    newItem.addClass('item').removeClass('template');
-    newItem.show();
-    newItem.appendTo('#positionPercentContainer' + categoryId);
+    $(items[0]).clone().appendTo('#positionPercentContainer' + categoryId);
 }
 
-function delPositionPercent(item) {
-    $(item).parents('.item').remove();
+function delPositionPercent(item,categoryId) {
+    var items = $('#positionPercentContainer'+categoryId+' > .item');
+    if(items.length > 1) {
+        $(item).parents('.item').remove();
+    }
 }
 
 function validateStaffPercent(categoryId) {
@@ -552,14 +554,44 @@ function validateStaffPercent(categoryId) {
 
 function getStaffPercentObj(categoryId) {
     var obj = {"position":[],"percent":[]};
-    var items = $('#positionPercentContainer'+categoryId+' > .item');
-    items.find('input,select').each(function (index, element) {
-        elType = element.nodeName.toLowerCase();
-        if (elType === 'input') {
-            obj['percent'].push(element.value);
-        } else if (elType === 'select') {
-            obj['position'].push($(element).find(':selected').val());
+    var percents = $('#positionPercentContainer'+categoryId+' > .item').find('input');
+    var positions = $('#positionPercentContainer'+categoryId+' > .item').find('select');
+    for (var i = 0; i < percents.length; i++) {
+        percent = parseFloat($(percents[i]).val());
+        if(percent > 0) {
+            obj['percent'].push(percent);
+            obj['position'].push($(positions[i]).val());
+        }
+    }
+    return obj;
+}
+
+function editStaffPercent(id) {
+    if (!validateStaffPercent('')) {
+        var errorMessage = '<h4 style="color:red;" align="center">Неверный формат данных!</h4>';
+        $('.errorMessage').html(errorMessage).show();
+        return;
+    }
+
+    var staffPercentObj = getStaffPercentObj('');
+    var wrapper = {
+        idCat: id,
+        staffPercentPosition: staffPercentObj.position,
+        staffPercentPercent: staffPercentObj.percent
+    };
+    $.ajax({
+        type: "POST",
+        url: "/boss/menu/edit/staffPercent",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(wrapper),
+        success: function () {
+            location.reload();
+
+        },
+        error: function (e) {
+            alert("Неверный формат данных -/");
         }
     });
-    return obj;
+    $('.errorMessage').html(errorMessage).hide();
 }

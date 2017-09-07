@@ -3,18 +3,19 @@ package com.cafe.crm.dto;
 
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
-import com.cafe.crm.models.user.User;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class ShiftView {
 
-	private List<User> usersOnShift;
+	private List<UserDTO> usersOnShift;
 	private Set<Client> clients;
 	private List<Calculate> activeCalculate;
 	private Set<Calculate> allCalculate;
+	private Map<Long,Integer> staffPercentBonuses;
 	private double cashBox;
 	private double bankCashBox;
 	private double totalCashBox;
@@ -24,9 +25,9 @@ public class ShiftView {
 	private LocalDate shiftDate;
 	private double otherCosts;
 
-	public ShiftView(List<User> usersOnShift, Set<Client> clients, List<Calculate> activeCalculate,
+	public ShiftView(List<UserDTO> usersOnShift, Set<Client> clients, List<Calculate> activeCalculate,
 					 Set<Calculate> allCalculate, double cashBox, double totalCashBox, int usersTotalShiftSalary,
-					 Double card, Double allPrice, LocalDate shiftDate, Double otherCosts, Double bankCashBox) {
+					 Double card, Double allPrice, LocalDate shiftDate, Double otherCosts, Double bankCashBox,Map<Long,Integer> userStaffPercentBonuses) {
 		this.usersOnShift = usersOnShift;
 		this.clients = clients;
 		this.activeCalculate = activeCalculate;
@@ -39,13 +40,14 @@ public class ShiftView {
 		this.shiftDate = shiftDate;
 		this.otherCosts = otherCosts;
 		this.bankCashBox = bankCashBox;
+		this.staffPercentBonuses = userStaffPercentBonuses;
 	}
 
-	public List<User> getUsersOnShift() {
+	public List<UserDTO> getUsersOnShift() {
 		return usersOnShift;
 	}
 
-	public void setUsersOnShift(List<User> usersOnShift) {
+	public void setUsersOnShift(List<UserDTO> usersOnShift) {
 		this.usersOnShift = usersOnShift;
 	}
 
@@ -135,5 +137,14 @@ public class ShiftView {
 
 	public void setBankCashBox(Double bankCashBox) {
 		this.bankCashBox = bankCashBox;
+	}
+
+
+	public Map<Long, Integer> getStaffPercentBonuses() {
+		return staffPercentBonuses;
+	}
+
+	public void setStaffPercentBonuses(Map<Long, Integer> staffPercentBonuses) {
+		this.staffPercentBonuses = staffPercentBonuses;
 	}
 }
