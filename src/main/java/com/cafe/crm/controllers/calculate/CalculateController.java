@@ -1,5 +1,6 @@
 package com.cafe.crm.controllers.calculate;
 
+import com.cafe.crm.exceptions.debt.DebtDataException;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.TimerOfPause;
@@ -212,11 +213,12 @@ public class CalculateController {
 	}
 
 	@RequestMapping(value = {"/close-client-debt"}, method = RequestMethod.POST)
-	public String closeClientDebt(@RequestParam(name = "clientsId", required = false) long[] clientsId,
+	public ResponseEntity closeClientDebt(@RequestParam(name = "clientsId", required = false) long[] clientsId,
 							  @RequestParam("calculateId") Long calculateId,
-								  @RequestParam("debtorName") String debtorName) {
-		calculateControllerService.closeClientDebt(debtorName, clientsId, calculateId);
-		return "redirect:/manager";
+								  @RequestParam("debtorName") String debtorName,
+	                              @RequestParam(value = "paidAmount", required = false) Double paidAmount) {
+		calculateControllerService.closeClientDebt(debtorName, clientsId, calculateId, paidAmount);
+		return ResponseEntity.ok("Долг добавлен!");
 	}
 
 	@RequestMapping(value = {"/change-round-state"}, method = RequestMethod.POST)
@@ -231,6 +233,10 @@ public class CalculateController {
 		calculateService.save(calculate);
 	}
 
+	@ExceptionHandler(value = DebtDataException.class)
+	public ResponseEntity<?> handleUserUpdateException(DebtDataException ex) {
+		return ResponseEntity.badRequest().body(ex.getMessage());
+	}
 }
 
 
