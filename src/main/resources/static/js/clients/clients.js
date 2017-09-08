@@ -428,3 +428,52 @@ function closeClientDebt(calculateId) {
     $('#debtorNameError' + calculateId).hide();
     $('#debtorName' + calculateId).val('');
 }
+
+function getSumPay() {
+    var totalSum = [0, 0, 0, 0];
+    Array.from(document.getElementById("clients").rows).forEach(
+        function(item) {
+        if(item.querySelector('.commonCheck')) {
+            totalSum[0] += +item.querySelector('.commonCheck').innerHTML;
+        }
+        if(item.querySelector('.cashPayment')) {
+            totalSum[1] += +item.querySelector('.cashPayment').innerHTML;
+        }
+        if(item.querySelector('.menuCost')) {
+            totalSum[2] += +item.querySelector('.menuCost').innerHTML;
+        }
+        if(item.querySelector('.timeCost')) {
+            totalSum[3] += +item.querySelector('.timeCost').innerHTML;
+        }
+    });
+    document.getElementById("commonCheckSum").innerHTML += " " + totalSum[0];
+    document.getElementById("cashPaymentSum").innerHTML += " " + totalSum[1];
+    document.getElementById("menuCostSum").innerHTML += " " + totalSum[2];
+    document.getElementById("timeCostSum").innerHTML += " " + totalSum[3];
+}
+function getSumPayWith() {
+    var totalSum = [0, 0, 0, 0, 0];
+    Array.from(document.getElementById("clients").rows).forEach(function(item) {
+        if(item.querySelector('.commonCheck')) {
+            totalSum[0] += +item.querySelector('.commonCheck').innerHTML;
+        }
+        if(item.querySelector('.cashPayment')) {
+            totalSum[1] += +item.querySelector('.cashPayment').innerHTML;
+        }
+        if(item.querySelector('.clubCardPayment')) {
+            totalSum[2] += +item.querySelector('.clubCardPayment').innerHTML;
+        }
+        if(item.querySelector('.menuCost')) {
+            totalSum[3] += +item.querySelector('.menuCost').innerHTML;
+        }
+        if(item.querySelector('.timeCost')) {
+            totalSum[4] += +item.querySelector('.timeCost').innerHTML;
+        }
+    });
+    document.getElementById("commonCheckSum").innerHTML += " " + totalSum[0];
+    document.getElementById("cashPaymentSum").innerHTML += " " + totalSum[1];
+    document.getElementById("clubCardPaymentSum").innerHTML += " " + totalSum[2];
+    document.getElementById("menuCostSum").innerHTML += " " + totalSum[3];
+    document.getElementById("timeCostSum").innerHTML += " " + totalSum[4];
+
+}

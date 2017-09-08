@@ -86,8 +86,5 @@ vk:
       view: db:invalid-token
       subject: Токен доступа недействителен
 
-cost-category-name:
-  salary-for-shift: Зарплата сотрудников # Название расхода
-
 card:
  enable: false  # Включить, отключить рекламу (true false)

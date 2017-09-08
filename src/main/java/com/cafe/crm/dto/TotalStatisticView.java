@@ -6,25 +6,25 @@ import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.user.User;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class TotalStatisticView {
 
 	private double profit;
 	private double salariesCosts;
 	private double otherCosts;
-	private List<User> users;
+	private Set<User> users;
 	private List<Client> clients;
-	private List<Cost> listOfSalariesCosts;
 	private List<Cost> listOfOtherCosts;
 
-	public TotalStatisticView(double profit, double salariesCosts, double otherCosts, List<User> users,
-							  List<Client> clients, List<Cost> listOfSalariesCosts, List<Cost> listOfOtherCosts) {
+	public TotalStatisticView(double profit, double salariesCosts, double otherCosts, Set<User> users,
+							  List<Client> clients, List<Cost> listOfOtherCosts) {
 		this.profit = profit;
 		this.salariesCosts = salariesCosts;
 		this.otherCosts = otherCosts;
 		this.users = users;
 		this.clients = clients;
-		this.listOfSalariesCosts = listOfSalariesCosts;
 		this.listOfOtherCosts = listOfOtherCosts;
 	}
 
@@ -52,11 +52,11 @@ public class TotalStatisticView {
 		this.otherCosts = otherCosts;
 	}
 
-	public List<User> getUsers() {
+	public Set<User> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<User> users) {
+	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
 
@@ -66,14 +66,6 @@ public class TotalStatisticView {
 
 	public void setClients(List<Client> clients) {
 		this.clients = clients;
-	}
-
-	public List<Cost> getListOfSalariesCosts() {
-		return listOfSalariesCosts;
-	}
-
-	public void setListOfSalariesCosts(List<Cost> listOfSalariesCosts) {
-		this.listOfSalariesCosts = listOfSalariesCosts;
 	}
 
 	public List<Cost> getListOfOtherCosts() {
