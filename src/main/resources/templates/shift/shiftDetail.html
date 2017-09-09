@@ -70,7 +70,7 @@
                 </tr>
                 <tr>
                     <table class="table table-striped">
-                        <thead style="background: #DAEEFF">
+                        <thead style="background: #DAEEFF; border-top: 2px solid #dcdedd">
                         <tr>
                             <th> Время посадки</th>
                             <th> Проведенное время</th>
@@ -140,13 +140,6 @@
                     <th> Зарплата</th>
                 </tr>
                 </thead>
-                <!--<tbody>
-                <tr th:each="listOfSalariesCosts : ${salaryUserCost}">
-                    <td th:text="${listOfSalariesCosts.get('date')}"></td>
-                    <td th:text="${listOfSalariesCosts.get('name')}"></td>
-                    <td th:text="${listOfSalariesCosts.get('price')}"></td>
-                </tr>
-                </tbody>-->
                 <tbody>
                 <tr th:each="user : ${shiftView.usersOnShift}">
                     <td th:text="${shiftView.shiftDate}"></td>

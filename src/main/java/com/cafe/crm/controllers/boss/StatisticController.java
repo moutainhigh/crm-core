@@ -60,10 +60,13 @@ public class StatisticController {
 		ModelAndView modelAndView = new ModelAndView("totalStatistics");
 		TotalStatisticView totalStatisticView = createTotalStatisticView(LocalDate.parse(from), LocalDate.parse(to));
 		Set<Shift> allShiftsBetween = shiftService.findByDates(LocalDate.parse(from), LocalDate.parse(to));
-		Shift lastShift = allShiftsBetween.stream()
-				.skip(allShiftsBetween.size() - 1)
-				.findFirst()
-				.orElse(null);
+		Shift lastShift = new Shift();
+		int count = 0;
+		for (Shift shift: allShiftsBetween) {
+			count++;
+			if (allShiftsBetween.size() == count)
+				lastShift = shift;
+		}
 		if (lastShift != null) {
 			modelAndView.addObject("cashBox", lastShift.getCashBox());
 			modelAndView.addObject("shifts", allShiftsBetween);

@@ -76,15 +76,15 @@ closeShiftEmailShortage:
 
 vk:
   application-id:  # application id in vk
-  application-secret:  # application secret key
-  message-name: daily-report # name of template in db
-  chat-id:  # id of conference
-  access-token:
-  api-version: 5.68 # vk api version
-  mail: # Notification to email
-    invalid-token:
-      view: db:invalid-token
-      subject: Токен доступа недействителен
+    application-secret:  # application secret key
+    message-name: daily-report # name of template in db
+    chat-id:  # id of conference
+    access-token:
+    api-version: 5.68 # vk api version
+    mail: # Notification to email
+      invalid-token:
+        view: db:invalid-token
+        subject: Токен доступа недействителен
 
 card:
  enable: false  # Включить, отключить рекламу (true false)

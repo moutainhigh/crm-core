@@ -34,6 +34,7 @@ import java.util.*;
  * Перед выполнением запросов к API необходимо получить ключ доступа access_token.<br/>
  * Необходимо перенаправить браузер пользователя по адресу https://oauth.vk.com/authorize.<br/>
  * Пример запроса:<br/>
+ * https://oauth.vk.com/authorize?client_id=6172460&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=messages,offline&response_type=token&v=5.68&state=123456
  * (@link https://oauth.vk.com/authorize?client_id=1&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=messages,offline&response_type=token&v=5.68&state=123456}
  * Где, client_id - идентификатор вашего приложения,
  * 		display - тип отображения страницы авторизации,
@@ -149,16 +150,12 @@ public class VkServiceImpl implements VkService {
 		double salaryCost = 0d;
 		for (User user : shift.getUsers()) {
 			salaries
-					.append(user.getFirstName())
-					.append(" ")
-					.append(user.getLastName())
-					.append(" - ").append(df.format(user.getShiftSalary()))
-					.append(System.getProperty("line.separator"));
-			if (user.getBonus() != 0) {
-				salaryCost += user.getSalary() + user.getBonus();
-			} else {
-				salaryCost += user.getSalary();
-			}
+				.append(user.getFirstName())
+				.append(" ")
+				.append(user.getLastName())
+				.append(" - ").append(df.format(user.getShiftSalary() + user.getBonus()))
+				.append(System.getProperty("line.separator"));
+			salaryCost += user.getShiftSalary() + user.getBonus();
 		}
 		if (salaries.length() > 0) {
 			salaries.deleteCharAt(salaries.length() - 1);
@@ -174,9 +171,9 @@ public class VkServiceImpl implements VkService {
 		for (Cost cost : costs) {
 			otherCost += cost.getPrice() * cost.getQuantity();
 			otherCosts
-					.append(cost.getName())
-					.append(" - ").append(df.format(cost.getPrice() * cost.getQuantity()))
-					.append(System.getProperty("line.separator"));
+				.append(cost.getName())
+				.append(" - ").append(df.format(cost.getPrice() * cost.getQuantity()))
+				.append(System.getProperty("line.separator"));
 		}
 		if (otherCosts.length() > 0) {
 			otherCosts.deleteCharAt(otherCosts.length() - 1);
