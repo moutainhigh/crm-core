@@ -33,9 +33,9 @@
                             <select onchange="submit();"
                                     style="width:130px; float: left; height: 34px;font-size:18px;margin-top: 5px;margin-left: 6px "
                                     class="form-control" th:form="'formRef'+${calculate.id}" name="boardId">
-                                <option value="-1" th:selected="${listBoard} == null ? 'true' : 'false' ">
+                                <!--<option value="-1" th:selected="${listBoard} == null ? 'true' : 'false' ">
                                     Нет
-                                </option>
+                                </option>-->
                                 <p th:each="b : ${listBoard}">
                                     <option th:value="${b.id}"
                                             th:text="${b.name}"
@@ -226,14 +226,16 @@
                             </button>
 
                         </form>
-                        <div th:id="'deleteModal' + ${calculate.id}" class="modal fade">
+                        <div th:id="'deleteModal' + ${calculate.id}" class="modal fade" th:onshow="'ajaxModalDel(\'' + ${calculate.id} + '\');'">
                             <div class="modal-dialog " style="width: 250px;margin-top: 150px" roles="document">
                                 <div class="modal-content">
                                     <div class="modal-body">
+                                        <div class="clientDel">
                                         <p style="font-size: 20px">Вы желаете удалить клиента/тов ?</p>
                                         <button th:form="'formTest' + ${calculate.id}" class="btn btn-danger">Да
                                         </button>
                                         <button class="btn btn-danger" type="button" data-dismiss="modal">Нет</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
