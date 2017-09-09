@@ -19,8 +19,6 @@ public class InitCost {
 	private final CostCategoryService costCategoryService;
 	private final TimeManager timeManager;
 
-	@Value("${cost-category-name.salary-for-shift}")
-	private String categoryNameSalaryForShift;
 
 	@Autowired
 	public InitCost(CostCategoryService costCategoryService, CostService costService, TimeManager timeManager) {
@@ -32,16 +30,14 @@ public class InitCost {
 	@Transactional
 	@PostConstruct
 	public void init() {
-//		CostCategory category1 = new CostCategory("Продукты питания");
+		CostCategory category1 = new CostCategory("Продукты питания");
 //		CostCategory category2 = new CostCategory("Спиртные напитки");
 //		CostCategory category3 = new CostCategory("Безалкогольные напитки");
 //		CostCategory category4 = new CostCategory("Бытовые продукты");
-		CostCategory category5 = new CostCategory(categoryNameSalaryForShift);
-//		costCategoryService.save(category1);
+		costCategoryService.save(category1);
 //		costCategoryService.save(category2);
 //		costCategoryService.save(category3);
 //		costCategoryService.save(category4);
-		costCategoryService.save(category5);
 
 //		ZoneId zoneId = ZoneId.of("Europe/Moscow");
 //

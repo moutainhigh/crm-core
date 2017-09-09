@@ -16,10 +16,10 @@
 <div class="col-md-7 col-sm-offset-3">
     <div class="container">
         <center>
-        <div class="row" style="margin-top: 5%">
+            <div class="row" style="margin-top: 5%">
                 <h1 style="color: #5bc0de;">
                     Статистика за период с: <span th:text="${from} + ' по ' + ${to}"></span></h1>
-        </div>
+            </div>
         </center>
         <hr/>
         <div class="row">
@@ -86,186 +86,176 @@
         <input type="radio" name="tabs" id="tab-nav-3"/>
         <label for="tab-nav-3">Сотрудники</label>
         <input type="radio" name="tabs" id="tab-nav-4"/>
-        <label for="tab-nav-4">Зарплата</label>
-        <input type="radio" name="tabs" id="tab-nav-5"/>
-        <label for="tab-nav-5">Прочие расходы</label>
+        <label for="tab-nav-4">Прочие расходы</label>
 
         <div class="tabs">
-                <div class="table">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th> Общий чек</th>
-                                <th> Оплата наличными</th>
-                                <th th:if="${cardEnable}"> Оплата по клубной карте</th>
-                                <th> Стоимость меню</th>
-                                <th> Стоимость времени</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="client : ${totalStat.clients}">
-                                <td th:text="${client.allPrice}"></td>
-                                <td th:text="${client.cache}"></td>
-                                <td th:text="${client.payWithCard}" th:if="${cardEnable}"></td>
-                                <td th:text="${client.priceMenu}"></td>
-                                <td th:text="${client.priceTime}"></td>
-                            </tr>
-                            </tbody>
-                            <tfoot>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td th:if="${cardEnable}"></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+            <div class="table">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th> Общий чек</th>
+                            <th> Оплата наличными</th>
+                            <th th:if="${cardEnable}"> Оплата по клубной карте</th>
+                            <th> Стоимость меню</th>
+                            <th> Стоимость времени</th>
+                        </tr>
+                        <tr style="text-align: center; background: #DAEEFF">
+                            <td id="commonCheckSum">Всего грязными:<br/></td>
+                            <td id="cashPaymentSum">Всего наличными:<br/></td>
+                            <td id="clubCardPaymentSum" th:if="${cardEnable}">Всего картами:<br/></td>
+                            <td id="menuCostSum">Всего по меню:<br/></td>
+                            <td id="timeCostSum">Всего по времени:<br/></td>
+                        </tr>
+                        </thead>
+                        <tbody id="clients">
+                        <tr th:each="client : ${totalStat.clients}">
+                            <td class="commonCheck" th:text="${client.allPrice}"></td>
+                            <td class="cashPayment" th:text="${client.cache}"></td>
+                            <td class="clubCardPayment" th:text="${client.payWithCard}" th:if="${cardEnable}"></td>
+                            <td class="menuCost" th:text="${client.priceMenu}"></td>
+                            <td class="timeCost" th:text="${client.priceTime}"></td>
+
+                            <script type="text/javascript">
+
+                            </script>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td th:if="${cardEnable}"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </tfoot>
+                    </table>
                 </div>
-                <div class="table">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th> Дата</th>
-                                <th></th>
-                                <th> Касса</th>
-                                <th></th>
-                                <th> Прибыль грязными</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="shift : ${shift}">
-                                <td th:text="${shift.shiftDate}"></td>
-                                <td></td>
-                                <td th:text="${shift.cashBox}"></td>
-                                <td></td>
-                                <td th:text="${shift.profit}"></td>
-                            </tr>
-                            </tbody>
-                            <tfoot>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+            </div>
+            <script th:unless="${cardEnable}">
+                jQuery(document).ready( function() {
+                    getSumPay();
+                });
+            </script>
+            <script th:if="${cardEnable}">
+                jQuery(document).ready( function() {
+                    getSumPayWith();
+                });
+            </script>
+            <div class="table">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th> Дата</th>
+                            <th></th>
+                            <th> Касса</th>
+                            <th></th>
+                            <th> Прибыль грязными</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="shift : ${shifts}">
+                            <td th:text="${shift.shiftDate}"></td>
+                            <td></td>
+                            <td th:text="${shift.cashBox}"></td>
+                            <td></td>
+                            <td th:text="${shift.profit}"></td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </tfoot>
+                    </table>
                 </div>
-                <div class="table">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th> ФИО</th>
-                                <th> Должность</th>
-                                <th> Зарплата</th>
-                                <th> Бонус</th>
-                                <th> Оклад за смену</th>
-                                <th> Количество смен</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="user : ${totalStat.users}">
-                                <td th:text="${user.firstName + ' '+ user.lastName}"></td>
-                                <td th:text="${user.positions}"></td>
-                                <td th:text="${user.salary}"></td>
-                                <td th:text="${user.bonus}"></td>
-                                <td th:text="${user.shiftSalary}"></td>
-                                <td th:text="${user.shifts.size()}"></td>
-                            </tr>
-                            </tbody>
-                            <tfoot>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+            </div>
+            <div class="table">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th> ФИО</th>
+                            <th> Должность</th>
+                            <th> Зарплата</th>
+                            <th> Бонус</th>
+                            <th> Оклад за смену</th>
+                            <th> Количество смен</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user : ${totalStat.users}">
+                            <td th:text="${user.firstName + ' '+ user.lastName}"></td>
+                            <td th:text="${user.positions}"></td>
+                            <td th:text="${user.salary}"></td>
+                            <td th:text="${user.bonus}"></td>
+                            <td th:text="${user.shiftSalary}"></td>
+                            <td th:text="${user.shifts.size()}"></td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </tfoot>
+                    </table>
                 </div>
-                <div class="table">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th> Дата</th>
-                                <th> Описание</th>
-                                <th> Цена</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="listOfSalariesCosts : ${totalStat.listOfSalariesCosts}">
-                                <td th:text="${listOfSalariesCosts.date}"></td>
-                                <td th:text="${listOfSalariesCosts.name}"></td>
-                                <td th:text="${listOfSalariesCosts.price * listOfSalariesCosts.quantity} % 1 == 0
-                     ? ${#numbers.formatDecimal((listOfSalariesCosts.price * listOfSalariesCosts.quantity), 0, 0)}
-                     : ${#numbers.formatDecimal((listOfSalariesCosts.price * listOfSalariesCosts.quantity), 0, 2)}"></td>
-                            </tr>
-                            </tbody>
-                            <tfoot>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-                <div class="table">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th> Дата</th>
-                                <th> Описание</th>
-                                <th> Категория</th>
-                                <th> Цена</th>
-                                <th> Количество</th>
-                                <th> Сумма</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="allCost : ${totalStat.listOfOtherCosts}">
-                                <td th:text="${allCost.date}"></td>
-                                <td th:text="${allCost.name}"></td>
-                                <td th:text="${allCost.category.name}"></td>
-                                <td th:text="${allCost.price} % 1 == 0
+            </div>
+            <div class="table">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th> Дата</th>
+                            <th> Описание</th>
+                            <th> Категория</th>
+                            <th> Цена</th>
+                            <th> Количество</th>
+                            <th> Сумма</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="allCost : ${totalStat.listOfOtherCosts}">
+                            <td th:text="${allCost.date}"></td>
+                            <td th:text="${allCost.name}"></td>
+                            <td th:text="${allCost.category.name}"></td>
+                            <td th:text="${allCost.price} % 1 == 0
                  ? ${#numbers.formatDecimal(allCost.price, 0, 0)}
                  : ${#numbers.formatDecimal(allCost.price, 0, 2)}">
-                                </td>
-                                <td th:text="${allCost.quantity} % 1 == 0
+                            </td>
+                            <td th:text="${allCost.quantity} % 1 == 0
                  ? ${#numbers.formatDecimal(allCost.quantity, 0, 0)}
                  : ${#numbers.formatDecimal(allCost.quantity, 0, 2)}">
-                                </td>
-                                <td th:text="${allCost.price * allCost.quantity} % 1 == 0
+                            </td>
+                            <td th:text="${allCost.price * allCost.quantity} % 1 == 0
                  ? ${#numbers.formatDecimal((allCost.price * allCost.quantity), 0, 0)}
                  : ${#numbers.formatDecimal((allCost.price * allCost.quantity), 0, 2)}"></td>
-                            </tr>
-                            </tbody>
-                            <tfoot>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </tfoot>
+                    </table>
                 </div>
+            </div>
         </div>
     </div>
 </div>
@@ -274,6 +264,7 @@
 </div>
 <div th:replace="media/advertisingDispatch :: advertising"></div>
 <script th:src="@{/js/mail.js}"></script>
+<script th:src="@{/js/clients/clients.js}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.6/prefixfree.min.js"></script>
 </body>
 </html>

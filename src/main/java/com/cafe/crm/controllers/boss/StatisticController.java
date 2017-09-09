@@ -18,9 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RequestMapping("/boss/totalStatistics")
@@ -29,9 +27,6 @@ public class StatisticController {
 	private final ShiftService shiftService;
 	private final TimeManager timeManager;
 	private final CostService costService;
-
-	@Value("${cost-category-name.salary-for-shift}")
-	private String categoryNameSalaryForShift;
 
 	@Autowired
 	public StatisticController(CostService costService, ShiftService shiftService, TimeManager timeManager) {
@@ -49,7 +44,7 @@ public class StatisticController {
 		Set<Shift> allShiftsBetween = shiftService.findByDates(now, now);
 		if (lastShift != null) {
 			modelAndView.addObject("cashBox", lastShift.getCashBox());
-			modelAndView.addObject("shift", allShiftsBetween);
+			modelAndView.addObject("shifts", allShiftsBetween);
 		} else {
 			modelAndView.addObject("cashBox", 0D);
 		}
@@ -63,10 +58,15 @@ public class StatisticController {
 	@RequestMapping(value = "/searchByDate", method = RequestMethod.POST)
 	public ModelAndView searchByDateStat(@RequestParam("from") String from, @RequestParam("to") String to) {
 		ModelAndView modelAndView = new ModelAndView("totalStatistics");
-
 		TotalStatisticView totalStatisticView = createTotalStatisticView(LocalDate.parse(from), LocalDate.parse(to));
-		Shift lastShift = shiftService.getLast();
 		Set<Shift> allShiftsBetween = shiftService.findByDates(LocalDate.parse(from), LocalDate.parse(to));
+		Shift lastShift = new Shift();
+		int count = 0;
+		for (Shift shift: allShiftsBetween) {
+			count++;
+			if (allShiftsBetween.size() == count)
+				lastShift = shift;
+		}
 		if (lastShift != null) {
 			modelAndView.addObject("cashBox", lastShift.getCashBox());
 			modelAndView.addObject("shifts", allShiftsBetween);
@@ -93,33 +93,30 @@ public class StatisticController {
 		double profit = 0D;
 		double totalShiftSalary = 0D;
 		double otherCosts = 0D;
-		List<User> users = new ArrayList<>();
+		Set<User> users = new HashSet<>();
 		List<Client> clients = new ArrayList<>();
-		List<Cost> salaryCost = new ArrayList<>();
 		List<Cost> otherCost = new ArrayList<>();
-
 		if (shifts == null) {
-			return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clients, salaryCost, otherCost);
+			return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clients, otherCost);
 		}
-		for (Shift shift : shifts) {
+		for(Shift shift : shifts) {
 			users.addAll(shift.getUsers());
 			clients.addAll(shift.getClients());
 			otherCost.addAll(costService.findByShiftId(shift.getId()));
 		}
-
-		salaryCost.addAll(costService.findByCategoryNameAndDateBetween(categoryNameSalaryForShift, from, to));
-		otherCost.removeAll(salaryCost);
-		for (Cost cost : salaryCost) {
-			if (cost.getCategory().getName().equalsIgnoreCase(categoryNameSalaryForShift)) {
-				totalShiftSalary += (cost.getPrice() * cost.getQuantity());
-			} else {
-				otherCosts += (cost.getPrice() * cost.getQuantity());
-			}
+		for (User user : users) {
+			user.getShifts().retainAll(shifts);
+			int totalSalary = user.getShiftSalary() * user.getShifts().size() + user.getBonus();
+			user.setSalary(totalSalary);
+			totalShiftSalary += totalSalary;
+		}
+		for (Cost cost : otherCost) {
+			otherCosts += cost.getPrice() * cost.getQuantity();
 		}
 		for (Client client : clients) {
 			profit += client.getAllPrice();
 		}
-		return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clients, salaryCost, otherCost);
+		return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clients, otherCost);
 	}
 
 }

@@ -3,6 +3,7 @@ package com.cafe.crm.controllers.boss;
 import com.cafe.crm.dto.ShiftView;
 import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.shift.Shift;
+import com.cafe.crm.models.user.User;
 import com.cafe.crm.services.interfaces.cost.CostService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
@@ -17,8 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RequestMapping("/boss/statistics")
@@ -27,9 +27,6 @@ public class ShiftStatisticController {
 	private final ShiftService shiftService;
 	private final CostService costService;
 	private final TimeManager timeManager;
-
-	@Value("${cost-category-name.salary-for-shift}")
-	private String categoryNameSalaryForShift;
 
 
 	@Autowired
@@ -65,21 +62,17 @@ public class ShiftStatisticController {
 		Double allOtherCost = 0D;
 		Shift shift = shiftService.findOne(id);
 		ShiftView shiftView = shiftService.createShiftView(shift);
-		List<Cost> salaryUserCost = costService.findByDateAndCategoryNameAndVisibleTrue(shift.getShiftDate(),
-				categoryNameSalaryForShift);
-		List<Cost> otherCost = costService.findByDateAndVisibleTrue(shift.getShiftDate());
-		otherCost.removeAll(salaryUserCost);
-		for (Cost salaryWorkerGood : salaryUserCost) {
-			allSalaryCost = allSalaryCost + salaryWorkerGood.getPrice() * salaryWorkerGood.getQuantity();
+		for (User user : shift.getUsers()) {
+				allSalaryCost += user.getShiftSalary() + user.getBonus();
 		}
+		List<Cost> otherCost = costService.findByDateAndVisibleTrue(shift.getShiftDate());
 		for (Cost otherGood : otherCost) {
 			allOtherCost = allOtherCost + otherGood.getPrice() * otherGood.getQuantity();
 		}
 		mv.addObject("shiftView", shiftView);
-		mv.addObject("salaryUserCost", salaryUserCost);
 		mv.addObject("allSalaryCost", allSalaryCost);
 		mv.addObject("allOtherCost", allOtherCost);
-		mv.addObject("otherCost", otherCost);
+		mv.addObject("listOfOtherCosts", otherCost);
 		return mv;
 	}
 }

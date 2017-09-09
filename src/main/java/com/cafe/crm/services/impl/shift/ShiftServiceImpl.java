@@ -38,8 +38,6 @@ public class ShiftServiceImpl implements ShiftService {
 	private final SessionRegistry sessionRegistry;
 	private CostService costService;
 
-	@Value("${cost-category-name.salary-for-shift}")
-	private String categoryNameSalaryForShift;
 
 	@Autowired
 	public ShiftServiceImpl(CalculateService calculateService, TimeManager timeManager, CostCategoryService costCategoryService, ShiftRepository shiftRepository, UserService userService, SessionRegistry sessionRegistry) {
@@ -135,17 +133,11 @@ public class ShiftServiceImpl implements ShiftService {
 	@Transactional
 	@Override
 	public Shift closeShift(Map<Long, Integer> mapOfUsersIdsAndBonuses, Double allPrice, Double cashBox, Double bankCashBox, String comment) {
-		CostCategory costCategory = costCategoryService.find(categoryNameSalaryForShift);
 		Shift shift = shiftRepository.getLast();
 		for (Map.Entry<Long, Integer> entry : mapOfUsersIdsAndBonuses.entrySet()) {
 			User user = userService.findById(entry.getKey());
 			user.setSalary(user.getSalary() + user.getShiftSalary());
 			user.setBonus(user.getBonus() + entry.getValue());
-			int salaryCost = user.getShiftSalary() + entry.getValue();
-			Cost costSalaryUser = new Cost(user.getFirstName() + " " + user.getLastName(),
-					salaryCost, 1,
-					costCategory, LocalDate.now());
-			costService.save(costSalaryUser);
 			userService.save(user);
 		}
 		shift.setBankCashBox(bankCashBox);
@@ -172,10 +164,11 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Override
 	public ShiftView createShiftView(Shift shift) {
-		List<User> usersOnShift = getUsersOnShift();
+		List<User> usersOnShift = shift.getUsers();
 		Set<Client> clients = findOne(shift.getId()).getClients();
 		List<Calculate> activeCalculate = calculateService.getAllOpen();
 		Set<Calculate> allCalculate = shift.getCalculates();
+		Object object = allCalculate.getClass();
 		double cashBox = shift.getCashBox();
 		double bankCashBox = shift.getBankCashBox();
 		Double totalCashBox;
@@ -209,7 +202,7 @@ public class ShiftServiceImpl implements ShiftService {
 		}
 
 		LocalDate shiftDate = shift.getShiftDate();
-		List<Cost> costWithoutUsersSalaries = costService.findByShiftIdAndCategoryNameNot(shift.getId(), categoryNameSalaryForShift);
+		List<Cost> costWithoutUsersSalaries = costService.findByShiftId(shift.getId());
 		double otherCosts = 0d;
 		for (Cost cost : costWithoutUsersSalaries) {
 			otherCosts += (cost.getPrice() * cost.getQuantity());
