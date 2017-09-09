@@ -204,7 +204,7 @@
 
                             </form>
                             <td>
-                                <input th:form="'formTest' + ${calculate.id}" th:class="'class' + ${calculate.id}"
+                                <input th:form="'formTest' + ${calculate.id}" th:class="'class' + ${calculate.id} + ' clientsToDel'"
                                        th:id="'test' + ${client.id}" type="checkbox" class="form-control"
                                        style="width: 20px;height: 20px;margin-top: 5px" th:value="${client.id}"
                                        name="clientsId"/>
@@ -226,7 +226,7 @@
                             </button>
 
                         </form>
-                        <div th:id="'deleteModal' + ${calculate.id}" class="modal fade" th:onshow="'ajaxModalDel(\'' + ${calculate.id} + '\');'">
+                        <div th:id="'deleteModal' + ${calculate.id}" class="modal fade" th:onshow="'deleteClients();'">
                             <div class="modal-dialog " style="width: 250px;margin-top: 150px" roles="document">
                                 <div class="modal-content">
                                     <div class="modal-body">
