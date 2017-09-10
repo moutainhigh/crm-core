@@ -14,6 +14,8 @@ public class WrapperOfProduct implements Serializable {  // wrapper for menuCont
 	private String name;
 	private String description;
 	private Double cost;
+	private List<Long> staffPercentPosition;
+	private List<Integer> staffPercentPercent;
 
 	private Double selfCost;
 
@@ -83,6 +85,22 @@ public class WrapperOfProduct implements Serializable {  // wrapper for menuCont
 
 	public void setAmount(List<Integer> amount) {
 		this.amount = amount;
+	}
+
+	public List<Long> getStaffPercentPosition() {
+		return staffPercentPosition;
+	}
+
+	public void setStaffPercentPosition(List<Long> staffPercentPosition) {
+		this.staffPercentPosition = staffPercentPosition;
+	}
+
+	public List<Integer> getStaffPercentPercent() {
+		return staffPercentPercent;
+	}
+
+	public void setStaffPercentPercent(List<Integer> staffPercentPercent) {
+		this.staffPercentPercent = staffPercentPercent;
 	}
 }
 

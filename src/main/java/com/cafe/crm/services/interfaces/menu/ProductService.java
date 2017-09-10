@@ -1,8 +1,11 @@
 package com.cafe.crm.services.interfaces.menu;
 
+import com.cafe.crm.dto.WrapperOfProduct;
 import com.cafe.crm.models.menu.Product;
+import com.cafe.crm.models.user.Position;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface ProductService {
@@ -21,4 +24,5 @@ public interface ProductService {
 
 	void reduceIngredientAmount(Product product);
 
+	Map<Position,Integer> createStaffPercent(WrapperOfProduct wrapper);
 }

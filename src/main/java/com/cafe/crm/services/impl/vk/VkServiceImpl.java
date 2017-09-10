@@ -34,6 +34,7 @@ import java.util.*;
  * Перед выполнением запросов к API необходимо получить ключ доступа access_token.<br/>
  * Необходимо перенаправить браузер пользователя по адресу https://oauth.vk.com/authorize.<br/>
  * Пример запроса:<br/>
+ * https://oauth.vk.com/authorize?client_id=6172460&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=messages,offline&response_type=token&v=5.68&state=123456
  * (@link https://oauth.vk.com/authorize?client_id=1&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=messages,offline&response_type=token&v=5.68&state=123456}
  * Где, client_id - идентификатор вашего приложения,
  * 		display - тип отображения страницы авторизации,
@@ -70,9 +71,6 @@ public class VkServiceImpl implements VkService {
 	private final VkProperties vkProperties;
 	private final EmailService emailService;
 	private final UserService userService;
-
-	@Value("${cost-category-name.salary-for-shift}")
-	private String categoryNameSalaryForShift;
 
 	@Autowired
 	public VkServiceImpl(TemplateService templateService, RestTemplate restTemplate, VkProperties vkProperties, EmailService emailService, UserService userService) {
@@ -119,7 +117,7 @@ public class VkServiceImpl implements VkService {
 
 		StringBuilder salaryCosts = new StringBuilder();
 		StringBuilder otherCosts = new StringBuilder();
-		double totalCosts = formatCostsAndGetTotalCosts(shift.getCosts(), salaryCosts, otherCosts);
+		double totalCosts = formatCostsAndGetOtherCosts(shift.getCosts(), otherCosts) + formatCostsAndGetSalariesCost(shift, salaryCosts);
 		double shortage = shift.getProfit() - totalCosts - shift.getCashBox() - shift.getBankCashBox();
 
 		params[0] = shortage <= 0d ? "" : "НЕДОСТАЧА!";
@@ -147,34 +145,42 @@ public class VkServiceImpl implements VkService {
 		return result;
 	}
 
-	private double formatCostsAndGetTotalCosts(List<Cost> costs, StringBuilder salaries, StringBuilder otherCosts) {
+	private double formatCostsAndGetSalariesCost(Shift shift, StringBuilder salaries) {
 		DecimalFormat df = new DecimalFormat("#.##");
-		double totalCosts = 0d;
-		for (Cost cost : costs) {
-			totalCosts += cost.getPrice() * cost.getQuantity();
-			if (cost.getCategory().getName().equals(categoryNameSalaryForShift)) {
-				salaries
-						.append(cost.getName())
-						.append(" - ").append(df.format(cost.getPrice() * cost.getQuantity()))
-						.append(System.getProperty("line.separator"));
-			} else {
-				otherCosts
-						.append(cost.getName())
-						.append(" - ").append(df.format(cost.getPrice() * cost.getQuantity()))
-						.append(System.getProperty("line.separator"));
-			}
+		double salaryCost = 0d;
+		for (User user : shift.getUsers()) {
+			salaries
+				.append(user.getFirstName())
+				.append(" ")
+				.append(user.getLastName())
+				.append(" - ").append(df.format(user.getShiftSalary() + user.getBonus()))
+				.append(System.getProperty("line.separator"));
+			salaryCost += user.getShiftSalary() + user.getBonus();
 		}
 		if (salaries.length() > 0) {
 			salaries.deleteCharAt(salaries.length() - 1);
 		} else {
 			salaries.append("Отсутствует!");
 		}
+		return salaryCost;
+	}
+
+	private double formatCostsAndGetOtherCosts(List<Cost> costs, StringBuilder otherCosts) {
+		DecimalFormat df = new DecimalFormat("#.##");
+		double otherCost = 0d;
+		for (Cost cost : costs) {
+			otherCost += cost.getPrice() * cost.getQuantity();
+			otherCosts
+				.append(cost.getName())
+				.append(" - ").append(df.format(cost.getPrice() * cost.getQuantity()))
+				.append(System.getProperty("line.separator"));
+		}
 		if (otherCosts.length() > 0) {
 			otherCosts.deleteCharAt(otherCosts.length() - 1);
 		} else {
 			otherCosts.append("Отсутствуют!");
 		}
-		return totalCosts;
+		return otherCost;
 	}
 
 	private String getAmountOfClients(Collection<? extends Client> clients) {

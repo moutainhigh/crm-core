@@ -22,7 +22,6 @@
                 <th>Цена</th>
                 <th>Себестоимость</th>
                 <th>Редактировать</th>
-                <th>Рецепт</th>
                 <th>Удалить</th>
             </tr>
             <tbody class="searchable" th:each="prod,iter:${products}">
@@ -32,16 +31,28 @@
                 <td th:id="'allC' + ${prod.id}"><p th:text="${prod.description}"></p></td>
                 <td th:id="'allD' + ${prod.id}"><p th:text="${!prod.category.floatingPrice} ? ${prod.cost} : 'Плавающая'"></p></td>
                 <td th:id="'allE' + ${prod.id}"><p th:text="${prod.selfCost}"></p></td>
-                <td class="col-lg-2"><a id="ins" class="btn btn-primary btn-info"
-                                        th:href="'#allP'+${prod.id}"
-                                        data-toggle="modal">Редактировать </a>
+                <td class="col-lg-2">
+
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                            Редактировать<span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a id="ins"
+                                   th:href="'#allP'+${prod.id}"
+                                   data-toggle="modal">Редактировать</a></li>
+                            <li>
+                                <a  th:href="'/boss/menu/get/recipe/?id='+${prod.id}" >
+                                    Изменить рецепт
+                                </a></li>
+                            <li>
+                                <a  th:href="'/boss/menu/get/staffPercent/?id='+${prod.id}" >
+                                    Изменить процент сотрудникам
+                                </a></li>
+                        </ul>
+                    </div>
+
                 </td>
-                <td>
-                    <button form="getRecipePage" name="id" class="btn btn-primary btn-info" th:value="${prod.id}"
-                            th:type="submit">
-                        Изменить рецепт
-                    </button>
-                </td>
+
                 <td>
                     <button th:onclick="'del(\''+ ${prod.id} + '\');'"
                             class="btn btn-primary btn-danger" name="del">

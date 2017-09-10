@@ -1,5 +1,6 @@
 package com.cafe.crm.models.menu;
 
+import com.cafe.crm.models.user.Position;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -40,6 +41,11 @@ public class Product {
 	@MapKeyJoinColumn(name = "ingredient")
 	@Column(name = "amount")
 	private Map<Ingredients, Integer> recipe;
+
+	@ElementCollection
+	@MapKeyJoinColumn(name = "position")
+	@Column(name = "percent")
+	private Map<Position, Integer> staffPercent;
 
 	private int rating;
 
@@ -144,5 +150,13 @@ public class Product {
 				", description='" + description + '\'' +
 				", cost=" + cost +
 				'}';
+	}
+
+	public Map<Position, Integer> getStaffPercent() {
+		return staffPercent;
+	}
+
+	public void setStaffPercent(Map<Position, Integer> staffPercent) {
+		this.staffPercent = staffPercent;
 	}
 }
