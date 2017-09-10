@@ -121,23 +121,22 @@ function ajaxModal(id, cardEnable) {
     });
 }
 
-function ajaxModalDel(id) {
-    $.ajax({
-        type: "POST",
-        url: "/manager/output-clients",
-        data: $('#formTest' + id).serialize(),
-
-        success: function (data) {
-            if (data == "") {
-                var errorMessage = '<h4 style="color:red;" align="center">Выберите клиентов для удаления!</h4>';
-                $('.clientDel').html(errorMessage).show();
-                window.setTimeout(function () {
-                    location.reload()
-                }, 1000);
-            }
+function deleteClients() {
+    var boxes2 = $('.clientsToDel');
+    var isChecked = false;
+    for(var x = 0; x < boxes2.length; x++) {
+        isChecked = boxes2[x].checked;
+        if(isChecked) {
+            return;
         }
-    });
+    }
+        var errorMessage = '<h4 style="color:red;" align="center">Выберите клиентов для удаления</h4>';
+        $('.clientDel').html(errorMessage).show();
+        window.setTimeout(function () {
+            location.reload()
+        }, 1000);
 }
+
 
 function getLayerProductAjax(clientId) {
     $.ajax({
