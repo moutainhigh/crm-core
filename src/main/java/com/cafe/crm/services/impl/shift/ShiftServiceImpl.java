@@ -218,10 +218,6 @@ public class ShiftServiceImpl implements ShiftService {
 
 		Map<Long, Integer> staffPercentBonusesMap = calcStaffPercentBonusesAndGetMap(layerProducts, usersOnShift);
 
-		for (UserDTO user: usersOnShift) {
-			usersTotalShiftSalary += user.getShiftSalary();
-		}
-
 		for (LayerProduct layerProduct: layerProducts) {
 			if (layerProduct.isDirtyProfit()) {
 				allPrice += layerProduct.getCost();
