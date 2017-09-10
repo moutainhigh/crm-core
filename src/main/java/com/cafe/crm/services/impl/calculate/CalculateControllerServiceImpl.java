@@ -256,10 +256,8 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		double totalDebtAmount = 0.0D;
 
 		if (clients != null && !clients.isEmpty()) {
-			double averagePaidAmountOfAllClients = Math.round(paidAmount / clients.size());
 			for (Client client : clients) {
 				totalDebtAmount += client.getAllPrice();
-				client.setCache(client.getCache() - averagePaidAmountOfAllClients);
 				client.setState(false);
 			}
 
