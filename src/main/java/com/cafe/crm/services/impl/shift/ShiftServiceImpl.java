@@ -183,7 +183,7 @@ public class ShiftServiceImpl implements ShiftService {
 	@Override
 	public ShiftView createShiftView(Shift shift) {
 
-		List<UserDTO> usersOnShift = DozerUtil.map(getUsersOnShift(),UserDTO.class);
+		List<UserDTO> usersOnShift = DozerUtil.map(shift.getUsers(),UserDTO.class);
 		Set<Client> clients = findOne(shift.getId()).getClients();
 		List<Calculate> activeCalculate = calculateService.getAllOpen();
 		Set<Calculate> allCalculate = shift.getCalculates();
