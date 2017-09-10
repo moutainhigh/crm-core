@@ -19,4 +19,6 @@ public interface PositionService {
 
 	List<Position> findByIdIn(Long[] ids);
 
+	Position findById(Long id);
+
 }

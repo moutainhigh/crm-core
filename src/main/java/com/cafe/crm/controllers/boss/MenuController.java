@@ -5,10 +5,12 @@ import com.cafe.crm.models.menu.Category;
 import com.cafe.crm.models.menu.Ingredients;
 import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.dto.WrapperOfProduct;
+import com.cafe.crm.models.user.Position;
 import com.cafe.crm.services.interfaces.menu.CategoriesService;
 import com.cafe.crm.services.interfaces.menu.IngredientsService;
 import com.cafe.crm.services.interfaces.menu.MenuService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
+import com.cafe.crm.services.interfaces.position.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,13 +34,15 @@ public class MenuController {
 	private final CategoriesService categoriesService;
 	private final ProductService productService;
 	private final IngredientsService ingredientsService;
+	private final PositionService positionService;
 
 	@Autowired
-	public MenuController(CategoriesService categoriesService, ProductService productService, IngredientsService ingredientsService, MenuService menuService) {
+	public MenuController(CategoriesService categoriesService, ProductService productService, IngredientsService ingredientsService, MenuService menuService, PositionService positionService) {
 		this.categoriesService = categoriesService;
 		this.productService = productService;
 		this.ingredientsService = ingredientsService;
 		this.menuService = menuService;
+		this.positionService = positionService;
 	}
 
 	@ModelAttribute(value = "product")
@@ -57,6 +61,7 @@ public class MenuController {
 		mv.addObject("menu", menuService.getOne(1L));
 		mv.addObject("categories", categoriesService.findAll());
 		mv.addObject("products", productService.findAllOrderByRatingDesc());
+		mv.addObject("positions", positionService.findAll());
 
 		return mv;
 	}
@@ -99,6 +104,7 @@ public class MenuController {
 		Category category = categoriesService.getOne(wrapper.getId());
 		Map<Ingredients, Integer> recipe = ingredientsService.createRecipe(wrapper);
 		double recipeCost = ingredientsService.getRecipeCost(recipe);
+		Map<Position, Integer> staffPercent = productService.createStaffPercent(wrapper);
 		if (category != null) {
 			Product product = new Product();
 			product.setCategory(category);
@@ -107,6 +113,7 @@ public class MenuController {
 			product.setSelfCost(wrapper.getSelfCost() + recipeCost);
 			product.setDescription(wrapper.getDescription());
 			product.setRecipe(recipe);
+			product.setStaffPercent(staffPercent);
 			productService.saveAndFlush(product);
 			category.getProducts().add(product);
 			categoriesService.saveAndFlush(category);
@@ -169,6 +176,17 @@ public class MenuController {
 		return modelAndView;
 	}
 
+	@RequestMapping(value = "/get/staffPercent/", method = RequestMethod.GET)
+	public ModelAndView getStaffPercentForEdit(@RequestParam("id") Long idProduct) {
+
+		ModelAndView modelAndView = new ModelAndView("menu/editStaffPercent");
+		modelAndView.addObject("staffPercent", productService.findOne(idProduct).getStaffPercent());
+		modelAndView.addObject("positions",positionService.findAll());
+		modelAndView.addObject("product", productService.findOne(idProduct));
+
+		return modelAndView;
+	}
+
 	@RequestMapping(value = "/edit/recipe", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> editRecipe(@RequestBody WrapperOfProduct wrapper) {
@@ -178,6 +196,19 @@ public class MenuController {
 		if (product != null) {
 			product.setSelfCost(ingredientsService.getRecipeCost(recipe));
 			product.setRecipe(recipe);
+			productService.saveAndFlush(product);
+		}
+		return new ResponseEntity<>(1L, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/edit/staffPercent", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> editStaffPercent(@RequestBody WrapperOfProduct wrapper) {
+		Product product = productService.findOne(wrapper.getId()); // id product
+		Map<Position, Integer> staffPercent = productService.createStaffPercent(wrapper);
+
+		if (product != null) {
+			product.setStaffPercent(staffPercent);
 			productService.saveAndFlush(product);
 		}
 		return new ResponseEntity<>(1L, HttpStatus.OK);
@@ -195,4 +226,16 @@ public class MenuController {
 		String referrer = request.getHeader("Referer");
 		return "redirect:" + referrer;
 	}
+
+	@RequestMapping(value = "/delete/staffPercent/{id}", method = RequestMethod.POST)
+	public String deleteStaffPercent(@PathVariable(name = "id") Long id, HttpServletRequest request) {
+		Product product = productService.findOne(id);
+		if (product != null) {
+			product.getStaffPercent().clear();
+			productService.saveAndFlush(product);
+		}
+		String referrer = request.getHeader("Referer");
+		return "redirect:" + referrer;
+	}
+
 }

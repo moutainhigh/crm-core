@@ -28,6 +28,9 @@ public class LayerProduct {
 
 	private boolean floatingPrice;
 
+	@NotNull
+	private Long productId;
+
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JsonManagedReference
 	@JoinTable(name = "client_layer_product",
@@ -110,5 +113,13 @@ public class LayerProduct {
 		int result = id != null ? id.hashCode() : 0;
 		result = 31 * result + (name != null ? name.hashCode() : 0);
 		return result;
+	}
+
+	public Long getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Long productId) {
+		this.productId = productId;
 	}
 }

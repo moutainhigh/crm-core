@@ -64,6 +64,11 @@ public class PositionServiceImpl implements PositionService {
 		return positionRepository.findByIdIn(ids);
 	}
 
+	@Override
+	public Position findById(Long id) {
+		return positionRepository.findOne(id);
+	}
+
 	private void checkForNotNew(Position position) {
 		if (position.getId() == null) {
 			throw new PositionDataException("Не был передан Id пользователя!");
