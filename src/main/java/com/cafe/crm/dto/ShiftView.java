@@ -3,6 +3,7 @@ package com.cafe.crm.dto;
 
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.note.Note;
 import com.cafe.crm.models.user.User;
 
 import java.time.LocalDate;
@@ -23,10 +24,11 @@ public class ShiftView {
 	private Double allPrice;
 	private LocalDate shiftDate;
 	private double otherCosts;
+	private List<Note> enabledNotes;
 
 	public ShiftView(List<User> usersOnShift, Set<Client> clients, List<Calculate> activeCalculate,
 					 Set<Calculate> allCalculate, double cashBox, double totalCashBox, int usersTotalShiftSalary,
-					 Double card, Double allPrice, LocalDate shiftDate, Double otherCosts, Double bankCashBox) {
+					 Double card, Double allPrice, LocalDate shiftDate, Double otherCosts, Double bankCashBox, List<Note> enabledNotes) {
 		this.usersOnShift = usersOnShift;
 		this.clients = clients;
 		this.activeCalculate = activeCalculate;
@@ -39,6 +41,7 @@ public class ShiftView {
 		this.shiftDate = shiftDate;
 		this.otherCosts = otherCosts;
 		this.bankCashBox = bankCashBox;
+		this.enabledNotes = enabledNotes;
 	}
 
 	public List<User> getUsersOnShift() {
@@ -135,5 +138,13 @@ public class ShiftView {
 
 	public void setBankCashBox(Double bankCashBox) {
 		this.bankCashBox = bankCashBox;
+	}
+
+	public List<Note> getEnabledNotes() {
+		return enabledNotes;
+	}
+
+	public void setEnabledNotes(List<Note> enabledNotes) {
+		this.enabledNotes = enabledNotes;
 	}
 }

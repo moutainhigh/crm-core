@@ -30,7 +30,7 @@ public interface ShiftService {
 
 	List<Shift> findAll();
 
-	Shift closeShift(Map<Long, Integer> mapOfUsersIdsAndBonuses, Double allPrice, Double shortage, Double bankCashBox, String comment);
+	Shift closeShift(Map<Long, Integer> mapOfUsersIdsAndBonuses, Double allPrice, Double shortage, Double bankCashBox, String comment, Map<String, String> mapOfNoteNameAndValue);
 
 	Set<Shift> findByDates(LocalDate start, LocalDate end);
 

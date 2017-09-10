@@ -6,6 +6,8 @@ import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.models.client.LayerProduct;
 import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.cost.CostCategory;
+import com.cafe.crm.models.note.NoteRecord;
+import com.cafe.crm.models.note.Note;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.dto.ShiftView;
 import com.cafe.crm.models.user.User;
@@ -13,6 +15,8 @@ import com.cafe.crm.repositories.shift.ShiftRepository;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.cost.CostCategoryService;
 import com.cafe.crm.services.interfaces.cost.CostService;
+import com.cafe.crm.services.interfaces.note.NoteRecordService;
+import com.cafe.crm.services.interfaces.note.NoteService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.utils.TimeManager;
@@ -36,19 +40,23 @@ public class ShiftServiceImpl implements ShiftService {
 	private final CalculateService calculateService;
 	private final TimeManager timeManager;
 	private final SessionRegistry sessionRegistry;
+	private final NoteService noteService;
+	private final NoteRecordService noteRecordService;
 	private CostService costService;
 
 	@Value("${cost-category-name.salary-for-shift}")
 	private String categoryNameSalaryForShift;
 
 	@Autowired
-	public ShiftServiceImpl(CalculateService calculateService, TimeManager timeManager, CostCategoryService costCategoryService, ShiftRepository shiftRepository, UserService userService, SessionRegistry sessionRegistry) {
+	public ShiftServiceImpl(CalculateService calculateService, TimeManager timeManager, CostCategoryService costCategoryService, ShiftRepository shiftRepository, UserService userService, SessionRegistry sessionRegistry, NoteService noteService, NoteRecordService noteRecordService) {
 		this.calculateService = calculateService;
 		this.timeManager = timeManager;
 		this.costCategoryService = costCategoryService;
 		this.shiftRepository = shiftRepository;
 		this.userService = userService;
 		this.sessionRegistry = sessionRegistry;
+		this.noteService = noteService;
+		this.noteRecordService = noteRecordService;
 	}
 
 	@Autowired
@@ -134,7 +142,7 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Transactional
 	@Override
-	public Shift closeShift(Map<Long, Integer> mapOfUsersIdsAndBonuses, Double allPrice, Double cashBox, Double bankCashBox, String comment) {
+	public Shift closeShift(Map<Long, Integer> mapOfUsersIdsAndBonuses, Double allPrice, Double cashBox, Double bankCashBox, String comment, Map<String, String> mapOfNoteNameAndValue) {
 		CostCategory costCategory = costCategoryService.find(categoryNameSalaryForShift);
 		Shift shift = shiftRepository.getLast();
 		for (Map.Entry<Long, Integer> entry : mapOfUsersIdsAndBonuses.entrySet()) {
@@ -148,14 +156,29 @@ public class ShiftServiceImpl implements ShiftService {
 			costService.save(costSalaryUser);
 			userService.save(user);
 		}
+		List<NoteRecord> noteRecords = saveAndGetNoteRecords(mapOfNoteNameAndValue, shift);
 		shift.setBankCashBox(bankCashBox);
 		shift.setCashBox(cashBox);
 		shift.setProfit(allPrice);
 		shift.setComment(comment);
+		shift.setNoteRecords(noteRecords);
 		shift.setOpen(false);
 		shiftRepository.saveAndFlush(shift);
 		closeAllUserSessions();
 		return shift;
+	}
+
+	private List<NoteRecord> saveAndGetNoteRecords(Map<String, String> mapOfNoteNameAndValue, Shift shift) {
+		List<NoteRecord> noteRecords = new ArrayList<>();
+		for (Map.Entry<String, String> noteNameAndValue : mapOfNoteNameAndValue.entrySet()) {
+			NoteRecord noteRecord = new NoteRecord();
+			noteRecord.setName(noteNameAndValue.getKey());
+			noteRecord.setValue(noteNameAndValue.getValue());
+			noteRecord.setShift(shift);
+			NoteRecord savedNoteRecord = noteRecordService.save(noteRecord);
+			noteRecords.add(savedNoteRecord);
+		}
+		return noteRecords;
 	}
 
 	private void closeAllUserSessions() {
@@ -176,6 +199,7 @@ public class ShiftServiceImpl implements ShiftService {
 		Set<Client> clients = findOne(shift.getId()).getClients();
 		List<Calculate> activeCalculate = calculateService.getAllOpen();
 		Set<Calculate> allCalculate = shift.getCalculates();
+		List<Note> enabledNotes = noteService.findAllByEnableIsTrue();
 		double cashBox = shift.getCashBox();
 		double bankCashBox = shift.getBankCashBox();
 		Double totalCashBox;
@@ -217,7 +241,7 @@ public class ShiftServiceImpl implements ShiftService {
 		allPrice -= card;
 		totalCashBox = (cashBox + bankCashBox + allPrice) - (usersTotalShiftSalary + otherCosts);
 		return new ShiftView(usersOnShift, clients, activeCalculate, allCalculate,
-				cashBox, totalCashBox, usersTotalShiftSalary, card, allPrice, shiftDate, otherCosts, bankCashBox);
+				cashBox, totalCashBox, usersTotalShiftSalary, card, allPrice, shiftDate, otherCosts, bankCashBox, enabledNotes);
 	}
 
 	@Override

@@ -1,13 +1,32 @@
-function test(id) {
-    if ($('#1' + id).attr('type') == 'hidden') {
-        $('#1' + id).attr('type', 'text');
+function switchBonusInputVisibility(id) {
+    if ($('#inputBonus' + id).attr('type') == 'hidden') {
+        $('#inputBonus' + id).attr('type', 'text');
     } else {
-        $('#1' + id).attr('type', 'hidden');
+        $('#inputBonus' + id).attr('type', 'hidden');
     }
 }
 
 
-function test2() {
+function checkInputDataWithShortage() {
+    checkNoteInputData();
+}
+
+
+function checkInputData() {
+    checkNoteInputData();
+    checkCashInputData();
+}
+
+function checkNoteInputData() {
+    $('.classInputNote').each(function() {
+        var noteValue = this.value;
+        if(!$.trim(noteValue).length) {
+            $('.collapseNotes').collapse('show');
+        }
+    });
+}
+
+function checkCashInputData() {
     var totalCashBox = parseFloat($("#totalCashBox").val());
     var cashBox = parseFloat($("#cashBox").val());
     var payWithCard = parseFloat($("#payWithCard").val());
@@ -25,16 +44,23 @@ function test2() {
 }
 
 function recalculation() {
+    var usersBonuses = 0;
+    $('.userBonus').each(function() {
+        var bonus = $(this).val();
+        if ($.isNumeric(bonus)) {
+            usersBonuses += parseInt(bonus);
+        }
+    });
     $.ajax({
         type: "POST",
-        url: "/manager/recalculation",
-        data: $('#form').serialize(),
+        url: "/manager/shift/recalculation",
+        data: {usersBonuses: usersBonuses},
         success: function (data) {
             $('#usersTotalShiftSalary').val(data[0]);
             $('#totalCashBox').val(data[1]);
         },
-        error: function () {
-            console.log('ajaxModal сломался? ');
+        error: function (error) {
+            console.log(error.responseText);
         }
     });
 }
@@ -65,7 +91,6 @@ $(document).ready(function () {
 
 $(document).ready(function () {
     $('#checklistOnCloseInputForm').submit(function (e) {
-        e.preventDefault();
         var form = document.getElementById('checklistOnCloseInputForm');
         var inputs = form.getElementsByTagName('input');
         var isChecked = false;
@@ -80,9 +105,9 @@ $(document).ready(function () {
         }
         if(isChecked) {
             var checklistModal = $('#checklistOnCloseModal');
-            var closeShiftModal = $('#closeShiftModalId');
-            closeShiftModal.modal('show');
             checklistModal.modal('hide');
+        } else {
+            e.preventDefault();
         }
     });
 });
