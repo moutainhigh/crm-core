@@ -3,6 +3,7 @@ package com.cafe.crm.dto;
 
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.note.Note;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,7 +16,7 @@ public class ShiftView {
 	private Set<Client> clients;
 	private List<Calculate> activeCalculate;
 	private Set<Calculate> allCalculate;
-	private Map<Long,Integer> staffPercentBonuses;
+	private Map<Long, Integer> staffPercentBonuses;
 	private double cashBox;
 	private double bankCashBox;
 	private double totalCashBox;
@@ -24,10 +25,11 @@ public class ShiftView {
 	private Double allPrice;
 	private LocalDate shiftDate;
 	private double otherCosts;
+	private List<Note> enabledNotes;
 
 	public ShiftView(List<UserDTO> usersOnShift, Set<Client> clients, List<Calculate> activeCalculate,
 					 Set<Calculate> allCalculate, double cashBox, double totalCashBox, int usersTotalShiftSalary,
-					 Double card, Double allPrice, LocalDate shiftDate, Double otherCosts, Double bankCashBox,Map<Long,Integer> userStaffPercentBonuses) {
+					 Double card, Double allPrice, LocalDate shiftDate, Double otherCosts, Double bankCashBox, List<Note> enabledNotes, Map<Long, Integer> userStaffPercentBonuses) {
 		this.usersOnShift = usersOnShift;
 		this.clients = clients;
 		this.activeCalculate = activeCalculate;
@@ -40,6 +42,7 @@ public class ShiftView {
 		this.shiftDate = shiftDate;
 		this.otherCosts = otherCosts;
 		this.bankCashBox = bankCashBox;
+		this.enabledNotes = enabledNotes;
 		this.staffPercentBonuses = userStaffPercentBonuses;
 	}
 
@@ -139,6 +142,13 @@ public class ShiftView {
 		this.bankCashBox = bankCashBox;
 	}
 
+	public List<Note> getEnabledNotes() {
+		return enabledNotes;
+	}
+
+	public void setEnabledNotes(List<Note> enabledNotes) {
+		this.enabledNotes = enabledNotes;
+	}
 
 	public Map<Long, Integer> getStaffPercentBonuses() {
 		return staffPercentBonuses;

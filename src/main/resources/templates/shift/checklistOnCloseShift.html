@@ -6,7 +6,7 @@
 </head>
 <body>
 <div th:fragment="checklistOnClose">
-    <form id="checklistOnCloseInputForm">
+    <form id="checklistOnCloseInputForm" th:action="@{/manager/shift/close}" method="get">
         <div class="modal fade" id="checklistOnCloseModal">
             <div class="modal-dialog">
                 <div class="modal-content">

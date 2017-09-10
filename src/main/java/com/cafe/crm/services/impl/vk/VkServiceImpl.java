@@ -4,6 +4,7 @@ package com.cafe.crm.services.impl.vk;
 import com.cafe.crm.configs.property.VkProperties;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.cost.Cost;
+import com.cafe.crm.models.note.NoteRecord;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.template.Template;
 import com.cafe.crm.models.user.User;
@@ -11,9 +12,9 @@ import com.cafe.crm.services.interfaces.email.EmailService;
 import com.cafe.crm.services.interfaces.template.TemplateService;
 import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.services.interfaces.vk.VkService;
+import org.apache.commons.lang3.StringUtils;
 import org.cloudinary.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -112,7 +113,7 @@ public class VkServiceImpl implements VkService {
 	}
 
 	private String formatMessage(Shift shift, String raw) {
-		Object[] params = new Object[13];
+		Object[] params = new Object[14];
 		DecimalFormat df = new DecimalFormat("#.##");
 
 		StringBuilder salaryCosts = new StringBuilder();
@@ -133,16 +134,13 @@ public class VkServiceImpl implements VkService {
 		params[10] = df.format(shift.getBankCashBox());
 		params[11] = df.format(shift.getBankCashBox() + shift.getCashBox());
 		params[12] = getComment(shift.getComment());
+		params[13] = getNotes(shift.getNoteRecords());
 
 		return MessageFormat.format(raw, params);
 	}
 
 	private String getComment(String comment) {
-		String result = "";
-		if ((comment != null) && !comment.isEmpty()) {
-			result = "\nКомментарий :\n" + comment;
-		}
-		return result;
+		return StringUtils.isEmpty(comment) ? "\nКомментарий :\nОтсутсвует!" : "\nКомментарий :\n" + comment;
 	}
 
 	private double formatCostsAndGetSalariesCost(Shift shift, StringBuilder salaries) {
@@ -230,5 +228,13 @@ public class VkServiceImpl implements VkService {
 			}
 		}
 		return cmp < 0;
+	}
+
+	private String getNotes(List<NoteRecord> noteRecords) {
+		StringBuilder sb = new StringBuilder();
+		for (NoteRecord noteRecord : noteRecords) {
+			sb.append(noteRecord.getName()).append(" : ").append(noteRecord.getValue()).append(System.getProperty("line.separator"));
+		}
+		return sb.toString();
 	}
 }

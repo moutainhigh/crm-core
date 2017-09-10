@@ -1,6 +1,7 @@
 package com.cafe.crm.controllers.shift;
 
 
+import com.cafe.crm.dto.ShiftCloseDTO;
 import com.cafe.crm.dto.ShiftView;
 import com.cafe.crm.exceptions.transferDataException.TransferException;
 import com.cafe.crm.models.shift.Shift;
@@ -22,7 +23,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,9 +85,9 @@ public class ShiftController {
 		}
 		if (usersIdsOnShift == null) {
 			User user = userService.findByEmail(authentication.getName());
-			shiftService.crateNewShift(cashBox, bankCashBox, user.getId());
+			shiftService.createNewShift(cashBox, bankCashBox, user.getId());
 		} else {
-			shiftService.crateNewShift(cashBox, bankCashBox, usersIdsOnShift);
+			shiftService.createNewShift(cashBox, bankCashBox, usersIdsOnShift);
 		}
 
 		return "redirect:/manager";
@@ -119,58 +119,75 @@ public class ShiftController {
 		return "redirect:/manager/shift/settings";
 	}
 
-	@RequestMapping(value = "/shift/end", method = RequestMethod.POST)
-	public String closeShift(@RequestParam(name = "usersBonus") Integer[] usersBonuses,
-							 @RequestParam(name = "usersIds") Long[] usersIds,
-							 @RequestParam(name = "cashBox") Double cashBox,
-							 @RequestParam(name = "bankCashBox") Double bankCashBox,
-							 @RequestParam(name = "comment") String comment) {
+	@RequestMapping(value = "/shift/close", method = RequestMethod.GET)
+	public String showShiftClosePage(Model model) {
+		model.addAttribute("closeShiftView", shiftService.createShiftView(shiftService.getLast()));
+		return "shift/shiftClose";
+	}
+
+	@RequestMapping(value = "/shift/close", method = RequestMethod.POST)
+	public String closeShift(ShiftCloseDTO shiftCloseDTO) {
 		Shift lastShift = shiftService.getLast();
 		ShiftView shiftView = shiftService.createShiftView(lastShift);
-		Map<Long, Integer> mapOfUsersIdsAndBonuses = new HashMap<>();
-
-		Map<Long, Integer> staffPercentBonuses = shiftView.getStaffPercentBonuses();
-
-		for (int i = 0; i < usersIds.length; i++) {
-			Integer staffPercentBonus = staffPercentBonuses.get(usersIds[i]);
-			mapOfUsersIdsAndBonuses.put(usersIds[i], usersBonuses[i] + (staffPercentBonus == null?0:staffPercentBonus));
+		if (!shiftView.getActiveCalculate().isEmpty()) {
+			return "redirect:shift/shiftClose";
 		}
-
 		lastShift.getRepaidDebts().clear();
 		Double allPrice = shiftView.getAllPrice();
 		Double payWithCard = shiftView.getCard();
-		Integer totalBonusSum = 0;
-		for (Integer userBonus : usersBonuses) {
-			totalBonusSum = totalBonusSum + userBonus;
-		}
+		addPercentBonusesToUsers(shiftCloseDTO, shiftView);
+		Integer totalBonusSum = getTotalBonusSum(shiftCloseDTO);
 		Double totalCashBox = shiftView.getTotalCashBox() - totalBonusSum;
+		Double cashBox = shiftCloseDTO.getCashBox();
+		Double bankCashBox = shiftCloseDTO.getBankCashBox();
 		Double shortage = totalCashBox - (cashBox + bankCashBox);
 
-		if (shortage <= 0) {
-			Shift shift = shiftService.closeShift(mapOfUsersIdsAndBonuses, allPrice, cashBox, bankCashBox, comment);
-			vkService.sendDailyReportToConference(shift);
-		} else {
+		if (shortage > 0) {
 			List<User> users = userService.findByRoleName(EMAIL_RECIPIENT_ROLE_IN_CASE_SHORTAGE);
 			emailService.sendCloseShiftInfoFromText(totalCashBox, cashBox, bankCashBox, payWithCard, allPrice, users, shortage);
-			Shift shift = shiftService.closeShift(mapOfUsersIdsAndBonuses, allPrice, cashBox, bankCashBox, comment);
-			vkService.sendDailyReportToConference(shift);
 		}
+		closeShiftAndSendDailyReport(shiftCloseDTO, allPrice, cashBox, bankCashBox);
 
 		return "redirect:/login";
 	}
 
+	private void addPercentBonusesToUsers(ShiftCloseDTO shiftCloseDTO, ShiftView shiftView) {
+		Integer percentBonus;
+		Map<Long, Integer> mapOfUsersIdsAndBonuses =  shiftCloseDTO.getMapOfUsersIdsAndBonuses();
+		Map<Long, Integer> staffPercentBonuses = shiftView.getStaffPercentBonuses();
+		for (Map.Entry<Long, Integer> idAndBonus : mapOfUsersIdsAndBonuses.entrySet()) {
+			percentBonus = getStaffPercentBonus(staffPercentBonuses, idAndBonus.getKey());
+			idAndBonus.setValue(idAndBonus.getValue() + percentBonus);
+		}
+	}
+
+	private Integer getTotalBonusSum(ShiftCloseDTO shiftCloseDTO) {
+		Integer totalBonusSum = 0;
+		Map<Long, Integer> mapOfUsersIdsAndBonuses =  shiftCloseDTO.getMapOfUsersIdsAndBonuses();
+		for (Map.Entry<Long, Integer> idAndBonus : mapOfUsersIdsAndBonuses.entrySet()) {
+			totalBonusSum += idAndBonus.getValue();
+		}
+		return totalBonusSum;
+	}
+
+	private Integer getStaffPercentBonus(Map<Long, Integer> staffPercentBonuses, Long id) {
+		Integer percentBonus = staffPercentBonuses.get(id);
+		return percentBonus == null ? 0 : percentBonus;
+	}
+
+	private void closeShiftAndSendDailyReport(ShiftCloseDTO shiftCloseDTO, Double allPrice, Double cashBox, Double bankCashBox) {
+		Shift shift = shiftService.closeShift(shiftCloseDTO.getMapOfUsersIdsAndBonuses(), allPrice, cashBox, bankCashBox, shiftCloseDTO.getComment(), shiftCloseDTO.getMapOfNoteNameAndValue());
+		vkService.sendDailyReportToConference(shift);
+	}
+
 
 	@ResponseBody
-	@RequestMapping(value = "/recalculation", method = RequestMethod.POST)
-	public List<Object> recalculation(@RequestParam(name = "usersBonus") Integer[] usersBonuses) {
+	@RequestMapping(value = "/shift/recalculation", method = RequestMethod.POST)
+	public List<Object> recalculation(@RequestParam(name = "usersBonuses") Integer usersBonuses) {
 		Shift lastShift = shiftService.getLast();
-		Integer totalBonusSum = 0;
-		for (Integer userBonus : usersBonuses) {
-			totalBonusSum += userBonus;
-		}
 		ShiftView shiftView = shiftService.createShiftView(lastShift);
-		int salaryWorkerOnShift = shiftView.getUsersTotalShiftSalary() + totalBonusSum;
-		Double totalCashBox = shiftView.getTotalCashBox() - totalBonusSum;
+		int salaryWorkerOnShift = shiftView.getUsersTotalShiftSalary() + usersBonuses;
+		Double totalCashBox = shiftView.getTotalCashBox() - usersBonuses;
 		List<Object> result = new ArrayList<>();
 		result.add(salaryWorkerOnShift);
 		result.add(totalCashBox);

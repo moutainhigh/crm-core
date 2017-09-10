@@ -5,6 +5,7 @@ import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.models.cost.Cost;
+import com.cafe.crm.models.note.NoteRecord;
 import com.cafe.crm.models.user.User;
 
 import javax.persistence.*;
@@ -58,6 +59,9 @@ public class Shift {
 
 	// TODO: 26.07.2017 Подумать над размером
 	private String comment;
+
+	@OneToMany(mappedBy = "shift")
+	private List<NoteRecord> noteRecords;
 
 	public Shift(LocalDate shiftDate, List<User> users, double bankCashBox) {
 		this.shiftDate = shiftDate;
@@ -182,6 +186,14 @@ public class Shift {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public List<NoteRecord> getNoteRecords() {
+		return noteRecords;
+	}
+
+	public void setNoteRecords(List<NoteRecord> noteRecords) {
+		this.noteRecords = noteRecords;
 	}
 
 	@Override

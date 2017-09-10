@@ -61,7 +61,6 @@ public class CostController {
 		model.addAttribute("today", today);
 		model.addAttribute("fromDate", today);
 		model.addAttribute("toDate", null);
-		model.addAttribute("closeShiftView", shiftService.createShiftView(shift));
 		model.addAttribute("closeChecklist", checklistService.getAllForCloseShift());
 
 		return "costs/costs";
@@ -93,7 +92,6 @@ public class CostController {
 		model.addAttribute("today", today);
 		model.addAttribute("fromDate", from);
 		model.addAttribute("toDate", to);
-		model.addAttribute("closeShiftView", shiftService.createShiftView(shift));
 
 		return "costs/costs";
 	}
