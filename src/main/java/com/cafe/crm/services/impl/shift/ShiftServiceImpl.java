@@ -76,7 +76,7 @@ public class ShiftServiceImpl implements ShiftService {
 		List<User> users = userService.findByIdIn(usersIdsOnShift);
 		Shift shift = new Shift(timeManager.getDate(), users, bankCashBox);
 		shift.setOpen(true);
-		for (User user : users) {
+		for (User user: users) {
 			user.getShifts().add(shift);
 		}
 		shift.setCashBox(cashBox);
@@ -147,7 +147,7 @@ public class ShiftServiceImpl implements ShiftService {
 	public Shift closeShift(Map<Long, Integer> mapOfUsersIdsAndBonuses, Double allPrice, Double cashBox, Double bankCashBox, String comment) {
 		CostCategory costCategory = costCategoryService.find(categoryNameSalaryForShift);
 		Shift shift = shiftRepository.getLast();
-		for (Map.Entry<Long, Integer> entry : mapOfUsersIdsAndBonuses.entrySet()) {
+		for (Map.Entry<Long, Integer> entry: mapOfUsersIdsAndBonuses.entrySet()) {
 			User user = userService.findById(entry.getKey());
 			user.setSalary(user.getSalary() + user.getShiftSalary());
 			user.setBonus(user.getBonus() + entry.getValue());
@@ -169,7 +169,7 @@ public class ShiftServiceImpl implements ShiftService {
 	}
 
 	private void closeAllUserSessions() {
-		for (Object principal : sessionRegistry.getAllPrincipals()) {
+		for (Object principal: sessionRegistry.getAllPrincipals()) {
 			sessionRegistry.getAllSessions(principal, false).forEach(SessionInformation::expireNow);
 		}
 	}
@@ -195,7 +195,7 @@ public class ShiftServiceImpl implements ShiftService {
 		Double allPrice = 0D;
 
 		Set<LayerProduct> layerProducts = new HashSet<>();
-		for (Client client : clients) {
+		for (Client client: clients) {
 			layerProducts.addAll(client.getLayerProducts());
 			card += client.getPayWithCard();
 			allPrice += client.getPriceTime();
@@ -203,21 +203,21 @@ public class ShiftServiceImpl implements ShiftService {
 
 		Map<Long, Integer> staffPercentBonusesMap = calcStaffPercentBonusesAndGetMap(layerProducts, usersOnShift);
 
-		for (UserDTO user : usersOnShift) {
+		for (UserDTO user: usersOnShift) {
 			usersTotalShiftSalary += user.getShiftSalary();
 		}
 
-		for (LayerProduct layerProduct : layerProducts) {
+		for (LayerProduct layerProduct: layerProducts) {
 			if (layerProduct.isDirtyProfit()) {
 				allPrice += layerProduct.getCost();
 			}
 		}
 
-		for (Debt debt : shift.getRepaidDebts()) {
+		for (Debt debt: shift.getRepaidDebts()) {
 			allPrice += debt.getDebtAmount();
 		}
 
-		for (Debt debt : shift.getGivenDebts()) {
+		for (Debt debt: shift.getGivenDebts()) {
 			allPrice -= debt.getDebtAmount();
 		}
 
@@ -225,7 +225,7 @@ public class ShiftServiceImpl implements ShiftService {
 		LocalDate shiftDate = shift.getShiftDate();
 		List<Cost> costWithoutUsersSalaries = costService.findByShiftIdAndCategoryNameNot(shift.getId(), categoryNameSalaryForShift);
 		double otherCosts = 0d;
-		for (Cost cost : costWithoutUsersSalaries) {
+		for (Cost cost: costWithoutUsersSalaries) {
 			otherCosts += (cost.getPrice() * cost.getQuantity());
 		}
 		allPrice -= card;
@@ -274,7 +274,7 @@ public class ShiftServiceImpl implements ShiftService {
 			for (UserDTO user: staff) {
 
 				List<PositionDTO> userPositions = DozerUtil.map(mapper,user.getPositions(),PositionDTO.class);
-				for (PositionDTO positionDTO : userPositions) {
+				for (PositionDTO positionDTO: userPositions) {
 
 					Integer percent = staffPercent.get(DozerUtil.map(mapper,positionDTO,Position.class));
 					if (percent != null) {
