@@ -24,7 +24,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -253,8 +256,10 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		double totalDebtAmount = 0.0D;
 
 		if (clients != null && !clients.isEmpty()) {
+			double averagePaidAmountOfAllClients = Math.round(paidAmount / clients.size());
 			for (Client client : clients) {
 				totalDebtAmount += client.getAllPrice();
+				client.setCache(client.getCache() - averagePaidAmountOfAllClients);
 				client.setState(false);
 			}
 
@@ -262,7 +267,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 				throw new DebtDataException("Нельзя указывать отрицательную сумму!");
 			} else if (paidAmount > totalDebtAmount) {
 				throw new DebtDataException("Вы возвращаете сумму большую чем долг");
-			} else if (paidAmount != 0 && paidAmount < totalDebtAmount){
+			} else if (paidAmount != 0 && paidAmount < totalDebtAmount) {
 				totalDebtAmount = totalDebtAmount - paidAmount;
 			}
 

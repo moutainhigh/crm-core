@@ -212,7 +212,7 @@ public class CalculateController {
 	}
 
 	@RequestMapping(value = {"/close-client-debt"}, method = RequestMethod.POST)
-	public ResponseEntity closeClientDebt(@RequestParam(name = "clientsId", required = false) long[] clientsId,
+	public ResponseEntity closeClientDebt(@RequestParam(name = "clientsId[]") long[] clientsId,
 							  @RequestParam("calculateId") Long calculateId,
 								  @RequestParam("debtorName") String debtorName,
 	                              @RequestParam(value = "paidAmount", required = false) Double paidAmount) {
