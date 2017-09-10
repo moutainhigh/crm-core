@@ -7,7 +7,6 @@ import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.models.client.LayerProduct;
 import com.cafe.crm.models.cost.Cost;
-import com.cafe.crm.models.cost.CostCategory;
 import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.dto.ShiftView;
@@ -40,7 +39,6 @@ public class ShiftServiceImpl implements ShiftService {
 
 	private final ShiftRepository shiftRepository;
 	private final UserService userService;
-	private final CostCategoryService costCategoryService;
 	private final CalculateService calculateService;
 	private final TimeManager timeManager;
 	private final SessionRegistry sessionRegistry;
@@ -48,10 +46,9 @@ public class ShiftServiceImpl implements ShiftService {
 	private final ProductService productService;
 
 	@Autowired
-	public ShiftServiceImpl(CalculateService calculateService, TimeManager timeManager, CostCategoryService costCategoryService, ShiftRepository shiftRepository, UserService userService, SessionRegistry sessionRegistry, ProductService productService) {
+	public ShiftServiceImpl(CalculateService calculateService, TimeManager timeManager,ShiftRepository shiftRepository, UserService userService, SessionRegistry sessionRegistry, ProductService productService) {
 		this.calculateService = calculateService;
 		this.timeManager = timeManager;
-		this.costCategoryService = costCategoryService;
 		this.shiftRepository = shiftRepository;
 		this.userService = userService;
 		this.sessionRegistry = sessionRegistry;
@@ -185,7 +182,7 @@ public class ShiftServiceImpl implements ShiftService {
 		Double card = 0D;
 		Double allPrice = 0D;
 
-		for (User user : usersOnShift) {
+		for (UserDTO user: usersOnShift) {
 			usersTotalShiftSalary += user.getShiftSalary();
 		}
 
