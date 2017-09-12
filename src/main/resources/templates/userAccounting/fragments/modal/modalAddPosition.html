@@ -21,11 +21,32 @@
                 </div>
                 <div class="modal-body">
                     <div class="errorMessage"></div>
-                    <form class="formAddPosition form-signin">
-                        <h2 class="form-signin-heading">Заполните Поля</h2>
-                        <input type="text" class="form-control" placeholder="Введите название должности"
-                               required="required" autofocus="" name="name" pattern=".{1,}"
-                               title="Поле Должность не должно быть пустым"/>
+                    <form class="formAddPosition form-horizontal">
+                        <div class="form-group">
+                            <label for="position" class="col-md-4 control-label">Название должности</label>
+                            <div class="col-md-6">
+                                <input type="text" id="position" class="form-control" placeholder="Введите название должности"
+                                       required="required" autofocus="" name="name" pattern=".{1,}"
+                                       title="Поле Должность не должно быть пустым"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div id="inputPercentFromSales">
+                                <label for="percentageOfSales" class="col-md-4 control-label">Добавить процент с выручки</label>
+                                <div class="col-md-6">
+                                    <input type="number" id="percentageOfSales" class="form-control" value="0"
+                                       name="percentageOfSales" min="0" max="100"
+                                       title="Поле Процент не должно быть пустым"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-4 col-sm-10">
+                                <div class="checkbox">
+                                    <label><input type="checkbox" name="isPositionUsePercentOfSales"/> Добавить процент с выручки </label>
+                                </div>
+                            </div>
+                        </div>
                         <br/>
                         <button class="btn btn-lg btn-primary btn-block" type="submit">Добавить Должность В Базу
                             Данных

@@ -7,6 +7,10 @@ public class PositionDTO {
 
     private String name;
 
+    private Integer percentageOfSales;
+
+    private boolean isPositionUsePercentOfSales;
+
     public Long getId() {
         return id;
     }
@@ -21,6 +25,22 @@ public class PositionDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getPercentageOfSales() {
+        return percentageOfSales;
+    }
+
+    public void setPercentageOfSales(Integer percentageOfSales) {
+        this.percentageOfSales = percentageOfSales;
+    }
+
+    public boolean isPositionUsePercentOfSales() {
+        return isPositionUsePercentOfSales;
+    }
+
+    public void setIsPositionUsePercentOfSales(boolean isPositionUsePercentOfSales) {
+        this.isPositionUsePercentOfSales = isPositionUsePercentOfSales;
     }
 
     @Override

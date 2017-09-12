@@ -39,19 +39,39 @@
                         </div>
                         <div class="modal-body">
                             <div class="errorMessage"></div>
-                            <form class="formEditPosition form-signin" th:action="@{/boss/user/position/edit}" method="POST"
-                                  th:attr="data-id=${position.id}">
-
+                            <form class="formEditPosition form-horizontal">
                                 <input type="hidden" class="form-control" th:value="${position.id}" name="id"/>
-                                <h4>Название должности</h4>
-                                <input type="text" class="form-control" th:value="${position.name}" name="name"/>
+                                <div class="form-group">
+                                    <label for="position" class="col-md-4 control-label">Название должности</label>
+                                    <div class="col-md-6">
+                                        <input type="text" id="position" class="form-control" th:value="${position.name}"
+                                               required="required" autofocus="" name="name" pattern=".{1,}"
+                                               title="Поле Должность не должно быть пустым"/>
+                                    </div>
+                                </div>
                                 <br/>
-
-                                <button type="submit" class="btn btn-lg btn-primary btn-block">Изменить Должность
+                                <div class="form-group">
+                                    <div id="inputPercentFromSales">
+                                        <label for="percentageOfSales" class="col-md-4 control-label">Изменить процент с выручки</label>
+                                        <div class="col-md-6">
+                                            <input type="number" id="percentageOfSales" class="form-control" th:value="${position.percentageOfSales}"
+                                                   name="percentageOfSales" min="0" max="100"
+                                                   title="Поле Процент не должно быть пустым"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-4 col-sm-10">
+                                        <div class="checkbox">
+                                            <label><input type="checkbox" name="isPositionUsePercentOfSales"/> Изменить процент с выручки </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <button class="btn btn-lg btn-primary btn-block" type="submit">Изменить Должность
                                 </button>
-                                <br/>
                             </form>
-
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">
                                     Отмена
