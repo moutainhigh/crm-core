@@ -53,12 +53,13 @@
 
     <div id="billsOnShift" class="collapse">
         <div class="table">
-            <table class="table table-striped" th:each="calc : ${shiftView.allCalculate}" style="margin-bottom: 0px">
+            <table class="table table-striped" th:each="calc : ${shiftView.allCalculate}">
                 <thead>
                 <tr>
                     <th> Описание</th>
                     <th> Описание стола</th>
                     <th> Количество клиентов</th>
+                    <th style="width: 90px"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -67,50 +68,46 @@
                     <td th:if="${calc.description}!=null" th:text="${calc.description}"></td>
                     <td th:each="board:${calc.board}" th:text="${board.name}"></td>
                     <td th:text="${calc.client.size()}"></td>
+                    <td class="tr-wrapper" style="text-align: left">
+                        <button th:id="'billsButton' + ${calc.id}" type="button" class="btn btn-info" style="margin-bottom: 1%">
+                            Детали
+                        </button>
+                    </td>
                 </tr>
                 <tr>
-                    <table class="table table-striped">
-                        <thead style="background: #DAEEFF; border-top: 2px solid #dcdedd">
-                        <tr>
-                            <th> Время посадки</th>
-                            <th> Проведенное время</th>
-                            <th> Стоимость времени</th>
-                            <th> Скидка</th>
-                            <th> Скидка по карте</th>
-                            <th> Общая стоимость счета</th>
-                            <th> Оплата наличными</th>
-                            <th> Стоимость меню</th>
-                            <th> Оплата по клубной карте</th>
-                        </tr>
-                        </thead>
-                        <tbody th:each="client : ${calc.client}">
-                        <tr>
-                            <td th:text="${client.timeStart}"></td>
-                            <td th:text="${client.passedTime}"></td>
-                            <td th:text="${client.priceTime}"></td>
-                            <td th:text="${client.discount}"></td>
-                            <td th:text="${client.discountWithCard}"></td>
-                            <td th:text="${client.allPrice}"></td>
-                            <td th:text="${client.cache}"></td>
-                            <td th:text="${client.priceMenu}"></td>
-                            <td th:text="${client.payWithCard}"></td>
+                    <td class="tr-wrapper" colspan="4">
+                        <div th:id="'billsOnShift' + ${calc.id}" style="display: none">
+                            <table class="table table-striped nested-table">
+                                <thead>
+                                <tr>
+                                    <th> Время посадки</th>
+                                    <th> Проведенное время</th>
+                                    <th> Стоимость времени</th>
+                                    <th> Скидка</th>
+                                    <th> Скидка по карте</th>
+                                    <th> Общая стоимость счета</th>
+                                    <th> Оплата наличными</th>
+                                    <th> Стоимость меню</th>
+                                    <th th:if="${cardEnable}"> Оплата по клубной карте</th>
+                                </tr>
+                                </thead>
+                                <tbody th:each="client : ${calc.client}">
+                                <tr>
+                                    <td th:text="${client.timeStart}"></td>
+                                    <td th:text="${client.passedTime}"></td>
+                                    <td th:text="${client.priceTime}"></td>
+                                    <td th:text="${client.discount}"></td>
+                                    <td th:text="${client.discountWithCard}"></td>
+                                    <td th:text="${client.allPrice}"></td>
+                                    <td th:text="${client.cache}"></td>
+                                    <td th:text="${client.priceMenu}"></td>
+                                    <td th:if="${cardEnable}" th:text="${client.payWithCard}"></td>
 
-                        </tr>
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        </tfoot>
-                    </table>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
                 </tr>
                 </tbody>
                 <tfoot>
@@ -118,8 +115,18 @@
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
                 </tr>
                 </tfoot>
+                <script th:inline="javascript" type="text/javascript">
+                    jQuery(document).ready( function() {
+                        var buttonId = '#billsButton' + [[${calc.id}]];
+                        var billsOnShiftId = '#billsOnShift' + [[${calc.id}]];
+                        jQuery(buttonId).click(function(){
+                                $(billsOnShiftId).slideToggle('fast');
+                        });
+                    });
+                </script>
             </table>
         </div>
     </div>

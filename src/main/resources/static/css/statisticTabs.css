@@ -111,3 +111,16 @@ th > .btn-default:hover, th > .btn-default:focus, th > .btn-default:active, th >
 .ui-autocomplete {
     z-index: 1500 !important;
 }
+
+.tr-wrapper {
+    padding: 0 !important;
+}
+
+.nested-table {
+    margin-bottom: 0 !important;
+}
+
+.nested-table thead {
+    background: #DAEEFF !important;
+
+}
