@@ -279,21 +279,23 @@ public class ShiftServiceImpl implements ShiftService {
 
 			Long productId = layerProduct.getProductId();
 			Product product = productService.findOne(productId);
-			Map<Position, Integer> staffPercent = product.getStaffPercent();
+			if(product != null) {
+				Map<Position, Integer> staffPercent = product.getStaffPercent();
 
-			for (UserDTO user: staff) {
+				for (UserDTO user: staff) {
 
-				List<PositionDTO> userPositions = DozerUtil.map(mapper,user.getPositions(),PositionDTO.class);
-				for (PositionDTO positionDTO: userPositions) {
+					List<PositionDTO> userPositions = DozerUtil.map(mapper,user.getPositions(),PositionDTO.class);
+					for (PositionDTO positionDTO: userPositions) {
 
-					Integer percent = staffPercent.get(DozerUtil.map(mapper,positionDTO,Position.class));
-					if (percent != null) {
+						Integer percent = staffPercent.get(DozerUtil.map(mapper,positionDTO,Position.class));
+						if (percent != null) {
 
-						int bonus = (int) (layerProduct.getCost() * percent / 100);
-						user.setShiftSalary(bonus + user.getShiftSalary());
+							int bonus = (int) (layerProduct.getCost() * percent / 100);
+							user.setShiftSalary(bonus + user.getShiftSalary());
 
-						Integer saveBonus = staffPercentBonusesMap.get(user.getId());
-						staffPercentBonusesMap.put(user.getId(), bonus + (saveBonus != null ? saveBonus : 0));
+							Integer saveBonus = staffPercentBonusesMap.get(user.getId());
+							staffPercentBonusesMap.put(user.getId(), bonus + (saveBonus != null ? saveBonus : 0));
+						}
 					}
 				}
 			}

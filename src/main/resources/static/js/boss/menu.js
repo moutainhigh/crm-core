@@ -29,8 +29,16 @@ $(document).on('click', '#saveNewProductData', function () {
         amount.push($(this).val());
     });
 
+
+    var needAddSelfCost = true;
     for (i = 0; i < ingredient.length; i++) {
+        if (amount[i] > 0 && needAddSelfCost) {
+            needAddSelfCost = false;
+        }
         myMap[ingredient[i]] = amount[i];
+    }
+    if (!needAddSelfCost) {
+        setSelfCost = 0;
     }
 
     var staffPercentObj = getStaffPercentObj(id);
@@ -82,6 +90,7 @@ $(document).on('click', '#saveNewProductData', function () {
             $("#addName" + id).val("");
             $("#addDes" + id).val("");
             $("#addCost" + id).val("0.0");
+            $("#addSelfCost" + id).val("0")
         },
         error: function (e) {
             var errorMessage = '<h4 style="color:red;" align="center">Неудалось добавить продукт!</h4>';
@@ -500,7 +509,7 @@ function getEditHtmlOnAddProduct(hrefPrefix,product,isFloatingPrice) {
         ' <label>Цена</label>'+
         ' <input type="text" class="form-control"'+
         ' id="'+inputPrefix+'Cost'+product.productId+'" name="cost" required="" pattern="\d+" title="только цифры" '+
-        ' value="'+product.cost+'"'+ (isFloatingPrice===true?'disabled':'') +'"/>'+
+        ' value="'+product.cost+'"'+ (isFloatingPrice===true?'disabled="disabled"':'') +'"/>'+
         ' </div>'+
         ' <div class="form-group">'+
         ' <label>Себестоимость</label>'+
