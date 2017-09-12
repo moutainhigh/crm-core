@@ -12,4 +12,6 @@ public interface PositionRepository extends JpaRepository<Position, Long> {
 
 	List<Position> findByIdIn(Long[] ids);
 
+	List<Position> findByIsPositionUsePercentOfSalesIsTrue();
+
 }

@@ -4,6 +4,8 @@ package com.cafe.crm.models.user;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 @Entity
 @Table(name = "positions")
@@ -15,6 +17,14 @@ public class Position {
 	@NotBlank(message = "Поле \"name\" не может быть пустым")
 	@Column(unique = true, nullable = false)
 	private String name;
+
+	@Column(name = "percent")
+	@Min(value = 0, message = "Поле \"percentageOfSales\" не может быть меньше 0")
+	@Max(value = 100, message = "Поле \"percentageOfSales\" не может быть больше 100")
+	private Integer percentageOfSales = 0;
+
+	@Column(name = "use_percent")
+	private boolean isPositionUsePercentOfSales = false;
 
 	public Position() {
 	}
@@ -37,6 +47,22 @@ public class Position {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Integer getPercentageOfSales() {
+		return percentageOfSales;
+	}
+
+	public void setPercentageOfSales(Integer percentageOfSales) {
+		this.percentageOfSales = percentageOfSales;
+	}
+
+	public boolean isPositionUsePercentOfSales() {
+		return isPositionUsePercentOfSales;
+	}
+
+	public void setIsPositionUsePercentOfSales(boolean isPositionUsePercentOfSales) {
+		this.isPositionUsePercentOfSales = isPositionUsePercentOfSales;
 	}
 
 	@Override

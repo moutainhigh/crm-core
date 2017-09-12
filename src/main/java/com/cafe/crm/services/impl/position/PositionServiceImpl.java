@@ -35,6 +35,11 @@ public class PositionServiceImpl implements PositionService {
 	}
 
 	@Override
+	public List<Position> findAllWithEnabledPercent() {
+		return positionRepository.findByIsPositionUsePercentOfSalesIsTrue();
+	}
+
+	@Override
 	public void update(Position position) {
 		checkForNotNew(position);
 		checkForUniqueName(position);
