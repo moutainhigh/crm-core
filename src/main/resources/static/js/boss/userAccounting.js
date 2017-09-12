@@ -135,6 +135,11 @@ $(document).ready(function () {
     $('.formAddPosition').on('submit', function (event) {
         event.preventDefault();
         $('.errorMessage').html('').hide();
+        if($('#percentageOfSales').val() == '') {
+            var errorMessage = '<h4 style="color:red;" align="center">' + 'Поле Процент не должно быть пустым!' + '</h4>';
+            $('.errorMessage').html(errorMessage).show();
+            return;
+        }
         var data = $(this).serialize();
         $.ajax({
             type: 'post',
@@ -155,6 +160,11 @@ $(document).ready(function () {
     $('.formEditPosition').on('submit', function (event) {
         event.preventDefault();
         $('.errorMessage').html('').hide();
+        if($('#percentageOfSales').val() == '') {
+            var errorMessage = '<h4 style="color:red;" align="center">' + 'Поле Процент не должно быть пустым!' + '</h4>';
+            $('.errorMessage').html(errorMessage).show();
+            return;
+        }
         var data = $(this).serialize();
         $.ajax({
             type: 'post',
@@ -186,4 +196,17 @@ $(document).ready(function () {
             $("#addUserSecondPasswordAllForm").show();
         }
     })
+});
+
+$(function () {
+    $('div[id="inputPercentFromSales"]').hide();
+
+    //show it when the checkbox is clicked
+    $('input[name="isPositionUsePercentOfSales"]').on('click', function () {
+        if ($(this).prop('checked')) {
+            $('div[id="inputPercentFromSales"]').fadeIn();
+        } else {
+            $('div[id="inputPercentFromSales"]').hide();
+        }
+    });
 });

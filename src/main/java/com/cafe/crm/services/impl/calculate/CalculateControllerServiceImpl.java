@@ -131,7 +131,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 	@Override
 	public List<Client> calculatePrice() {
-		long startTime = System.currentTimeMillis();/// для измерения скорости работы расчетов под ajax
+		//long startTime = System.currentTimeMillis();/// для измерения скорости работы расчетов под ajax
 		List<Calculate> calculates = calculateService.getAllOpen();
 		List<Client> clients = new ArrayList<>();
 		for (Calculate calculate : calculates) {
@@ -150,7 +150,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 			}
 		}
 		clientService.saveAll(clients);
-		System.out.println(System.currentTimeMillis() - startTime);
+		//System.out.println(System.currentTimeMillis() - startTime);
 		return clients;
 	}
 
@@ -267,6 +267,8 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 				throw new DebtDataException("Вы возвращаете сумму большую чем долг");
 			} else if (paidAmount != 0 && paidAmount < totalDebtAmount) {
 				totalDebtAmount = totalDebtAmount - paidAmount;
+			} else if (paidAmount == totalDebtAmount) {
+				throw new DebtDataException("Сумма долга равна уплаченной сумме!");
 			}
 
 			Debt debt = new Debt();
