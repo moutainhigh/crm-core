@@ -11,6 +11,8 @@ public interface PositionService {
 
 	List<Position> findAll();
 
+	List<Position> findAllWithEnabledPercent();
+
 	void update(Position position);
 
 	void delete(Long id);

@@ -68,7 +68,6 @@ public class CalculateController {
 		modelAndView.addObject("listCalculate", calculateService.getAllOpen());
 		modelAndView.addObject("listBoard", boardService.getAllOpen());
 		modelAndView.addObject("listDiscounts", discountService.getAllOpen());
-		modelAndView.addObject("closeShiftView", shiftService.createShiftView(shift));
 		modelAndView.addObject("closeChecklist", checklistService.getAllForCloseShift());
 		return modelAndView;
 	}
@@ -213,7 +212,7 @@ public class CalculateController {
 	}
 
 	@RequestMapping(value = {"/close-client-debt"}, method = RequestMethod.POST)
-	public ResponseEntity closeClientDebt(@RequestParam(name = "clientsId", required = false) long[] clientsId,
+	public ResponseEntity closeClientDebt(@RequestParam(name = "clientsId[]") long[] clientsId,
 							  @RequestParam("calculateId") Long calculateId,
 								  @RequestParam("debtorName") String debtorName,
 	                              @RequestParam(value = "paidAmount", required = false) Double paidAmount) {

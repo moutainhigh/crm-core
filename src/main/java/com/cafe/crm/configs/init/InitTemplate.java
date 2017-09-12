@@ -69,14 +69,16 @@ public class InitTemplate {
 		dailyReportMessage.append("{4}\n");
 		dailyReportMessage.append("Всего: {5}\n\n");
 		dailyReportMessage.append("Зарплата Сотрудников:\n");
-		dailyReportMessage.append("{6}\n");
+		dailyReportMessage.append("{6}\n\n");
 		dailyReportMessage.append("Прочее расходы:\n");
-		dailyReportMessage.append("{7}\n");
+		dailyReportMessage.append("{7}\n\n");
 		dailyReportMessage.append("Всего расходов за день - {8}\n\n");
 		dailyReportMessage.append("Наличными - {9}\n");
 		dailyReportMessage.append("Карта - {10}\n");
 		dailyReportMessage.append("Общая Сумма - {11}\n");
-		dailyReportMessage.append("{12}");
+		dailyReportMessage.append("{12}\n\n");
+		dailyReportMessage.append("Заметки\n");
+		dailyReportMessage.append("{13}");
 		byte[] byteOfDailyMessage = dailyReportMessage.toString().getBytes("UTF-8");
 		Template dailyReportForVk = new Template("daily-report", byteOfDailyMessage);
 

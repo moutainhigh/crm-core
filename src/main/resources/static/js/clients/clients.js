@@ -432,21 +432,23 @@ function closeClientDebt(calculateId) {
     if (isBlank($('#debtorName' + calculateId).val())) {
         var errorMessage = '<h4 style="color:red;" align="center">' + 'Обязательно укажите имя должника!' + '</h4>';
         $('#debtorNameError' + calculateId).html(errorMessage).show();
-        return;
     } else {
         var url = '/manager/close-client-debt';
 
-        $('<input />').attr('type', 'hidden')
-            .attr('name', "debtorName")
-            .attr('value',  $('#debtorName' + calculateId).val())
-            .appendTo('#formTest'+calculateId);
-        $('<input />').attr('type', 'hidden')
-            .attr('name', "paidAmount")
-            .attr('value',  $('#paidAmount' + calculateId).val())
-            .appendTo('#formTest'+calculateId);
+        var checkedValue = document.getElementsByClassName('class' + calculateId);
+        var arrayID = [];
+        for(var i = 0 ; i < checkedValue.length ; i++) {
+            if(checkedValue[i].checked){
+                arrayID.push(checkedValue[i].value);
+            }
+        }
 
-        var formData = $('#formTest' + calculateId).serialize();
-
+        var  formData = {
+            clientsId : arrayID,
+            calculateId : calculateId,
+            debtorName : $('#debtorName' + calculateId).val(),
+            paidAmount : $('#paidAmount' + calculateId).val()
+        };
         $.ajax({
             type: 'POST',
             url: url,
@@ -461,6 +463,7 @@ function closeClientDebt(calculateId) {
             error: function (error) {
                 var errorMessage = '<h4 style="color:red;" align="center">' + error.responseText + '</h4>';
                 $('.messageAd').html(errorMessage).show();
+
             }
         });
     }
