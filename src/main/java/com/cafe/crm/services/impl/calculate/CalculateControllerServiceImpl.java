@@ -267,6 +267,8 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 				throw new DebtDataException("Вы возвращаете сумму большую чем долг");
 			} else if (paidAmount != 0 && paidAmount < totalDebtAmount) {
 				totalDebtAmount = totalDebtAmount - paidAmount;
+			} else if (paidAmount == totalDebtAmount) {
+				throw new DebtDataException("Сумма долга равна уплаченной сумме!");
 			}
 
 			Debt debt = new Debt();
