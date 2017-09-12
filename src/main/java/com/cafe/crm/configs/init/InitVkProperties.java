@@ -10,10 +10,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 
-/**
- * Created by homesandbox on 23.08.2017.
- */
-
 @Component
 public class InitVkProperties {
 
