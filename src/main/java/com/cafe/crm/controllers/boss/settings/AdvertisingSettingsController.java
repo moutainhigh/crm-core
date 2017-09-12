@@ -29,7 +29,7 @@ public class AdvertisingSettingsController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView bardSettingPage() {
-		ModelAndView modelAndView = new ModelAndView("/settingPages/smtpSettingsPage");
+		ModelAndView modelAndView = new ModelAndView("settingPages/smtpSettingsPage");
 		modelAndView.addObject("advertSettings", customSettings.getCustomSettings());
 		modelAndView.addObject("listSMTPSettings", advertisingSettingsService.getAll());
 		return modelAndView;

@@ -29,7 +29,7 @@ public class CostCategoryController {
 		model.addAttribute("categoryList", categoryService.findAll());
 		model.addAttribute("formCategory", new CostCategory());
 
-		return "/costs/categories/category";
+		return "costs/categories/category";
 	}
 
 	@RequestMapping(value = "/add")

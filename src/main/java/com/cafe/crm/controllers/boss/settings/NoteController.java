@@ -29,7 +29,7 @@ public class NoteController {
 	public String showNoteSettingPage(Model model) {
 		List<Note> orderedNotes = noteService.findAllOrderingByEnableDescNameAsc();
 		model.addAttribute("notes", orderedNotes);
-		return "/settingPages/notesSettingPage";
+		return "settingPages/notesSettingPage";
 	}
 
 	@RequestMapping(path = "/boss/settings/note/add", method = RequestMethod.POST)

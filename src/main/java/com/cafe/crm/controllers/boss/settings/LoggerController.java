@@ -34,7 +34,7 @@ public class LoggerController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView loggerSettingPage() {
-		ModelAndView modelAndView = new ModelAndView("/settingPages/loggerSettingPage");
+		ModelAndView modelAndView = new ModelAndView("settingPages/loggerSettingPage");
 		modelAndView.addObject(logLevel());
 		return modelAndView;
 	}

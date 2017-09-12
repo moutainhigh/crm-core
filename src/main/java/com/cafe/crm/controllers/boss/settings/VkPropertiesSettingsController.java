@@ -27,7 +27,7 @@ public class VkPropertiesSettingsController {
 
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView vkPropertiesSettingPage() throws IOException {
-        ModelAndView modelAndView = new ModelAndView("/settingPages/vkPropertiesSettingPage");
+        ModelAndView modelAndView = new ModelAndView("settingPages/vkPropertiesSettingPage");
         modelAndView.addObject("vkProperties",getVkPropertiesFromDB());
         return modelAndView;
     }
