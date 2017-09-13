@@ -131,7 +131,6 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 	@Override
 	public List<Client> calculatePrice() {
-		//long startTime = System.currentTimeMillis();/// для измерения скорости работы расчетов под ajax
 		List<Calculate> calculates = calculateService.getAllOpen();
 		List<Client> clients = new ArrayList<>();
 		for (Calculate calculate : calculates) {
@@ -150,7 +149,6 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 			}
 		}
 		clientService.saveAll(clients);
-		//System.out.println(System.currentTimeMillis() - startTime);
 		return clients;
 	}
 
