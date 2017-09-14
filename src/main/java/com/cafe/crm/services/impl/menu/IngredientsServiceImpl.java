@@ -1,5 +1,8 @@
 package com.cafe.crm.services.impl.menu;
 
+import com.cafe.crm.exceptions.services.NegativeOrZeroInputsIngredientsServiceException;
+import com.cafe.crm.exceptions.services.NotEnoughIngredientsIngredientsServiceException;
+import com.cafe.crm.exceptions.services.NullInputsIngredientsServiceException;
 import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.menu.Ingredients;
 import com.cafe.crm.dto.WrapperOfProduct;
@@ -28,7 +31,7 @@ public class IngredientsServiceImpl implements IngredientsService {
 		this.companyIdCache = companyIdCache;
 	}
 
-	private void setCompany(Ingredients ingredients){
+	private void setCompany(Ingredients ingredients) {
 		Long companyId = companyIdCache.getCompanyId();
 		Company company = companyService.findOne(companyId);
 		ingredients.setCompany(company);
@@ -62,28 +65,54 @@ public class IngredientsServiceImpl implements IngredientsService {
 
 	@Override
 	public Map<Ingredients, Integer> createRecipe(WrapperOfProduct wrapper) {
+
+		if (wrapper == null) {
+			throw new NullInputsIngredientsServiceException("Null input in createRecipe");
+		}
 		Map<Ingredients, Integer> recipe = new HashMap<>();
 		List<String> names = wrapper.getNames();
 		List<Integer> amount = wrapper.getAmount();
-		Ingredients ingredients;
-		if (names != null && amount != null) {
-			if (!(amount.get(0) == 0 && names.size() == 1)) {
-				for (int i = 0; i < names.size(); i++) {
-					ingredients = findByName(names.get(i));
-					if (ingredients != null) {
-						recipe.put(ingredients, amount.get(i));
-					}
-				}
-			}
+		String ingredientName;
+		if ((names == null) || (amount == null)) {
+			throw new NullInputsIngredientsServiceException("Null input in createRecipe");
 		}
+
+		Ingredients ingredients;
+		for (int i = 0; i < names.size(); i++) {
+			ingredientName = names.get(i);
+			ingredients = findByName(ingredientName);
+			if (ingredients == null) {
+				throw new NullInputsIngredientsServiceException("Couldn't find " + ingredientName +
+						" ingredient for recipe");
+			}
+			if (amount.get(i) <= 0) {
+				throw new NegativeOrZeroInputsIngredientsServiceException("Negative or zero amount for " + ingredientName +
+						" ingredient");
+			}
+			if (ingredients.getAmount() < amount.get(i)) {
+				throw new NotEnoughIngredientsIngredientsServiceException("There are no enough " + ingredientName +
+						" ingredient for recipe");
+			}
+			recipe.put(ingredients, amount.get(i));
+		}
+
 		return recipe;
 	}
 
 	@Override
 	public Double getRecipeCost(Map<Ingredients, Integer> recipe) {
 		double result = 0L;
+		if (recipe == null) {
+			throw new NullInputsIngredientsServiceException("Null input in getRecipeCost");
+		}
 
 		for (Map.Entry<Ingredients, Integer> entry : recipe.entrySet()) {
+			if (entry.getKey() == null) {
+				throw new NullInputsIngredientsServiceException("Null input in getRecipeCost");
+			}
+			if (entry.getValue() <= 0) {
+				throw new NegativeOrZeroInputsIngredientsServiceException("Negative or zero amount for " + entry.getKey().getName());
+			}
 			result += entry.getKey().getPrice() * entry.getValue();
 		}
 		return result;
@@ -91,11 +120,9 @@ public class IngredientsServiceImpl implements IngredientsService {
 
 	@Override
 	public void reduceIngredientAmount(Map<Ingredients, Integer> recipe) {
-
 		for (Map.Entry<Ingredients, Integer> entry : recipe.entrySet()) {
 			entry.getKey().setAmount(entry.getKey().getAmount() - entry.getValue());
 			save(entry.getKey());
 		}
-
 	}
 }
