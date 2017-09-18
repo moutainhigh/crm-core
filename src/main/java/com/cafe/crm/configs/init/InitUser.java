@@ -107,7 +107,7 @@ public class InitUser {
 
 	//@PostConstruct
 	public void init() {
-		forGerman();
+		forTest();
 	}
 
 
