@@ -117,7 +117,7 @@ public class CardProfileController {
 			if (invited != null) {
 				Card ourInvited = cardService.getOne(invited);
 				card.setWhoInvitedMe(invited);
-				card.setBalance(propertyService.getOne(3L).getValue());     // referral bonus
+				card.setBalance(propertyService.getByName("price.refBonus").getValue());     // referral bonus
 				ourInvited.getIdMyInvitedUsers().add(idCard);
 				cardService.save(ourInvited);
 			}

@@ -22,9 +22,9 @@ public class InitProperties {
 
 	@PostConstruct
 	public void init() {
-		Property property = new Property("Цена за первый час", 300D, "р", null);
-		Property property1 = new Property("Цена за остальные часы", 200D, "р", null);
-		Property property2 = new Property("Реферальный бонус", 150D, "р", true);
+		Property property = new Property("price.firstHour", 300D, "р", null);
+		Property property1 = new Property("price.nextHours", 200D, "р", null);
+		Property property2 = new Property("price.refBonus", 150D, "р", true);
 		propertyService.save(property);
 		propertyService.save(property1);
 		propertyService.save(property2);

@@ -11,7 +11,7 @@ public interface PropertyService {
 
 	List<Property> findAll();
 
-	Property getOne(Long id);
+	Property getByName(String name);
 
 	void delete(Long id);
 

@@ -38,8 +38,8 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 		double priceTime;
 		long passedHours = (long) timePassed.getHour();
 		long passedMinutes = (long) timePassed.getMinute();
-		double firstHour = propertyService.getOne(1L).getValue(); //  ставка за первый час
-		double secondHour = propertyService.getOne(2L).getValue(); // ставка за второй час
+		double firstHour = propertyService.getByName("price.firstHour").getValue(); //  ставка за первый час
+		double secondHour = propertyService.getByName("price.nextHours").getValue(); // ставка за второй час
 		if (passedHours == 0) {
 			priceTime = firstHour;
 		} else {
@@ -57,8 +57,8 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 		double priceTime;
 		long passedHours = (long) timePassed.getHour();
 		long passedMinutes = (long) timePassed.getMinute();
-		double firstHour = propertyService.getOne(1L).getValue(); //  ставка за первый час
-		double secondHour = propertyService.getOne(2L).getValue(); // ставка за второй час
+		double firstHour = propertyService.getByName("price.firstHour").getValue(); //  ставка за первый час
+		double secondHour = propertyService.getByName("price.nextHours").getValue(); // ставка за второй час
 		if (passedHours == 0) {
 			priceTime = firstHour;
 		} else {

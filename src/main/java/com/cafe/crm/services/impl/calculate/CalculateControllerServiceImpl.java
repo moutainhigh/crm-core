@@ -238,7 +238,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	private void setBalanceAndSaveInvitedCard(Card clientCard) {
 		if (clientCard.getWhoInvitedMe() != null && clientCard.getVisitDate() == null) {
 			Card invitedCard = cardService.getOne(clientCard.getWhoInvitedMe());
-			invitedCard.setBalance(invitedCard.getBalance() + propertyService.getOne(3L).getValue());
+			invitedCard.setBalance(invitedCard.getBalance() + propertyService.getByName("price.refBonus").getValue());
 			cardService.save(invitedCard);
 		}
 	}
