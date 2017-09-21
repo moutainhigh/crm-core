@@ -84,7 +84,7 @@ public class CalculateController {
 					timer = timerOfPauseService.findTimerOfPauseByIdOfClient(client.getId());
 					if (client.isPause()) {                                   //unset pause
 						Long timeOfPastPauses = timer.getWholeTimePause();
-						timer.setEndTime(timeManager.getDateTime());
+						timer.setEndTime(timeManager.getDateTime().withSecond(0).withNano(0));
 						long fullPauseTime = ChronoUnit.MINUTES.between(timer.getStartTime(), timer.getEndTime());
 						if (timeOfPastPauses != null) {
 							fullPauseTime += timeOfPastPauses;
@@ -96,12 +96,12 @@ public class CalculateController {
 						if (timer == null) {                                    // if this first pause on this calc
 							timer = new TimerOfPause();
 							timer.setIdOfClient(client.getId());
-							timer.setStartTime(timeManager.getDateTime());
+							timer.setStartTime(timeManager.getDateTime().withSecond(0).withNano(0));
 							client.setPause(true);
 							client.setPausedIndex(true);
 							calculate.setPause(true);
 						} else {
-							timer.setStartTime(timeManager.getDateTime());      // if this second or more pause on this calc
+							timer.setStartTime(timeManager.getDateTime().withSecond(0).withNano(0));      // if this second or more pause on this calc
 							client.setPause(true);
 							calculate.setPause(true);
 						}
