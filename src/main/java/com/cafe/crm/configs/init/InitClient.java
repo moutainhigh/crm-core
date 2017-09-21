@@ -21,7 +21,7 @@ public class InitClient {
 		this.cardService = cardService;
 	}
 
-	//@PostConstruct
+	@PostConstruct
 	public void init() {
 
 		Board board = new Board();

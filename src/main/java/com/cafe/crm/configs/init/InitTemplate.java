@@ -24,7 +24,7 @@ public class InitTemplate {
 		this.templateService = templateService;
 	}
 
-	//@PostConstruct
+	@PostConstruct
 	public void init() throws IOException {
 		Resource resourceDisable = resourceLoader.getResource("classpath:templates/media/mail/disable-advertising.html");
 		InputStream inStream = resourceDisable.getInputStream();

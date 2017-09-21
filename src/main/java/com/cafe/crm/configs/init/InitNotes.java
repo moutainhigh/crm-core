@@ -17,7 +17,7 @@ public class InitNotes {
 		this.noteService = noteService;
 	}
 
-	//@PostConstruct
+	@PostConstruct
 	private void init() {
 		Note note1 = new Note();
 		note1.setName("Заметка 1");

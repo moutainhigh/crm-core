@@ -20,7 +20,7 @@ public class InitProperties {
 		this.propertyService = propertyService;
 	}
 
-	//@PostConstruct
+	@PostConstruct
 	public void init() {
 		Property property = new Property("price.firstHour", 300D, "р", null);
 		Property property1 = new Property("price.nextHours", 200D, "р", null);

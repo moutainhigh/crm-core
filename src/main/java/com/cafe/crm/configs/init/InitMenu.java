@@ -37,7 +37,7 @@ public class InitMenu {
 		this.boardService = boardService;
 	}
 
-	//@PostConstruct
+	@PostConstruct
 	public void init() {
 
 		Ingredients ingredients1 = new Ingredients();

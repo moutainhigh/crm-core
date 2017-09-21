@@ -24,7 +24,8 @@ public class InitUser {
 		this.userService = userService;
 	}
 
-	private void forTest() {
+	@PostConstruct
+	public void init() {
 		Position adminPosition = new Position("Администратор");
 		Position bossPosition = new Position("Владелец");
 		Position workerPosition = new Position("Чайник");
@@ -81,33 +82,6 @@ public class InitUser {
 		userService.save(boss);
 		userService.save(manager);
 		userService.save(worker);
-	}
-
-	private void forGerman() {
-
-		User admin = new User();
-		admin.setPassword(passwordEncoder.encode("admin"));
-		admin.setActivated(true);
-		admin.setFirstName("Admin");
-		admin.setLastName("admin");
-		admin.setEmail("admin@mail.ru");
-		admin.setPhone("89111111111");
-
-		List<Role> bossRoles = new ArrayList<>();
-		bossRoles.add(new Role("BOSS"));
-		admin.setRoles(bossRoles);
-
-		List<Position> bossPositionsList = new ArrayList<>();
-		bossPositionsList.add(new Position("Владелец"));
-		admin.setPositions(bossPositionsList);
-
-		userService.save(admin);
-
-	}
-
-	//@PostConstruct
-	public void init() {
-		forTest();
 	}
 
 
