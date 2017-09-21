@@ -168,7 +168,12 @@
                                 <div th:replace="client/clientFragments/timeEditModal :: timeEditModal"
                                      th:remove="tag"></div>
                                 <td style="text-align: center">
-
+                                    <div class="col-md-2" th:if="${!client.isPause()}">
+                                        <button class="btn btn-success" type="button" th:id="'setClientTimePauseButton'" th:onclick="'setClientTimePause(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'"><span class="glyphicon glyphicon-pause"></span></button>
+                                    </div>
+                                    <div class="col-md-2" th:if="${client.isPause()}">
+                                        <button class="btn btn-success" type="button" th:id="'setClientTimePlayButton'" th:onclick="'setClientTimeUnpause(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'"><span class="glyphicon glyphicon-play"></span></button>
+                                    </div>
                                 </td>
                                 <td>
                                     <p th:id="'dopDiscount' + ${client.id}" style="float: left;"
@@ -219,13 +224,6 @@
                             Удалить
                         </button>
 
-                        <form action="/manager/pause" th:method="POST">
-                            <button th:text="${calculate.isPause()} ? 'Снять с паузы' : 'Пауза'" name="id"
-                                    th:value="${calculate.id}" style="float: left;margin-left: 23px"
-                                    class="btn btn-primary">
-                            </button>
-
-                        </form>
                         <div th:id="'deleteModal' + ${calculate.id}" class="modal fade" th:onshow="'deleteClients();'">
                             <div class="modal-dialog " style="width: 250px;margin-top: 150px" roles="document">
                                 <div class="modal-content">

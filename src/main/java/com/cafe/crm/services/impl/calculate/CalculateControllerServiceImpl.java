@@ -1,17 +1,20 @@
 package com.cafe.crm.services.impl.calculate;
 
 import ch.qos.logback.classic.Logger;
+import com.cafe.crm.exceptions.client.ClientDataException;
 import com.cafe.crm.exceptions.debt.DebtDataException;
 import com.cafe.crm.models.board.Board;
 import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.Debt;
+import com.cafe.crm.models.client.TimerOfPause;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.calculate.CalculateControllerService;
 import com.cafe.crm.services.interfaces.calculate.CalculatePriceService;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
+import com.cafe.crm.services.interfaces.calculate.TimerOfPauseService;
 import com.cafe.crm.services.interfaces.card.CardService;
 import com.cafe.crm.services.interfaces.client.ClientService;
 import com.cafe.crm.services.interfaces.debt.DebtService;
@@ -24,6 +27,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,9 +48,10 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	private final PropertyService propertyService;
 	private final ShiftService shiftService;
 	private final Logger logger;
+	private final TimerOfPauseService timerOfPauseService;
 
 	@Autowired
-	public CalculateControllerServiceImpl(DebtService debtService, CalculatePriceService calculatePriceService, EmailService emailService, TimeManager timeManager, ClientService clientService, CalculateService calculateService, @Qualifier(value = "logger") Logger logger, BoardService boardService, PropertyService propertyService, ShiftService shiftService, CardService cardService) {
+	public CalculateControllerServiceImpl(DebtService debtService, CalculatePriceService calculatePriceService, EmailService emailService, TimeManager timeManager, ClientService clientService, CalculateService calculateService, @Qualifier(value = "logger") Logger logger, BoardService boardService, PropertyService propertyService, ShiftService shiftService, CardService cardService, TimerOfPauseService timerOfPauseService) {
 		this.debtService = debtService;
 		this.calculatePriceService = calculatePriceService;
 		this.emailService = emailService;
@@ -58,6 +63,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		this.propertyService = propertyService;
 		this.shiftService = shiftService;
 		this.cardService = cardService;
+		this.timerOfPauseService = timerOfPauseService;
 	}
 
 	@Override
@@ -190,7 +196,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	public void closeClient(long[] clientsId, Long calculateId) {
 
 		if (clientsId == null) {
-			return;
+			throw new ClientDataException("Ошибка передачи клиентских ID");
 		}
 
 		List<Client> listClient = clientService.findByIdIn(clientsId);
@@ -201,6 +207,9 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 				.forEach(card -> balanceBeforeDeduction.put(card.getId(), card.getBalance()));
 
 		for (Client client : listClient) {
+			if (client.isPause()) {
+				throw new ClientDataException("На форме расчёта присутствуют клиетны на паузе!");
+			}
 			client.setState(false);
 			Card clientCard = client.getCard();
 			if (clientCard == null) {
@@ -347,5 +356,44 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 			Double deductionAmount = balanceBeforeDeduction - balanceAfterDeduction;
 			emailService.sendBalanceInfoAfterDeduction(balanceAfterDeduction, deductionAmount, client.getCard().getEmail());
 		});
+	}
+
+	@Override
+	public void pauseClient(Long idCalculate, Long clientId) {
+		Calculate calculate = calculateService.getOne(idCalculate);
+		Client client = clientService.getOne(clientId);
+		TimerOfPause timer = timerOfPauseService.findTimerOfPauseByIdOfClient(client.getId());
+		if (timer == null) { // if this first pause on this calc
+			timer = new TimerOfPause();
+			timer.setIdOfClient(client.getId());
+			timer.setStartTime(timeManager.getDateTime().withSecond(0).withNano(0));
+			client.setPause(true);
+			client.setPausedIndex(true);
+		} else {
+			timer.setStartTime(timeManager.getDateTime().withSecond(0).withNano(0));      // if this second or more pause on this calc
+			client.setPause(true);
+		}
+		timerOfPauseService.save(timer);
+		clientService.save(client);
+		calculateService.save(calculate);
+	}
+
+	@Override
+	public void unpauseClient(Long idCalculate, Long clientId) {
+		Calculate calculate = calculateService.getOne(idCalculate);
+		Client client = clientService.getOne(clientId);
+		TimerOfPause timer = timerOfPauseService.findTimerOfPauseByIdOfClient(client.getId());
+		Long timeOfPastPauses = timer.getWholeTimePause();
+		timer.setEndTime(timeManager.getDateTime().withSecond(0).withNano(0));
+		long fullPauseTime = ChronoUnit.MINUTES.between(timer.getStartTime(), timer.getEndTime());
+		if (timeOfPastPauses != null) {
+			fullPauseTime += timeOfPastPauses;
+		}
+		timer.setWholeTimePause(fullPauseTime);
+		client.setPause(false);
+
+		timerOfPauseService.save(timer);
+		clientService.save(client);
+		calculateService.save(calculate);
 	}
 }
