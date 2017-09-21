@@ -359,8 +359,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	}
 
 	@Override
-	public void pauseClient(Long idCalculate, Long clientId) {
-		Calculate calculate = calculateService.getOne(idCalculate);
+	public void pauseClient(Long clientId) {
 		Client client = clientService.getOne(clientId);
 		TimerOfPause timer = timerOfPauseService.findTimerOfPauseByIdOfClient(client.getId());
 		if (timer == null) { // if this first pause on this calc
@@ -375,12 +374,10 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		}
 		timerOfPauseService.save(timer);
 		clientService.save(client);
-		calculateService.save(calculate);
 	}
 
 	@Override
-	public void unpauseClient(Long idCalculate, Long clientId) {
-		Calculate calculate = calculateService.getOne(idCalculate);
+	public void unpauseClient(Long clientId) {
 		Client client = clientService.getOne(clientId);
 		TimerOfPause timer = timerOfPauseService.findTimerOfPauseByIdOfClient(client.getId());
 		Long timeOfPastPauses = timer.getWholeTimePause();
@@ -394,6 +391,5 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 
 		timerOfPauseService.save(timer);
 		clientService.save(client);
-		calculateService.save(calculate);
 	}
 }

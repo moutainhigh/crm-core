@@ -530,12 +530,11 @@ function getSumPayWith() {
 
 }
 
-function setClientTimePause(calculateId, clientId) {
+function setClientTimePause(clientId) {
     $.ajax({
         type: "POST",
         url: "/manager/pause",
         data: {
-            calculateId: calculateId,
             clientId: clientId
         },
 
@@ -545,13 +544,12 @@ function setClientTimePause(calculateId, clientId) {
     });
 }
 
-function setClientTimeUnpause(calculateId, clientId) {
+function setClientTimeUnpause(clientId) {
 
     $.ajax({
         type: "POST",
         url: "/manager/unpause",
         data: {
-            calculateId: calculateId,
             clientId: clientId
         },
 

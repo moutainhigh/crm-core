@@ -65,18 +65,16 @@ public class CalculateController {
 	}
 
 	@RequestMapping(value = {"/pause"}, method = RequestMethod.POST)
-	public String pause(@RequestParam("calculateId") Long idCalculate,
-	                    @RequestParam("clientId") Long clientId) {
-		calculateControllerService.pauseClient(idCalculate, clientId);
+	public String pause(@RequestParam("clientId") Long clientId) {
+		calculateControllerService.pauseClient(clientId);
 
 		return "redirect:/manager";
 	}
 
 	@RequestMapping(value = {"/unpause"}, method = RequestMethod.POST)
-	public String unpause(@RequestParam("calculateId") Long idCalculate,
-	                      @RequestParam("clientId") Long clientId) {
+	public String unpause(@RequestParam("clientId") Long clientId) {
 
-		calculateControllerService.unpauseClient(idCalculate, clientId);
+		calculateControllerService.unpauseClient(clientId);
 
 		return "redirect:/manager";
 	}
