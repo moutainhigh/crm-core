@@ -33,7 +33,7 @@
                     </div>
                     <div class="col-md-1  col-md-offset-2">
                         <h4>Количество</h4>
-                        <input th:type="number" min="0" max="2147483647" value="0" th:field="*{amount}"/>
+                        <input th:type="number" min="1" max="2147483647" value="0" th:field="*{amount}"/>
                         <p style="color: black ; font-weight:bold" th:if="${#fields.hasErrors('amount')}"
                            th:errors="*{amount}">error message</p>
                     </div>

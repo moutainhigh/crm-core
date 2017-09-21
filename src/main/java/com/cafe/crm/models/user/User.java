@@ -65,7 +65,6 @@ public class User {
 	@Max(value = Integer.MAX_VALUE, message = "Поле \"salary\" должно быть цифрой меньшей 2147483647!")
 	private int salary;
 
-	@Min(value = 0, message = "Поле \"bonus\" должно быть цифрой большей 0!")
 	@Max(value = Integer.MAX_VALUE, message = "Поле \"bonus\" должно быть цифрой меньшей 2147483647!")
 	private int bonus;
 

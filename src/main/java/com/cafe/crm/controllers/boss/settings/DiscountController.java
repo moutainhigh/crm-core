@@ -29,7 +29,7 @@ public class DiscountController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView discountSettingPage() {
-		ModelAndView modelAndView = new ModelAndView("/settingPages/discountSettingPage");
+		ModelAndView modelAndView = new ModelAndView("settingPages/discountSettingPage");
 		modelAndView.addObject("discounts", discountService.getAllOpen());
 		return modelAndView;
 	}

@@ -38,7 +38,7 @@ public class GeneralSettingController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView showGeneralSettingPage() {
-		ModelAndView modelAndView = new ModelAndView("/settingPages/generalSettingPage");
+		ModelAndView modelAndView = new ModelAndView("settingPages/generalSettingPage");
 		modelAndView.addObject("properties", propertyService.findAll());
 		return modelAndView;
 	}

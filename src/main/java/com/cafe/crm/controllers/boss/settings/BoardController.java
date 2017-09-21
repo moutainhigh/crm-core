@@ -29,7 +29,7 @@ public class BoardController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView bardSettingPage() {
-		ModelAndView modelAndView = new ModelAndView("/settingPages/boardSettingPage");
+		ModelAndView modelAndView = new ModelAndView("settingPages/boardSettingPage");
 		modelAndView.addObject("boards", boardService.getAllOpen());
 		return modelAndView;
 	}

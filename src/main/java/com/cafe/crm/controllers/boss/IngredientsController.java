@@ -46,7 +46,7 @@ public class IngredientsController {
 			model.addAttribute("list", ingredientsService.getAll());
 			return "ingredients/ingredients";
 		}
-		if (ingredients.getAmount() >= 0) {
+		if (ingredients.getAmount() > 0) {
 			ingredients.setPrice(ingredients.getPrice() / ingredients.getAmount());
 			ingredientsService.save(ingredients);
 		}

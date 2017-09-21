@@ -177,13 +177,15 @@ public class ShiftServiceImpl implements ShiftService {
 
 	private List<NoteRecord> saveAndGetNoteRecords(Map<String, String> mapOfNoteNameAndValue, Shift shift) {
 		List<NoteRecord> noteRecords = new ArrayList<>();
-		for (Map.Entry<String, String> noteNameAndValue : mapOfNoteNameAndValue.entrySet()) {
-			NoteRecord noteRecord = new NoteRecord();
-			noteRecord.setName(noteNameAndValue.getKey());
-			noteRecord.setValue(noteNameAndValue.getValue());
-			noteRecord.setShift(shift);
-			NoteRecord savedNoteRecord = noteRecordService.save(noteRecord);
-			noteRecords.add(savedNoteRecord);
+		if (mapOfNoteNameAndValue != null) {
+			for (Map.Entry<String, String> noteNameAndValue : mapOfNoteNameAndValue.entrySet()) {
+				NoteRecord noteRecord = new NoteRecord();
+				noteRecord.setName(noteNameAndValue.getKey());
+				noteRecord.setValue(noteNameAndValue.getValue());
+				noteRecord.setShift(shift);
+				NoteRecord savedNoteRecord = noteRecordService.save(noteRecord);
+				noteRecords.add(savedNoteRecord);
+			}
 		}
 		return noteRecords;
 	}

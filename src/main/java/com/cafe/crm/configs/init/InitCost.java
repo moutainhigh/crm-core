@@ -28,7 +28,7 @@ public class InitCost {
 	}
 
 	@Transactional
-	@PostConstruct
+	//@PostConstruct
 	public void init() {
 		CostCategory category1 = new CostCategory("Продукты питания");
 //		CostCategory category2 = new CostCategory("Спиртные напитки");
