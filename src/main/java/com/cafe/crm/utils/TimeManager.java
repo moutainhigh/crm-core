@@ -51,6 +51,10 @@ public class TimeManager {
 		return date;
 	}
 
+	public LocalDateTime getDateTimeWithoutSeconds () {
+		return getDateTime().withSecond(0).withNano(0);
+	}
+
 	public LocalTime getTime() {
 		return getDateTime().toLocalTime();
 	}

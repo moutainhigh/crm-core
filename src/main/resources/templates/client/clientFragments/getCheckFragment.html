@@ -8,7 +8,7 @@
     <style> .cent {
         text-align: center;
     } </style>
-    <div th:if="${!calculate.isPause()}">
+    <div>
         <button th:onclick="'ajaxModal(\'' + ${calculate.id} + '\', \'' + ${cardEnable} + '\');'" style="float: right" class="btn btn-danger">
             Рассчитать
         </button>
@@ -21,6 +21,7 @@
                         type="button" data-dismiss="modal">
                     <i class="fa fa-times" aria-hidden="true" style="font-size: 30px"></i>
                 </button>
+                <div class="errorMessage"></div>
                 <p th:id="'head' + ${calculate.id}" style="font-size: 30px;margin-left: 10px;margin-top: 20px">
                     Пусто </p>
                 <div class="modal-body">
@@ -109,12 +110,14 @@
                             </div>
 
                             <div class="col-md-1">
-                                <button type="submit" th:form="'formTest' + ${calculate.id}" formaction="/manager/close-client"
+                                <button type="button" th:onclick="'closeClient(\'' + ${calculate.id} + '\')'"
                                         style="font-size:20px;" class="btn btn-danger">Рассчитать
                                 </button>
                             </div>
                         </div>
                     </div>
+                    <!--Error modal when trying close calculate with paused client-->
+
                 </div>
             </div>
         </div>

@@ -529,3 +529,61 @@ function getSumPayWith() {
     document.getElementById("timeCostSum").innerHTML += " " + totalSum[4];
 
 }
+
+function setClientTimePause(clientId) {
+    $.ajax({
+        type: "POST",
+        url: "/manager/pause",
+        data: {
+            clientId: clientId
+        },
+
+        success: function (data) {
+            location.reload();
+        }
+    });
+}
+
+function setClientTimeUnpause(clientId) {
+
+    $.ajax({
+        type: "POST",
+        url: "/manager/unpause",
+        data: {
+            clientId: clientId
+        },
+
+        success: function (data) {
+            location.reload();
+        }
+    });
+}
+
+function closeClient(calculateId) {
+
+    var checkedValue = document.getElementsByClassName('class' + calculateId);
+    var arrayID = [];
+    for(var i = 0 ; i < checkedValue.length ; i++) {
+        if(checkedValue[i].checked){
+            arrayID.push(checkedValue[i].value);
+        }
+    }
+    var  formData = {
+        clientsId : arrayID,
+        calculateId : calculateId
+    };
+
+    $.ajax({
+        type: "POST",
+        url: "/manager/close-client",
+        data: formData,
+
+        success: function (data) {
+            location.reload();
+        },
+        error: function (error) {
+            var errorMessage = '<h4 style="color:red;" align="center">' + error.responseText + '</h4>';
+            $('.errorMessage').html(errorMessage).show();
+        }
+    });
+}

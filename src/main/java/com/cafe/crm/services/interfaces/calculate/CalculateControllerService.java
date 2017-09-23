@@ -28,4 +28,8 @@ public interface CalculateControllerService {
 
 	void deleteClients(long[] clientsId, Long calculateId);
 
+	void pauseClient(Long clientId);
+
+	void unpauseClient(Long clientId);
+
 }
