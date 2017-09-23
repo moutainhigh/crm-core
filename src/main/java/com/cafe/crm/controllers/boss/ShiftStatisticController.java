@@ -41,6 +41,10 @@ public class ShiftStatisticController {
 		ModelAndView mv = new ModelAndView("shift/shiftStatistics");
 		List<Shift> allShifts = shiftService.findAll();
 		LocalDate date = timeManager.getDate();
+		Shift lastShift = shiftService.getLast();
+		if (lastShift != null) {
+			date = lastShift.getShiftDate();
+		}
 		mv.addObject("shifts", allShifts);
 		mv.addObject("date", date);
 		return mv;

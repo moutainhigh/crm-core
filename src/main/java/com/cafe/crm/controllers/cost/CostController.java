@@ -59,7 +59,7 @@ public class CostController {
 		model.addAttribute("totalPrice", totalPrice);
 		model.addAttribute("formCost", new Cost());
 		model.addAttribute("today", today);
-		model.addAttribute("fromDate", today);
+		model.addAttribute("fromDate", shift.getShiftDate());
 		model.addAttribute("toDate", null);
 		model.addAttribute("closeChecklist", checklistService.getAllForCloseShift());
 

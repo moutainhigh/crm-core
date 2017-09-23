@@ -39,16 +39,18 @@ public class StatisticController {
 	public ModelAndView showStatisticForAllTimePage() {
 		ModelAndView modelAndView = new ModelAndView("totalStatistics");
 		LocalDate now = getShiftDate();
+		LocalDate dateFrom = now;
 		TotalStatisticView totalStatisticView = createTotalStatisticView(now, now);
 		Shift lastShift = shiftService.getLast();
 		Set<Shift> allShiftsBetween = shiftService.findByDates(now, now);
 		if (lastShift != null) {
 			modelAndView.addObject("cashBox", lastShift.getCashBox());
 			modelAndView.addObject("shifts", allShiftsBetween);
+			dateFrom = lastShift.getShiftDate();
 		} else {
 			modelAndView.addObject("cashBox", 0D);
 		}
-		modelAndView.addObject("from", now);
+		modelAndView.addObject("from", dateFrom);
 		modelAndView.addObject("to", now);
 		modelAndView.addObject("totalStat", totalStatisticView);
 		return modelAndView;

@@ -52,6 +52,7 @@ public class DebtController {
 		LocalDate today = timeManager.getDate();
 		List<Debt> debtList = debtService.findByVisibleIsTrueAndDateBetween(today, today.plusYears(100));
 		Double totalDebtAmount = getTotalPrice(debtList);
+		Shift shift = shiftService.getLast();
 
 		ModelAndView modelAndView = new ModelAndView("debt/debt");
 		modelAndView.addObject("debtsList", debtList);
@@ -59,7 +60,7 @@ public class DebtController {
 		modelAndView.addObject("debtorName", null);
 		modelAndView.addObject("formDebt", new Debt());
 		modelAndView.addObject("today", today);
-		modelAndView.addObject("fromDate", today);
+		modelAndView.addObject("fromDate", shift.getShiftDate());
 		modelAndView.addObject("toDate", null);
 		modelAndView.addObject("closeChecklist", checklistService.getAllForCloseShift());
 
