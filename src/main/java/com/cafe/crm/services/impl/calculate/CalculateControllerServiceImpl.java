@@ -361,15 +361,15 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	@Override
 	public void pauseClient(Long clientId) {
 		Client client = clientService.getOne(clientId);
-		TimerOfPause timer = timerOfPauseService.findTimerOfPauseByIdOfClient(client.getId());
+		TimerOfPause timer = timerOfPauseService.findTimerOfPauseByIdOfClient(clientId);
 		if (timer == null) { // if this first pause on this calc
 			timer = new TimerOfPause();
-			timer.setIdOfClient(client.getId());
-			timer.setStartTime(timeManager.getDateTime().withSecond(0).withNano(0));
+			timer.setIdOfClient(clientId);
+			timer.setStartTime(timeManager.getDateTimeWithoutSeconds());
 			client.setPause(true);
 			client.setPausedIndex(true);
 		} else {
-			timer.setStartTime(timeManager.getDateTime().withSecond(0).withNano(0));      // if this second or more pause on this calc
+			timer.setStartTime(timeManager.getDateTimeWithoutSeconds());      // if this second or more pause on this calc
 			client.setPause(true);
 		}
 		timerOfPauseService.save(timer);
@@ -379,9 +379,9 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	@Override
 	public void unpauseClient(Long clientId) {
 		Client client = clientService.getOne(clientId);
-		TimerOfPause timer = timerOfPauseService.findTimerOfPauseByIdOfClient(client.getId());
+		TimerOfPause timer = timerOfPauseService.findTimerOfPauseByIdOfClient(clientId);
 		Long timeOfPastPauses = timer.getWholeTimePause();
-		timer.setEndTime(timeManager.getDateTime().withSecond(0).withNano(0));
+		timer.setEndTime(timeManager.getDateTimeWithoutSeconds());
 		long fullPauseTime = ChronoUnit.MINUTES.between(timer.getStartTime(), timer.getEndTime());
 		if (timeOfPastPauses != null) {
 			fullPauseTime += timeOfPastPauses;
