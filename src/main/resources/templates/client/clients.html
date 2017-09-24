@@ -158,9 +158,8 @@
                                             <p th:text="${client.timeStart.toLocalTime().withSecond(0).withNano(0)}"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <button class="time-edit glyphicon glyphicon-edit" data-toggle="modal"
-                                                    th:href="'#timeEditModal' + ${client.id}"
-                                                    aria-hidden="true"></button>
+                                            <span class="time-edit glyphicon glyphicon-edit" data-toggle="modal"
+                                                    th:href="'#timeEditModal' + ${client.id}"></span>
                                         </div>
 
                                     </div>
