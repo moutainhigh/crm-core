@@ -26,27 +26,20 @@ public class ShiftStatisticController {
 
 	private final ShiftService shiftService;
 	private final CostService costService;
-	private final TimeManager timeManager;
 
 
 	@Autowired
-	public ShiftStatisticController(ShiftService shiftService, CostService costService, TimeManager timeManager) {
+	public ShiftStatisticController(ShiftService shiftService, CostService costService) {
 		this.shiftService = shiftService;
 		this.costService = costService;
-		this.timeManager = timeManager;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView getAdminPage() {
 		ModelAndView mv = new ModelAndView("shift/shiftStatistics");
 		List<Shift> allShifts = shiftService.findAll();
-		LocalDate date = timeManager.getDate();
-		Shift lastShift = shiftService.getLast();
-		if (lastShift != null) {
-			date = lastShift.getShiftDate();
-		}
 		mv.addObject("shifts", allShifts);
-		mv.addObject("date", date);
+		mv.addObject("date", shiftService.getLastShiftDate());
 		return mv;
 	}
 

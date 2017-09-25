@@ -12,7 +12,6 @@ import java.util.Set;
 public interface ShiftRepository extends JpaRepository<Shift, Long> {
 
 	@Query("SELECT u FROM Shift u WHERE u.id =(select max(id) from Shift)")
-		//последняя смена в базе
 	Shift getLast();
 
 	@Query("SELECT e FROM Shift e WHERE e.shiftDate BETWEEN :startDate and :endDate")

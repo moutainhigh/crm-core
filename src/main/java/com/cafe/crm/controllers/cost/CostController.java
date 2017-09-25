@@ -46,11 +46,11 @@ public class CostController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String showCostsPage(Model model) {
-		LocalDate today = getShiftDate();
-		List<Cost> costs = costService.findByDateBetween(today, today.plusYears(100));
+		LocalDate today = timeManager.getDate();
+		LocalDate lastShiftDate = shiftService.getLastShiftDate();
+		List<Cost> costs = costService.findByDateBetween(lastShiftDate, today);
 		List<CostCategory> costCategories = costCategoryService.findAll();
 		Double totalPrice = getTotalPrice(costs);
-		Shift shift = shiftService.getLast();
 
 		model.addAttribute("costs", costs);
 		model.addAttribute("costCategories", costCategories);
@@ -59,7 +59,7 @@ public class CostController {
 		model.addAttribute("totalPrice", totalPrice);
 		model.addAttribute("formCost", new Cost());
 		model.addAttribute("today", today);
-		model.addAttribute("fromDate", shift.getShiftDate());
+		model.addAttribute("fromDate", lastShiftDate);
 		model.addAttribute("toDate", null);
 		model.addAttribute("closeChecklist", checklistService.getAllForCloseShift());
 
@@ -72,7 +72,6 @@ public class CostController {
 											  @RequestParam(name = "costName") String costName,
 											  @RequestParam(name = "categoryName") String categoryName,
 											  Model model) {
-		LocalDate today = getShiftDate();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 		List<Cost> costs = getCosts(costName, categoryName, fromDate, toDate, formatter);
@@ -81,7 +80,6 @@ public class CostController {
 
 		LocalDate from = isBlank(fromDate) ? null : LocalDate.parse(fromDate, formatter);
 		LocalDate to = isBlank(toDate) ? null : LocalDate.parse(toDate, formatter);
-		Shift shift = shiftService.getLast();
 
 		model.addAttribute("costs", costs);
 		model.addAttribute("costCategories", costCategories);
@@ -89,20 +87,10 @@ public class CostController {
 		model.addAttribute("categoryName", categoryName);
 		model.addAttribute("totalPrice", totalPrice);
 		model.addAttribute("formCost", new Cost());
-		model.addAttribute("today", today);
 		model.addAttribute("fromDate", from);
 		model.addAttribute("toDate", to);
 
 		return "costs/costs";
-	}
-
-	private LocalDate getShiftDate() {
-		LocalTime now = timeManager.getTime();
-		if (now.isAfter(LocalTime.MIDNIGHT) && now.isBefore(LocalTime.NOON)) {
-			return timeManager.getDate().minusDays(1);
-		}
-
-		return timeManager.getDate();
 	}
 
 	private double getTotalPrice(List<Cost> costs) {
