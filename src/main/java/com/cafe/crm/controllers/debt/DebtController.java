@@ -59,7 +59,7 @@ public class DebtController {
 		modelAndView.addObject("debtorName", null);
 		modelAndView.addObject("formDebt", new Debt());
 		modelAndView.addObject("today", today);
-		modelAndView.addObject("fromDate", today);
+		modelAndView.addObject("fromDate", shiftService.getLastShiftDate());
 		modelAndView.addObject("toDate", null);
 		modelAndView.addObject("closeChecklist", checklistService.getAllForCloseShift());
 

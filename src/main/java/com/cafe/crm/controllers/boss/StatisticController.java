@@ -24,99 +24,93 @@ import java.util.*;
 @RequestMapping("/boss/totalStatistics")
 public class StatisticController {
 
-	private final ShiftService shiftService;
-	private final TimeManager timeManager;
-	private final CostService costService;
+    private final ShiftService shiftService;
+    private final TimeManager timeManager;
+    private final CostService costService;
 
-	@Autowired
-	public StatisticController(CostService costService, ShiftService shiftService, TimeManager timeManager) {
-		this.costService = costService;
-		this.shiftService = shiftService;
-		this.timeManager = timeManager;
-	}
+    @Autowired
+    public StatisticController(CostService costService, ShiftService shiftService, TimeManager timeManager) {
+        this.costService = costService;
+        this.shiftService = shiftService;
+        this.timeManager = timeManager;
+    }
 
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView showStatisticForAllTimePage() {
-		ModelAndView modelAndView = new ModelAndView("totalStatistics");
-		LocalDate now = getShiftDate();
-		TotalStatisticView totalStatisticView = createTotalStatisticView(now, now);
-		Shift lastShift = shiftService.getLast();
-		Set<Shift> allShiftsBetween = shiftService.findByDates(now, now);
-		if (lastShift != null) {
-			modelAndView.addObject("cashBox", lastShift.getCashBox());
-			modelAndView.addObject("shifts", allShiftsBetween);
-		} else {
-			modelAndView.addObject("cashBox", 0D);
-		}
-		modelAndView.addObject("from", now);
-		modelAndView.addObject("to", now);
-		modelAndView.addObject("totalStat", totalStatisticView);
-		return modelAndView;
+    @RequestMapping(method = RequestMethod.GET)
+    public ModelAndView showStatisticForAllTimePage() {
+        ModelAndView modelAndView = new ModelAndView("totalStatistics");
+        LocalDate dateFrom = shiftService.getLastShiftDate();
+        LocalDate dateTo = timeManager.getDate();
 
-	}
+        TotalStatisticView totalStatisticView = createTotalStatisticView(dateFrom, dateTo);
+        Shift lastShift = shiftService.getLast();
+        Set<Shift> allShiftsBetween = shiftService.findByDates(dateFrom, dateTo);
+        if (lastShift != null) {
+            modelAndView.addObject("cashBox", lastShift.getCashBox());
+            modelAndView.addObject("shifts", allShiftsBetween);
+            dateFrom = lastShift.getShiftDate();
+        } else {
+            modelAndView.addObject("cashBox", 0D);
+        }
+        modelAndView.addObject("from", dateFrom);
+        modelAndView.addObject("to", dateTo);
+        modelAndView.addObject("totalStat", totalStatisticView);
+        return modelAndView;
 
-	@RequestMapping(value = "/searchByDate", method = RequestMethod.POST)
-	public ModelAndView searchByDateStat(@RequestParam("from") String from, @RequestParam("to") String to) {
-		ModelAndView modelAndView = new ModelAndView("totalStatistics");
-		TotalStatisticView totalStatisticView = createTotalStatisticView(LocalDate.parse(from), LocalDate.parse(to));
-		Set<Shift> allShiftsBetween = shiftService.findByDates(LocalDate.parse(from), LocalDate.parse(to));
-		Shift lastShift = new Shift();
-		int count = 0;
-		for (Shift shift: allShiftsBetween) {
-			count++;
-			if (allShiftsBetween.size() == count)
-				lastShift = shift;
-		}
-		if (lastShift != null) {
-			modelAndView.addObject("cashBox", lastShift.getCashBox());
-			modelAndView.addObject("shifts", allShiftsBetween);
-		} else {
-			modelAndView.addObject("cashBox", 0D);
-		}
-		modelAndView.addObject("from", from);
-		modelAndView.addObject("to", to);
-		modelAndView.addObject("totalStat", totalStatisticView);
-		return modelAndView;
-	}
+    }
 
-	private LocalDate getShiftDate() {
-		LocalTime now = timeManager.getTime();
-		if (now.isAfter(LocalTime.MIDNIGHT) && now.isBefore(LocalTime.NOON)) {
-			return timeManager.getDate().minusDays(1);
-		}
+    @RequestMapping(value = "/searchByDate", method = RequestMethod.POST)
+    public ModelAndView searchByDateStat(@RequestParam("from") String from, @RequestParam("to") String to) {
+        ModelAndView modelAndView = new ModelAndView("totalStatistics");
+        TotalStatisticView totalStatisticView = createTotalStatisticView(LocalDate.parse(from), LocalDate.parse(to));
+        Set<Shift> allShiftsBetween = shiftService.findByDates(LocalDate.parse(from), LocalDate.parse(to));
+        Shift lastShift = new Shift();
+        int count = 0;
+        for (Shift shift : allShiftsBetween) {
+            count++;
+            if (allShiftsBetween.size() == count)
+                lastShift = shift;
+        }
+        if (lastShift != null) {
+            modelAndView.addObject("cashBox", lastShift.getCashBox());
+            modelAndView.addObject("shifts", allShiftsBetween);
+        } else {
+            modelAndView.addObject("cashBox", 0D);
+        }
+        modelAndView.addObject("from", from);
+        modelAndView.addObject("to", to);
+        modelAndView.addObject("totalStat", totalStatisticView);
+        return modelAndView;
+    }
 
-		return timeManager.getDate();
-	}
-
-	private TotalStatisticView createTotalStatisticView(LocalDate from, LocalDate to) {
-		Set<Shift> shifts = shiftService.findByDates(from, to);
-		double profit = 0D;
-		double totalShiftSalary = 0D;
-		double otherCosts = 0D;
-		Set<User> users = new HashSet<>();
-		List<Client> clients = new ArrayList<>();
-		List<Cost> otherCost = new ArrayList<>();
-		if (shifts == null) {
-			return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clients, otherCost);
-		}
-		for(Shift shift : shifts) {
-			users.addAll(shift.getUsers());
-			clients.addAll(shift.getClients());
-			otherCost.addAll(costService.findByShiftId(shift.getId()));
-		}
-		for (User user : users) {
-			user.getShifts().retainAll(shifts);
-			int totalSalary = user.getShiftSalary() * user.getShifts().size() + user.getBonus();
-			user.setSalary(totalSalary);
-			totalShiftSalary += totalSalary;
-		}
-		for (Cost cost : otherCost) {
-			otherCosts += cost.getPrice() * cost.getQuantity();
-		}
-		for (Client client : clients) {
-			profit += client.getAllPrice();
-		}
-		return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clients, otherCost);
-	}
+    private TotalStatisticView createTotalStatisticView(LocalDate from, LocalDate to) {
+        Set<Shift> shifts = shiftService.findByDates(from, to);
+        double profit = 0D;
+        double totalShiftSalary = 0D;
+        double otherCosts = 0D;
+        Set<User> users = new HashSet<>();
+        List<Client> clients = new ArrayList<>();
+        List<Cost> otherCost = new ArrayList<>();
+        if (shifts == null) {
+            return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clients, otherCost);
+        }
+        for (Shift shift : shifts) {
+            users.addAll(shift.getUsers());
+            clients.addAll(shift.getClients());
+            otherCost.addAll(costService.findByShiftId(shift.getId()));
+        }
+        for (User user : users) {
+            user.getShifts().retainAll(shifts);
+            int totalSalary = user.getShiftSalary() * user.getShifts().size() + user.getBonus();
+            user.setSalary(totalSalary);
+            totalShiftSalary += totalSalary;
+        }
+        for (Cost cost : otherCost) {
+            otherCosts += cost.getPrice() * cost.getQuantity();
+        }
+        for (Client client : clients) {
+            profit += client.getAllPrice();
+        }
+        return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clients, otherCost);
+    }
 
 }

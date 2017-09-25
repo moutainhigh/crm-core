@@ -36,6 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 @Transactional
@@ -286,6 +287,16 @@ public class ShiftServiceImpl implements ShiftService {
 		lastShift.setCashBox(cashBox);
 		lastShift.setBankCashBox(bankCashBox);
 		saveAndFlush(lastShift);
+	}
+
+	@Override
+	public LocalDate getLastShiftDate() {
+		Shift lastShift = shiftRepository.getLast();
+		if (lastShift != null) {
+			return lastShift.getShiftDate();
+		} else {
+			return timeManager.getDate();
+		}
 	}
 
 	private Map<Long, Integer> calcStaffPercentBonusesAndGetMap(Set<LayerProduct> layerProducts, List<UserDTO> staff) {
