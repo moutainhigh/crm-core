@@ -205,8 +205,8 @@ public class ShiftServiceImpl implements ShiftService {
 	@Override
 	public ShiftView createShiftView(Shift shift) {
 		List<UserDTO> usersOnShift = UserConverter.convertListUsersToDTO(shift.getUsers());
-		Set<Client> clients = findOne(shift.getId()).getClients();
-		List<Calculate> activeCalculate = calculateService.getAllOpen();
+		Set<Client> clients = new HashSet<>();
+		List<Calculate> activeCalculate = new ArrayList<>();
 		Set<Calculate> allCalculate = shift.getCalculates();
 		List<Note> enabledNotes = noteService.findAllByEnableIsTrue();
 		Double cashBox = shift.getCashBox();
@@ -217,6 +217,14 @@ public class ShiftServiceImpl implements ShiftService {
 		Double allPrice = 0D;
 
 		Set<LayerProduct> layerProducts = new HashSet<>();
+		for (Calculate calculate : allCalculate) {
+			if (!calculate.isState()) {
+				clients.addAll(calculate.getClient());
+			} else {
+				activeCalculate.add(calculate);
+			}
+		}
+
 		for (Client client : clients) {
 			layerProducts.addAll(client.getLayerProducts());
 			card += client.getPayWithCard();

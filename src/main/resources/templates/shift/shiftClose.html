@@ -163,8 +163,15 @@
 
 
                 <div th:if="${not #lists.isEmpty(closeShiftView.activeCalculate)}">
-                    <h1 align="center">Нельзя закрыть смену</h1>
-                    <h3 align="center">Присутствуют незакрытые счета</h3>
+                    <div class="col-md-6  col-md-offset-3">
+                        <h4 align="center">Прибыль грязными на текущий момент: </h4>
+                        <input type="text" style="margin-top: -4px" readonly="readonly" id="allPriceWithoutOpenCalculate"
+                               name="allPrice" class="form-control" th:value="${closeShiftView.allPrice}"/>
+                        <br/>
+                        <h1 align="center">Нельзя закрыть смену</h1>
+                        <h3 align="center">Присутствуют незакрытые счета</h3>
+                    </div>
+
                 </div>
                 <br/>
             </form>
