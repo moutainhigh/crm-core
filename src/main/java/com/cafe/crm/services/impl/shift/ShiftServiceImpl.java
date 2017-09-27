@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 @Transactional
@@ -221,8 +222,8 @@ public class ShiftServiceImpl implements ShiftService {
 	@Override
 	public ShiftView createShiftView(Shift shift) {
 		List<UserDTO> usersOnShift = UserConverter.convertListUsersToDTO(shift.getUsers());
-		Set<Client> clients = findOne(shift.getId()).getClients();
-		List<Calculate> activeCalculate = calculateService.getAllOpen();
+		Set<Client> clients = new HashSet<>();
+		List<Calculate> activeCalculate = new ArrayList<>();
 		Set<Calculate> allCalculate = shift.getCalculates();
 		List<Note> enabledNotes = noteService.findAllByEnableIsTrue();
 		Double cashBox = shift.getCashBox();
@@ -233,6 +234,14 @@ public class ShiftServiceImpl implements ShiftService {
 		Double allPrice = 0D;
 
 		Set<LayerProduct> layerProducts = new HashSet<>();
+		for (Calculate calculate : allCalculate) {
+			if (!calculate.isState()) {
+				clients.addAll(calculate.getClient());
+			} else {
+				activeCalculate.add(calculate);
+			}
+		}
+
 		for (Client client : clients) {
 			layerProducts.addAll(client.getLayerProducts());
 			card += client.getPayWithCard();
@@ -302,6 +311,16 @@ public class ShiftServiceImpl implements ShiftService {
 		lastShift.setCashBox(cashBox);
 		lastShift.setBankCashBox(bankCashBox);
 		saveAndFlush(lastShift);
+	}
+
+	@Override
+	public LocalDate getLastShiftDate() {
+		Shift lastShift = shiftRepository.getLast();
+		if (lastShift != null) {
+			return lastShift.getShiftDate();
+		} else {
+			return timeManager.getDate();
+		}
 	}
 
 	private Map<Long, Integer> calcStaffPercentBonusesAndGetMap(Set<LayerProduct> layerProducts, List<UserDTO> staff) {
