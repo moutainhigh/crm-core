@@ -315,7 +315,7 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Override
 	public LocalDate getLastShiftDate() {
-		Shift lastShift = shiftRepository.getLast();
+		Shift lastShift = shiftRepository.getLastAndCompanyId(companyIdCache.getCompanyId());
 		if (lastShift != null) {
 			return lastShift.getShiftDate();
 		} else {
