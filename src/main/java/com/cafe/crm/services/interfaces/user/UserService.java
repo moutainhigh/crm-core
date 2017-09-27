@@ -39,4 +39,7 @@ public interface UserService {
 	void changePassword(String username, String oldPassword, String newPasswword, String repeatedPassword);
 
 	boolean isValidPassword(String email, String oldPassword);
+
+	User findByUsername(String username);
+
 }

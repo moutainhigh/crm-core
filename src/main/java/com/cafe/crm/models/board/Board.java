@@ -1,5 +1,7 @@
 package com.cafe.crm.models.board;
 
+import com.cafe.crm.models.BaseEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -9,7 +11,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "board")
-public class Board {
+public class Board extends BaseEntity {
 	@Id
 	@GeneratedValue
 	private Long id;

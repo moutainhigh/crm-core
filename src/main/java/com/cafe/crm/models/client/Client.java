@@ -1,5 +1,6 @@
 package com.cafe.crm.models.client;
 
+import com.cafe.crm.models.BaseEntity;
 import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.discount.Discount;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "clients")
-public class Client {
+public class Client extends BaseEntity {
 	@Id
 	@GeneratedValue
 	private Long id;

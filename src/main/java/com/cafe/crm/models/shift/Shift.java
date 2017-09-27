@@ -1,6 +1,7 @@
 package com.cafe.crm.models.shift;
 
 
+import com.cafe.crm.models.BaseEntity;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.Debt;
@@ -17,7 +18,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "shifts")
-public class Shift {
+public class Shift extends BaseEntity {
 
 	@Id
 	@GeneratedValue

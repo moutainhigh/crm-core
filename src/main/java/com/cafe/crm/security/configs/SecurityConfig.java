@@ -2,6 +2,7 @@ package com.cafe.crm.security.configs;
 
 
 import com.cafe.crm.security.handlers.CustomAuthenticationSuccessHandler;
+import com.cafe.crm.security.handlers.CustomLogoutHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
@@ -29,6 +30,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+
+	@Autowired
+	private CustomLogoutHandler customLogoutHandler;
+
 	@Autowired
 	public SecurityConfig(UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) {
 		this.userDetailsService = userDetailsService;
@@ -40,6 +45,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public static ServletListenerRegistrationBean httpSessionEventPublisher() {
 		return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
 	}
+
+//	@Bean
+//	public CustomLogoutHandler getLogoutHandler() {
+//		return new CustomLogoutHandler();
+//	}
 
 	@Bean
 	public CustomAuthenticationSuccessHandler getHandler() {
@@ -72,6 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.logout()
 				.logoutUrl("/logout")
 				.logoutSuccessUrl("/login?logout")
+				.logoutSuccessHandler(customLogoutHandler)
 				.invalidateHttpSession(true)
 				.permitAll()
 				.and()

@@ -2,7 +2,9 @@ package com.cafe.crm.services.impl.menu;
 
 import com.cafe.crm.models.menu.Menu;
 import com.cafe.crm.repositories.menu.MenuRepository;
+import com.cafe.crm.services.interfaces.company.CompanyService;
 import com.cafe.crm.services.interfaces.menu.MenuService;
+import com.cafe.crm.utils.CompanyIdCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +13,16 @@ import org.springframework.stereotype.Service;
 public class MenuServiceImpl implements MenuService {
 
 	private final MenuRepository menuRepository;
+	private CompanyIdCache companyIdCache;
 
 	@Autowired
 	public MenuServiceImpl(MenuRepository menuRepository) {
 		this.menuRepository = menuRepository;
+	}
+
+	@Autowired
+	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
+		this.companyIdCache = companyIdCache;
 	}
 
 	@Override

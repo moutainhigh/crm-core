@@ -1,11 +1,12 @@
 package com.cafe.crm.models.template;
 
+import com.cafe.crm.models.BaseEntity;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
 
 @Entity
-public class Template {
+public class Template extends BaseEntity {
 	@Id
 	@GeneratedValue
 	private Long id;

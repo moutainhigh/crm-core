@@ -1,5 +1,6 @@
 package com.cafe.crm.models.menu;
 
+import com.cafe.crm.models.BaseEntity;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -9,7 +10,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "category")
-public class Category {
+public class Category extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -59,7 +60,6 @@ public class Category {
 	}
 
 	public void setProducts(List<Product> products) {
-
 		this.products = products;
 	}
 

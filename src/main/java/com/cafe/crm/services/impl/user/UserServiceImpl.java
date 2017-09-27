@@ -6,17 +6,24 @@ import com.cafe.crm.models.user.Position;
 import com.cafe.crm.models.user.Role;
 import com.cafe.crm.models.user.User;
 import com.cafe.crm.repositories.user.UserRepository;
+import com.cafe.crm.services.interfaces.company.CompanyService;
 import com.cafe.crm.services.interfaces.position.PositionService;
 import com.cafe.crm.services.interfaces.role.RoleService;
 import com.cafe.crm.services.interfaces.user.UserService;
+import com.cafe.crm.utils.CompanyIdCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.cache.annotation.Cacheable;
+
+import java.util.*;
+
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -27,15 +34,22 @@ public class UserServiceImpl implements UserService {
 	private final RoleService roleService;
 	private final PasswordEncoder passwordEncoder;
 	private PositionService positionService;
+	private final CompanyService companyService;
+	private CompanyIdCache companyIdCache;
+
+	@Autowired
+	private SessionRegistry sessionRegistry;
 
 	@Value("${user.default-password}")
 	private String defaultPassword;
 
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder) {
+	public UserServiceImpl(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder, CompanyService companyService) {
 		this.userRepository = userRepository;
 		this.roleService = roleService;
 		this.passwordEncoder = passwordEncoder;
+		this.companyService = companyService;
+//		this.sessionRegistry = sessionRegistry;
 	}
 
 	@Autowired
@@ -43,10 +57,23 @@ public class UserServiceImpl implements UserService {
 		this.positionService = positionService;
 	}
 
+	@Autowired
+	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
+		this.companyIdCache = companyIdCache;
+	}
+
 	@Override
 	public void save(User user) {
+		user.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
 		userRepository.saveAndFlush(user);
 	}
+
+	private void setCompanyId(User user) {
+		user.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+	}
+
+	@Autowired
+	CacheManager cacheManager;
 
 	@Override
 	public void save(User user, String positionsIds, String rolesIds, String isDefaultPassword) {
@@ -54,12 +81,14 @@ public class UserServiceImpl implements UserService {
 		setPositionsToUser(user, positionsIds);
 		setRolesToUser(user, rolesIds);
 		setPasswordToUser(user, isDefaultPassword);
+		setCompanyId(user);
 		userRepository.saveAndFlush(user);
+		cacheManager.getCache("user").clear();
 	}
 
 	@Override
 	public List<User> findAll() {
-		return userRepository.findByEnabledIsTrue();
+		return userRepository.findByEnabledIsTrueAndCompanyId(companyIdCache.getCompanyId());
 	}
 
 	@Override
@@ -69,27 +98,27 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User findByEmail(String email) {
-		return userRepository.findByEmailAndEnabledIsTrue(email);
+		return userRepository.findByEmailAndEnabledIsTrueAndCompanyId(email, companyIdCache.getCompanyId());
 	}
 
 	@Override
 	public User findByPhone(String phone) {
-		return userRepository.findByPhoneAndEnabledIsTrue(phone);
+		return userRepository.findByPhoneAndEnabledIsTrueAndCompanyId(phone, companyIdCache.getCompanyId());
 	}
 
 	@Override
 	public List<User> findByPositionIdAndOrderByLastName(Long positionId) {
-		return userRepository.findByPositionsIdAndEnabledIsTrue(positionId);
+		return userRepository.findByPositionsIdAndEnabledIsTrueAndCompanyId(positionId, companyIdCache.getCompanyId());
 	}
 
 	@Override
 	public List<User> findByPositionIdWithAnyEnabledStatus(Long positionId) {
-		return userRepository.findByPositionsId(positionId);
+		return userRepository.findByPositionsIdAndCompanyId(positionId, companyIdCache.getCompanyId());
 	}
 
 	@Override
 	public List<User> findByRoleName(String roleName) {
-		return userRepository.findByRolesName(roleName);
+		return userRepository.findByRolesNameAndCompanyId(roleName, companyIdCache.getCompanyId());
 	}
 
 	@Override
@@ -103,8 +132,48 @@ public class UserServiceImpl implements UserService {
 		return usersByPositions;
 	}
 
+
+	private <T> boolean listsEqual(List<T> list1, List<T> list2){
+		if (list1.size() != list2.size()){
+			return false;
+		}
+		for (int i = 0; i < list1.size(); i++){
+			if (!list1.get(i).equals(list2.get(i))){
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private void updateSessionRegistryAndCache(User updatedUser) {
+//		get user from database or cache
+		User storedUser = findById(updatedUser.getId());
+
+		cacheManager.getCache("user").evict(storedUser.getEmail());
+		cacheManager.getCache("user").put(updatedUser.getEmail(), updatedUser);
+
+//		if security related fields of user will be updated invalidate his\her session
+		boolean positionsEqual = listsEqual(storedUser.getPositions(), updatedUser.getPositions());
+		boolean rolesEqual = listsEqual(storedUser.getRoles(), updatedUser.getRoles());
+		if (!positionsEqual || !rolesEqual || !storedUser.getPassword().equals(updatedUser.getPassword())
+				|| !storedUser.getPhone().equals(updatedUser.getPhone())
+				|| !storedUser.getEmail().equals(updatedUser.getEmail())) {
+
+			for (Object principal : sessionRegistry.getAllPrincipals()) {
+				String usernameFromSession;
+				if (principal instanceof UserDetails) {
+					usernameFromSession = ((UserDetails) principal).getUsername();
+					if (storedUser.getEmail().equals(usernameFromSession)) {
+						sessionRegistry.getAllSessions(principal, false).forEach(SessionInformation::expireNow);
+					}
+				}
+			}
+		}
+	}
+
 	@Override
-	public void update(User user, String oldPassword, String newPassword, String repeatedPassword, String positionsIds, String rolesIds) {
+	public void update(User user, String oldPassword, String newPassword, String repeatedPassword, String
+			positionsIds, String rolesIds) {
 		checkForNotNew(user);
 		checkForUniqueEmailAndPhone(user);
 		if (isValidPasswordsData(user, oldPassword, newPassword, repeatedPassword)) {
@@ -113,12 +182,14 @@ public class UserServiceImpl implements UserService {
 		setPositionsToUser(user, positionsIds);
 		setRolesToUser(user, rolesIds);
 		setDataFromDatabaseToUser(user);
+		setCompanyId(user);
+		updateSessionRegistryAndCache(user);
 		userRepository.saveAndFlush(user);
 	}
 
 	@Override
 	public List<User> findByEmailOrPhone(String email, String phone) {
-		return userRepository.findByEmailOrPhone(email, phone);
+		return userRepository.findByEmailOrPhoneAndCompanyId(email, phone, companyIdCache.getCompanyId());
 	}
 
 	@Override
@@ -132,7 +203,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<User> findByIdIn(long[] ids) {
-		return userRepository.findByIdIn(ids);
+		return userRepository.findByIdInAndCompanyId(ids, companyIdCache.getCompanyId());
 	}
 
 	@Override
@@ -176,6 +247,12 @@ public class UserServiceImpl implements UserService {
 				throw new UserDataException("Пользователь с таким e-mail или телефоном существует!");
 			}
 		}
+	}
+
+	@Override
+	@Cacheable("user")
+	public User findByUsername(String username) {
+		return userRepository.findByUsername(username);
 	}
 
 	private boolean isValidPasswordsData(User user, String oldPassword, String newPassword, String repeatedPassword) {

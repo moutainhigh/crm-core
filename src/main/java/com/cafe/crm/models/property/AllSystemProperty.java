@@ -1,17 +1,19 @@
 package com.cafe.crm.models.property;
 
+import com.cafe.crm.models.BaseEntity;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "trash_property")
-public class AllSystemProperty {
+public class AllSystemProperty extends BaseEntity {
 
 	@Id
 	@GeneratedValue
 	private Long id;
 
-	@Column(unique = true, nullable = false)
+	@Column(nullable = false)
 	private String name;
 
 	@Column

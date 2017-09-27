@@ -5,8 +5,10 @@ import com.cafe.crm.exceptions.debt.DebtDataException;
 import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.repositories.debt.DebtRepository;
+import com.cafe.crm.services.interfaces.company.CompanyService;
 import com.cafe.crm.services.interfaces.debt.DebtService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
+import com.cafe.crm.utils.CompanyIdCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +19,30 @@ import java.util.List;
 public class DebtServiceImpl implements DebtService {
 
 	private final DebtRepository repository;
-
 	private final ShiftService shiftService;
+	private final CompanyService companyService;
+	private CompanyIdCache companyIdCache;
 
 	@Autowired
-	public DebtServiceImpl(DebtRepository repository, ShiftService shiftService) {
+	public DebtServiceImpl(DebtRepository repository, ShiftService shiftService, CompanyService companyService) {
 		this.repository = repository;
 		this.shiftService = shiftService;
+		this.companyService = companyService;
+	}
+
+	@Autowired
+	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
+		this.companyIdCache = companyIdCache;
+	}
+
+	private void setCompanyId(Debt debt) {
+		debt.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
 	}
 
 	@Override
 	public void save(Debt debt) {
 		if (debt.getDebtAmount() > 0) {
+			setCompanyId(debt);
 			repository.save(debt);
 		} else {
 			throw new DebtDataException("Введена недопустимая сумма долга");
@@ -53,12 +67,12 @@ public class DebtServiceImpl implements DebtService {
 
 	@Override
 	public List<Debt> getAll() {
-		return repository.findAll();
+		return repository.findByCompanyId(companyIdCache.getCompanyId());
 	}
 
 	@Override
 	public List<Debt> findByVisibleIsTrueAndDateBetween(LocalDate from, LocalDate to) {
-		return repository.findByVisibleIsTrueAndDateBetween(from, to);
+		return repository.findByVisibleIsTrueAndDateBetweenAndCompanyId(from, to, companyIdCache.getCompanyId());
 	}
 
 	@Override
@@ -69,7 +83,7 @@ public class DebtServiceImpl implements DebtService {
 
 	@Override
 	public List<Debt> findByDebtorAndDateBetween(String debtor, LocalDate from, LocalDate to) {
-		return repository.findByDebtorAndDateBetween(debtor, from, to);
+		return repository.findByDebtorAndDateBetweenAndCompanyId(debtor, from, to, companyIdCache.getCompanyId());
 	}
 
 	@Override

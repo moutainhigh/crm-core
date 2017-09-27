@@ -1,5 +1,7 @@
 package com.cafe.crm.models.discount;
 
+import com.cafe.crm.models.BaseEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -10,7 +12,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "discount")
-public class Discount {
+public class Discount extends BaseEntity {
 	@Id
 	@GeneratedValue
 	private Long id;

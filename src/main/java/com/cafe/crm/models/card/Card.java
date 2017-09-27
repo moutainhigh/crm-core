@@ -1,5 +1,6 @@
 package com.cafe.crm.models.card;
 
+import com.cafe.crm.models.BaseEntity;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Range;
 
@@ -12,13 +13,12 @@ import java.util.Set;
 
 @Entity
 @Table(name = "cards")
-public class Card {
+public class Card extends BaseEntity {
 
 	@Id
 	@GeneratedValue
 	private Long id;
 
-	@Column(unique = true)
 	private String phoneNumber;
 
 	private String token;

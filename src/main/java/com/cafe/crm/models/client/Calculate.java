@@ -1,5 +1,6 @@
 package com.cafe.crm.models.client;
 
+import com.cafe.crm.models.BaseEntity;
 import com.cafe.crm.models.board.Board;
 import com.cafe.crm.models.card.Card;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "calculation")
-public class Calculate {
+public class Calculate extends BaseEntity {
 	@Id
 	@GeneratedValue
 	private Long id;

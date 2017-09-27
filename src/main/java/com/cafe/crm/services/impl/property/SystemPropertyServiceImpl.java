@@ -3,7 +3,9 @@ package com.cafe.crm.services.impl.property;
 
 import com.cafe.crm.models.property.AllSystemProperty;
 import com.cafe.crm.repositories.property.SystemPropertyRepository;
+import com.cafe.crm.services.interfaces.company.CompanyService;
 import com.cafe.crm.services.interfaces.property.SystemPropertyService;
+import com.cafe.crm.utils.CompanyIdCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,15 +17,32 @@ public class SystemPropertyServiceImpl implements SystemPropertyService {
 
 	@Autowired
 	private SystemPropertyRepository repository;
+	private CompanyService companyService;
+	private CompanyIdCache companyIdCache;
+
+	@Autowired
+	public void setCompanyService(CompanyService companyService) {
+		this.companyService = companyService;
+	}
+
+	@Autowired
+	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
+		this.companyIdCache = companyIdCache;
+	}
+
+	private void setCompanyId(AllSystemProperty allSystemProperty) {
+		allSystemProperty.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+	}
 
 	@Override
 	public void save(AllSystemProperty property) {
+//		setCompanyId(property);
 		repository.save(property);
 	}
 
 	@Override
 	public void saveMasterKey(String newMasterKey) {
-		AllSystemProperty masterKey = repository.findByNameIgnoreCase("masterKey");
+		AllSystemProperty masterKey = repository.findByNameIgnoreCaseAndCompanyId("masterKey", companyIdCache.getCompanyId());
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 		if (masterKey == null) {
@@ -44,7 +63,7 @@ public class SystemPropertyServiceImpl implements SystemPropertyService {
 
 	@Override
 	public void delete(String name) {
-		repository.deleteByName(name);
+		repository.deleteByNameAndCompanyId(name, companyIdCache.getCompanyId());
 	}
 
 	@Override
@@ -59,11 +78,11 @@ public class SystemPropertyServiceImpl implements SystemPropertyService {
 
 	@Override
 	public AllSystemProperty findOne(String name) {
-		return repository.findByNameIgnoreCase(name);
+		return repository.findByNameIgnoreCaseAndCompanyId(name, companyIdCache.getCompanyId());
 	}
 
 	@Override
 	public List<AllSystemProperty> findAll() {
-		return repository.findAll();
+		return repository.findByCompanyId(companyIdCache.getCompanyId());
 	}
 }

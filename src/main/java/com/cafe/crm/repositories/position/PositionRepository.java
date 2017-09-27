@@ -8,10 +8,12 @@ import java.util.List;
 
 public interface PositionRepository extends JpaRepository<Position, Long> {
 
-	Position findByName(String name);
+	Position findByNameAndCompanyId(String name, Long companyId);
 
-	List<Position> findByIdIn(Long[] ids);
+	List<Position> findByIdInAndCompanyId(Long[] ids, Long companyId);
 
-	List<Position> findByIsPositionUsePercentOfSalesIsTrue();
+	List<Position> findByIsPositionUsePercentOfSalesIsTrueAndCompanyId(Long companyId);
+
+	List<Position> findByCompanyId(Long companyId);
 
 }

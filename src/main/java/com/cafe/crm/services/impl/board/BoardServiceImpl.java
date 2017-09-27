@@ -3,6 +3,8 @@ package com.cafe.crm.services.impl.board;
 import com.cafe.crm.models.board.Board;
 import com.cafe.crm.repositories.board.BoardRepository;
 import com.cafe.crm.services.interfaces.board.BoardService;
+import com.cafe.crm.services.interfaces.company.CompanyService;
+import com.cafe.crm.utils.CompanyIdCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +14,27 @@ import java.util.List;
 public class BoardServiceImpl implements BoardService {
 
 	private final BoardRepository boardRepository;
+	private final CompanyService companyService;
+	private CompanyIdCache companyIdCache;
 
 	@Autowired
-	public BoardServiceImpl(BoardRepository boardRepository) {
+	public BoardServiceImpl(BoardRepository boardRepository, CompanyService companyService) {
 		this.boardRepository = boardRepository;
+		this.companyService = companyService;
+	}
+
+	@Autowired
+	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
+		this.companyIdCache = companyIdCache;
+	}
+
+	private void setCompanyId(Board board){
+		board.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
 	}
 
 	@Override
 	public void save(Board board) {
+		setCompanyId(board);
 		boardRepository.saveAndFlush(board);
 	}
 
@@ -30,7 +45,7 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public List<Board> getAll() {
-		return boardRepository.findAll();
+		return boardRepository.findByCompanyId(companyIdCache.getCompanyId());
 	}
 
 	@Override
@@ -45,6 +60,6 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public List<Board> getAllOpen() {
-		return boardRepository.getAllOpen();
+		return boardRepository.getAllOpen(companyIdCache.getCompanyId());
 	}
 }

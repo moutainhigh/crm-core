@@ -1,5 +1,6 @@
 package com.cafe.crm.models.menu;
 
+import com.cafe.crm.models.BaseEntity;
 import com.cafe.crm.models.user.Position;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -10,7 +11,7 @@ import java.util.Map;
 
 @Entity
 @Table(name = "product")
-public class Product {
+public class Product extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -34,7 +35,7 @@ public class Product {
 	private Double selfCost = 0D;
 
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Category.class)
-	@JoinTable(name = "product_and_categories", joinColumns = {@JoinColumn(name = "category_id")}, inverseJoinColumns = {@JoinColumn(name = "product_id")})
+	@JoinTable(name = "product_and_categories", joinColumns = {@JoinColumn(name = "product_id")}, inverseJoinColumns = {@JoinColumn(name = "category_id")})
 	private Category category;
 
 	@ElementCollection
