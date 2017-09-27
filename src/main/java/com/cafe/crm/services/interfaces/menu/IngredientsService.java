@@ -2,22 +2,26 @@ package com.cafe.crm.services.interfaces.menu;
 
 
 import com.cafe.crm.models.menu.Ingredients;
-import com.cafe.crm.models.menu.WrapperOfProduct;
+import com.cafe.crm.dto.WrapperOfProduct;
 
 import java.util.List;
 import java.util.Map;
 
 public interface IngredientsService {
 
-    List<Ingredients> getAll();
+	List<Ingredients> getAll();
 
-    void save(Ingredients ingredients);
+	void save(Ingredients ingredients);
 
-    Ingredients getOne(Long id);
+	Ingredients getOne(Long id);
 
-    void delete(Long id);
+	void delete(Long id);
 
-    Ingredients findByName(String name);
+	Ingredients findByName(String name);
 
-    Map<Ingredients, Integer> createRecipe(WrapperOfProduct wrapper);
+	Map<Ingredients, Integer> createRecipe(WrapperOfProduct wrapper);
+
+	Double getRecipeCost(Map<Ingredients, Integer> recipe);
+
+	void reduceIngredientAmount(Map<Ingredients, Integer> recipe);
 }

@@ -12,37 +12,41 @@ import java.util.List;
 @Service
 public class AdvertisingSettingsServiceImpl implements AdvertisingSettingsService {
 
-    @Autowired
-    AdvertisingSettingsRepository repository;
+	private final AdvertisingSettingsRepository repository;
 
-    @Override
-    public void save(AdvertisingSettings settings) {
-        repository.save(settings);
-    }
+	@Autowired
+	public AdvertisingSettingsServiceImpl(AdvertisingSettingsRepository repository) {
+		this.repository = repository;
+	}
 
-    @Override
-    public void delete(AdvertisingSettings settings) {
-        repository.delete(settings);
-    }
+	@Override
+	public void save(AdvertisingSettings settings) {
+		repository.save(settings);
+	}
 
-    @Override
-    public void delete(Long id) {
-        repository.delete(id);
-    }
+	@Override
+	public void delete(AdvertisingSettings settings) {
+		repository.delete(settings);
+	}
 
-    @Override
-    public AdvertisingSettings get(Long id) {
-        return repository.findOne(id);
-    }
+	@Override
+	public void delete(Long id) {
+		repository.delete(id);
+	}
 
-    @Override
-    public AdvertisingSettings findByEmail(String email) {
-        return repository.findByEmailIgnoreCase(email);
-    }
+	@Override
+	public AdvertisingSettings get(Long id) {
+		return repository.findOne(id);
+	}
 
-    @Override
-    public List<AdvertisingSettings> getAll() {
-        return repository.findAll();
-    }
+	@Override
+	public AdvertisingSettings findByEmail(String email) {
+		return repository.findByEmailIgnoreCase(email);
+	}
+
+	@Override
+	public List<AdvertisingSettings> getAll() {
+		return repository.findAll();
+	}
 
 }

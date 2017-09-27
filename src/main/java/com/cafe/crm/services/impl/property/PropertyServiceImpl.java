@@ -12,32 +12,34 @@ import java.util.List;
 @Service
 public class PropertyServiceImpl implements PropertyService {
 
-    @Autowired
-    private PropertyRepository propertyRepository;
+	private final PropertyRepository propertyRepository;
 
-    @Override
-    public void save(Property property) {
-        propertyRepository.saveAndFlush(property);
-    }
+	@Autowired
+	public PropertyServiceImpl(PropertyRepository propertyRepository) {
+		this.propertyRepository = propertyRepository;
+	}
 
-    @Override
-    public List<Property> findAll() {
-        return propertyRepository.findAll();
-    }
+	@Override
+	public void save(Property property) {
+		propertyRepository.saveAndFlush(property);
+	}
 
-    @Override
-    public Property getOne(Long id) {
-        return propertyRepository.findOne(id);
-    }
+	@Override
+	public List<Property> findAll() {
+		return propertyRepository.findAll();
+	}
 
-    @Override
-    public void delete(Long id) {
-        propertyRepository.delete(id);
-    }
+	@Override
+	public Property getByName(String name) { return propertyRepository.getByName(name); }
 
-    @Override
-    public void saveCollection(List<Property> list) {
-        propertyRepository.save(list);
-    }
+	@Override
+	public void delete(Long id) {
+		propertyRepository.delete(id);
+	}
+
+	@Override
+	public void saveCollection(List<Property> list) {
+		propertyRepository.save(list);
+	}
 
 }

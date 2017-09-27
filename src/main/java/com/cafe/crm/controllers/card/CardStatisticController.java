@@ -26,70 +26,68 @@ import java.util.List;
 @RequestMapping(value = "/boss")
 public class CardStatisticController {
 
-    private final CardService cardService;
+	private final CardService cardService;
+	private final CalculateService calculateService;
+	private final ClientService clientService;
 
-    private final CalculateService calculateService;
+	@Autowired
+	public CardStatisticController(CardService cardService, CalculateService calculateService, ClientService clientService) {
+		this.cardService = cardService;
+		this.calculateService = calculateService;
+		this.clientService = clientService;
+	}
 
-    private final ClientService clientService;
+	@RequestMapping(value = "/card/statistic/all", method = RequestMethod.GET)
+	public String showAllCardStatistic(Model model) {
+		List<Card> cards = cardService.getAll();
 
-    @Autowired
-    public CardStatisticController(CardService cardService, CalculateService calculateService, ClientService clientService) {
-        this.cardService = cardService;
-        this.calculateService = calculateService;
-        this.clientService = clientService;
-    }
+		model.addAttribute("cards", cards);
 
-    @RequestMapping(value = "/card/statistic/all", method = RequestMethod.GET)
-    public String showAllCardStatistic(Model model) {
-        List<Card> cards = cardService.getAll();
+		return "card/statistic/all-cards";
+	}
 
-        model.addAttribute("cards", cards);
+	@RequestMapping(value = "/card/statistic/{id}", method = RequestMethod.GET)
+	public String showCardStatistic(@PathVariable(name = "id") Long cardId, Model model) {
+		Card card = cardService.getOne(cardId);
+		List<Client> clients = clientService.findByCardId(cardId);
+		double totalPaid = 0d;
+		List<PaymentHistory> listOfPaymentHistory = new ArrayList<>();
+		for (Client client : clients) {
+			totalPaid += client.getPayWithCard();
+			listOfPaymentHistory.add(convertToPaymentHistory(client));
+		}
 
-        return "card/statistic/all-cards";
-    }
+		model.addAttribute("card", card);
+		model.addAttribute("totalPaid", totalPaid);
+		model.addAttribute("listOfPaymentHistory", listOfPaymentHistory);
 
-    @RequestMapping(value = "/card/statistic/{id}", method = RequestMethod.GET)
-    public String showCardStatistic(@PathVariable(name = "id") Long cardId, Model model) {
-        Card card = cardService.getOne(cardId);
-        List<Client> clients = clientService.findByCardId(cardId);
-        double totalPaid = 0d;
-        List<PaymentHistory> listOfPaymentHistory = new ArrayList<>();
-        for (Client client : clients) {
-            totalPaid += client.getPayWithCard();
-            listOfPaymentHistory.add(convertToPaymentHistory(client));
-        }
+		return "card/statistic/specific-card";
+	}
 
-        model.addAttribute("card", card);
-        model.addAttribute("totalPaid", totalPaid);
-        model.addAttribute("listOfPaymentHistory", listOfPaymentHistory);
+	private PaymentHistory convertToPaymentHistory(Client client) {
+		Calculate calculate = calculateService.findByClientId(client.getId());
+		return PaymentHistory.builder()
+				.calculateId(calculate.getId())
+				.calculateDescription(calculate.getDescription())
+				.clientDescription(client.getDescription())
+				.totalPrice(client.getAllPrice())
+				.menuPrice(client.getPriceMenu())
+				.timePrice(client.getPriceTime())
+				.cafeDiscount(client.getDiscount())
+				.cardDiscount(client.getDiscountWithCard())
+				.payWithCard(client.getPayWithCard())
+				.dateStart(client.getTimeStart())
+				.spentTime(client.getPassedTime()).build();
+	}
 
-        return "card/statistic/specific-card";
-    }
+	@RequestMapping(value = "/card/image/{id}", produces = MediaType.IMAGE_PNG_VALUE, method = RequestMethod.GET)
+	public ResponseEntity<byte[]> getImage(@PathVariable("id") Long cardId) {
+		byte[] imageContent = cardService.getOne(cardId).getPhoto();
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.IMAGE_PNG);
 
-    private PaymentHistory convertToPaymentHistory(Client client) {
-        Calculate calculate = calculateService.findByClientId(client.getId());
-        return PaymentHistory.builder()
-                .calculateId(calculate.getId())
-                .calculateDescription(calculate.getDescription())
-                .clientDescription(client.getDescription())
-                .totalPrice(client.getAllPrice())
-                .menuPrice(client.getPriceMenu())
-                .timePrice(client.getPriceTime())
-                .cafeDiscount(client.getDiscount())
-                .cardDiscount(client.getDiscountWithCard())
-                .payWithCard(client.getPayWithCard())
-                .dateStart(client.getTimeStart())
-                .spentTime(client.getPassedTime()).build();
-    }
-
-    @RequestMapping(value = "/card/image/{id}", produces = MediaType.IMAGE_PNG_VALUE, method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getImage(@PathVariable("id") Long cardId) {
-        byte[] imageContent = cardService.getOne(cardId).getPhoto();
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
-
-        return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
-    }
+		return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
+	}
 
 
 }

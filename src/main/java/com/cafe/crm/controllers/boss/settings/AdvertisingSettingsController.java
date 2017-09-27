@@ -18,63 +18,66 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/boss/settings/advert-setting")
 public class AdvertisingSettingsController {
 
-    @Autowired
-    AdvertisingSettingsService advertisingSettingsService;
+	private final AdvertisingSettingsService advertisingSettingsService;
+	private final AdvertisingCustomSettings customSettings;
 
-    @Autowired
-    AdvertisingCustomSettings customSettings;
+	@Autowired
+	public AdvertisingSettingsController(AdvertisingSettingsService advertisingSettingsService, AdvertisingCustomSettings customSettings) {
+		this.advertisingSettingsService = advertisingSettingsService;
+		this.customSettings = customSettings;
+	}
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView bardSettingPage() {
-        ModelAndView modelAndView = new ModelAndView("/settingPages/smtpSettingsPage");
-        modelAndView.addObject("advertSettings", customSettings.getCustomSettings());
-        modelAndView.addObject("listSMTPSettings", advertisingSettingsService.getAll());
-        return modelAndView;
-    }
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView bardSettingPage() {
+		ModelAndView modelAndView = new ModelAndView("settingPages/smtpSettingsPage");
+		modelAndView.addObject("advertSettings", customSettings.getCustomSettings());
+		modelAndView.addObject("listSMTPSettings", advertisingSettingsService.getAll());
+		return modelAndView;
+	}
 
-    @RequestMapping(value = "/new", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<?> setAdvertisingCustomSettings(
-            @RequestParam(name = "settingsName") String settingsName,
-            @RequestParam(name = "password") String password,
-            @RequestParam(name = "email") String email) {
+	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> setAdvertisingCustomSettings(
+			@RequestParam(name = "settingsName") String settingsName,
+			@RequestParam(name = "password") String password,
+			@RequestParam(name = "email") String email) {
 
-        AdvertisingSettings settingsInDB = advertisingSettingsService.findByEmail(email);
+		AdvertisingSettings settingsInDB = advertisingSettingsService.findByEmail(email);
 
-        if (settingsInDB == null) {
-            AdvertisingSettings newSettings = new AdvertisingSettings(settingsName, email, password, "smtp.gmail.com");
+		if (settingsInDB == null) {
+			AdvertisingSettings newSettings = new AdvertisingSettings(settingsName, email, password, "smtp.gmail.com");
 
-            advertisingSettingsService.save(newSettings);
-            JavaMailSenderImpl senderImpl = customSettings.getCustomSettings();
-            senderImpl.setUsername(email);
-            senderImpl.setPassword(password);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
+			advertisingSettingsService.save(newSettings);
+			JavaMailSenderImpl senderImpl = customSettings.getCustomSettings();
+			senderImpl.setUsername(email);
+			senderImpl.setPassword(password);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
 
-    @RequestMapping(value = "/existing-settings", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<?> setExistingSettings(@RequestParam(name = "settingsId") Long id) {
-        AdvertisingSettings settings = advertisingSettingsService.get(id);
-        JavaMailSenderImpl senderImpl = customSettings.getCustomSettings();
+	@RequestMapping(value = "/existing-settings", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> setExistingSettings(@RequestParam(name = "settingsId") Long id) {
+		AdvertisingSettings settings = advertisingSettingsService.get(id);
+		JavaMailSenderImpl senderImpl = customSettings.getCustomSettings();
 
-        if (settings.getEmail().equalsIgnoreCase(senderImpl.getUsername())) {
-            return ResponseEntity.badRequest().body("Эти настройки уже применены!");
-        } else {
-            senderImpl.setUsername(settings.getEmail());
-            senderImpl.setPassword(settings.getPassword());
-            return ResponseEntity.ok("Настройки успешно применены!");
-        }
-    }
+		if (settings.getEmail().equalsIgnoreCase(senderImpl.getUsername())) {
+			return ResponseEntity.badRequest().body("Эти настройки уже применены!");
+		} else {
+			senderImpl.setUsername(settings.getEmail());
+			senderImpl.setPassword(settings.getPassword());
+			return ResponseEntity.ok("Настройки успешно применены!");
+		}
+	}
 
-    @RequestMapping(value = "/del-settings", method = RequestMethod.POST)
-    public String delExistingSettings(@RequestParam(name = "settingsId") Long id) {
+	@RequestMapping(value = "/del-settings", method = RequestMethod.POST)
+	public String delExistingSettings(@RequestParam(name = "settingsId") Long id) {
 
-        advertisingSettingsService.delete(id);
+		advertisingSettingsService.delete(id);
 
-        return "redirect:";
-    }
+		return "redirect:";
+	}
 
 }

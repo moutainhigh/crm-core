@@ -235,6 +235,19 @@
             <version>1.6.0</version>
         </dependency>
 
+        <!--utils-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+            <version>3.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sf.dozer</groupId>
+            <artifactId>dozer</artifactId>
+            <version>5.5.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>

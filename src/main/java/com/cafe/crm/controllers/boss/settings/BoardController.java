@@ -18,46 +18,49 @@ import java.util.List;
 @RequestMapping("/boss/settings/board-setting")
 public class BoardController {
 
-    @Autowired
-    private BoardService boardService;
+	private final BoardService boardService;
+	private final CalculateService calculateService;
 
-    @Autowired
-    private CalculateService calculateService;
+	@Autowired
+	public BoardController(BoardService boardService, CalculateService calculateService) {
+		this.boardService = boardService;
+		this.calculateService = calculateService;
+	}
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView bardSettingPage() {
-        ModelAndView modelAndView = new ModelAndView("/settingPages/boardSettingPage");
-        modelAndView.addObject("boards", boardService.getAllOpen());
-        return modelAndView;
-    }
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView bardSettingPage() {
+		ModelAndView modelAndView = new ModelAndView("settingPages/boardSettingPage");
+		modelAndView.addObject("boards", boardService.getAllOpen());
+		return modelAndView;
+	}
 
-    @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public String newBoard(Board board, HttpServletRequest request) {
-        boardService.save(board);
-        String referrer = request.getHeader("Referer");
-        return "redirect:" + referrer;
-    }
+	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	public String newBoard(Board board, HttpServletRequest request) {
+		boardService.save(board);
+		String referrer = request.getHeader("Referer");
+		return "redirect:" + referrer;
+	}
 
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
-    public String deleteBoard(@PathVariable("id") Long id, HttpServletRequest request) {
-        String referrer = request.getHeader("Referer");
-        Board board = boardService.getOne(id);
-        List<Calculate> calc = calculateService.getAllOpen();
-        boolean flag = false;
-        for (Calculate calculate : calc) {
-            if (calculate.getBoard() != null) {
-                if (calculate.getBoard().equals(board)) {
-                    flag = true;
-                    break;
-                }
-            }
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
+	public String deleteBoard(@PathVariable("id") Long id, HttpServletRequest request) {
+		String referrer = request.getHeader("Referer");
+		Board board = boardService.getOne(id);
+		List<Calculate> calc = calculateService.getAllOpen();
+		boolean flag = false;
+		for (Calculate calculate : calc) {
+			if (calculate.getBoard() != null) {
+				if (calculate.getBoard().equals(board)) {
+					flag = true;
+					break;
+				}
+			}
 
-        }
-        if (!flag) {
-            board.setIsOpen(false);
-            boardService.save(board);
-        }
-        return "redirect:" + referrer;
-    }
+		}
+		if (!flag) {
+			board.setIsOpen(false);
+			boardService.save(board);
+		}
+		return "redirect:" + referrer;
+	}
 
 }

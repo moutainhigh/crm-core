@@ -2,12 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
+    <link rel="stylesheet" th:href="@{/css/costs.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/css/statisticTabs.css}" type="text/css"/>
 </head>
 <body>
 
 <div th:replace="bossnavbar :: bossNavbar"></div>
 
-<div class="container" style="margin-top: 100px;">
+<div class="container" style="margin-top: 5%;">
 
     <h2 align="center" style="color: #5bc0de">Дата смены: <span th:text="${shiftView.shiftDate}"></span></h2>
 </div>
@@ -16,159 +18,240 @@
 <div class="container" style="width: 70%">
     <div class="col-md-2" style="margin-left: 10%">
         <h4 style="color: #5bc0de;">Касса</h4>
-        <span style="color: white;font-size: 30px" th:text="${shiftView.cashBox}"></span>
+        <span style="color: white;font-size: 30px" th:text="${#numbers.formatInteger(shiftView.cashBox,0)}"></span>
         <br></br>
     </div>
     <div class="col-md-2 ">
         <h4 style="color: #5bc0de;">Прибыль грязными</h4>
-        <span style="color: white;font-size: 30px" th:text="${shiftView.allPrice}"></span>
+        <span style="color: white;font-size: 30px" th:text="${#numbers.formatInteger(shiftView.allPrice,0)}"></span>
         <br></br>
     </div>
     <div class="col-md-2 ">
         <h4 style="color: #5bc0de;">Прочие расходы</h4>
-        <span style="color: white;font-size: 30px" th:text="${allOtherGoods}"></span>
+        <span style="color: white;font-size: 30px" th:text="${#numbers.formatInteger(allOtherCost,0)}"></span>
         <br></br>
     </div>
     <div class="col-md-2 ">
         <h4 style="color: #5bc0de;">Зарплатные расходы</h4>
-        <span style="color: white;font-size: 30px" th:text="${allSalaryGoods}"></span>
+        <span style="color: white;font-size: 30px" th:text="${#numbers.formatInteger(allSalaryCost,0)}"></span>
         <br></br>
     </div>
 
     <div class="col-md-2 ">
         <h4 style="color: #5bc0de;">Количество клиентов</h4>
         <span style="color: white;font-size: 30px" th:text="${shiftView.clients.size()}"></span>
-        <br></br>
+        <br/>
     </div>
 </div>
-<hr></hr>
+<hr/>
 
 <div class="container" style="width: 70%">
-    <h2 align="center" style="color: #5bc0de">Счета на смене</h2>
-    <div class="table">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th> Описание</th>
-                <th> Описание стола</th>
-                <th> Количество клиентов</th>
-            </tr>
-            </thead>
-            <tbody th:each="calc : ${shiftView.allCalculate}">
-            <tr>
-                <td th:if="${calc.description}==null" th:text="Описание+' '+ отсутствует"></td>
-                <td th:if="${calc.description}!=null" th:text="${calc.description}"></td>
-                <td th:each="board:${calc.board}" th:text="${board.name}"></td>
-                <td th:text="${calc.client.size()}"></td>
-            </tr>
-            </tbody>
-        </table>
+    <center>
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#billsOnShift" style="margin-bottom: 1%">Счета и клиенты на смене
+        </button>
+    </center>
+
+    <div id="billsOnShift" class="collapse">
+        <div class="table">
+            <table class="table table-striped" th:each="calc : ${shiftView.allCalculate}">
+                <thead>
+                <tr>
+                    <th> Описание</th>
+                    <th> Описание стола</th>
+                    <th> Количество клиентов</th>
+                    <th style="width: 90px"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:if="${calc.description}==null" th:text="Описание+' '+ отсутствует"></td>
+                    <td th:if="${calc.description}!=null" th:text="${calc.description}"></td>
+                    <td th:each="board:${calc.board}" th:text="${board.name}"></td>
+                    <td th:text="${calc.client.size()}"></td>
+                    <td class="tr-wrapper" style="text-align: left">
+                        <button th:id="'billsButton' + ${calc.id}" type="button" class="btn btn-info" style="margin-bottom: 1%">
+                            Детали
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tr-wrapper" colspan="4">
+                        <div th:id="'billsOnShift' + ${calc.id}" style="display: none">
+                            <table class="table table-striped nested-table">
+                                <thead>
+                                <tr>
+                                    <th> Время посадки</th>
+                                    <th> Проведенное время</th>
+                                    <th> Стоимость времени</th>
+                                    <th> Скидка</th>
+                                    <th> Скидка по карте</th>
+                                    <th> Общая стоимость счета</th>
+                                    <th> Оплата наличными</th>
+                                    <th> Стоимость меню</th>
+                                    <th th:if="${cardEnable}"> Оплата по клубной карте</th>
+                                </tr>
+                                </thead>
+                                <tbody th:each="client : ${calc.client}">
+                                <tr>
+                                    <td th:text="${client.timeStart}"></td>
+                                    <td th:text="${client.passedTime}"></td>
+                                    <td th:text="${client.priceTime}"></td>
+                                    <td th:text="${client.discount}"></td>
+                                    <td th:text="${client.discountWithCard}"></td>
+                                    <td th:text="${client.allPrice}"></td>
+                                    <td th:text="${client.cache}"></td>
+                                    <td th:text="${client.priceMenu}"></td>
+                                    <td th:if="${cardEnable}" th:text="${client.payWithCard}"></td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tfoot>
+                <script th:inline="javascript" type="text/javascript">
+                    jQuery(document).ready( function() {
+                        var buttonId = '#billsButton' + [[${calc.id}]];
+                        var billsOnShiftId = '#billsOnShift' + [[${calc.id}]];
+                        jQuery(buttonId).click(function(){
+                                $(billsOnShiftId).slideToggle('fast');
+                        });
+                    });
+                </script>
+            </table>
+        </div>
     </div>
 
 
-    <h2 align="center" style="color: #5bc0de">Клиенты на смене</h2>
-    <div class="table">
-        <table class="table table-striped">
-            <tr>
-                <th> Время посадки</th>
-                <th> Проведенное время</th>
-                <th> Стоимость времени</th>
-                <th> Скидка</th>
-                <th> Скидка по карте</th>
-                <th> Общая стоимость счета</th>
-                <th> Оплата наличными</th>
-                <th> Стоимость меню</th>
-                <th> Оплата по клубной карте</th>
-            </tr>
-            <tbody th:each="client : ${shiftView.clients}">
-            <tr>
-                <td th:text="${client.timeStart}"></td>
-                <td th:text="${client.passedTime}"></td>
-                <td th:text="${client.priceTime}"></td>
-                <td th:text="${client.discount}"></td>
-                <td th:text="${client.discountWithCard}"></td>
-                <td th:text="${client.allPrice}"></td>
-                <td th:text="${client.cache}"></td>
-                <td th:text="${client.priceMenu}"></td>
-                <td th:text="${client.payWithCard}"></td>
 
-            </tr>
-            </tbody>
-        </table>
+    <center>
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#salary" style="margin-bottom: 1%">Зарплатные расходы
+        </button>
+    </center>
+    <div id="salary" class="collapse">
+        <div class="table">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th> Дата</th>
+                    <th> ФИО</th>
+                    <th> Зарплата</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${shiftView.usersOnShift}">
+                    <td th:text="${shiftView.shiftDate}"></td>
+                    <td th:text="${user.firstName + ' ' + user.lastName}"></td>
+                    <td th:text="${user.shiftSalary + user.bonus}"></td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
 
-
-    <h2 align="center" style="color: #5bc0de">Зарплатные расходы</h2>
-    <div class="table">
-        <table class="table table-striped">
-            <tr>
-                <th> Дата</th>
-                <th> ФИО</th>
-                <th> Цена</th>
-            </tr>
-            <tbody th:each="salaryGoods : ${salaryWorkerGoods}">
-            <tr>
-                <td th:text="${salaryGoods.date}"></td>
-                <td th:text="${salaryGoods.name}"></td>
-                <td th:text="${salaryGoods.price}"></td>
-            </tr>
-            </tbody>
-        </table>
+    <center>
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#anotherOutlay" style="margin-bottom: 1%">Прочие расходы
+        </button>
+    </center>
+    <div id="anotherOutlay" class="collapse">
+        <div class="table">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th> Дата</th>
+                    <th> Название</th>
+                    <th> Цена</th>
+                    <th> Количество</th>
+                    <th> Сумма</th>
+                </tr>
+                </thead>
+                <tbody th:each="listOfOtherCosts : ${listOfOtherCosts}">
+                <tr>
+                    <td th:text="${listOfOtherCosts.date}"></td>
+                    <td th:text="${listOfOtherCosts.name}"></td>
+                    <td th:text="${listOfOtherCosts.price}"></td>
+                    <td th:text="${listOfOtherCosts.quantity}"></td>
+                    <td th:text="${listOfOtherCosts.price * listOfOtherCosts.quantity} % 1 == 0
+                 ? ${#numbers.formatDecimal((listOfOtherCosts.price * listOfOtherCosts.quantity), 0, 0)}
+                 : ${#numbers.formatDecimal((listOfOtherCosts.price * listOfOtherCosts.quantity), 0, 2)}">
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
 
-    <h2 align="center" style="color: #5bc0de">Прочие расходы</h2>
-    <div class="table">
-        <table class="table table-striped">
-            <tr>
-                <th> Дата</th>
-                <th> ФИО</th>
-                <th> Цена</th>
-                <th> Количество</th>
-                <th> Сумма</th>
-            </tr>
-            <tbody th:each="otherGoods : ${otherGoods}">
-            <tr>
-                <td th:text="${otherGoods.date}"></td>
-                <td th:text="${otherGoods.name}"></td>
-                <td th:text="${otherGoods.price}"></td>
-                <td th:text="${otherGoods.quantity}"></td>
-                <td th:text="${otherGoods.price * otherGoods.quantity} % 1 == 0
-                 ? ${#numbers.formatDecimal((otherGoods.price * otherGoods.quantity), 0, 0)}
-                 : ${#numbers.formatDecimal((otherGoods.price * otherGoods.quantity), 0, 2)}">
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <h2 align="center" style="color: #5bc0de">Сотрудники на смене</h2>
-    <div class="table">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th> Имя</th>
-                <th> Фамилия</th>
-                <th> Должности</th>
-                <th> Email</th>
-                <th> Номер телефона</th>
-                <th> Оклад</th>
-                <th> Зарплата</th>
-                <th> Бонус</th>
-            </tr>
-            </thead>
-            <tbody th:each="worker : ${shiftView.allActiveWorker}">
-            <tr>
-                <td th:text="${worker.firstName}"></td>
-                <td th:text="${worker.lastName}"></td>
-                <td th:text="${worker.allPosition}"></td>
-                <td th:text="${worker.email}"></td>
-                <td th:text="${worker.phone}"></td>
-                <td th:text="${worker.shiftSalary}"></td>
-                <td th:text="${worker.salary}"></td>
-                <td th:text="${worker.bonus}"></td>
-            </tr>
-            </tbody>
-        </table>
+    <center>
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#employeeOnShift" style="margin-bottom: 1%">Сотрудники на
+            смене
+        </button>
+    </center>
+    <div id="employeeOnShift" class="collapse">
+        <div class="table">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th> Имя</th>
+                    <th> Фамилия</th>
+                    <th> Должности</th>
+                    <th> Email</th>
+                    <th> Номер телефона</th>
+                    <th> Оклад</th>
+                    <th> Зарплата</th>
+                    <th> Бонус</th>
+                </tr>
+                </thead>
+                <tbody th:each="user : ${shiftView.usersOnShift}">
+                <tr>
+                    <td th:text="${user.firstName}"></td>
+                    <td th:text="${user.lastName}"></td>
+                    <td th:text="${user.positions}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td th:text="${user.phone}"></td>
+                    <td th:text="${user.shiftSalary}"></td>
+                    <td th:text="${user.salary + user.bonus}"></td>
+                    <td th:text="${user.bonus}"></td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
     </div>
 </div>
 </body>

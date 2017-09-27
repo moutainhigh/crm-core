@@ -9,12 +9,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdvertisingCustomSettings {
 
-    @Autowired
-    private JavaMailSender javaMailSender;
+	private final JavaMailSender javaMailSender;
+
+	@Autowired
+	public AdvertisingCustomSettings(JavaMailSender javaMailSender) {
+		this.javaMailSender = javaMailSender;
+	}
 
 
-    public JavaMailSenderImpl getCustomSettings() {
-        return (JavaMailSenderImpl) javaMailSender;
-    }
+	public JavaMailSenderImpl getCustomSettings() {
+		return (JavaMailSenderImpl) javaMailSender;
+	}
 
 }

@@ -9,21 +9,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class TimerOfPauseServiceImpl implements TimerOfPauseService {
 
-    @Autowired
-    private TimerOfPauseRepository timerOfPauseRepository;
+	private final TimerOfPauseRepository timerOfPauseRepository;
 
-    @Override
-    public TimerOfPause getOne(Long id) {
-        return timerOfPauseRepository.getOne(id);
-    }
+	@Autowired
+	public TimerOfPauseServiceImpl(TimerOfPauseRepository timerOfPauseRepository) {
+		this.timerOfPauseRepository = timerOfPauseRepository;
+	}
 
-    @Override
-    public void save(TimerOfPause timer) {
-        timerOfPauseRepository.saveAndFlush(timer);
-    }
+	@Override
+	public TimerOfPause getOne(Long id) {
+		return timerOfPauseRepository.getOne(id);
+	}
 
-    @Override
-    public TimerOfPause findTimerOfPauseByIdOfClient(Long id) {
-        return timerOfPauseRepository.findTimerOfPauseByIdOfClient(id);
-    }
+	@Override
+	public void save(TimerOfPause timer) {
+		timerOfPauseRepository.saveAndFlush(timer);
+	}
+
+	@Override
+	public TimerOfPause findTimerOfPauseByIdOfClient(Long id) {
+		return timerOfPauseRepository.findTimerOfPauseByIdOfClient(id);
+	}
 }

@@ -13,54 +13,50 @@ import java.util.List;
 @Component
 public class TimeManager {
 
-    @Value("#{'${time.server}'.split(',')}")
-    private List<String> servers;
+	@Value("#{'${time.server}'.split(',')}")
+	private List<String> servers;
 
-    private LocalDateTime date;
+	private LocalDateTime date;
+	private NTPUDPClient timeClient = new NTPUDPClient();
+	private InetAddress inetAddress;
+	private TimeInfo timeInfo;
+	private boolean isServerDateTime;
 
-    private NTPUDPClient timeClient = new NTPUDPClient();
+	public TimeManager() {
+	}
 
-    private InetAddress inetAddress;
+	public boolean getIsServerDateTime() {
+		return isServerDateTime;
+	}
 
-    private TimeInfo timeInfo;
+	public LocalDate getDate() {
+		return getDateTime().toLocalDate();
+	}
 
-    private boolean isServerDateTime;
+	public LocalDateTime getDateTime() {
+		timeClient.setDefaultTimeout(500);
+		for (String server : servers) {
+			try {
+				inetAddress = InetAddress.getByName(server);
+				timeInfo = timeClient.getTime(inetAddress);
+				long returnTime = timeInfo.getMessage().getTransmitTimeStamp().getTime();
+				date = Instant.ofEpochMilli(returnTime).atZone(ZoneId.systemDefault()).toLocalDateTime();
+				isServerDateTime = true;
+				return date;
+			} catch (IOException ignored) {
+			}
+		}
+		isServerDateTime = false;
+		date = LocalDateTime.now();
+		return date;
+	}
 
-    public TimeManager() {
-    }
+	public LocalDateTime getDateTimeWithoutSeconds () {
+		return getDateTime().withSecond(0).withNano(0);
+	}
 
-    public boolean getIsServerDateTime() {
-        return isServerDateTime;
-    }
+	public LocalTime getTime() {
+		return getDateTime().toLocalTime();
+	}
 
-    public LocalDate getDate() {
-        return getDateTime0().toLocalDate();
-    }
-
-    public LocalDateTime getDateTime() {
-        return getDateTime0();
-    }
-
-    public LocalTime getTime() {
-        return getDateTime0().toLocalTime();
-    }
-
-    // TODO: 06.07.2017 Придумать название
-    private LocalDateTime getDateTime0() {
-        timeClient.setDefaultTimeout(500);
-        for (String server : servers) {
-            try {
-                inetAddress = InetAddress.getByName(server);
-                timeInfo = timeClient.getTime(inetAddress);
-                long returnTime = timeInfo.getMessage().getTransmitTimeStamp().getTime();
-                date = Instant.ofEpochMilli(returnTime).atZone(ZoneId.systemDefault()).toLocalDateTime();
-                isServerDateTime = true;
-                return date;
-            } catch (IOException ignored) {
-            }
-        }
-        isServerDateTime = false;
-        date = LocalDateTime.now();
-        return date;
-    }
 }

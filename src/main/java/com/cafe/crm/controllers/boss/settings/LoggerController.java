@@ -17,50 +17,52 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/boss/settings/logger-setting")
 public class LoggerController {
-    @Autowired
-    @Qualifier(value = "logger")
-    private Logger log;
 
-    @Autowired
-    @Qualifier(value = "hibLogger")
-    private Logger hibLog;
+	private final Logger log;
+	private final Logger hibLog;
 
-    @ModelAttribute(name = "logLevel")
-    public String logLevel() {
-        return log.getLevel().levelStr;
-    }
+	@Autowired
+	public LoggerController(@Qualifier(value = "logger") Logger log, @Qualifier(value = "hibLogger") Logger hibLog) {
+		this.log = log;
+		this.hibLog = hibLog;
+	}
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView loggerSettingPage() {
-        ModelAndView modelAndView = new ModelAndView("/settingPages/loggerSettingPage");
-        modelAndView.addObject(logLevel());
-        return modelAndView;
-    }
+	@ModelAttribute(name = "logLevel")
+	public String logLevel() {
+		return log.getLevel().levelStr;
+	}
 
-    @RequestMapping(value = "/logLevel", method = RequestMethod.POST)
-    public String setLogLevel(@RequestParam(name = "level") String logLevel, HttpServletRequest request) {
-        log.info("Log level: " + logLevel);
-        switch (logLevel) {
-            case ("ERROR"):
-                log.setLevel(Level.ERROR);
-                hibLog.setLevel(Level.ERROR);
-                break;
-            case ("INFO"):
-                log.setLevel(Level.INFO);
-                hibLog.setLevel(Level.INFO);
-                break;
-            case ("DEBUG"):
-                log.setLevel(Level.DEBUG);
-                hibLog.setLevel(Level.DEBUG);
-                break;
-            case ("WARN"):
-                log.setLevel(Level.WARN);
-                hibLog.setLevel(Level.WARN);
-                break;
-            default:
-                log.error("Unknown log level: " + logLevel);
-                break;
-        }
-        return "redirect:" + request.getHeader("Referer");
-    }
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView loggerSettingPage() {
+		ModelAndView modelAndView = new ModelAndView("settingPages/loggerSettingPage");
+		modelAndView.addObject(logLevel());
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/logLevel", method = RequestMethod.POST)
+	public String setLogLevel(@RequestParam(name = "level") String logLevel, HttpServletRequest request) {
+		log.info("Log level: " + logLevel);
+		switch (logLevel) {
+			case ("ERROR"):
+				log.setLevel(Level.ERROR);
+				hibLog.setLevel(Level.ERROR);
+				break;
+			case ("INFO"):
+				log.setLevel(Level.INFO);
+				hibLog.setLevel(Level.INFO);
+				break;
+			case ("DEBUG"):
+				log.setLevel(Level.DEBUG);
+				hibLog.setLevel(Level.DEBUG);
+				break;
+			case ("WARN"):
+				log.setLevel(Level.WARN);
+				hibLog.setLevel(Level.WARN);
+				break;
+			default:
+				log.error("Unknown log level: " + logLevel);
+				break;
+		}
+		return "redirect:" + request.getHeader("Referer");
+	}
 }

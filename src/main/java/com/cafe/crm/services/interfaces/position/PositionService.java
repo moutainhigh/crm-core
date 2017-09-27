@@ -1,20 +1,26 @@
 package com.cafe.crm.services.interfaces.position;
 
 
-import com.cafe.crm.models.worker.Position;
+import com.cafe.crm.models.user.Position;
 
 import java.util.List;
 
 public interface PositionService {
 
-    void addPosition(Position position);
+	void save(Position position);
 
-    List<Position> listAllPosition();
+	List<Position> findAll();
 
-    void updatePosition(Position position);
+	List<Position> findAllWithEnabledPercent();
 
-    void deletePosition(Long id);
+	void update(Position position);
 
-    Position findById(Long id);
+	void delete(Long id);
+
+	Position findByName(String name);
+
+	List<Position> findByIdIn(Long[] ids);
+
+	Position findById(Long id);
 
 }

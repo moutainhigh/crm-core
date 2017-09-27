@@ -18,44 +18,52 @@ import java.util.List;
 @RequestMapping("/boss/settings/discount-setting")
 public class DiscountController {
 
-    @Autowired
-    private DiscountService discountService;
+	private final DiscountService discountService;
+	private final ClientService clientService;
 
-    @Autowired
-    private ClientService clientService;
+	@Autowired
+	public DiscountController(DiscountService discountService, ClientService clientService) {
+		this.discountService = discountService;
+		this.clientService = clientService;
+	}
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView discountSettingPage() {
-        ModelAndView modelAndView = new ModelAndView("/settingPages/discountSettingPage");
-        modelAndView.addObject("discounts", discountService.getAllOpen());
-        return modelAndView;
-    }
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView discountSettingPage() {
+		ModelAndView modelAndView = new ModelAndView("settingPages/discountSettingPage");
+		modelAndView.addObject("discounts", discountService.getAllOpen());
+		return modelAndView;
+	}
 
-    @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public String newDiscount(HttpServletRequest request, Discount discount) {
-        discountService.save(discount);
-        return "redirect:" + request.getHeader("Referer");
-    }
+	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	public String newDiscount(HttpServletRequest request, Discount discount) {
+		discountService.save(discount);
+		return "redirect:" + request.getHeader("Referer");
+	}
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public String deleteDiscount(@RequestParam("id") Long id, HttpServletRequest request) {
-        String referrer = request.getHeader("Referer");
-        Discount discount = discountService.getOne(id);
-        List<Client> clientList = clientService.getAllOpen();
-        boolean flag = false;
-        for (Client client : clientList) {
-            if (client.getDiscountObj() != null) {
-                if (client.getDiscountObj().equals(discount)) {
-                    flag = true;
-                    break;
-                }
-            }
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	public String deleteDiscount(@RequestParam("id") Long id, HttpServletRequest request) {
+		String referrer = request.getHeader("Referer");
+		Discount discount = discountService.getOne(id);
+		List<Client> clientList = clientService.getAllOpen();
 
-        }
-        if (!flag) {
-            discount.setIsOpen(false);
-            discountService.save(discount);
-        }
-        return "redirect:" + referrer;
-    }
+		boolean assignedToClient = false;
+		for (Client client : clientList) {
+			if (client.getDiscountObj() != null) {
+				if (client.getDiscountObj().equals(discount)) {
+					assignedToClient = true;
+					break;
+				}
+			}
+
+		}
+
+		if (assignedToClient) {
+			discount.setIsOpen(false);
+			discountService.save(discount);
+		} else {
+			discountService.delete(discount);
+		}
+
+		return "redirect:" + referrer;
+	}
 }

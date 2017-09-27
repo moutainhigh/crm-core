@@ -12,37 +12,41 @@ import java.util.List;
 @Service
 public class DiscountServiceImpl implements DiscountService {
 
-    @Autowired
-    DiscountRepository discountRepository;
+	private final DiscountRepository discountRepository;
 
-    @Override
-    public void save(Discount discount) {
-        discountRepository.save(discount);
-    }
+	@Autowired
+	public DiscountServiceImpl(DiscountRepository discountRepository) {
+		this.discountRepository = discountRepository;
+	}
 
-    @Override
-    public void delete(Discount discount) {
-        discountRepository.delete(discount);
-    }
+	@Override
+	public void save(Discount discount) {
+		discountRepository.save(discount);
+	}
 
-    @Override
-    public List<Discount> getAll() {
-        return discountRepository.findAll();
-    }
+	@Override
+	public void delete(Discount discount) {
+		discountRepository.delete(discount);
+	}
 
-    @Override
-    public Discount getOne(Long id) {
-        return discountRepository.findOne(id);
-    }
+	@Override
+	public List<Discount> getAll() {
+		return discountRepository.findAll();
+	}
 
-    @Override
-    public void deleteById(Long id) {
-        discountRepository.delete(id);
-    }
+	@Override
+	public Discount getOne(Long id) {
+		return discountRepository.findOne(id);
+	}
 
-    @Override
-    public List<Discount> getAllOpen() {
-        return discountRepository.getAllOpen();
-    }
+	@Override
+	public void deleteById(Long id) {
+		discountRepository.delete(id);
+	}
+
+	@Override
+	public List<Discount> getAllOpen() {
+		return discountRepository.getAllOpen();
+	}
 }
 

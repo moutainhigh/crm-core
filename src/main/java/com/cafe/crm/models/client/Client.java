@@ -14,208 +14,221 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "client")
+@Table(name = "clients")
 public class Client {
-    @Id
-    @GeneratedValue
-    private Long id;
+	@Id
+	@GeneratedValue
+	private Long id;
 
-    @Size(max = 30)
-    @NotNull
-    private String description = "";
+	@Size(max = 30)
+	@NotNull
+	private String description = "";
 
-    private boolean isPause = false;  // now is paused ?
+	private boolean isPause = false;  // now is paused ?
 
-    private boolean pausedIndex = false;     // true - if was pause
-    private LocalDateTime timeStart;
-    private boolean state = true;// Open or Closed
-    private boolean deleteState = false;// Open or Closed
-    @NotNull
-    @Max(100)
-    private Long discount = 0L;//связанный обьект отдает скидку в это поле
-    @Max(100)
-    @NotNull
-    private Long discountWithCard = 0L;
-    private Double allPrice = 0D;//initial amount
-    private Double cache = 0D;// ready money
-    private LocalTime passedTime;
-    private Double priceMenu = 0D;
-    private Double priceTime = 0D;
-    @NotNull
-    private Double payWithCard = 0D;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JsonBackReference
-    @JoinTable(name = "client_layer_product",
-            joinColumns = {@JoinColumn(name = "client_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "layer_product_id", referencedColumnName = "id")})
-    private List<LayerProduct> layerProducts;
-    @ManyToOne
-    private Card card;
-    @ManyToOne
-    private Discount discountObj;
+	private boolean pausedIndex = false;     // true - if was pause
 
-    public Client() {
-    }
+	private LocalDateTime timeStart;
 
-    public boolean isPause() {
-        return isPause;
-    }
+	private boolean state = true;// Open or Closed
 
-    public void setPause(boolean pause) {
-        isPause = pause;
-    }
+	private boolean deleteState = false;// Open or Closed
+	@NotNull
+	@Max(100)
+	private Long discount = 0L;//связанный обьект отдает скидку в это поле
 
-    public boolean isPausedIndex() {
-        return pausedIndex;
-    }
+	@Max(100)
+	@NotNull
+	private Long discountWithCard = 0L;
 
-    public void setPausedIndex(boolean pausedIndex) {
-        this.pausedIndex = pausedIndex;
-    }
+	private Double allPrice = 0D;//initial amount
 
-    public Discount getDiscountObj() {
-        return discountObj;
-    }
+	private Double cache = 0D;// ready money
 
-    public void setDiscountObj(Discount discountObj) {
-        this.discountObj = discountObj;
-    }
+	private LocalTime passedTime;
 
-    public boolean isDeleteState() {
-        return deleteState;
-    }
+	private Double priceMenu = 0D;
 
-    public void setDeleteState(boolean deleteState) {
-        this.deleteState = deleteState;
-    }
+	private Double priceTime = 0D;
 
-    public List<LayerProduct> getLayerProducts() {
-        return layerProducts;
-    }
+	@NotNull
+	private Double payWithCard = 0D;
 
-    public void setLayerProducts(List<LayerProduct> layerProducts) {
-        this.layerProducts = layerProducts;
-    }
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JsonBackReference
+	@JoinTable(name = "client_layer_product",
+			joinColumns = {@JoinColumn(name = "client_id", referencedColumnName = "id")},
+			inverseJoinColumns = {@JoinColumn(name = "layer_product_id", referencedColumnName = "id")})
+	private List<LayerProduct> layerProducts;
 
-    public Long getDiscountWithCard() {
-        return discountWithCard;
-    }
+	@ManyToOne
+	private Card card;
 
-    public void setDiscountWithCard(Long discountWithCard) {
-        this.discountWithCard = discountWithCard;
-    }
+	@ManyToOne
+	private Discount discountObj;
 
-    public Card getCard() {
-        return card;
-    }
+	public Client() {
+	}
 
-    public void setCard(Card card) {
-        this.card = card;
-    }
+	public boolean isPause() {
+		return isPause;
+	}
 
-    public Double getCache() {
-        return cache;
-    }
+	public void setPause(boolean pause) {
+		isPause = pause;
+	}
 
-    public void setCache(Double cache) {
-        this.cache = cache;
-    }
+	public boolean isPausedIndex() {
+		return pausedIndex;
+	}
 
-    public boolean isState() {
-        return state;
-    }
+	public void setPausedIndex(boolean pausedIndex) {
+		this.pausedIndex = pausedIndex;
+	}
 
-    public void setState(boolean state) {
-        this.state = state;
-    }
+	public Discount getDiscountObj() {
+		return discountObj;
+	}
 
-    public Long getDiscount() {
-        return discount;
-    }
+	public void setDiscountObj(Discount discountObj) {
+		this.discountObj = discountObj;
+	}
 
-    public void setDiscount(Long discount) {
-        this.discount = discount;
-    }
+	public boolean isDeleteState() {
+		return deleteState;
+	}
 
-    public Double getAllPrice() {
-        return allPrice;
-    }
+	public void setDeleteState(boolean deleteState) {
+		this.deleteState = deleteState;
+	}
 
-    public void setAllPrice(Double allPrice) {
-        this.allPrice = allPrice;
-    }
+	public List<LayerProduct> getLayerProducts() {
+		return layerProducts;
+	}
 
-    public LocalTime getPassedTime() {
-        return passedTime;
-    }
+	public void setLayerProducts(List<LayerProduct> layerProducts) {
+		this.layerProducts = layerProducts;
+	}
 
-    public void setPassedTime(LocalTime passedTime) {
-        this.passedTime = passedTime;
-    }
+	public Long getDiscountWithCard() {
+		return discountWithCard;
+	}
 
-    public Double getPriceMenu() {
-        return priceMenu;
-    }
+	public void setDiscountWithCard(Long discountWithCard) {
+		this.discountWithCard = discountWithCard;
+	}
 
-    public void setPriceMenu(Double priceMenu) {
-        this.priceMenu = priceMenu;
-    }
+	public Card getCard() {
+		return card;
+	}
 
-    public Double getPriceTime() {
-        return priceTime;
-    }
+	public void setCard(Card card) {
+		this.card = card;
+	}
 
-    public void setPriceTime(Double priceTime) {
-        this.priceTime = priceTime;
-    }
+	public Double getCache() {
+		return cache;
+	}
 
-    public Double getPayWithCard() {
-        return payWithCard;
-    }
+	public void setCache(Double cache) {
+		this.cache = cache;
+	}
 
-    public void setPayWithCard(Double payWithCard) {
-        this.payWithCard = payWithCard;
-    }
+	public boolean isState() {
+		return state;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public void setState(boolean state) {
+		this.state = state;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Long getDiscount() {
+		return discount;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setDiscount(Long discount) {
+		this.discount = discount;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public Double getAllPrice() {
+		return allPrice;
+	}
 
-    public LocalDateTime getTimeStart() {
-        return timeStart;
-    }
+	public void setAllPrice(Double allPrice) {
+		this.allPrice = allPrice;
+	}
 
-    public void setTimeStart(LocalDateTime timeStart) {
-        this.timeStart = timeStart;
-    }
+	public LocalTime getPassedTime() {
+		return passedTime;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	public void setPassedTime(LocalTime passedTime) {
+		this.passedTime = passedTime;
+	}
 
-        Client client = (Client) o;
+	public Double getPriceMenu() {
+		return priceMenu;
+	}
 
-        if (id != null ? !id.equals(client.id) : client.id != null) return false;
-        return description != null ? description.equals(client.description) : client.description == null;
-    }
+	public void setPriceMenu(Double priceMenu) {
+		this.priceMenu = priceMenu;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        return result;
-    }
+	public Double getPriceTime() {
+		return priceTime;
+	}
+
+	public void setPriceTime(Double priceTime) {
+		this.priceTime = priceTime;
+	}
+
+	public Double getPayWithCard() {
+		return payWithCard;
+	}
+
+	public void setPayWithCard(Double payWithCard) {
+		this.payWithCard = payWithCard;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public LocalDateTime getTimeStart() {
+		return timeStart;
+	}
+
+	public void setTimeStart(LocalDateTime timeStart) {
+		this.timeStart = timeStart;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Client client = (Client) o;
+
+		if (id != null ? !id.equals(client.id) : client.id != null) return false;
+		return description != null ? description.equals(client.description) : client.description == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (description != null ? description.hashCode() : 0);
+		return result;
+	}
 }

@@ -1,11 +1,19 @@
 package com.cafe.crm.controllers.debt;
 
+import com.cafe.crm.exceptions.cost.category.CostCategoryDataException;
+import com.cafe.crm.exceptions.debt.DebtDataException;
 import com.cafe.crm.models.client.Debt;
+import com.cafe.crm.models.property.AllSystemProperty;
+import com.cafe.crm.models.shift.Shift;
+import com.cafe.crm.services.interfaces.checklist.ChecklistService;
 import com.cafe.crm.services.interfaces.debt.DebtService;
+import com.cafe.crm.services.interfaces.property.SystemPropertyService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,100 +24,148 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
+@RequestMapping(value = "/manager/tableDebt")
 public class DebtController {
 
-    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    private DebtService debtService;
-    private TimeManager timeManager;
-    private ShiftService shiftService;
+	private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	private final DebtService debtService;
+	private final TimeManager timeManager;
+	private final ShiftService shiftService;
+	private final ChecklistService checklistService;
 
-    @Autowired
-    public DebtController(DebtService debtService, TimeManager timeManager, ShiftService shiftService) {
-        this.debtService = debtService;
-        this.timeManager = timeManager;
-        this.shiftService = shiftService;
-    }
+	@Autowired
+	PasswordEncoder encoder;
 
-    @RequestMapping(value = "/manager/tableDebt", method = RequestMethod.GET)
-    public ModelAndView showDebtPage() {
-        if (shiftService.getLast() == null || !(shiftService.getLast().getOpen())) {
-            return new ModelAndView("redirect:/manager/shift/");
-        }
-        LocalDate today = timeManager.getDate();
-        List<Debt> debtList = debtService.findByVisibleIsTrueAndDateBetween(today, today.plusYears(100));
-        Double totalDebtAmount = getTotalPrice(debtList);
-        ModelAndView modelAndView = new ModelAndView("/debt/debt");
-        modelAndView.addObject("debtsList", debtList);
-        modelAndView.addObject("totalDebtAmount", totalDebtAmount);
-        modelAndView.addObject("debtorName", null);
-        modelAndView.addObject("formDebt", new Debt());
-        modelAndView.addObject("today", today);
-        modelAndView.addObject("fromDate", today);
-        modelAndView.addObject("toDate", null);
-        modelAndView.addObject("CloseShiftView", shiftService.createShiftView(shiftService.getLast()));
-        return modelAndView;
-    }
+	@Autowired
+	SystemPropertyService systemPropertyService;
 
-    @RequestMapping(value = "/manager/tableDebt", method = RequestMethod.POST)
-    public ModelAndView updatePageAfterSearch(@RequestParam(name = "fromDate") String fromDate,
-                                              @RequestParam(name = "toDate") String toDate,
-                                              @RequestParam(name = "debtorName") String debtorName) {
+	@Autowired
+	public DebtController(DebtService debtService, TimeManager timeManager, ShiftService shiftService, ChecklistService checklistService) {
+		this.debtService = debtService;
+		this.timeManager = timeManager;
+		this.shiftService = shiftService;
+		this.checklistService = checklistService;
+	}
 
-        LocalDate today = timeManager.getDate();
-        List<Debt> debtList = filter(debtorName, fromDate, toDate);
-        Double totalDebtAmount = getTotalPrice(debtList);
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView showDebtPage() {
+		LocalDate today = timeManager.getDate();
+		List<Debt> debtList = debtService.findByVisibleIsTrueAndDateBetween(today, today.plusYears(100));
+		Double totalDebtAmount = getTotalPrice(debtList);
 
-        LocalDate from = (fromDate == null || fromDate.isEmpty()) ? null : LocalDate.parse(fromDate, formatter);
-        LocalDate to = (toDate == null || toDate.isEmpty()) ? null : LocalDate.parse(toDate, formatter);
+		ModelAndView modelAndView = new ModelAndView("debt/debt");
+		modelAndView.addObject("debtsList", debtList);
+		modelAndView.addObject("totalDebtAmount", totalDebtAmount);
+		modelAndView.addObject("debtorName", null);
+		modelAndView.addObject("formDebt", new Debt());
+		modelAndView.addObject("today", today);
+		modelAndView.addObject("fromDate", shiftService.getLastShiftDate());
+		modelAndView.addObject("toDate", null);
+		modelAndView.addObject("closeChecklist", checklistService.getAllForCloseShift());
 
-        ModelAndView modelAndView = new ModelAndView("/debt/debt");
-        modelAndView.addObject("debtsList", debtList);
-        modelAndView.addObject("totalDebtAmount", totalDebtAmount);
-        modelAndView.addObject("debtorName", debtorName);
-        modelAndView.addObject("formDebt", new Debt());
-        modelAndView.addObject("today", today);
-        modelAndView.addObject("fromDate", from);
-        modelAndView.addObject("toDate", to);
+		return modelAndView;
+	}
 
-        return modelAndView;
-    }
+	@RequestMapping(method = RequestMethod.POST)
+	public ModelAndView updatePageAfterSearch(@RequestParam(name = "fromDate") String fromDate,
+											  @RequestParam(name = "toDate") String toDate,
+											  @RequestParam(name = "debtorName") String debtorName) {
+		LocalDate today = timeManager.getDate();
+		List<Debt> debtList = filter(debtorName, fromDate, toDate);
+		Double totalDebtAmount = getTotalPrice(debtList);
 
-    private List<Debt> filter(String debtorName, String fromDate, String toDate) {
-        debtorName = (debtorName == null) ? null : debtorName.trim();
+		LocalDate from = (fromDate == null || fromDate.isEmpty()) ? null : LocalDate.parse(fromDate, formatter);
+		LocalDate to = (toDate == null || toDate.isEmpty()) ? null : LocalDate.parse(toDate, formatter);
 
-        LocalDate today = timeManager.getDate();
-        LocalDate from = (fromDate == null || fromDate.isEmpty())
-                ? today.minusYears(100) : LocalDate.parse(fromDate, formatter);
-        LocalDate to = (toDate == null || toDate.isEmpty())
-                ? today.plusYears(100) : LocalDate.parse(toDate, formatter);
+		ModelAndView modelAndView = new ModelAndView("debt/debt");
+		modelAndView.addObject("debtsList", debtList);
+		modelAndView.addObject("totalDebtAmount", totalDebtAmount);
+		modelAndView.addObject("debtorName", debtorName);
+		modelAndView.addObject("formDebt", new Debt());
+		modelAndView.addObject("today", today);
+		modelAndView.addObject("fromDate", from);
+		modelAndView.addObject("toDate", to);
 
-        if (debtorName == null || debtorName.isEmpty()) {
-            return debtService.findByVisibleIsTrueAndDateBetween(from, to);
-        } else {
-            return debtService.findByDebtorAndDateBetween(debtorName, from, to);
-        }
+		return modelAndView;
+	}
 
-    }
+	private List<Debt> filter(String debtorName, String fromDate, String toDate) {
+		debtorName = (debtorName == null) ? null : debtorName.trim();
 
-    private Double getTotalPrice(List<Debt> goodsList) {
-        return goodsList
-                .stream().mapToDouble(Debt::getDebtAmount).sum();
-    }
+		LocalDate today = timeManager.getDate();
+		LocalDate from = (fromDate == null || fromDate.isEmpty())
+				? today.minusYears(100) : LocalDate.parse(fromDate, formatter);
+		LocalDate to = (toDate == null || toDate.isEmpty())
+				? today.plusYears(100) : LocalDate.parse(toDate, formatter);
 
-    @RequestMapping(value = "/manager/tableDebt/addDebt", method = RequestMethod.POST)
-    public String saveGoods(@ModelAttribute @Valid Debt debt) {
+		if (debtorName == null || debtorName.isEmpty()) {
+			return debtService.findByVisibleIsTrueAndDateBetween(from, to);
+		} else {
+			return debtService.findByDebtorAndDateBetween(debtorName, from, to);
+		}
 
-        debtService.save(debt);
+	}
 
-        return "redirect:";
-    }
+	private Double getTotalPrice(List<Debt> goodsList) {
+		return goodsList
+				.stream().mapToDouble(Debt::getDebtAmount).sum();
+	}
 
-    @RequestMapping(value = "/manager/tableDebt/delete", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<?> deleteGoods(@RequestParam(name = "debtId") Long id) {
+	@RequestMapping(value = "/addDebt", method = RequestMethod.POST)
+	public ResponseEntity<?> saveGoods(@ModelAttribute @Valid Debt debt) {
 
-        debtService.delete(id);
+		debtService.save(debt);
 
-        return ResponseEntity.ok("Товар успешно удален!");
-    }
+		return ResponseEntity.ok("Долг успешно добавлен!");
+	}
+
+	@RequestMapping(value = "/repay", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> repayDebts(@RequestParam(name = "debtId") Long id) {
+
+		debtService.repayDebt(id);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/deleteBoss", method = RequestMethod.POST)
+	public ResponseEntity<?> deleteDebtsBoss(@RequestParam(name = "debtId") Long id) {
+
+		Debt debt = debtService.get(id);
+
+		if (debt != null) {
+			debtService.delete(debt);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+
+	@RequestMapping(value = "/deleteManager", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> deleteDebtsManager(@RequestParam(name = "debtId") Long id,
+	                                            @RequestParam(name = "masterKey") String masterKey) {
+
+		Debt debt = debtService.get(id);
+		AllSystemProperty property = systemPropertyService.findOne("masterKey");
+		String dbMasterKey;
+
+		if (property != null) {
+			dbMasterKey = property.getProperty();
+		} else {
+			throw new DebtDataException("Мастер ключ не настроен");
+		}
+
+		if (debt != null && encoder.matches(masterKey, dbMasterKey)) {
+			debtService.delete(debt);
+			return ResponseEntity.ok("Долг успешно удален");
+		} else {
+			throw new DebtDataException("Введен неверный мастер ключ");
+		}
+
+	}
+
+	@ExceptionHandler(value = DebtDataException.class)
+	public ResponseEntity<?> handleUserUpdateException(DebtDataException ex) {
+		return ResponseEntity.badRequest().body(ex.getMessage());
+	}
+
 }

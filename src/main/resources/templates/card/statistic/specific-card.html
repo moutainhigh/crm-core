@@ -13,8 +13,9 @@
     <h1 class="table-name" align="center">История карты</h1>
     <div th:replace="card/statistic/fragments/cardStatisticPanel :: panel"></div>
 </div>
-
+<div th:replace="media/advertisingDispatch :: advertising"></div>
 <script th:src="@{/webjars/datatables/1.10.12/js/jquery.dataTables.min.js}" type="text/javascript"></script>
 <script th:src="@{/js/card/payment-history.js}"></script>
+<script th:src="@{/js/mail.js}"></script>
 </body>
 </html>

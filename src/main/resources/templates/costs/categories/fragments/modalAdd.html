@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<div class="modal fade" tabindex="-1" role="dialog" id="modalAddCategory" th:fragment="modalAdd">
+    <form class="form-horizontal" id="formAddCategory" method="post" th:action="@{/boss/cost/category/add}" th:object="${formCategory}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Добавление новой категории расходов</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="messageAd"></div>
+                    <div class="form-group">
+                        <label for="addCategory" class="col-md-offset-1 col-sm-2 control-label">Категория</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" aria-label="Категория"
+                                   placeholder="Категория расхода" required="required" id="addCategory"
+                                   th:name="name"/>
+                        </div><!-- /.col-lg-6 -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
+                    <button type="submit" class="btn btn-success">Добавить категорию</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </form>
+</div><!-- /.modal -->
+
+</body>
+</html>

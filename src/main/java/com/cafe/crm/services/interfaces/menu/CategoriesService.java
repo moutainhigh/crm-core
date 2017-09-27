@@ -15,4 +15,6 @@ public interface CategoriesService {
 
     void delete(Long id);
 
+	List<Category> sortProductListAndGetAllCategories();
+
 }

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/navSetting.css}"/>
+</head>
+<body>
+<div th:replace="bossnavbar :: bossNavbar"></div>
+<div th:replace="settingPages/navSetting :: navSetting"></div>
+<div th:replace="media/advertisingDispatch :: advertising"></div>
+
+<div class="container" style="padding-top: 50px;">
+    <h1 th:align="center" style="color: #5bc0de;margin-bottom: 40px;">Настройки карт</h1>
+    <div class="row">
+        <div align="center" class="col-md-offset-4 col-md-4" style="background-color: white;padding: 10px;">
+            <form roles="form" method="post" th:action="@{/boss/settings/card/changeStatus}">
+                <h3 align="center">Текущий статус карт : <br/><b th:text="${cardEnable} ? 'Работают' : 'Отключены'"></b></h3>
+                <button type="submit" class="btn btn-success center-block">Поменять статус</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" th:src="@{/js/setting/page/nav-setting.js}"></script>
+</body>
+</html>

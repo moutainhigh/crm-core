@@ -1,107 +1,114 @@
 package com.cafe.crm.models.property;
 
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "property")
 public class Property {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+	@Id
+	@GeneratedValue
+	private Long id;
 
-    @NotNull
-    @NotEmpty
-    private String name;
-    @NotNull
-    private Double value;
-    @NotNull
-    private String unit;
+	@NotBlank(message = "Поле \"name\" не может быть пустым")
+	private String name;
 
-    private Boolean enable;
+	@Min(value = 0, message = "Поле \"value\" должно быть цифрой большей 0!")
+	@Max(value = Integer.MAX_VALUE, message = "Поле \"value\" должно быть цифрой меньшей 2147483647!")
+	private double value;
 
-    public Property() {
-    }
+	@NotNull
+	private String unit;
 
-    public Property(String name, Double value, String unit, Boolean enable) {
-        this.name = name;
-        this.value = value;
-        this.unit = unit;
-        this.enable = enable;
-    }
+	private Boolean enable;
 
-    public String getUnit() {
-        return unit;
-    }
+	public Property() {
+	}
 
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
+	public Property(String name, Double value, String unit, Boolean enable) {
+		this.name = name;
+		this.value = value;
+		this.unit = unit;
+		this.enable = enable;
+	}
 
-    public Boolean getEnable() {
-        return enable;
-    }
+	public String getUnit() {
+		return unit;
+	}
 
-    public void setEnable(Boolean enable) {
-        this.enable = enable;
-    }
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
 
-    public void setEnabled(Boolean enabled) {
-        enable = enabled;
-    }
+	public Boolean getEnable() {
+		return enable;
+	}
 
-    public Double getValue() {
+	public void setEnable(Boolean enable) {
+		this.enable = enable;
+	}
 
-        return value;
-    }
+	public void setEnabled(Boolean enabled) {
+		enable = enabled;
+	}
 
-    public void setValue(Double value) {
-        this.value = value;
-    }
+	public Double getValue() {
 
-    public Long getId() {
-        return id;
-    }
+		return value;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setValue(Double value) {
+		this.value = value;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	public String getName() {
+		return name;
+	}
 
-        Property property = (Property) o;
+	public void setName(String name) {
+		this.name = name;
+	}
 
-        if (id != null ? !id.equals(property.id) : property.id != null) return false;
-        if (name != null ? !name.equals(property.name) : property.name != null) return false;
-        if (value != null ? !value.equals(property.value) : property.value != null)
-            return false;
-        return enable != null ? enable.equals(property.enable) : property.enable == null;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (enable != null ? enable.hashCode() : 0);
-        return result;
-    }
+		Property property = (Property) o;
+
+		if (Double.compare(property.value, value) != 0) return false;
+		if (id != null ? !id.equals(property.id) : property.id != null) return false;
+		if (name != null ? !name.equals(property.name) : property.name != null) return false;
+		return enable != null ? enable.equals(property.enable) : property.enable == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		temp = Double.doubleToLongBits(value);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (enable != null ? enable.hashCode() : 0);
+		return result;
+	}
 }

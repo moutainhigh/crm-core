@@ -19,66 +19,71 @@ import javax.validation.Valid;
 @RequestMapping("boss/menu/ingredients")
 public class IngredientsController {
 
-    @Autowired
-    private IngredientsService ingredientsService;
+	private final IngredientsService ingredientsService;
 
-    @ModelAttribute("ingredients")
-    public Ingredients get() {
-        return new Ingredients();
-    }
+	@Autowired
+	public IngredientsController(IngredientsService ingredientsService) {
+		this.ingredientsService = ingredientsService;
+	}
+
+	@ModelAttribute("ingredients")
+	public Ingredients get() {
+		return new Ingredients();
+	}
 
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ModelAndView getPage() {
-        ModelAndView model = new ModelAndView();
-        model.setViewName("ingredients/ingredients");
-        model.addObject("list", ingredientsService.getAll());
-        return model;
-    }
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView getPage() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("ingredients/ingredients");
+		model.addObject("list", ingredientsService.getAll());
+		return model;
+	}
 
-    @RequestMapping(method = RequestMethod.POST)
-    public String createNew(@Valid Ingredients ingredients, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("list", ingredientsService.getAll());
-            return "ingredients/ingredients";
-        }
-        if (ingredients.getAmount() >= 0) {
-            ingredientsService.save(ingredients);
-        }
-        return "redirect:/boss/menu/ingredients";
-    }
+	@RequestMapping(method = RequestMethod.POST)
+	public String createNew(@Valid Ingredients ingredients, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			model.addAttribute("list", ingredientsService.getAll());
+			return "ingredients/ingredients";
+		}
+		if (ingredients.getAmount() > 0) {
+			ingredients.setPrice(ingredients.getPrice() / ingredients.getAmount());
+			ingredientsService.save(ingredients);
+		}
+		return "redirect:/boss/menu/ingredients";
+	}
 
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public String deleteIng(Long id) {
-        ingredientsService.delete(id);
-        return "redirect:/boss/menu/ingredients";
-    }
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	public String deleteIng(Long id) {
+		ingredientsService.delete(id);
+		return "redirect:/boss/menu/ingredients";
+	}
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String addAmount(@RequestParam("add") Integer amount, @RequestParam("id") Long id) {
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public String addAmount(@RequestParam("add") Integer amount, @RequestParam("id") Long id) {
 
-        Ingredients ingredients = ingredientsService.getOne(id);
-        if (ingredients != null && amount > 0) {
-            int am = ingredients.getAmount();
-            ingredients.setAmount(am + amount);
-            ingredientsService.save(ingredients);
-        }
-        return "redirect:/boss/menu/ingredients";
-    }
+		Ingredients ingredients = ingredientsService.getOne(id);
+		if (ingredients != null && amount > 0) {
+			int am = ingredients.getAmount();
+			ingredients.setAmount(am + amount);
+			ingredientsService.save(ingredients);
+		}
+		return "redirect:/boss/menu/ingredients";
+	}
 
-    @RequestMapping(value = "/deduct", method = RequestMethod.POST)
-    public String deductAmount(@RequestParam("deduct") Integer amount, @RequestParam("id") Long id) {
+	@RequestMapping(value = "/deduct", method = RequestMethod.POST)
+	public String deductAmount(@RequestParam("deduct") Integer amount, @RequestParam("id") Long id) {
 
-        Ingredients ingredients = ingredientsService.getOne(id);
-        if (ingredients != null && amount > 0) {
-            int am = ingredients.getAmount();
-            if (am - amount >= 0) {
-                ingredients.setAmount(am - amount);
-            }
-            ingredientsService.save(ingredients);
-        }
-        return "redirect:/boss/menu/ingredients";
-    }
+		Ingredients ingredients = ingredientsService.getOne(id);
+		if (ingredients != null && amount > 0) {
+			int am = ingredients.getAmount();
+			if (am - amount >= 0) {
+				ingredients.setAmount(am - amount);
+			}
+			ingredientsService.save(ingredients);
+		}
+		return "redirect:/boss/menu/ingredients";
+	}
 
 
 }

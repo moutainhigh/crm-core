@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="addUser" th:remove="tag">
+    <button type="button" class="btn btn-lg btn-primary btn-block"
+            data-toggle="modal" href="#modalAddUserForAllUsersPanel">Добавить Нового Сотрудника
+    </button>
+    <!-- Modal -->
+    <div id="modalAddUserForAllUsersPanel" class="modal fade" roles="dialog">
+        <div th:replace="userAccounting/fragments/modal/modalBodyAddUser :: modalBodyAddUser"></div>
+    </div>
+</div>
+</body>
+</html>

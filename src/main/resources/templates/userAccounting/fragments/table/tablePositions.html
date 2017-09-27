@@ -1,0 +1,120 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script th:src="@{/js/filter.js}"></script>
+</head>
+
+<body>
+
+<div class="table" style="border-radius:5px;padding-right: 250px;padding-left: 250px" th:fragment="tablePosition">
+    <table class="table table-striped">
+        <tr>
+            <th> Название должности</th>
+            <th> Действия</th>
+            <th></th>
+        </tr>
+        <tbody class="searchablePosition" th:each="position : ${allPositions}">
+        <tr>
+            <td th:text="${position.name}"></td>
+            <td class="col-lg-2">
+                <button class="btn btn-primary btn-info" th:href="'#editPosition'+${position.id}"
+                        data-toggle="modal">Редактировать
+                </button>
+            </td>
+
+            <td class="col-lg-2">
+                <button class="btn btn-primary btn-danger" th:href="'#deletePosition'+${position.id}"
+                        data-toggle="modal">Удалить
+                </button>
+            </td>
+
+
+            <div class="modal fade" th:id="'editPosition'+${position.id}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h2 class="form-signin-heading">Форма Редактирования Должности</h2>
+                        </div>
+                        <div class="modal-body">
+                            <div class="errorMessage"></div>
+                            <form class="formEditPosition form-horizontal">
+                                <input type="hidden" class="form-control" th:value="${position.id}" name="id"/>
+                                <div class="form-group">
+                                    <label for="position" class="col-md-4 control-label">Название должности</label>
+                                    <div class="col-md-6">
+                                        <input type="text" id="position" class="form-control" th:value="${position.name}"
+                                               required="required" autofocus="" name="name" pattern=".{1,}"
+                                               title="Поле Должность не должно быть пустым"/>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="form-group">
+                                    <div id="inputPercentFromSales">
+                                        <label for="percentageOfSales" class="col-md-4 control-label">Изменить процент с выручки</label>
+                                        <div class="col-md-6">
+                                            <input type="number" id="percentageOfSales" class="form-control" th:value="${position.percentageOfSales}"
+                                                   name="percentageOfSales" min="0" max="100"
+                                                   title="Поле Процент не должно быть пустым"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-4 col-sm-10">
+                                        <div class="checkbox">
+                                            <label><input type="checkbox" name="isPositionUsePercentOfSales"/> Изменить процент с выручки </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <button class="btn btn-lg btn-primary btn-block" type="submit">Изменить Должность
+                                </button>
+                            </form>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                    Отмена
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal fade" th:id="'deletePosition'+${position.id}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h2 class="form-signin-heading">Форма Удаления Должности</h2>
+                        </div>
+                        <div class="modal-body">
+                            <h3 style="color: crimson">Удалить должность?</h3>
+                            <br/>
+                            <form class="form-signin" th:action="@{'/boss/user/position/delete/'+${position.id}}"
+                                  method="GET">
+                                <h4>Название должности</h4>
+                                <input type="text" class="form-control" th:value="${position.name}" name="name"/>
+                                <br/>
+
+                                <button type="submit" class="btn btn-lg btn-primary btn-block">Да</button>
+                                <br/>
+                                <button type="button" class="btn btn-lg btn-primary btn-block" data-dismiss="modal">
+                                    Нет
+                                </button>
+                                <br/>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

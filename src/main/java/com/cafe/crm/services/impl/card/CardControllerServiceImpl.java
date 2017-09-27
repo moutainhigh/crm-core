@@ -15,23 +15,26 @@ import java.util.List;
 @Transactional
 public class CardControllerServiceImpl implements CardControllerService {
 
-    @Autowired
-    private CardService cardService;
+	private final CardService cardService;
+	private final CalculateService calculateService;
 
-    @Autowired
-    private CalculateService calculateService;
+	@Autowired
+	public CardControllerServiceImpl(CardService cardService, CalculateService calculateService) {
+		this.cardService = cardService;
+		this.calculateService = calculateService;
+	}
 
-    @Override
-    public void addCardToCalculate(Long idCard, Long idCalculate) {
-        Card card = cardService.getOne(idCard);
-        cardService.save(card);
-        Calculate calculate = calculateService.getOne(idCalculate);
-        List<Card> cards = calculate.getCards();
-        if (!cards.contains(card)) {
-            cards.add(card);
-            calculate.setCards(cards);
-            calculateService.save(calculate);
-        }
-    }
+	@Override
+	public void addCardToCalculate(Long idCard, Long idCalculate) {
+		Card card = cardService.getOne(idCard);
+		cardService.save(card);
+		Calculate calculate = calculateService.getOne(idCalculate);
+		List<Card> cards = calculate.getCards();
+		if (!cards.contains(card)) {
+			cards.add(card);
+			calculate.setCards(cards);
+			calculateService.save(calculate);
+		}
+	}
 
 }

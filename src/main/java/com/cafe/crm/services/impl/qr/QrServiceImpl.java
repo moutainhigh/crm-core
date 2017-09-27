@@ -22,50 +22,54 @@ import java.nio.charset.Charset;
 @Service
 public class QrServiceImpl implements QrService {
 
-    @Autowired
-    private AmazonServiceImpl amazonService;
+	private final AmazonServiceImpl amazonService;
 
-    @Override
-    public File generateQrImage(String link) {
-        Charset charset = Charset.forName("UTF-8");
-        AbstractQRCode bout =
-                QRCode.from(link)
-                        .withSize(500, 500)
-                        .to(ImageType.PNG)
-                        .withCharset(String.valueOf(charset));
-        return bout.file();
-    }
+	@Autowired
+	public QrServiceImpl(AmazonServiceImpl amazonService) {
+		this.amazonService = amazonService;
+	}
 
-    @Override
-    public void generateQrInstance(Card card) {
-        Charset charset = Charset.forName("UTF-8");
-        AbstractQRCode bout =
-                QRCode.from(String.valueOf(card))
-                        .withSize(500, 500)
-                        .to(ImageType.PNG)
-                        .withCharset(String.valueOf(charset));
-        try {
-            File file = new File("src/main/resources/static/images/v1-Instance.png");
-            OutputStream out = new FileOutputStream
-                    (file.getAbsolutePath());
-            bout.writeTo(out);
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	@Override
+	public File generateQrImage(String link) {
+		Charset charset = Charset.forName("UTF-8");
+		AbstractQRCode bout =
+				QRCode.from(link)
+						.withSize(500, 500)
+						.to(ImageType.PNG)
+						.withCharset(String.valueOf(charset));
+		return bout.file();
+	}
 
-    @Override
-    public String readQrFile(String link, String charset)
-            throws FileNotFoundException, IOException, NotFoundException {
-        BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(
-                new BufferedImageLuminanceSource(
-                        ImageIO.read(new FileInputStream(
-                                link)))));
-        Result qrCodeResult = new MultiFormatReader().decode(binaryBitmap);
-        return qrCodeResult.getText();
-    }
+	@Override
+	public void generateQrInstance(Card card) {
+		Charset charset = Charset.forName("UTF-8");
+		AbstractQRCode bout =
+				QRCode.from(String.valueOf(card))
+						.withSize(500, 500)
+						.to(ImageType.PNG)
+						.withCharset(String.valueOf(charset));
+		try {
+			File file = new File("src/main/resources/static/images/v1-Instance.png");
+			OutputStream out = new FileOutputStream
+					(file.getAbsolutePath());
+			bout.writeTo(out);
+			out.flush();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public String readQrFile(String link, String charset)
+			throws FileNotFoundException, IOException, NotFoundException {
+		BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(
+				new BufferedImageLuminanceSource(
+						ImageIO.read(new FileInputStream(
+								link)))));
+		Result qrCodeResult = new MultiFormatReader().decode(binaryBitmap);
+		return qrCodeResult.getText();
+	}
 
 }
 

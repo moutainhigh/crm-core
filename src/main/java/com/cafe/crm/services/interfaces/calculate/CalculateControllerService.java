@@ -6,24 +6,30 @@ import java.util.List;
 
 public interface CalculateControllerService {
 
-    void createCalculate(Long id, Long number, String descr);
+	void createCalculate(Long id, Long number, String descr);
 
-    void createCalculateWithCard(Long id, Long number, String descr, Long idCard);
+	void createCalculateWithCard(Long id, Long number, String descr, Long idCard);
 
-    void refreshBoard(Long idC, Long idB);
+	void refreshBoard(Long idC, Long idB);
 
-    void addClient(Long id, Long number, String descr);
+	void addClient(Long id, Long number, String descr);
 
-    List<Client> calculatePrice();
+	List<Client> calculatePrice();
 
-    List<Client> calculatePrice(Long calculateId);
+	List<Client> calculatePrice(Long calculateId);
 
-    List<Client> outputClients(long[] clientsId);
+	List<Client> outputClients(long[] clientsId);
 
-    void closeClient(long[] clientsId, Long calculateId);
+	void closeClient(long[] clientsId, Long calculateId);
 
-    Long addCardOnClient(Long calculateId, Long clientId, Long cardId);
+	void closeClientDebt(String debtorName, long[] clientsId, Long calculateId, Double amountOfDebt);
 
-    void deleteClients(long[] clientsId, Long calculateId);
+	Long addCardOnClient(Long calculateId, Long clientId, Long cardId);
+
+	void deleteClients(long[] clientsId, Long calculateId);
+
+	void pauseClient(Long clientId);
+
+	void unpauseClient(Long clientId);
 
 }

@@ -2,61 +2,76 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
-    <div th:replace="bossnavbar :: bossNavbar"></div>
-    <div th:replace="settingPages/navSetting :: navSetting"></div>
-    <div th:replace="media/advertisingDispatch :: advertising"></div>
-    <script th:src="@{/js/mail.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/navSetting.css}"/>
 </head>
 <body>
+<div th:replace="bossnavbar :: bossNavbar"></div>
+<div th:replace="settingPages/navSetting :: navSetting"></div>
+<div th:replace="media/advertisingDispatch :: advertising"></div>
 <div class="container" style="padding-top: 50px">
-    <h1 th:align="center" style="color: #5bc0de;margin-bottom: 85px;">Базовые настройки</h1>
-    <form role="form" method="post" th:id="myForm" th:object="${wrapper}" action="/boss/settings/general-setting/edit"
-          style="margin: 10px auto; width: 50%; " modelAttribute="properties">
+    <div class="col-md-8 col-md-offset-2">
+    <h1 th:align="center" style="color: #5bc0de;margin-bottom: 85px;">Прочие настройки</h1>
         <table class="table" style="background: white;border-radius: 5px;box-shadow: 0 0 2px 1px;">
             <thead>
+            <div class="errorMessage"></div>
             <tr>
-                <th style="text-align:  center;">№</th>
-                <th style="text-align:  center;">Название параметра</th>
+                <!--<th style="text-align:  center;">№</th>-->
+                <th style="text-align:  center;">Название</th>
                 <th style="text-align:  center;">Значение</th>
-                <th style="text-align:  center;">ед.изм</th>
-                <th style="text-align:  center;">Активация</th>
+                <th style="text-align:  center;">Статус активации</th>
+                <th style="text-align:  center;">Обновить</th>
             </tr>
             </thead>
-            <tbody class="searchable" th:each="property, stat : *{properties}">
+            <tbody class="searchable">
             <tr style="font-size: 20px">
-                <input type="hidden" th:field="*{properties[__${stat.index}__].id}"/>
-                <input type="hidden" th:field="*{properties[__${stat.index}__].name}"/>
-                <input type="hidden" th:field="*{properties[__${stat.index}__].unit}"/>
-                <td th:align="center" th:text="*{properties[__${stat.index}__].id}"></td>
-                <td th:align="center" th:text="*{properties[__${stat.index}__].name}"></td>
-
-
+                <td th:align="center">Статус карт</td>
+                <td th:align="center" th:text="${cardEnable} ? 'Работают' : 'Отключены'">Выключены</td>
                 <td th:align="center">
-                    <input style="width: 100px" type="number" required="" class="form-control form2" name="value"
-                           th:field="*{properties[__${stat.index}__].value}" pattern="\d+"
-                           title="только цифры" min="0"/>
+                    <input id="inputCardEnable" type="checkbox" value="true" name="cardEnable"
+                           th:attrappend="checked=${cardEnable} ? checked "/>
                 </td>
-                <td th:align="center" style="font-size: 20px" th:text="*{properties[__${stat.index}__].unit}"></td>
-
-                <td>
-                    <div th:align="center" th:if="${property.getEnable()} != null">
-                        <input type="checkbox" data-toggle="toggle" data-on="Вкл" data-off="Выкл"
-                               th:checked="${property.getEnable()}"
-                               style="width:20px;height:20px;" th:id="'check_'+${property.getId()}"
-                               name="enable"
-                               th:field="*{properties[__${stat.index}__].enable}"/>
-                    </div>
+                <td th:align="center" >
+                    <button id="buttonCardEnable" type="button" class="btn btn-success center-block">Обновить</button>
                 </td>
             </tr>
+            <th:block  th:each="property: ${properties}">
+                <tr style="font-size: 20px">
+                    <form th:id="'formProperty'+${property.id}">
+                        <input type="hidden" th:value="${property.id}" name="id"/>
+                        <input type="hidden" th:value="${property.unit}" name="unit"/>
+                        <input type="hidden" th:value="${property.name}" name="name"/>
+                        <td th:align="center" th:text="${property.name}"></td>
+
+
+                        <td th:align="center">
+                            <input style="width: 100px" type="number" required="" class="form-control form2" name="value"
+                                   th:value="${property.value}" title="только цифры" min="0"/>
+                        </td>
+                        <td>
+                            <div th:align="center" th:if="${property.enable} != null">
+                                <input type="checkbox" data-toggle="toggle" data-on="Вкл" data-off="Выкл"
+                                       th:attrappend="checked=${property.enable} ? checked " th:value="true"
+                                       name="enable"/>
+                                <input type='hidden' value='false' name='enable'/>
+                            </div>
+                            <div th:align="center" th:text="${property.enable == null} ? '-------'" th:unless="${property.enable} != null">
+                                <input type="hidden" th:value="null"/>
+                            </div>
+                        </td>
+                        <td th:align="center" >
+                            <button type="button" th:attr="data-id=${property.id}" class="btn btn-success center-block buttonPropertyRefresh">Обновить</button>
+                        </td>
+                    </form>
+                </tr>
+            </th:block>
+
             </tbody>
         </table>
-
-        <div align="center">
-            <button type="submit" class="btn btn-lg btn-primary" id="send" name="upd">Сохранить</button>
-        </div>
-    </form>
+    </div>
 </div>
+
+<script th:src="@{/js/mail.js}"></script>
+<script type="text/javascript" th:src="@{/js/setting/page/nav-setting.js}"></script>
+<script type="text/javascript" th:src="@{/js/setting/page/general.js}"></script>
 </body>
 </html>
-
-

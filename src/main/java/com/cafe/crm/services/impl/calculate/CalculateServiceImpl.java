@@ -11,42 +11,46 @@ import java.util.List;
 @Service
 public class CalculateServiceImpl implements CalculateService {
 
-    @Autowired
-    private CalculateRepository calculateRepository;
+	private final CalculateRepository calculateRepository;
 
-    @Override
-    public void save(Calculate calculate) {
-        calculateRepository.save(calculate);
-    }
+	@Autowired
+	public CalculateServiceImpl(CalculateRepository calculateRepository) {
+		this.calculateRepository = calculateRepository;
+	}
 
-    @Override
-    public void delete(Calculate calculate) {
-        calculateRepository.delete(calculate);
-    }
+	@Override
+	public void save(Calculate calculate) {
+		calculateRepository.save(calculate);
+	}
 
-    @Override
-    public List<Calculate> getAll() {
-        return calculateRepository.findAll();
-    }
+	@Override
+	public void delete(Calculate calculate) {
+		calculateRepository.delete(calculate);
+	}
 
-    @Override
-    public Calculate getOne(Long id) {
-        return calculateRepository.findOne(id);
-    }
+	@Override
+	public List<Calculate> getAll() {
+		return calculateRepository.findAll();
+	}
 
-    @Override
-    public List<Calculate> getAllOpen() {
-        return calculateRepository.getAllOpen();
-    }
+	@Override
+	public Calculate getOne(Long id) {
+		return calculateRepository.findOne(id);
+	}
 
-    @Override
-    public Calculate getAllOpenOnCalculate(Long calculateId) {
-        return calculateRepository.getAllOpenOnCalculate(calculateId);
-    }
+	@Override
+	public List<Calculate> getAllOpen() {
+		return calculateRepository.getAllOpen();
+	}
 
-    @Override
-    public Calculate findByClientId(Long clientId) {
-        return calculateRepository.findByClientId(clientId);
-    }
+	@Override
+	public Calculate getAllOpenOnCalculate(Long calculateId) {
+		return calculateRepository.getAllOpenOnCalculate(calculateId);
+	}
+
+	@Override
+	public Calculate findByClientId(Long clientId) {
+		return calculateRepository.findByClientId(clientId);
+	}
 
 }

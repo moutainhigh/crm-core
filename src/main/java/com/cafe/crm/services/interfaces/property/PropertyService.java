@@ -7,14 +7,14 @@ import java.util.List;
 
 public interface PropertyService {
 
-    void save(Property property);
+	void save(Property property);
 
-    List<Property> findAll();
+	List<Property> findAll();
 
-    Property getOne(Long id);
+	Property getByName(String name);
 
-    void delete(Long id);
+	void delete(Long id);
 
-    void saveCollection(List<Property> list);
+	void saveCollection(List<Property> list);
 
 }

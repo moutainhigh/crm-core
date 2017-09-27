@@ -3,177 +3,235 @@ package com.cafe.crm.models.shift;
 
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
-import com.cafe.crm.models.worker.Worker;
+import com.cafe.crm.models.client.Debt;
+import com.cafe.crm.models.cost.Cost;
+import com.cafe.crm.models.note.NoteRecord;
+import com.cafe.crm.models.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 
 @Entity
-@Table(name = "Shift")
+@Table(name = "shifts")
 public class Shift {
 
-    @Column(name = "isOpen") // shift is open ?
-            Boolean isOpen;
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private Long id;
-    @Column(name = "dateShift")
-    private LocalDate dateShift;
-    @Column(name = "checkValue")
-    private Integer checkValue;// after change on set<>
-    @OneToMany
-    private Set<Calculate> allCalculate;
+	@Id
+	@GeneratedValue
+	private Long id;
 
-    @OneToMany
-    private Set<Client> clients;
+	private boolean opened;
 
-    @Column(name = "cashBox")
-    private Double cashBox = 0D;
+	@Column(name = "shift_date")
+	private LocalDate shiftDate;
 
-    @Column(name = "profit")
-    private Double profit = 0D;
+	@Column(name = "checkValue")
+	private Integer checkValue;// after change on set<>
 
-    @Column(name = "bankCashBox")
-    private Double bankCashBox = 0D;
+	@OneToMany
+	private Set<Calculate> calculates;
 
-    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Worker.class)
-    @JoinTable(name = "permissions_allShifts",
-            joinColumns = {@JoinColumn(name = "shift_id")},
-            inverseJoinColumns = {@JoinColumn(name = "worker_id")})
-    private Set<Worker> users;
+	@OneToMany
+	private Set<Client> clients;
 
-    public Shift(LocalDate dateShift, Set<Worker> users, Double bankCashBox) {
-        this.dateShift = dateShift;
-        this.users = users;
-        this.bankCashBox = bankCashBox;
-    }
+	@Column(name = "cash_box")
+	private double cashBox;
 
-    public Shift() {
-    }
+	private double profit;
 
-    public Double getBankCashBox() {
-        return bankCashBox;
-    }
+	@Column(name = "bank_cash_box")
+	private double bankCashBox;
 
-    public void setBankCashBox(Double bankCashBox) {
-        this.bankCashBox = bankCashBox;
-    }
+	@ManyToMany(mappedBy = "shifts", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	private List<User> users;
 
-    public Set<Worker> getUsers() {
-        return users;
-    }
+	@OneToMany(fetch = FetchType.LAZY)
+	private List<Debt> repaidDebts = new ArrayList<>();
 
-    public void setUsers(Set<Worker> users) {
-        this.users = users;
-    }
+	@OneToMany(fetch = FetchType.LAZY)
+	private List<Debt> givenDebts = new ArrayList<>();
 
-    public String getUsersNames() {   // return only names of workers of shift
+	@OneToMany(mappedBy = "shift")
+	private List<Cost> costs;
 
-        String names = "";
-        for (Worker worker : users) {
-            names += worker.getFirstName() + " ";
+	// TODO: 26.07.2017 Подумать над размером
+	private String comment;
 
-        }
-        return names;
-    }
+	@OneToMany(mappedBy = "shift")
+	private List<NoteRecord> noteRecords;
 
-    public Double getCashBox() {
-        return cashBox;
-    }
+	public Shift(LocalDate shiftDate, List<User> users, double bankCashBox) {
+		this.shiftDate = shiftDate;
+		this.users = users;
+		this.bankCashBox = bankCashBox;
+	}
 
-    public void setCashBox(Double cashBox) {
-        this.cashBox = cashBox;
-    }
+	public Shift() {
+	}
 
-    public Double getProfit() {
-        return profit;
-    }
+	public double getBankCashBox() {
+		return bankCashBox;
+	}
 
-    public void setProfit(Double profit) {
-        this.profit = profit;
-    }
+	public void setBankCashBox(double bankCashBox) {
+		this.bankCashBox = bankCashBox;
+	}
 
-    public Set<Calculate> getAllCalculate() {
-        return allCalculate;
-    }
+	public List<User> getUsers() {
+		return users;
+	}
 
-    public void setAllCalculate(Set<Calculate> allCalculate) {
-        this.allCalculate = allCalculate;
-    }
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
 
-    public Set<Client> getClients() {
-        return clients;
-    }
+	public String getUsersNames() {
+		StringBuilder usersNames = new StringBuilder();
+		for (User user : users) {
+			usersNames.append(user.getFirstName()).append(" ");
+		}
+		return usersNames.toString();
+	}
 
-    public void setClients(Set<Client> clients) {
-        this.clients = clients;
-    }
+	public double getCashBox() {
+		return cashBox;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public void setCashBox(double cashBox) {
+		this.cashBox = cashBox;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public double getProfit() {
+		return profit;
+	}
 
-    public LocalDate getDateShift() {
-        return dateShift;
-    }
+	public void setProfit(double profit) {
+		this.profit = profit;
+	}
 
-    public void setDateShift(LocalDate dateShift) {
-        this.dateShift = dateShift;
-    }
+	public Set<Calculate> getCalculates() {
+		return calculates;
+	}
 
-    public Integer getCheckValue() {
-        return checkValue;
-    }
+	public void setCalculates(Set<Calculate> calculates) {
+		this.calculates = calculates;
+	}
 
-    public void setCheckValue(Integer checkValue) {
-        this.checkValue = checkValue;
-    }
+	public Set<Client> getClients() {
+		return clients;
+	}
 
-    public Boolean getOpen() {
-        return isOpen;
-    }
+	public void setClients(Set<Client> clients) {
+		this.clients = clients;
+	}
 
-    public void setOpen(Boolean open) {
-        isOpen = open;
-    }
+	public Long getId() {
+		return id;
+	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	public LocalDate getShiftDate() {
+		return shiftDate;
+	}
 
-        Shift shift = (Shift) o;
+	public void setShiftDate(LocalDate shiftDate) {
+		this.shiftDate = shiftDate;
+	}
 
-        if (id != null ? !id.equals(shift.id) : shift.id != null) return false;
-        if (dateShift != null ? !dateShift.equals(shift.dateShift) : shift.dateShift != null) return false;
-        if (checkValue != null ? !checkValue.equals(shift.checkValue) : shift.checkValue != null) return false;
-        return isOpen != null ? isOpen.equals(shift.isOpen) : shift.isOpen == null;
-    }
+	public Integer getCheckValue() {
+		return checkValue;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (dateShift != null ? dateShift.hashCode() : 0);
-        result = 31 * result + (checkValue != null ? checkValue.hashCode() : 0);
-        result = 31 * result + (isOpen != null ? isOpen.hashCode() : 0);
-        return result;
-    }
+	public void setCheckValue(Integer checkValue) {
+		this.checkValue = checkValue;
+	}
 
-    @Override
-    public String toString() {
-        return "Shift{" +
-                "id=" + id +
-                ", dateShift=" + dateShift +
-                ", isOpen=" + isOpen +
-                ", users=" + users +
-                '}';
-    }
+	public boolean isOpen() {
+		return opened;
+	}
+
+	public void setOpen(boolean open) {
+		opened = open;
+	}
+
+	public List<Debt> getRepaidDebts() {
+		return repaidDebts;
+	}
+
+	public void addRepaidDebtToList(Debt debt) {
+		this.repaidDebts.add(debt);
+	}
+
+	public void addGivenDebtToList(Debt debt) {
+		this.givenDebts.add(debt);
+	}
+
+	public List<Cost> getCosts() {
+		return costs;
+	}
+
+	public void setCosts(List<Cost> costs) {
+		this.costs = costs;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public List<NoteRecord> getNoteRecords() {
+		return noteRecords;
+	}
+
+	public void setNoteRecords(List<NoteRecord> noteRecords) {
+		this.noteRecords = noteRecords;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Shift shift = (Shift) o;
+
+		if (opened != shift.opened) return false;
+		if (id != null ? !id.equals(shift.id) : shift.id != null) return false;
+		if (shiftDate != null ? !shiftDate.equals(shift.shiftDate) : shift.shiftDate != null) return false;
+		return checkValue != null ? checkValue.equals(shift.checkValue) : shift.checkValue == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (opened ? 1 : 0);
+		result = 31 * result + (shiftDate != null ? shiftDate.hashCode() : 0);
+		result = 31 * result + (checkValue != null ? checkValue.hashCode() : 0);
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "Shift{" +
+				"id=" + id +
+				", shiftDate=" + shiftDate +
+				", opened=" + opened +
+				'}';
+	}
+
+	public List<Debt> getGivenDebts() {
+		return givenDebts;
+	}
+
+	public void setGivenDebts(List<Debt> givenDebts) {
+		this.givenDebts = givenDebts;
+	}
 }

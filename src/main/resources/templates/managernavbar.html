@@ -22,17 +22,19 @@
                        style="padding-left: 10px;    padding-top: 8px;"></a>
                 </li>
                 <li><a href="/manager">Счета</a></li>
-                <li><a href="/manager/shift/edit">Настройки смены</a></li>
-                <li><a href="/manager/costs">Таблица расходов</a></li>
-                <li><a href="/manager/tableDebt">Таблица долгов</a></li>
-                <li><a data-toggle="modal" th:href="'#newPass'">Смена пароля</a></li>
+                <li><a href="/manager/shift/settings">Настройки</a></li>
+                <li><a href="/manager/cost">Расходы</a></li>
+                <li><a href="/manager/tableDebt">Долги</a></li>
+                <li><a data-toggle="modal" th:href="'#newPass'">Пароль</a></li>
+                <li th:if="${#lists.isEmpty(closeChecklist)}"><a th:href="@{/manager/shift/close}">Закрытие смены</a></li>
+                <li th:if="${not #lists.isEmpty(closeChecklist)}"><a data-toggle="modal" th:href="'#checklistOnCloseModal'">Закрытие смены</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a data-toggle="modal" th:href="'#closeShiftModalId'">Закрытие смены</a></li>
                 <li><a href="/logout">Выход</a></li>
             </ul>
         </div>
     </div><!--/.nav-collapse -->
 </div><!--/.navbar -->
+
 </body>
 </html>

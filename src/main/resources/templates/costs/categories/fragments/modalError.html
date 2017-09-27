@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<div class="modal fade" id="errorModal" tabindex="-1" roles="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" th:fragment="modalError">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="panel panel-danger">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Ошибка удаления</h3>
+                </div>
+                <div class="panel-body" style="color:red;" align="center">
+                    <div class="messageAd"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

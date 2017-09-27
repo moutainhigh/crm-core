@@ -15,66 +15,70 @@ import java.util.Set;
 @Service
 public class ClientServiceImpl implements ClientService {
 
-    @Autowired
-    private ClientRepository clientRepository;
+	private final ClientRepository clientRepository;
 
-    @Override
-    public void save(Client client) {
-        clientRepository.saveAndFlush(client);
-    }
+	@Autowired
+	public ClientServiceImpl(ClientRepository clientRepository) {
+		this.clientRepository = clientRepository;
+	}
 
-    @Override
-    public void saveAll(List<Client> clients) {
-        clientRepository.save(clients);
-    }
+	@Override
+	public void save(Client client) {
+		clientRepository.saveAndFlush(client);
+	}
 
-    @Override
-    public void delete(Client client) {
-        clientRepository.delete(client);
-    }
+	@Override
+	public void saveAll(List<Client> clients) {
+		clientRepository.save(clients);
+	}
 
-    @Override
-    public List<Client> getAll() {
-        return clientRepository.findAll();
-    }
+	@Override
+	public void delete(Client client) {
+		clientRepository.delete(client);
+	}
 
-    @Override
-    public Client getOne(Long id) {
-        return clientRepository.findOne(id);
-    }
+	@Override
+	public List<Client> getAll() {
+		return clientRepository.findAll();
+	}
 
-    @Override
-    public List<Client> getAllOpen() {
-        return clientRepository.getAllOpen();
-    }
+	@Override
+	public Client getOne(Long id) {
+		return clientRepository.findOne(id);
+	}
 
-    @Override
-    public List<Client> findByIdIn(long[] ids) {
-        return clientRepository.findByIdIn(ids);
-    }
+	@Override
+	public List<Client> getAllOpen() {
+		return clientRepository.getAllOpen();
+	}
 
-    @Override
-    public List<Client> findByCardId(Long cardId) {
-        return clientRepository.findByCardId(cardId);
-    }
+	@Override
+	public List<Client> findByIdIn(long[] ids) {
+		return clientRepository.findByIdIn(ids);
+	}
 
-    @Override
-    public Set<Card> findCardByClientIdIn(long[] clientsIds) {
-        return clientRepository.findCardByClientIdIn(clientsIds);
-    }
+	@Override
+	public List<Client> findByCardId(Long cardId) {
+		return clientRepository.findByCardId(cardId);
+	}
 
-    @Transactional
-    @Override
-    public boolean updateClientTime(Long id, int hours, int minutes) {
-        Client client = getOne(id);
-        if (client == null) {
-            return false;
-        }
-        LocalDateTime timeStart = client.getTimeStart();
-        LocalDateTime newTimeStart = timeStart.withHour(hours).withMinute(minutes);
-        client.setTimeStart(newTimeStart);
-        save(client);
-        return true;
-    }
+	@Override
+	public Set<Card> findCardByClientIdIn(long[] clientsIds) {
+		return clientRepository.findCardByClientIdIn(clientsIds);
+	}
+
+	@Transactional
+	@Override
+	public boolean updateClientTime(Long id, int hours, int minutes) {
+		Client client = getOne(id);
+		if (client == null) {
+			return false;
+		}
+		LocalDateTime timeStart = client.getTimeStart();
+		LocalDateTime newTimeStart = timeStart.withHour(hours).withMinute(minutes);
+		client.setTimeStart(newTimeStart);
+		save(client);
+		return true;
+	}
 
 }

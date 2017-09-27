@@ -11,7 +11,7 @@ $(document).ready(function () {
         // "ordering": false
         "order": [[0, "asc"]],
         "columnDefs": [{"targets": [], "visible": false},
-            {"targets": [4], "orderable": false}],
+            {"targets": [4,5], "orderable": false}],
         "oLanguage": {
             "sEmptyTable": "Нет доступных данных для таблицы!"
         },
@@ -61,48 +61,78 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-    $('#formAddGoods').submit(function (e) {
+    $('#formAddDebts').submit(function (e) {
         e.preventDefault();
         var url = '/manager/tableDebt/addDebt';
         var formData = $('#formAddDebts').serialize();
-
-        $.ajax({
-            type: 'POST',
-            url: url,
-            data: formData,
-            success: function (data) {
-                var successMessage = '<h4 style="color:green;" align="center">' + data + '</h4>';
-                $('.messageAd').html(successMessage).show();
-                window.setTimeout(function () {
-                    location.reload()
-                }, 1000);
-            },
-            error: function (error) {
-                var errorMessage = '<h4 style="color:red;" align="center">' + error.responseText + '</h4>';
-                $('.messageAd').html(errorMessage).show();
-            }
-
-        });
-    });
-});
-
-$(document).ready(function () {
-    $('#searchDebtor, #editName, #addName').autocomplete({
-        minLength: 1,
-        source: function (request, response) {
+        if(!isBlank($('#addDebt').val())) {
             $.ajax({
-                type: 'GET',
-                url: '/manager/costs/search/goods?name=' + request.term,
+                type: 'POST',
+                url: url,
+                data: formData,
                 success: function (data) {
-                    response(data.length === 0 ? [] : data);
+                    var successMessage = '<h4 style="color:green;" align="center">' + data + '</h4>';
+                    $('.messageAd').html(successMessage).show();
+                    window.setTimeout(function () {
+                        location.reload()
+                    }, 1000);
+                },
+                error: function (error) {
+                    var errorMessage = '<h4 style="color:red;" align="center">' + error.responseText + '</h4>';
+                    $('.messageAd').html(errorMessage).show();
                 }
-            })
+
+            });
+        } else {
+            var errorMessage = '<h4 style="color:red;" align="center">Пустое значение в качестве имени</h4>';
+            $('.messageAd').html(errorMessage).show();
         }
     });
 });
 
-function removeDebt(id) {
-    var url = '/manager/tableDebt/delete';
+function isBlank(str) {
+    return str.length === 0 || str.trim() === ""
+}
+
+function removeDebtBoss(id) {
+    var url = '/manager/tableDebt/deleteBoss';
+
+    var request = $.post(url, {debtId: id}, function () {
+        location.reload();
+    });
+}
+
+function removeDebtManager(id) {
+
+    var formData = {
+        masterKey: $('#masterKey').val(),
+        debtId: id
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "/manager/tableDebt/deleteManager",
+        data: formData,
+        success: function (result) {
+            var successMessage = '<h4 style="color:green;" align="center">' + result + '</h4>';
+            $('.deleteManagerDebt').html(successMessage).show();
+            window.setTimeout(function () {
+                $('.deleteManagerDebt').html(successMessage).hide();
+                location.reload();
+            }, 1000);
+        },
+        error: function (error) {
+            var errorMessage = '<h4 style="color:red;" align="center">' + error.responseText + '</h4>';
+            $('.deleteManagerDebt').html(errorMessage).show();
+            window.setTimeout(function () {
+                $('.deleteManagerDebt').html(errorMessage).hide();
+            }, 3000);
+        }
+    });
+}
+
+function repayDebt(id) {
+    var url = '/manager/tableDebt/repay';
 
     var request = $.post(url, {debtId: id}, function () {
         location.reload();

@@ -19,63 +19,65 @@ import java.util.Set;
 @RequestMapping("/manager")
 public class MenuCalculateController {
 
-    @Autowired
-    private ClientService clientService;
+	private final ClientService clientService;
+	private final CalculateService calculateService;
+	private final MenuCalculateControllerService menuCalculateService;
 
-    @Autowired
-    private CalculateService calculateService;
+	@Autowired
+	public MenuCalculateController(CalculateService calculateService, ClientService clientService, MenuCalculateControllerService menuCalculateService) {
+		this.calculateService = calculateService;
+		this.clientService = clientService;
+		this.menuCalculateService = menuCalculateService;
+	}
 
-    @Autowired
-    private MenuCalculateControllerService menuCalculateService;
+	@RequestMapping(value = {"/create-layer-product"}, method = RequestMethod.POST)
+	@ResponseBody
+	public LayerProduct createLayerProduct(@RequestParam("calculateId") long calculateId,
+										   @RequestParam("clientsId") long[] clientsId,
+										   @RequestParam("productId") long productId) {
+		return menuCalculateService.createLayerProduct(calculateId, clientsId, productId);
+	}
 
-    @RequestMapping(value = {"/create-layer-product"}, method = RequestMethod.POST)
-    @ResponseBody
-    public LayerProduct createLayerProduct(@RequestParam("calculateId") long calculateId,
-                                           @RequestParam("clientsId") long[] clientsId,
-                                           @RequestParam("productId") long productId) {
-        return menuCalculateService.createLayerProduct(calculateId, clientsId, productId);
-    }
+	@RequestMapping(value = {"/create-layer-product-floating-price"}, method = RequestMethod.POST)
+	@ResponseBody
+	public LayerProduct createLayerProductWithFloatingPrice(@RequestParam("calculateId") long calculateId,
+															@RequestParam("clientsId") long[] clientsId,
+															@RequestParam("productId") long productId,
+															@RequestParam("productPrice") double productPrice) {
+		return menuCalculateService.createLayerProductWithFloatingPrice(calculateId, clientsId, productId, productPrice);
+	}
 
-    @RequestMapping(value = {"/create-layer-product-floating-price"}, method = RequestMethod.POST)
-    @ResponseBody
-    public LayerProduct createLayerProductWithFloatingPrice(@RequestParam("calculateId") long calculateId,
-                                                            @RequestParam("clientsId") long[] clientsId,
-                                                            @RequestParam("productId") long productId,
-                                                            @RequestParam("productPrice") double productPrice) {
-        return menuCalculateService.createLayerProductWithFloatingPrice(calculateId, clientsId, productId, productPrice);
-    }
+	@RequestMapping(value = {"/add-client-on-layer-product"}, method = RequestMethod.POST)
+	@ResponseBody
+	public LayerProduct addClientOnLayerProduct(@RequestParam("calculateId") long calculateId,
+												@RequestParam("clientsId") long[] clientsId,
+												@RequestParam("productId") long layerProductId) {
+		return menuCalculateService.addClientOnLayerProduct(calculateId, clientsId, layerProductId);
+	}
 
-    @RequestMapping(value = {"/add-client-on-layer-product"}, method = RequestMethod.POST)
-    @ResponseBody
-    public LayerProduct addClientOnLayerProduct(@RequestParam("calculateId") long calculateId,
-                                                @RequestParam("clientsId") long[] clientsId,
-                                                @RequestParam("productId") long layerProductId) {
-        return menuCalculateService.addClientOnLayerProduct(calculateId, clientsId, layerProductId);
-    }
+	@RequestMapping(value = {"/delete-product-with-client"}, method = RequestMethod.POST)
+	@ResponseBody
+	public LayerProduct deleteProductOnClient(@RequestParam("calculateId") long calculateId,
+											  @RequestParam("clientsId") long[] clientsId,
+											  @RequestParam("productId") long layerProductId) {
+		return menuCalculateService.deleteProductOnClient(calculateId, clientsId, layerProductId);
+	}
 
-    @RequestMapping(value = {"/delete-product-with-client"}, method = RequestMethod.POST)
-    @ResponseBody
-    public LayerProduct deleteProductOnClient(@RequestParam("calculateId") long calculateId,
-                                              @RequestParam("clientsId") long[] clientsId,
-                                              @RequestParam("productId") long layerProductId) {
-        return menuCalculateService.deleteProductOnClient(calculateId, clientsId, layerProductId);
-    }
+	@RequestMapping(value = {"/get-products-on-calculate"}, method = RequestMethod.POST)
+	@ResponseBody
+	public Set<LayerProduct> getProductOnCalculate(@RequestParam("calculateId") long calculateId) {
+		return menuCalculateService.getProductOnCalculate(calculateId);
+	}
 
-    @RequestMapping(value = {"/get-products-on-calculate"}, method = RequestMethod.POST)
-    @ResponseBody
-    public Set<LayerProduct> getProductOnCalculate(@RequestParam("calculateId") long calculateId) {
-        return menuCalculateService.getProductOnCalculate(calculateId);
-    }
+	@RequestMapping(value = {"/get-layer-products-on-client"}, method = RequestMethod.POST)
+	@ResponseBody
+	public List<LayerProduct> getLayerProductsOnClient(@RequestParam("clientId") long clientId) {
+		return clientService.getOne(clientId).getLayerProducts();
+	}
 
-    @RequestMapping(value = {"/get-layer-products-on-client"}, method = RequestMethod.POST)
-    @ResponseBody
-    public List<LayerProduct> getLayerProductsOnClient(@RequestParam("clientId") long clientId) {
-        return clientService.getOne(clientId).getLayerProducts();
-    }
-
-    @RequestMapping(value = {"/get-open-clients-on-calculate"}, method = RequestMethod.POST)
-    @ResponseBody
-    public List<Client> getOpenClientsOnCalculateAjax(@RequestParam("calculateId") long calculateId) {
-        return calculateService.getAllOpenOnCalculate(calculateId).getClient();
-    }
+	@RequestMapping(value = {"/get-open-clients-on-calculate"}, method = RequestMethod.POST)
+	@ResponseBody
+	public List<Client> getOpenClientsOnCalculateAjax(@RequestParam("calculateId") long calculateId) {
+		return calculateService.getAllOpenOnCalculate(calculateId).getClient();
+	}
 }

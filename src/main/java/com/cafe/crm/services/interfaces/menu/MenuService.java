@@ -4,7 +4,6 @@ import com.cafe.crm.models.menu.Menu;
 
 public interface MenuService {
 
-    Menu getOne(Long id);
-
+	Menu getOne(Long id);
 
 }

@@ -33,9 +33,9 @@
                             <select onchange="submit();"
                                     style="width:130px; float: left; height: 34px;font-size:18px;margin-top: 5px;margin-left: 6px "
                                     class="form-control" th:form="'formRef'+${calculate.id}" name="boardId">
-                                <option value="-1" th:selected="${listBoard} == null ? 'true' : 'false' ">
+                                <!--<option value="-1" th:selected="${listBoard} == null ? 'true' : 'false' ">
                                     Нет
-                                </option>
+                                </option>-->
                                 <p th:each="b : ${listBoard}">
                                     <option th:value="${b.id}"
                                             th:text="${b.name}"
@@ -88,13 +88,13 @@
                             <thead>
 
                             <tr style="font-size: 17px">
-                                <th style="text-align: center;">Карта</th>
+                                <th style="text-align: center;" th:if="${cardEnable}">Карта</th>
                                 <th style="text-align: center;">Описание</th>
                                 <th style="text-align: center;">Старт</th>
                                 <th style="text-align: center;"></th>
 
                                 <th style="text-align: center;">Скидка</th>
-                                <th style="text-align: center;"> ₽ с карты</th>
+                                <th style="text-align: center;" th:if="${cardEnable}"> ₽ с карты</th>
                                 <th style="text-align: center;">Сумма</th>
                                 <th th:id="${calculate.id}">
                                     <input th:id="'checked' + ${calculate.id}" type="checkbox"
@@ -114,10 +114,10 @@
                                 <tr>
 
 
-                                    <td>
+                                    <td th:if="${cardEnable}">
                                         <!-- Выбор карт-->
                                         <form th:id="'cardSel' + ${client.id}" method="post"
-                                              action="/manager/add-card-on-client">
+                                              action="/manager/card/add-card-on-client">
                                             <input type="hidden" name="clientId" th:value="${client.id}"/>
                                             <input type="hidden" name="calculateId" th:value="${calculate.id}"/>
                                             <select th:onchange="'ajaxCardDiscount(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'"
@@ -158,9 +158,8 @@
                                             <p th:text="${client.timeStart.toLocalTime().withSecond(0).withNano(0)}"></p>
                                         </div>
                                         <div class="col-md-6">
-                                            <button class="time-edit glyphicon glyphicon-edit" data-toggle="modal"
-                                                    th:href="'#timeEditModal' + ${client.id}"
-                                                    aria-hidden="true"></button>
+                                            <span class="time-edit glyphicon glyphicon-edit" data-toggle="modal"
+                                                    th:href="'#timeEditModal' + ${client.id}"></span>
                                         </div>
 
                                     </div>
@@ -168,11 +167,16 @@
                                 <div th:replace="client/clientFragments/timeEditModal :: timeEditModal"
                                      th:remove="tag"></div>
                                 <td style="text-align: center">
-
+                                    <div class="col-md-2" th:if="${!client.isPause()}">
+                                        <button class="btn btn-success" type="button" th:id="'setClientTimePauseButton'" th:onclick="'setClientTimePause(\'' + ${client.id} + '\')'"><span class="glyphicon glyphicon-pause"></span></button>
+                                    </div>
+                                    <div class="col-md-2" th:if="${client.isPause()}">
+                                        <button class="btn btn-success" type="button" th:id="'setClientTimePlayButton'" th:onclick="'setClientTimeUnpause(\'' + ${client.id} + '\')'"><span class="glyphicon glyphicon-play"></span></button>
+                                    </div>
                                 </td>
                                 <td>
                                     <p th:id="'dopDiscount' + ${client.id}" style="float: left;"
-                                       th:text="${client.discountWithCard} + '% + '"></p>
+                                       th:text="${client.discountWithCard} + '% + '" th:if="${cardEnable}"></p>
 
 
                                     <select th:id="'two' + ${client.id}" autocomplete="off"
@@ -191,7 +195,7 @@
                                     </select>
 
                                 </td>
-                                <td>
+                                <td th:if="${cardEnable}">
 
                                     <input autocomplete="off" th:id="'three' + ${client.id}"
                                            th:onblur="'subAjax(\'' + ${client.id} + '\', \'' + ${calculate.id} + '\');'"
@@ -204,7 +208,7 @@
 
                             </form>
                             <td>
-                                <input th:form="'formTest' + ${calculate.id}" th:class="'class' + ${calculate.id}"
+                                <input th:form="'formTest' + ${calculate.id}" th:class="'class' + ${calculate.id} + ' clientsToDel'"
                                        th:id="'test' + ${client.id}" type="checkbox" class="form-control"
                                        style="width: 20px;height: 20px;margin-top: 5px" th:value="${client.id}"
                                        name="clientsId"/>
@@ -219,21 +223,16 @@
                             Удалить
                         </button>
 
-                        <form action="/manager/pause" th:method="POST">
-                            <button th:text="${calculate.isPause()} ? 'Снять с паузы' : 'Пауза'" name="id"
-                                    th:value="${calculate.id}" style="float: left;margin-left: 23px"
-                                    class="btn btn-primary">
-                            </button>
-
-                        </form>
-                        <div th:id="'deleteModal' + ${calculate.id}" class="modal fade">
-                            <div class="modal-dialog " style="width: 250px;margin-top: 150px" role="document">
+                        <div th:id="'deleteModal' + ${calculate.id}" class="modal fade" th:onshow="'deleteClients();'">
+                            <div class="modal-dialog " style="width: 250px;margin-top: 150px" roles="document">
                                 <div class="modal-content">
                                     <div class="modal-body">
+                                        <div class="clientDel">
                                         <p style="font-size: 20px">Вы желаете удалить клиента/тов ?</p>
                                         <button th:form="'formTest' + ${calculate.id}" class="btn btn-danger">Да
                                         </button>
                                         <button class="btn btn-danger" type="button" data-dismiss="modal">Нет</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -253,440 +252,7 @@
     </div>
     <div th:replace="fragments/managerChangePassword :: managerChangePassword"></div>
 </div>
-
-<script type="text/javascript">
-    ajax();
-    setInterval(ajax, 60000);
-    function cookiePanel(id) {
-        if ($.cookie(id) == true.toString()) {
-            $.cookie(id, "false");
-        } else if ($.cookie(id) == false.toString() || $.cookie(id) == null) {
-            $.cookie(id, "true");
-        }
-    }
-
-    function editClientTimeStart(clientId) {
-        //<![CDATA[
-        var hours = $('#editHours' + clientId).val();
-        if (hours < 0 || hours > 23 || hours == "") {
-            var errorMessage = '<h4 style="color:red;" align="center">Допустимое значение часов от 0 до 23</h4>';
-            $('.messageEdit' + clientId).html(errorMessage).show();
-            return false;
-        }
-        var minutes = $('#editMinutes' + clientId).val();
-        if (minutes < 0 || minutes > 59 || minutes == "") {
-            var errorMessage = '<h4 style="color:red;" align="center">Допустимое значение минут от 0 до 59</h4>';
-            $('.messageEdit' + clientId).html(errorMessage).show();
-            return false;
-        }
-        //]]>
-
-        var url = "/manager/edit-client-time-start";
-        var data = {clientId: clientId, hours: hours, minutes: minutes};
-
-        $.post(url, data, function () {
-            location.reload()
-        })
-                .fail(function (response) {
-                    var errorMessage = '<h4 style="color:red;" align="center">Не удалось обновить время</h4>';
-                    $('.messageEdit' + clientId).html(errorMessage).show();
-                    window.setTimeout(function () {
-                        location.reload()
-                    }, 1000);
-                });
-    }
-
-    function ajaxCardDiscount(id, calcId) {
-
-        $.ajax({
-            type: "POST",
-            url: "/manager/add-card-on-client",
-            data: $('#cardSel' + id).serialize(),
-
-            success: function (data) {
-                //<![CDATA[
-                $('#dopDiscount' + id).html(data + '%' + ' + ');
-                setTimeout(function () {
-                    ajaxForCalculate(calcId)
-                }, 500);
-                //]]>
-            },
-            error: function () {
-                console.log('ajaxCardDiscount сломался? ');
-            }
-        });
-    }
-
-    function ajaxModal(id) {
-        $.ajax({
-            type: "POST",
-            url: "/manager/output-clients",
-            data: $('#formTest' + id).serialize(),
-
-            success: function (data) {
-                //<![CDATA[
-                if (data == "") {
-                    $('#tb' + id).html(" ");
-                } else {
-                    var allpr = 0;
-                    var payWithCard = 0;
-                    var str = "";
-                    var strForAlert = ''
-                    var flag = false;
-                    for (var i = 0; i < data.length; i++) {
-
-
-                        var hours = +data[i].passedTime.hour < 10 ? ('0' + data[i].passedTime.hour) : data[i].passedTime.hour;
-                        var min = +data[i].passedTime.minute < 10 ? ('0' + data[i].passedTime.minute) : data[i].passedTime.minute;
-                        var time = hours + ':' + min;
-                        var order = "";
-                        str += '<tr><td class="cent">' + ((data[i].card == null) ? 'Нет' : data[i].card.name) + '</td><td class="cent">' + data[i].description + '</td><td class="cent">' + time + '</td><td class="cent">' + data[i].priceTime + '</td><td class="cent"><div  class="dropdown"><button onclick="getLayerProductAjax(' + data[i].id + ')"   class="btn btn-primary" data-toggle="dropdown" style="width: 100px;font-size: 20px;height:30px;margin-right: 5px;margin-top: 5px;padding: 0px">' + data[i].priceMenu + 'р' + '</button><div id = "clientDropMenu' + data[i].id + '"  style="width: 250px;font-size: 20px" class="dropdown-menu dropdown-menu-right">' + order + '</div></div></div> </td><td class="cent">' + ((+data[i].discount) + (+data[i].discountWithCard)) + '</td><td class="cent">' + data[i].payWithCard + '</td><td class="cent">' + data[i].cache + '</td></tr>';
-                        payWithCard += data[i].payWithCard;
-                        allpr += data[i].cache;
-                        if (data[i].card != null && data[i].card.balance < data[i].payWithCard) {
-                            strForAlert += (data[i].card.name + ', ');
-                            flag = true;
-                        }
-                    }
-
-                    if (flag) {
-                        if (confirm("Карта: " + strForAlert + "будет оплачена в долг.\nВы уверены?")) {
-                            $('#checkModal' + id).modal();
-                        }
-
-                    } else {
-                        $('#checkModal' + id).modal();
-                    }
-
-
-                    $('#head' + id).html($('#head1' + id).text())
-                    $('#all' + id).html(payWithCard + 'р<br/>' + allpr + 'р');
-                    $('#tb' + id).html(str);
-                }
-                //]]>
-            },
-            error: function () {
-                console.log('ajaxModal сломался? ');
-            }
-        });
-    }
-
-    function getLayerProductAjax(clientId) {
-        $.ajax({
-            type: "POST",
-            url: "/manager/get-layer-products-on-client",
-            data: {clientId: clientId},
-
-            success: function (data) {
-                //<![CDATA[
-                var str = " ";
-                for (var i = 0; i < data.length; i++) {
-                    str += '<li>' + data[i].name + ' №' + data[i].id + ' (' + data[i].cost + 'р)' + '</li>';
-                }
-                $('#clientDropMenu' + clientId).html(str);
-                //]]>
-            },
-            error: function () {
-                console.log('getLayerProductAjax сломался? ');
-            }
-        });
-    }
-
-    function ajaxForCalculate(calcId) {
-        $.ajax({
-            type: "POST",
-            url: "/manager/calculate-price-on-calculate",
-            data: {calculateId: calcId},
-            success: function (data) {
-                //<![CDATA[
-                for (var i = 0; i < data.length; i++) {
-                    $('#price' + data[i].id).html(data[i].allPrice);
-                }
-                //]]>
-            },
-            error: function () {
-                console.log('ajaxForCalculate сломался? ');
-            }
-        });
-    }
-
-    function ajax() {
-        $.ajax({
-            type: "POST",
-            url: "/manager/calculate-price",
-            success: function (data) {
-                //<![CDATA[
-                for (var i = 0; i < data.length; i++) {
-                    $('#price' + data[i].id).html(data[i].allPrice);
-                }
-
-                //]]>
-            },
-            error: function () {
-                console.log('ajax сломался? ');
-            }
-        });
-    }
-
-    function check(id) {
-        if ($('#checked' + id).is(':checked')) {
-            $(".class" + id).prop("checked", true);
-        } else {
-            $(".class" + id).prop("checked", false);
-        }
-    }
-
-    function check1(id) {
-        if ($('#checked1' + id).is(':checked')) {
-            $(".class1" + id).prop("checked", true);
-        } else {
-            $(".class1" + id).prop("checked", false);
-        }
-    }
-
-    function subAjax(id, calcId) {
-        $.ajax({
-            type: "POST",
-            url: "/manager/update-fields-client",
-            data: $('#updateForm' + id).serialize(),
-            success: function (data) {
-                //<![CDATA[
-                $('#clientMenuDescription' + id).text(data);
-                setTimeout(function () {
-                    ajaxForCalculate(calcId)
-                }, 500);
-                //]]>
-            },
-            error: function () {
-                console.log('subAjax сломался? ');
-            }
-        });
-    }
-
-    function createLayerProductAjax(prodId, calcId) {
-        $('#productId' + calcId).val(prodId);
-        $.ajax({
-            type: "POST",
-            url: "/manager/create-layer-product",
-            data: $('#addProductOnClientForm' + calcId).serialize(),
-            success: function (data) {
-                //<![CDATA[
-                var arr = data.clients;
-                for (var i = 0; i < arr.length; i++) {
-                    $('#ajaxMenu' + arr[i].id + ' li:last').after('<li id = "pr' + data.id + '">' + data.name + ' №' + data.id + ' (' + data.cost + 'р)' + '</li>');
-                }
-                setTimeout(function () {
-                    getOpenClientsOnCalculateAjax(calcId)
-                }, 500);
-                prog(calcId);
-                setTimeout(function () {
-                    ajaxForCalculate(calcId)
-                }, 500);
-                //]]>
-            },
-            error: function () {
-                console.log('createLayerProductAjax сломался? ');
-            }
-        });
-    }
-
-    function createLayerProductWithFloatingPriceAjax(prodId, calcId, inputId) {
-        $('#productId' + calcId).val(prodId);
-        var price = $(('#' + inputId) + prodId).val();
-        //<![CDATA[
-        if (price == "" || price <= 0) {
-            return false;
-        }
-        var data = $('#addProductOnClientForm' + calcId).serializeArray();
-        data.push({name: 'productPrice', value: price});
-        $.ajax({
-            type: "POST",
-            url: "/manager/create-layer-product-floating-price",
-            data: data,
-            success: function (data) {
-                var arr = data.clients;
-                for (var i = 0; i < arr.length; i++) {
-                    $('#ajaxMenu' + arr[i].id + ' li:last').after('<li id = "pr' + data.id + '">' + data.name + ' №' + data.id + ' (' + data.cost + 'р)' + '</li>');
-                }
-                setTimeout(function () {
-                    getOpenClientsOnCalculateAjax(calcId)
-                }, 500);
-                prog(calcId);
-                setTimeout(function () {
-                    ajaxForCalculate(calcId)
-                }, 500);
-                //]]>
-            },
-            error: function () {
-                console.log('createLayerProductWithFloatingPriceAjax сломался? ');
-            }
-        });
-    }
-
-
-    function addLayerProductOnClientAjax(layerProdId, calcId) {
-        $('#productId' + calcId).val(layerProdId);
-        $.ajax({
-            type: "POST",
-            url: "/manager/add-client-on-layer-product",
-            data: $('#addProductOnClientForm' + calcId).serialize(),
-            success: function (data) {
-                //<![CDATA[
-                var arr = data.clients;
-                for (var i = 0; i < arr.length; i++) {
-                    if (document.getElementById('ajaxMenu' + arr[i].id).querySelector("#pr" + data.id) == null) {
-                        $('#ajaxMenu' + arr[i].id + ' li:last').after('<li id = "pr' + data.id + '">' + data.name + ' №' + data.id + ' (' + data.cost + 'р)' + '</li>');
-                    }
-                }
-                setTimeout(function () {
-                    getOpenClientsOnCalculateAjax(calcId)
-                }, 500);
-                prog(calcId);
-                setTimeout(function () {
-                    ajaxForCalculate(calcId)
-                }, 500);
-
-                //]]>
-            },
-            error: function () {
-                console.log('addLayerProductOnClientAjax сломался? ');
-            }
-        });
-    }
-
-    function deleteLayerProductOnClientAjax(layerProdId, calcId) {
-        $('#productId' + calcId).val(layerProdId);
-        $.ajax({
-            type: "POST",
-            url: "/manager/delete-product-with-client",
-            data: $('#addProductOnClientForm' + calcId).serialize(),
-            success: function (data) {
-                //<![CDATA[
-                var arr = data.clients;
-                for (var i = 0; i < arr.length; i++) {
-                    var v = document.getElementById('ajaxMenu' + arr[i].id).querySelector("#pr" + data.id);
-                    if (v != null) {
-                        v.remove();
-                    }
-                }
-                getProductOnCalculateAjax(calcId);
-                setTimeout(function () {
-                    getOpenClientsOnCalculateAjax(calcId)
-                }, 500);
-                prog(calcId);
-                setTimeout(function () {
-                    ajaxForCalculate(calcId)
-                }, 500);
-
-                //]]>
-            },
-            error: function () {
-                console.log('deleteLayerProductOnClientAjax сломался? ');
-            }
-        });
-    }
-
-
-    function getProductOnCalculateAjax(calcId) {
-        $.ajax({
-            type: "POST",
-            url: "/manager/get-products-on-calculate",
-            data: {calculateId: calcId},
-            success: function (data) {
-                //<![CDATA[
-                var str;
-                if (data != "") {
-                    for (var i = 0; i < data.length; i++) {
-                        str += '<tr style="font-size: 20px;"><td>' + data[i].name + ' №' + data[i].id + '</td><td>' + data[i].description + '</td><td>' + data[i].cost + '</td><td><button onclick="addLayerProductOnClientAjax(' + data[i].id + ',' + calcId + ')" style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;"> <i class="fa fa-check" aria-hidden="true" style="font-size: 30px;color:#910405;"></i></button><button onclick="deleteLayerProductOnClientAjax(' + data[i].id + ',' + calcId + ')" style="background:rgba(255,0,0,0);float: left;margin-left: 20px; border: none;"><i class="fa fa-times" aria-hidden="true" style="font-size: 30px;color:#910405;"></i></button></td></tr>';
-                    }
-                } else {
-                    str = null;
-                }
-
-                $("#prodOnCalculate" + calcId).html(str);
-                //]]>
-            },
-            error: function () {
-                console.log('getProductOnCalculateAjax сломался? ');
-            }
-        });
-    }
-
-    function getOpenClientsOnCalculateAjax(calcId) {
-        $.ajax({
-            type: "POST",
-            url: "/manager/get-open-clients-on-calculate",
-            data: {calculateId: calcId},
-            success: function (data) {
-                //<![CDATA[
-                for (var i = 0; i < data.length; i++) {
-                    $('#priceMenu' + data[i].id).html(data[i].priceMenu);
-                }
-                //]]>
-            },
-            error: function () {
-                console.log('getOpenClients сломался? ');
-            }
-        });
-    }
-    //2 снизу это скрипты поиска по продуктам/категориям
-    $(document).ready(function () {
-        $("#search").keyup(function () {
-            _this = this;
-
-            $.each($("#mycateg a"), function () {
-                if ($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1) {
-                    $(this).hide();
-                } else {
-                    $(this).show();
-                }
-            });
-        });
-    });
-
-    $(document).ready(function () {
-        $("#searchPr").keyup(function () {
-            _this = this;
-
-            $.each($(".mytable tbody tr"), function () {
-                if ($(this).text().toLowerCase().indexOf($(_this).val().toLowerCase()) === -1) {
-                    $(this).hide();
-                } else {
-                    $(this).show();
-                }
-            });
-        });
-    });
-
-    function prog(calcId) {
-        var myTime = setInterval(
-                function () {
-                    if (+$('#progress' + calcId).val() != 100) {
-                        $('#progress' + calcId).val(+$('#progress' + calcId).val() + 7);
-                    } else {
-                        $('#progress' + calcId).val(0);
-                        clearInterval(myTime);
-                        myTime = 0;
-                    }
-                }, 10);
-    }
-
-    function roundState(calcId, state) {
-        if (state == 'true') {
-            $('#rek' + calcId).html('<p style="margin: 0;font-size: 20px">Не округлено</p>');
-            $('#rek' + calcId).attr('onclick', 'roundState(' + '"' + calcId + '"' + ',' + '"' + false + '"' + ')');
-        } else {
-            $('#rek' + calcId).html('<p style="margin: 0;font-size: 20px">Округлено</p>');
-            $('#rek' + calcId).attr('onclick', 'roundState(' + '"' + calcId + '"' + ',' + '"' + true + '"' + ')')
-        }
-        $('#formRoundState' + calcId).submit();
-        setTimeout(function () {
-            ajaxForCalculate(calcId)
-        }, 500);
-    }
-
-
-</script>
-
+<div th:replace="shift/checklistOnCloseShift :: checklistOnClose"></div>
+<script type="text/javascript" th:src="@{/js/clients/clients.js}"></script>
 </body>
 </html>

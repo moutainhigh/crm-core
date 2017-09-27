@@ -9,20 +9,29 @@
     <div class="panel-heading">
         <div class="row">
             <div class="col-md-1">
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalAddGoods">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalAddCost">
                     Добавить
                 </button>
             </div>
             <div class="row col-md-11">
-                <form id="formSearch" method="post" th:action="@{/manager/costs}">
+                <form id="formSearch" method="post" th:action="@{/manager/cost}">
                     <div class="col-md-3 col-md-offset-1">
                         <input type="text" class="form-control" aria-label="Название" placeholder="Все товары"
-                               th:value="${goodsName} ? ${goodsName} : '' " th:name="goodsName" id="searchGoods"/>
+                               th:value="${costName} ? ${costName} : '' " th:name="costName" id="searchCost"/>
                     </div>
-                    <div class="col-md-3">
-                        <input type="text" class="form-control" aria-label="Название" placeholder="Все категории"
-                               th:value="${categoryName} ? ${categoryName} : '' " th:name="categoryName"
-                               id="searchCategory"/>
+                    <div class="dropdown col-md-3">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="searchCategoryDropdownMenu"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <th:block th:text="${categoryName} ? ${categoryName} : 'Все категории' ">Все категории</th:block>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="searchCategoryDropdownMenu" id="searchCategoryDropList">
+                            <li><a>Все категории</a></li>
+                            <li th:each="category : ${costCategories}"><a th:text="${category.name}">Action</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3" hidden="hidden" >
+                        <input type="text" class="form-control" aria-label="Название"  th:value="${categoryName} ? ${categoryName} : 'Все категории'" th:name="categoryName" id="searchCategory"/>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
@@ -63,7 +72,7 @@
             </div>
         </div>
     </div>
-    <div th:replace="costs/fragments/table :: goodsTable" th:remove="tag"></div>
+    <div th:replace="costs/fragments/table :: costTable" th:remove="tag"></div>
 </div>
 
 </body>

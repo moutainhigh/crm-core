@@ -10,75 +10,80 @@ import java.util.List;
 
 @Service
 public class CardServiceImpl implements CardService {
-    @Autowired
-    private CardRepository cardRepository;
 
-    public void saveAll(List<Card> card) {
-        cardRepository.save(card);
-    }
+	private final CardRepository cardRepository;
 
-    public void save(Card card) {
-        cardRepository.saveAndFlush(card);
-    }
+	@Autowired
+	public CardServiceImpl(CardRepository cardRepository) {
+		this.cardRepository = cardRepository;
+	}
 
-    public void delete(Card card) {
-        cardRepository.delete(card);
-    }
+	public void saveAll(List<Card> card) {
+		cardRepository.save(card);
+	}
 
-    public List<Card> getAll() {
-        return cardRepository.findAll();
-    }
+	public void save(Card card) {
+		cardRepository.saveAndFlush(card);
+	}
 
-    public Card getOne(Long id) {
-        return cardRepository.findOne(id);
-    }
+	public void delete(Card card) {
+		cardRepository.delete(card);
+	}
 
-    public Card findByPhone(String phone) {
-        return cardRepository.findByPhoneNumber(phone);
-    }
+	public List<Card> getAll() {
+		return cardRepository.findAll();
+	}
 
-    @Override
-    public List<Card> findByListSurname(String name) {
-        return cardRepository.findByListSurname(name);
-    }
+	public Card getOne(Long id) {
+		return cardRepository.findOne(id);
+	}
 
-    @Override
-    public List<Card> findByEmailNotNullAndAdvertisingIsTrue() {
-        return cardRepository.findByEmailNotNullAndAdvertisingIsTrue();
-    }
+	public Card findByPhone(String phone) {
+		return cardRepository.findByPhoneNumber(phone);
+	}
 
-    @Override
-    public Card checkWhoInvitedMe(String searchParam) {
+	@Override
+	public List<Card> findByListSurname(String name) {
+		return cardRepository.findByListSurname(name);
+	}
 
-        Card card = cardRepository.findByPhoneNumber(searchParam);
-        if (card != null) {
-            return card;
-        }
-        card = cardRepository.findByEmail(searchParam);
-        if (card != null) {
-            return card;
-        }
-        String[] split = searchParam.split(" ");
-        if (split.length == 2) {
-            card = cardRepository.findByNameAndSurname(split[0], split[1]);
-            if (card != null) {
-                return card;
-            }
-            card = cardRepository.findBySurnameAndName(split[0], split[1]);
-            if (card != null) {
-                return card;
-            }
-        }
-        List<Card> list = cardRepository.findByListSurname(searchParam);
-        if (list.size() > 1) {
-            return null;
-        }
-        card = cardRepository.findBySurname(searchParam);
-        if (card != null) {
-            return card;
-        }
-        return null;
-    }
+	@Override
+	public List<Card> findByEmailNotNullAndAdvertisingIsTrue() {
+		return cardRepository.findByEmailNotNullAndAdvertisingIsTrue();
+	}
+
+	@Override
+	public Card checkWhoInvitedMe(String searchParam) {
+
+		Card card = cardRepository.findByPhoneNumber(searchParam);
+		if (card != null) {
+			return card;
+		}
+		card = cardRepository.findByEmail(searchParam);
+		if (card != null) {
+			return card;
+		}
+		String[] split = searchParam.split(" ");
+		if (split.length == 2) {
+			card = cardRepository.findByNameAndSurname(split[0], split[1]);
+			if (card != null) {
+				return card;
+			}
+			card = cardRepository.findBySurnameAndName(split[0], split[1]);
+			if (card != null) {
+				return card;
+			}
+		}
+		List<Card> list = cardRepository.findByListSurname(searchParam);
+		if (list.size() > 1) {
+			return null;
+		}
+		card = cardRepository.findBySurname(searchParam);
+		if (card != null) {
+			return card;
+		}
+		return null;
+	}
 
 
 }

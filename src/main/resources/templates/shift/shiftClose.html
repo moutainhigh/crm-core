@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Закрытие смены</title>
+    <div th:include="fragments/headTag :: bootstrap" th:remove="tag"></div>
+</head>
+<body>
+<div th:replace="managernavbar :: managerNavbar"></div>
+<div class="container" style="margin-top:50px">
+    <div class="panel panel-default" th:fragment="panel">
+        <div class="panel-heading">
+            <div align="center"><h4 class="panel-title">Закрытие смены</h4></div>
+        </div>
+        <div class="panel-body">
+            <form id="formShiftClose" th:action="@{/manager/shift/close}" method="post" class="form-signin">
+                <h3 align="center">Сотрудники на смене :</h3><br/>
+                <div th:each="allWorker : ${closeShiftView}">
+                    <div th:each="user: ${closeShiftView.usersOnShift}">
+                        <div class="row">
+                            <div class="col-md-4 ">
+                                <h4 align="center">ФИО сотрудника</h4>
+                                <input type="text" th:id="${user.id}" style="margin-top: -4px"
+                                       readonly="readonly" class="form-control"
+                                       th:value="${user.firstName+' '+user.lastName}"/><br/>
+                            </div>
+
+                            <div class="col-md-4" style="margin-top: -5px">
+                                <div class="question">
+                                    <h4 align="center">Оклад
+                                        <input th:id="'id'+${user.id}"
+                                               th:onclick="' switchBonusInputVisibility(\'' + ${user.id} + '\');'"
+                                               style="width: 20px;height: 20px;float: right;margin-bottom: 10px;margin-top: 0px"
+                                               class="coupon_question" type="checkbox" autocomplete="off"
+                                               value=""/>
+                                    </h4>
+                                    <input type="text" readonly="readonly" class="form-control"
+                                           th:value="${user.shiftSalary}" name="salary"/>
+                                </div><br/>
+                                <div class="answer">
+                                    <input th:id="'inputBonus'+${user.id}" th:href="${user.id}"
+                                           onblur="recalculation()" value="0" type="hidden" class="form-control userBonus"
+                                           placeholder="Введите бонус" autofocus="" th:name="'mapOfUsersIdsAndBonuses[' + ${user.id} + ']'"/>
+                                </div><br/>
+                            </div>
+
+                            <div class="col-md-4 ">
+                                <h4 align="center">Должности</h4>
+                                <input type="text" style="margin-top: -4px" readonly="readonly"
+                                       class="form-control" th:value="${user.positions}"/><br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-2">
+                        <h4 align="center">Количество клиентов за смену: </h4>
+                        <input type="text" readonly="readonly" class="form-control" th:value="${closeShiftView.clients.size()}"/><br/>
+                    </div>
+
+                    <div class="col-md-4">
+                        <h4 align="center">Количество счетов за смену: </h4>
+                        <input type="text" readonly="readonly" class="form-control"
+                               th:value="${closeShiftView.allCalculate.size()}"/>
+                        <br/><br/>
+                    </div>
+                </div>
+
+                <div th:if="${#lists.isEmpty(closeShiftView.activeCalculate)}">
+
+                    <h1 align="center">Сверка бюджета</h1>
+                    <div class="col-md-6 col-md-offset-3" >
+                        <h4 align="center">Зарплата сотрудников : </h4>
+                        <input type="text" style="margin-top: -4px" id="usersTotalShiftSalary"
+                               readonly="readonly" class="form-control"
+                               th:value="${closeShiftView.usersTotalShiftSalary}"/>
+                        <br/>
+                    </div>
+
+                    <div class="col-md-6 col-md-offset-3">
+                        <h4 align="center"><a href="/manager/costs">Прочие расходы :</a></h4>
+                        <input type="text" style="margin-top: -4px" readonly="readonly" class="form-control"
+                               th:value="${closeShiftView.otherCosts}"/>
+                        <br/>
+                    </div>
+
+                    <div class="col-md-6  col-md-offset-3">
+                        <h4 align="center"><a href="/manager/shift/edit">Касса :</a>
+                            <span>(наличные + деньги на карте)</span></h4>
+                        <input type="text" style="margin-top: -4px" readonly="readonly" id="totalCashBox"
+                               name="totalCashBox" class="form-control"
+                               th:value="${closeShiftView.totalCashBox}"/>
+                        <br/>
+                    </div>
+
+                    <div class="col-md-6  col-md-offset-3">
+                        <h4 align="center">Прибыль грязными : </h4>
+                        <input type="text" style="margin-top: -4px" readonly="readonly" id="allPrice"
+                               name="allPrice" class="form-control" th:value="${closeShiftView.allPrice}"/>
+                        <br/>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 col-md-offset-3">
+                            <h4 align="center">Наличные: </h4>
+                            <input type="number" class="form-control" id="cashBox" name="cashBox" placeholder="Наличные" required="required" min="0"/>
+                            <br/>
+                        </div>
+                        <div class="col-md-3">
+                            <h4 align="center">На банковской карте: </h4>
+                            <input type="number" class="form-control" id="bankCashBox"
+                                   name="bankCashBox" placeholder="На банковской карте" required="required" min="0"/>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-4 col-md-offset-4" th:if="${cardEnable}">
+                            <h4 style="font-size: 15px">Деньги с клубной карты: </h4>
+                            <input type="text" class="form-control" id="payWithCard" readonly="readonly"
+                                   name="payWithCard" th:value="${closeShiftView.card}"
+                                   placeholder="Деньги с карты"/>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <div class="col-md-6 col-md-offset-3">
+                        <button type="button" class="btn btn-primary btn-block" data-toggle="collapse"
+                                data-target="#notes" aria-expanded="false" >Заполнить заметки
+                        </button>
+                        <br/>
+                        <div id="notes" class="form-group collapse collapseNotes">
+                            <br/>
+                            <th:block th:each="note : ${closeShiftView.enabledNotes}">
+                                <div class="row">
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="basic-addon3" th:text="${note.name}" style="min-width:200px;max-width:200px;text-align:left;"></span>
+                                        <input type="text" class="form-control classInputNote" aria-describedby="basic-addon3" pattern="^(?=.*\S).+$" title="Поле не может быть пустым" required="required" th:name="'mapOfNoteNameAndValue[' + ${note.name} + ']'"/>
+                                    </div>
+                                    <br/>
+                                </div>
+                            </th:block>
+                        </div>
+
+                    </div>
+                    <br/>
+                    <div class="col-md-offset-3 col-md-6" >
+                        <button id="collapseText" type="button" class="btn btn-primary btn-block" data-toggle="collapse"
+                                data-target="#comment" aria-expanded="false" >Оставить комментарий
+                        </button>
+                        <br/>
+                        <div id="comment" class="form-group collapse">
+                            <br/>
+                            <textarea id="commentText" type="text" rows="5" class="form-control"
+                                      placeholder="Оставте комментарий" name="comment"/>
+                        </div>
+                    </div>
+                    <button type="submit" id="budget" onclick="checkInputData()"
+                            class="btn btn-lg btn-primary btn-block">Закрыть смену
+                    </button>
+                    <br/>
+                    <button style="visibility: hidden" id="closeShiftButtonShortage" onclick="checkInputDataWithShortage()"
+                            class="btn btn-lg btn-danger btn-block" type="submit">Закрыть смену с недосдачей
+                    </button>
+                </div>
+
+
+                <div th:if="${not #lists.isEmpty(closeShiftView.activeCalculate)}">
+                    <div class="col-md-6  col-md-offset-3">
+                        <h4 align="center">Прибыль грязными на текущий момент: </h4>
+                        <input type="text" style="margin-top: -4px" readonly="readonly" id="allPriceWithoutOpenCalculate"
+                               name="allPrice" class="form-control" th:value="${closeShiftView.allPrice}"/>
+                        <br/>
+                        <h1 align="center">Нельзя закрыть смену</h1>
+                        <h3 align="center">Присутствуют незакрытые счета</h3>
+                    </div>
+
+                </div>
+                <br/>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/shift/close.js}"></script>
+</body>
+</html>

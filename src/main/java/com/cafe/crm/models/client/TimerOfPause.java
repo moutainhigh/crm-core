@@ -8,93 +8,93 @@ import java.time.LocalDateTime;
 @Entity
 public class TimerOfPause {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+	@Id
+	@GeneratedValue
+	private Long id;
 
-    private Long idOfClient;
+	private Long idOfClient;
 
-    private LocalDateTime startTime;
+	private LocalDateTime startTime;
 
-    private LocalDateTime endTime;
+	private LocalDateTime endTime;
 
-    private Long wholeTimePause = 0L;
-
-
-    public TimerOfPause() {
-
-    }
+	private Long wholeTimePause = 0L;
 
 
-    public Long getId() {
-        return id;
-    }
+	public TimerOfPause() {
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	}
 
-    public Long getIdOfClient() {
-        return idOfClient;
-    }
 
-    public void setIdOfClient(Long idOfClient) {
-        this.idOfClient = idOfClient;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
+	public Long getIdOfClient() {
+		return idOfClient;
+	}
 
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
+	public void setIdOfClient(Long idOfClient) {
+		this.idOfClient = idOfClient;
+	}
 
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
+	public LocalDateTime getStartTime() {
+		return startTime;
+	}
 
-    public Long getWholeTimePause() {
-        return wholeTimePause;
-    }
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
+	}
 
-    public void setWholeTimePause(Long wholeTimePause) {
-        this.wholeTimePause = wholeTimePause;
-    }
+	public LocalDateTime getEndTime() {
+		return endTime;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	public void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
+	}
 
-        TimerOfPause that = (TimerOfPause) o;
+	public Long getWholeTimePause() {
+		return wholeTimePause;
+	}
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (startTime != null ? !startTime.equals(that.startTime) : that.startTime != null) return false;
-        if (endTime != null ? !endTime.equals(that.endTime) : that.endTime != null) return false;
-        return wholeTimePause != null ? wholeTimePause.equals(that.wholeTimePause) : that.wholeTimePause == null;
-    }
+	public void setWholeTimePause(Long wholeTimePause) {
+		this.wholeTimePause = wholeTimePause;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
-        result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
-        result = 31 * result + (wholeTimePause != null ? wholeTimePause.hashCode() : 0);
-        return result;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
-    @Override
-    public String toString() {
-        return "TimerOfPause{" +
-                "id=" + id +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", wholeTimePause=" + wholeTimePause +
-                '}';
-    }
+		TimerOfPause that = (TimerOfPause) o;
+
+		if (id != null ? !id.equals(that.id) : that.id != null) return false;
+		if (startTime != null ? !startTime.equals(that.startTime) : that.startTime != null) return false;
+		if (endTime != null ? !endTime.equals(that.endTime) : that.endTime != null) return false;
+		return wholeTimePause != null ? wholeTimePause.equals(that.wholeTimePause) : that.wholeTimePause == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
+		result = 31 * result + (endTime != null ? endTime.hashCode() : 0);
+		result = 31 * result + (wholeTimePause != null ? wholeTimePause.hashCode() : 0);
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "TimerOfPause{" +
+				"id=" + id +
+				", startTime=" + startTime +
+				", endTime=" + endTime +
+				", wholeTimePause=" + wholeTimePause +
+				'}';
+	}
 }

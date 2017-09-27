@@ -11,36 +11,40 @@ import java.util.List;
 @Service
 public class BoardServiceImpl implements BoardService {
 
-    @Autowired
-    private BoardRepository boardRepository;
+	private final BoardRepository boardRepository;
 
-    @Override
-    public void save(Board board) {
-        boardRepository.saveAndFlush(board);
-    }
+	@Autowired
+	public BoardServiceImpl(BoardRepository boardRepository) {
+		this.boardRepository = boardRepository;
+	}
 
-    @Override
-    public void delete(Board board) {
-        boardRepository.delete(board);
-    }
+	@Override
+	public void save(Board board) {
+		boardRepository.saveAndFlush(board);
+	}
 
-    @Override
-    public List<Board> getAll() {
-        return boardRepository.findAll();
-    }
+	@Override
+	public void delete(Board board) {
+		boardRepository.delete(board);
+	}
 
-    @Override
-    public Board getOne(Long id) {
-        return boardRepository.findOne(id);
-    }
+	@Override
+	public List<Board> getAll() {
+		return boardRepository.findAll();
+	}
 
-    @Override
-    public void deleteById(Long id) {
-        boardRepository.delete(id);
-    }
+	@Override
+	public Board getOne(Long id) {
+		return boardRepository.findOne(id);
+	}
 
-    @Override
-    public List<Board> getAllOpen() {
-        return boardRepository.getAllOpen();
-    }
+	@Override
+	public void deleteById(Long id) {
+		boardRepository.delete(id);
+	}
+
+	@Override
+	public List<Board> getAllOpen() {
+		return boardRepository.getAllOpen();
+	}
 }

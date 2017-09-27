@@ -1,5 +1,6 @@
 package com.cafe.crm.models.menu;
 
+import com.cafe.crm.models.user.Position;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -11,118 +12,151 @@ import java.util.Map;
 @Table(name = "product")
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-    @NotNull(message = "Укажите название")
-    @NotEmpty
-    @Length(min = 1, max = 30)
-    @Column(name = "name", nullable = false)
-    private String name;
+	@NotNull(message = "Укажите название")
+	@NotEmpty
+	@Length(min = 1, max = 30)
+	@Column(name = "name", nullable = false)
+	private String name;
 
-    @NotNull(message = "Укажите описание")
-    @Column(name = "description")
-    private String description;
+	@NotNull(message = "Укажите описание")
+	@Column(name = "description")
+	private String description;
 
-    @NotNull(message = "Укажите цену")
-    @Column(name = "cost")
-    private Double cost;
+	@NotNull(message = "Укажите цену")
+	@Column(name = "cost")
+	private Double cost;
 
-    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Category.class)
-    @JoinTable(name = "product_and_categories", joinColumns = {@JoinColumn(name = "category_id")}, inverseJoinColumns = {@JoinColumn(name = "product_id")})
-    private Category category;
+	@NotNull(message = "Укажите себестоимость")
+	private Double selfCost = 0D;
 
-    @ElementCollection
-    @MapKeyJoinColumn(name = "ingredient")
-    @Column(name = "amount")
-    private Map<Ingredients, Integer> recipe;
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Category.class)
+	@JoinTable(name = "product_and_categories", joinColumns = {@JoinColumn(name = "category_id")}, inverseJoinColumns = {@JoinColumn(name = "product_id")})
+	private Category category;
 
-    public Product() {
-    }
+	@ElementCollection
+	@MapKeyJoinColumn(name = "ingredient")
+	@Column(name = "amount")
+	private Map<Ingredients, Integer> recipe;
 
-    public Product(String name, String description, Double cost) {
-        this.name = name;
-        this.description = description;
-        this.cost = cost;
-    }
+	@ElementCollection
+	@MapKeyJoinColumn(name = "position")
+	@Column(name = "percent")
+	private Map<Position, Integer> staffPercent;
 
-    public Map<Ingredients, Integer> getRecipe() {
-        return recipe;
-    }
+	private int rating;
 
-    public void setRecipe(Map<Ingredients, Integer> recipe) {
-        this.recipe = recipe;
-    }
+	public Product() {
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public Product(String name, String description, Double cost) {
+		this.name = name;
+		this.description = description;
+		this.cost = cost;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Map<Ingredients, Integer> getRecipe() {
+		return recipe;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setRecipe(Map<Ingredients, Integer> recipe) {
+		this.recipe = recipe;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public Double getCost() {
-        return cost;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setCost(Double cost) {
-        this.cost = cost;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public Category getCategory() {
-        return category;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
+	public Double getCost() {
+		return cost;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+	public void setCost(Double cost) {
+		this.cost = cost;
+	}
 
-        Product product = (Product) o;
+	public Double getSelfCost() {
+		return selfCost;
+	}
 
-        if (cost != product.cost) return false;
-        if (id != null ? !id.equals(product.id) : product.id != null) return false;
-        if (name != null ? !name.equals(product.name) : product.name != null) return false;
-        return description != null ? description.equals(product.description) : product.description == null;
-    }
+	public void setSelfCost(Double selfCost) {
+		this.selfCost = selfCost;
+	}
 
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        return result;
-    }
+	public Category getCategory() {
+		return category;
+	}
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", cost=" + cost +
-                '}';
-    }
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public int getRating() {
+		return rating;
+	}
+
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Product product = (Product) o;
+
+		if (name != null ? !name.equals(product.name) : product.name != null) return false;
+		if (description != null ? !description.equals(product.description) : product.description != null) return false;
+		return cost != null ? cost.equals(product.cost) : product.cost == null;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = name != null ? name.hashCode() : 0;
+		result = 31 * result + (description != null ? description.hashCode() : 0);
+		result = 31 * result + (cost != null ? cost.hashCode() : 0);
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "Product{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", description='" + description + '\'' +
+				", cost=" + cost +
+				'}';
+	}
+
+	public Map<Position, Integer> getStaffPercent() {
+		return staffPercent;
+	}
+
+	public void setStaffPercent(Map<Position, Integer> staffPercent) {
+		this.staffPercent = staffPercent;
+	}
 }

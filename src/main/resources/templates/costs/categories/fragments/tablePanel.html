@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<div class="panel panel-default" th:fragment="panel">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-md-1">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalAddCategory">
+                    Добавить
+                </button>
+            </div>
+        </div>
+    </div>
+    <div th:replace="costs/categories/fragments/table :: categoryTable" th:remove="tag"></div>
+</div>
+
+</body>
+</html>

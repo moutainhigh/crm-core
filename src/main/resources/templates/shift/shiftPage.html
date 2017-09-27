@@ -47,9 +47,13 @@
                     <div class="form-group">
                         <label for="inputEmail" class="col-xs-2 control-label  col-xs-4 col-md-offset-3">Начало
                             смены</label>
-                        <div class="col-xs-4 col-md-offset-1">
+                        <div class="col-xs-4 col-md-offset-1" th:if="${#lists.isEmpty(openChecklist)}">
                             <a id="ins" class="btn btn-primary btn-info" style="width: 160px" th:href="'#add'"
                                data-toggle="modal">Начать смену</a>
+                        </div>
+                        <div class="col-xs-4 col-md-offset-1" th:if="${not #lists.isEmpty(openChecklist)}">
+                            <a id="checklistButton" class="btn btn-primary btn-info" style="width: 160px" href="#checklistModal"
+                               data-toggle="modal" data-backdrop="static" data-keyboard="false">Начать смену</a>
                         </div>
                     </div>
                 </form>
@@ -57,10 +61,10 @@
         </div>
     </div>
 </div>
-<form role="form" method="post" action="/manager/shift/begin" style="margin: 10px auto; width: 50%">
-    <div align="center" class="modal fade" th:id="'add'" tabindex="-1" role="dialog"
+<form roles="form" method="post" action="/manager/shift/begin" style="margin: 10px auto; width: 50%">
+    <div align="center" class="modal fade" th:id="'add'" tabindex="-1" roles="dialog"
          aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" roles="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"
@@ -82,22 +86,20 @@
                             <th>Должность</th>
                             <th>Добавить сотрудника</th>
                         </tr>
-                        <tbody class="searchable" th:each="user:${list}">
-                        <tr>
+                        <tbody class="searchable">
+                        <tr th:each="user:${users}">
                             <td><p th:text="${user.id}"></p></td>
                             <td><p th:text="${user.firstName}"></p></td>
                             <td><p th:text="${user.lastName}"></p></td>
-                            <td><p th:text="${user.allPosition}"></p></td>
-                            <td><input type="checkbox" style="width:20px;height:20px;" name="box"
+                            <td><p th:text="${user.positions}"></p></td>
+                            <td><input type="checkbox" style="width:20px;height:20px;" name="userId"
                                        th:value="${user.id}"/></td>
                         </tr>
                         </tbody>
                     </table>
                     <div th:if="${shiftCashBox}==null">
                         <h3>Введите количество денег в кассе</h3>
-                        <input type="text" class="form-control" value="" placeholder="Введите количество денег в кассе"
-                               required="" autofocus=""
-                               name="cashBox"/>
+                        <input type="number" class="form-control" value="" placeholder="Введите количество денег в кассе" required="" autofocus="" name="cashBox" min="0"/>
                     </div>
 
                     <div th:if="${shiftCashBox}!=null">
@@ -109,8 +111,7 @@
                     <div th:if="${bankCashBox}==null">
                         <h3>Введите количество денег на банковской карте</h3>
                         <input type="number" class="form-control" value=""
-                               placeholder="Введите количество денег на банковской карте" required="" autofocus=""
-                               name="bankCashBox"/>
+                               placeholder="Введите количество денег на банковской карте" required="" autofocus="" name="bankCashBox" min="0"/>
                     </div>
 
                     <div th:if="${bankCashBox}!=null">
@@ -132,8 +133,52 @@
         </div>
     </div>
 </form>
+
+<form id="checklistInputForm">
+    <div class="modal fade" id="checklistModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" align="center">Чеклист на начало смены</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table" id="tableChecklist">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Описание
+                                </th>
+                                <th>
+
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="checklist:${openChecklist}">
+                                <td th:text="${checklist.onOpenShiftText}"></td>
+                                <td><input type="checkbox"/></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="showMessage" style="color:red; text-align: center"></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</form>
+
 <div th:replace="fragments/managerChangePassword :: managerChangePassword"></div>
-<div th:replace="closeShift :: closeShift"></div>
+<div th:replace="shift/shiftClose :: closeShift"></div>
+<div th:replace="shift/checklistOnCloseShift :: checklistOnClose"></div>
 <script th:src="@{/js/shift/page.js}"></script>
 <script th:src="@{/js/filter.js}"></script>
 <script th:src="@{/js/shift/close.js}"></script>

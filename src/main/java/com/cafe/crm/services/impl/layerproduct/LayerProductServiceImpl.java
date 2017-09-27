@@ -12,27 +12,31 @@ import java.util.List;
 @Service
 public class LayerProductServiceImpl implements LayerProductService {
 
-    @Autowired
-    private LayerProductRepository layerProductRepository;
+	private final LayerProductRepository layerProductRepository;
 
-    @Override
-    public void save(LayerProduct layerProduct) {
-        layerProductRepository.saveAndFlush(layerProduct);
-    }
+	@Autowired
+	public LayerProductServiceImpl(LayerProductRepository layerProductRepository) {
+		this.layerProductRepository = layerProductRepository;
+	}
 
-    @Override
-    public void delete(LayerProduct layerProduct) {
-        layerProductRepository.delete(layerProduct);
-    }
+	@Override
+	public void save(LayerProduct layerProduct) {
+		layerProductRepository.saveAndFlush(layerProduct);
+	}
 
-    @Override
-    public List<LayerProduct> getAll() {
-        return layerProductRepository.findAll();
-    }
+	@Override
+	public void delete(LayerProduct layerProduct) {
+		layerProductRepository.delete(layerProduct);
+	}
 
-    @Override
-    public LayerProduct getOne(Long id) {
-        return layerProductRepository.findOne(id);
-    }
+	@Override
+	public List<LayerProduct> getAll() {
+		return layerProductRepository.findAll();
+	}
+
+	@Override
+	public LayerProduct getOne(Long id) {
+		return layerProductRepository.findOne(id);
+	}
 
 }

@@ -2,7 +2,6 @@ package com.cafe.crm.security.configs;
 
 
 import com.cafe.crm.security.handlers.CustomAuthenticationSuccessHandler;
-import com.cafe.crm.security.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
@@ -15,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
@@ -25,73 +25,70 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private AuthenticationService authenticationService;
+	private final UserDetailsService userDetailsService;
+	private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+	@Autowired
+	public SecurityConfig(UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) {
+		this.userDetailsService = userDetailsService;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+		this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
+	}
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+	@Bean
+	public static ServletListenerRegistrationBean httpSessionEventPublisher() {
+		return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
+	}
 
-    @Bean
-    public static ServletListenerRegistrationBean httpSessionEventPublisher() {
-        return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
-    }
+	@Bean
+	public CustomAuthenticationSuccessHandler getHandler() {
+		return new CustomAuthenticationSuccessHandler();
+	}
 
-    @Bean
-    public CustomAuthenticationSuccessHandler getHandler() {
-        return new CustomAuthenticationSuccessHandler();
-    }
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+	}
 
-    @Bean
-    public AuthenticationService getService() {
-        return new AuthenticationService();
-    }
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+		characterEncodingFilter.setEncoding("UTF-8");
+		characterEncodingFilter.setForceEncoding(true);
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(authenticationService).passwordEncoder(bCryptPasswordEncoder);
-    }
+		http
+				.authorizeRequests()
+				.antMatchers("/manager/**").hasAnyAuthority("MANAGER", "BOSS")
+				.antMatchers("/boss/**", "/worker/**", "/advertising/**").hasAuthority("BOSS")
+				.and()
+				.formLogin()
+				.loginPage("/login")
+				.loginProcessingUrl("/processing-url")
+				.successHandler(customAuthenticationSuccessHandler)
+				.usernameParameter("username")
+				.passwordParameter("password")
+				.and()
+				.logout()
+				.logoutUrl("/logout")
+				.logoutSuccessUrl("/login?logout")
+				.invalidateHttpSession(true)
+				.permitAll()
+				.and()
+				.csrf().disable()
+				.addFilterBefore(characterEncodingFilter, CsrfFilter.class);
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        CharacterEncodingFilter filter = new CharacterEncodingFilter();
-        filter.setEncoding("UTF-8");
-        filter.setForceEncoding(true);
+		http
+				.sessionManagement()
+				.maximumSessions(100)
+				.maxSessionsPreventsLogin(false)
+				.expiredUrl("/login?logout")
+				.sessionRegistry(sessionRegistry());
+	}
 
-        http
-                .authorizeRequests()
-                .antMatchers("/manager/**").hasAnyAuthority("MANAGER", "BOSS")
-                .antMatchers("/boss/**", "/worker/**", "/advertising/**").hasAuthority("BOSS")
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/processing-url")
-                .successHandler(customAuthenticationSuccessHandler)
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .and()
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
-                .invalidateHttpSession(true)
-                .permitAll()
-                .and()
-                .csrf().disable()
-                .addFilterBefore(filter, CsrfFilter.class);
-
-        http
-                .sessionManagement()
-                .maximumSessions(100)
-                .maxSessionsPreventsLogin(false)
-                .expiredUrl("/login?logout")
-                .sessionRegistry(sessionRegistry());
-    }
-
-    @Bean
-    public SessionRegistry sessionRegistry() {
-        SessionRegistry sessionRegistry = new SessionRegistryImpl();
-        return sessionRegistry;
-    }
+	@Bean
+	public SessionRegistry sessionRegistry() {
+		SessionRegistry sessionRegistry = new SessionRegistryImpl();
+		return sessionRegistry;
+	}
 }

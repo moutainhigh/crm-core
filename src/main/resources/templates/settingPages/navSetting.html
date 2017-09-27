@@ -5,7 +5,6 @@
 <body>
 <div class="navbar navbar-inverse navbar-fixed-left" th:fragment="navSetting"
      style="margin-top:48px;margin-bottom:0;float: left;height: 926px">
-
     <div class="sidebar">
         <div style="color: white; margin-left: 8px">
             <h6 id="state">Загрузка....</h6>
@@ -19,58 +18,12 @@
             <li><a href="/boss/settings/change-password">Смена пароля</a></li>
             <li><a href="/boss/settings/logger-setting">Логгирование</a></li>
             <li><a href="/boss/settings/advert-setting">Настройка SMTP</a></li>
+            <li><a href="/boss/settings/masterKey">Настройка мастер ключа</a></li>
+            <li><a href="/boss/settings/vk-properties-setting">Настройки VК</a></li>
+            <li><a href="/boss/settings/checklists">Настройки Чеклиста</a></li>
+            <li><a href="/boss/settings/notes">Заметки</a></li>
         </ul>
-        <style>
-            .navsvoi > li > a {
-                position: relative;
-                display: block;
-                padding-top: 15px;
-                padding-right: 5px;
-                padding-bottom: 5px;
-                padding-left: 5px;
-                color: #9d9d9d;
-
-            }
-
-            .nav > li:hover > a {
-                color: black;
-            }
-        </style>
-
     </div>
-    <ul>
-
-    </ul>
-    <style>
-        li, a, ul :hover {
-            color: black;
-        }
-    </style>
-
-    <script>
-        getServerTimeDateAjax();
-        function getServerTimeDateAjax() {
-            $.ajax({
-                type: "POST",
-                url: "/boss/settings/general-setting/get-server-time-date",
-                success: function (data) {
-                    //<![CDATA[
-                    var date = (data[0].dayOfMonth < 10 ? '0' + data[0].dayOfMonth : data[0].dayOfMonth)// потому что при парсе в дату это ***** прибавляет месяц
-                            + '-' + (data[0].monthValue < 10 ? '0' + data[0].monthValue : data[0].monthValue) + '-' + data[0].year;
-                    var time = new Date(data[0].year, data[0].monthValue, data[0].dayOfMonth,
-                            data[0].hour, data[0].minute, data[0].second, 0);
-                    $("#state").html('Время: ' + (data[1] ? 'server' : 'local'));
-                    $("#date").html(date);
-                    $("#time").html(time.toLocaleTimeString());
-                    //]]>
-                },
-                error: function () {
-                    console.log('getServerTimeDate сломался?');
-                }
-            });
-        }
-
-    </script>
 </div>
 </body>
 </html>

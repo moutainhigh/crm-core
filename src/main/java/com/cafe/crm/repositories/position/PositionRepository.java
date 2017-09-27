@@ -1,14 +1,17 @@
 package com.cafe.crm.repositories.position;
 
-import com.cafe.crm.models.worker.Position;
+import com.cafe.crm.models.user.Position;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 
 public interface PositionRepository extends JpaRepository<Position, Long> {
 
-    @Query("SELECT e FROM Position e WHERE e.jobName=:jobName")
-    Position getPositionByName(@Param("jobName") String jobName);
+	Position findByName(String name);
+
+	List<Position> findByIdIn(Long[] ids);
+
+	List<Position> findByIsPositionUsePercentOfSalesIsTrue();
 
 }
