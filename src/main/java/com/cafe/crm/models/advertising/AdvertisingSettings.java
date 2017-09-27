@@ -1,11 +1,13 @@
 package com.cafe.crm.models.advertising;
 
+import com.cafe.crm.models.BaseEntity;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "advertising_settings")
-public class AdvertisingSettings {
+public class AdvertisingSettings extends BaseEntity {
 
 	@Id
 	@GeneratedValue
@@ -13,7 +15,6 @@ public class AdvertisingSettings {
 
 	private String nameSettings;
 
-	@Column(unique = true)
 	private String email;
 
 	private String password;

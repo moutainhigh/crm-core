@@ -1,8 +1,8 @@
 package com.cafe.crm.models.property;
 
 
+import com.cafe.crm.models.BaseEntity;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "property")
-public class Property {
+public class Property extends BaseEntity {
 
 	@Id
 	@GeneratedValue

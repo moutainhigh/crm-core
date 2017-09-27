@@ -1,5 +1,6 @@
 package com.cafe.crm.models.client;
 
+import com.cafe.crm.models.BaseEntity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
@@ -11,7 +12,7 @@ import java.util.Objects;
 
 @Entity
 @Table
-public class Debt {
+public class Debt extends BaseEntity {
 
 	@Id
 	@GeneratedValue

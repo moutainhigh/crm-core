@@ -1,6 +1,7 @@
 package com.cafe.crm.models.client;
 
 
+import com.cafe.crm.models.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "layer_products")
-public class LayerProduct {
+public class LayerProduct extends BaseEntity {
 
 	@Id
 	@GeneratedValue

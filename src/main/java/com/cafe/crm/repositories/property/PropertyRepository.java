@@ -6,8 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface PropertyRepository extends JpaRepository<Property, Long> {
 
-    @Query("select b from Property b where b.name = :name")
-     Property getByName(@Param("name") String name);
+    @Query("select b from Property b where b.name = :name AND b.company.id = :companyId")
+     Property getByNameAndCompanyId(@Param("name") String name,
+                                    @Param("companyId") Long companyId);
+
+    List<Property> findByCompanyId(Long companyId);
 }

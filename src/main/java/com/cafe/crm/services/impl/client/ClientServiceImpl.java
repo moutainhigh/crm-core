@@ -4,6 +4,8 @@ import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.repositories.client.ClientRepository;
 import com.cafe.crm.services.interfaces.client.ClientService;
+import com.cafe.crm.services.interfaces.company.CompanyService;
+import com.cafe.crm.utils.CompanyIdCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,19 +18,35 @@ import java.util.Set;
 public class ClientServiceImpl implements ClientService {
 
 	private final ClientRepository clientRepository;
+	private final CompanyService companyService;
+	private CompanyIdCache companyIdCache;
 
 	@Autowired
-	public ClientServiceImpl(ClientRepository clientRepository) {
+	public ClientServiceImpl(ClientRepository clientRepository, CompanyService companyService) {
+		this.companyService = companyService;
 		this.clientRepository = clientRepository;
+	}
+
+	@Autowired
+	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
+		this.companyIdCache = companyIdCache;
+	}
+
+	private void setCompanyId(Client client) {
+		client.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
 	}
 
 	@Override
 	public void save(Client client) {
+		setCompanyId(client);
 		clientRepository.saveAndFlush(client);
 	}
 
 	@Override
 	public void saveAll(List<Client> clients) {
+		for (Client client: clients){
+			setCompanyId(client);
+		}
 		clientRepository.save(clients);
 	}
 
@@ -39,7 +57,7 @@ public class ClientServiceImpl implements ClientService {
 
 	@Override
 	public List<Client> getAll() {
-		return clientRepository.findAll();
+		return clientRepository.findByCompanyId(companyIdCache.getCompanyId());
 	}
 
 	@Override
@@ -49,7 +67,7 @@ public class ClientServiceImpl implements ClientService {
 
 	@Override
 	public List<Client> getAllOpen() {
-		return clientRepository.getAllOpen();
+		return clientRepository.getAllOpenAndCompanyId(companyIdCache.getCompanyId());
 	}
 
 	@Override

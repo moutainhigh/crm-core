@@ -16,6 +16,7 @@ import com.cafe.crm.models.user.Position;
 import com.cafe.crm.models.user.User;
 import com.cafe.crm.repositories.shift.ShiftRepository;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
+import com.cafe.crm.services.interfaces.company.CompanyService;
 import com.cafe.crm.services.interfaces.cost.CostCategoryService;
 import com.cafe.crm.services.interfaces.cost.CostService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
@@ -24,6 +25,7 @@ import com.cafe.crm.services.interfaces.note.NoteService;
 import com.cafe.crm.services.interfaces.position.PositionService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.services.interfaces.user.UserService;
+import com.cafe.crm.utils.CompanyIdCache;
 import com.cafe.crm.utils.converters.user.UserConverter;
 import com.cafe.crm.utils.DozerUtil;
 import com.cafe.crm.utils.TimeManager;
@@ -53,9 +55,11 @@ public class ShiftServiceImpl implements ShiftService {
 	private CostService costService;
 	private final ProductService productService;
 	private final PositionService positionService;
+	private CompanyIdCache companyIdCache;
+	private final CompanyService companyService;
 
 	@Autowired
-	public ShiftServiceImpl(CalculateService calculateService, TimeManager timeManager, CostCategoryService costCategoryService, ShiftRepository shiftRepository, UserService userService, SessionRegistry sessionRegistry, NoteService noteService, NoteRecordService noteRecordService, ProductService productService, PositionService positionService) {
+	public ShiftServiceImpl(CalculateService calculateService, TimeManager timeManager, CostCategoryService costCategoryService, ShiftRepository shiftRepository, UserService userService, SessionRegistry sessionRegistry, NoteService noteService, NoteRecordService noteRecordService, ProductService productService, PositionService positionService, CompanyService companyService) {
 		this.calculateService = calculateService;
 		this.timeManager = timeManager;
 		this.shiftRepository = shiftRepository;
@@ -65,6 +69,12 @@ public class ShiftServiceImpl implements ShiftService {
 		this.noteRecordService = noteRecordService;
 		this.productService = productService;
 		this.positionService = positionService;
+		this.companyService = companyService;
+	}
+
+	@Autowired
+	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
+		this.companyIdCache = companyIdCache;
 	}
 
 	@Autowired
@@ -72,8 +82,13 @@ public class ShiftServiceImpl implements ShiftService {
 		this.costService = costService;
 	}
 
+	private void setCompanyId(Shift shift) {
+		shift.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+	}
+
 	@Override
 	public void saveAndFlush(Shift shift) {
+		setCompanyId(shift);
 		shiftRepository.saveAndFlush(shift);
 	}
 
@@ -87,6 +102,7 @@ public class ShiftServiceImpl implements ShiftService {
 		}
 		shift.setCashBox(cashBox);
 		shift.setBankCashBox(bankCashBox);
+		setCompanyId(shift);
 		shiftRepository.saveAndFlush(shift);
 		return shift;
 	}
@@ -101,7 +117,7 @@ public class ShiftServiceImpl implements ShiftService {
 	@Override
 	public List<User> getUsersNotOnShift() {
 		List<User> users = userService.findAll();
-		Shift lastShift = shiftRepository.getLast();
+		Shift lastShift = shiftRepository.getLastAndCompanyId(companyIdCache.getCompanyId());
 		if (lastShift != null) {
 			users.removeAll(lastShift.getUsers());
 		}
@@ -111,7 +127,7 @@ public class ShiftServiceImpl implements ShiftService {
 	@Transactional(readOnly = true)
 	@Override
 	public List<User> getUsersOnShift() {
-		Shift lastShift = shiftRepository.getLast();
+		Shift lastShift = shiftRepository.getLastAndCompanyId(companyIdCache.getCompanyId());
 		if (lastShift != null) {
 			return lastShift.getUsers();
 		}
@@ -120,7 +136,7 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Override
 	public void deleteUserFromShift(Long userId) {
-		Shift shift = shiftRepository.getLast();
+		Shift shift = shiftRepository.getLastAndCompanyId(companyIdCache.getCompanyId());
 		User user = userService.findById(userId);
 		shift.getUsers().remove(user);
 		user.getShifts().remove(shift);
@@ -129,7 +145,7 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Override
 	public void addUserToShift(Long userId) {
-		Shift shift = shiftRepository.getLast();
+		Shift shift = shiftRepository.getLastAndCompanyId(companyIdCache.getCompanyId());
 		User user = userService.findById(userId);
 		shift.getUsers().add(user);
 		user.getShifts().add(shift);
@@ -139,19 +155,19 @@ public class ShiftServiceImpl implements ShiftService {
 	@Transactional(readOnly = true)
 	@Override
 	public Shift getLast() {
-		return shiftRepository.getLast();
+		return shiftRepository.getLastAndCompanyId(companyIdCache.getCompanyId());
 	}
 
 	@Transactional(readOnly = true)
 	@Override
 	public List<Shift> findAll() {
-		return shiftRepository.findAll();
+		return shiftRepository.findByCompanyId(companyIdCache.getCompanyId());
 	}
 
 	@Transactional
 	@Override
 	public Shift closeShift(Map<Long, Integer> mapOfUsersIdsAndBonuses, Double allPrice, Double cashBox, Double bankCashBox, String comment, Map<String, String> mapOfNoteNameAndValue) {
-		Shift shift = shiftRepository.getLast();
+		Shift shift = shiftRepository.getLastAndCompanyId(companyIdCache.getCompanyId());
 		List<User> usersOnShift = shift.getUsers();
 		for (Map.Entry<Long, Integer> entry : mapOfUsersIdsAndBonuses.entrySet()) {
 			User user = userService.findById(entry.getKey());
@@ -200,7 +216,7 @@ public class ShiftServiceImpl implements ShiftService {
 	@Transactional(readOnly = true)
 	@Override
 	public Set<Shift> findByDates(LocalDate start, LocalDate end) {
-		return shiftRepository.findByDates(start, end);
+		return shiftRepository.findByDatesAndCompanyId(start, end, companyIdCache.getCompanyId());
 	}
 
 	@Override
@@ -272,7 +288,7 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Override
 	public Shift findByDateShift(LocalDate date) {
-		return shiftRepository.findByShiftDate(date);
+		return shiftRepository.findByShiftDateAndCompanyId(date, companyIdCache.getCompanyId());
 	}
 
 	@Override
@@ -299,7 +315,7 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Override
 	public LocalDate getLastShiftDate() {
-		Shift lastShift = shiftRepository.getLast();
+		Shift lastShift = shiftRepository.getLastAndCompanyId(companyIdCache.getCompanyId());
 		if (lastShift != null) {
 			return lastShift.getShiftDate();
 		} else {

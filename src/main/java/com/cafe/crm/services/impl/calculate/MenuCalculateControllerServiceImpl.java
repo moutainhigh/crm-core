@@ -9,6 +9,7 @@ import com.cafe.crm.services.interfaces.calculate.MenuCalculateControllerService
 import com.cafe.crm.services.interfaces.client.ClientService;
 import com.cafe.crm.services.interfaces.layerproduct.LayerProductService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
+import com.cafe.crm.utils.CompanyIdCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

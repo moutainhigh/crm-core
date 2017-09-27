@@ -1,5 +1,6 @@
 package com.cafe.crm.models.menu;
 
+import com.cafe.crm.models.BaseEntity;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Entity;
@@ -11,7 +12,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "ingredients")
-public class Ingredients {
+public class Ingredients extends BaseEntity {
 
 	@Id
 	@GeneratedValue
