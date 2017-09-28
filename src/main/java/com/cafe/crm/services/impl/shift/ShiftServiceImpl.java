@@ -15,9 +15,7 @@ import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.user.Position;
 import com.cafe.crm.models.user.User;
 import com.cafe.crm.repositories.shift.ShiftRepository;
-import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.company.CompanyService;
-import com.cafe.crm.services.interfaces.cost.CostCategoryService;
 import com.cafe.crm.services.interfaces.cost.CostService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
 import com.cafe.crm.services.interfaces.note.NoteRecordService;
@@ -32,13 +30,10 @@ import com.cafe.crm.utils.TimeManager;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.session.SessionInformation;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.*;
 
 @Transactional
@@ -47,28 +42,22 @@ public class ShiftServiceImpl implements ShiftService {
 
 	private final ShiftRepository shiftRepository;
 	private final UserService userService;
-	private final CalculateService calculateService;
 	private final TimeManager timeManager;
-	private final SessionRegistry sessionRegistry;
 	private final NoteService noteService;
 	private final NoteRecordService noteRecordService;
 	private CostService costService;
 	private final ProductService productService;
-	private final PositionService positionService;
 	private CompanyIdCache companyIdCache;
 	private final CompanyService companyService;
 
 	@Autowired
-	public ShiftServiceImpl(CalculateService calculateService, TimeManager timeManager, CostCategoryService costCategoryService, ShiftRepository shiftRepository, UserService userService, SessionRegistry sessionRegistry, NoteService noteService, NoteRecordService noteRecordService, ProductService productService, PositionService positionService, CompanyService companyService) {
-		this.calculateService = calculateService;
+	public ShiftServiceImpl(TimeManager timeManager, ShiftRepository shiftRepository, UserService userService, NoteService noteService, NoteRecordService noteRecordService, ProductService productService, PositionService positionService, CompanyService companyService) {
 		this.timeManager = timeManager;
 		this.shiftRepository = shiftRepository;
 		this.userService = userService;
-		this.sessionRegistry = sessionRegistry;
 		this.noteService = noteService;
 		this.noteRecordService = noteRecordService;
 		this.productService = productService;
-		this.positionService = positionService;
 		this.companyService = companyService;
 	}
 
@@ -188,7 +177,6 @@ public class ShiftServiceImpl implements ShiftService {
 		shift.setNoteRecords(noteRecords);
 		shift.setOpen(false);
 		shiftRepository.saveAndFlush(shift);
-		closeAllUserSessions();
 		return shift;
 	}
 
@@ -207,11 +195,6 @@ public class ShiftServiceImpl implements ShiftService {
 		return noteRecords;
 	}
 
-	private void closeAllUserSessions() {
-		for (Object principal : sessionRegistry.getAllPrincipals()) {
-			sessionRegistry.getAllSessions(principal, false).forEach(SessionInformation::expireNow);
-		}
-	}
 
 	@Transactional(readOnly = true)
 	@Override
