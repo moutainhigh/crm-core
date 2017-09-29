@@ -1,8 +1,12 @@
 package com.cafe.crm.dto;
 
 
+import com.cafe.crm.models.user.User;
+import com.yc.easytransformer.annotations.Transform;
+
 import java.util.List;
 
+@Transform(User.class)
 public class UserDTO {
 
     private Long id;
