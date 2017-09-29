@@ -1,9 +1,12 @@
 package com.cafe.crm.models.user;
 
+import com.cafe.crm.dto.UserDTO;
 import com.cafe.crm.models.BaseEntity;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.utils.PatternStorage;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.yc.easytransformer.annotations.NotTransform;
+import com.yc.easytransformer.annotations.Transform;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
@@ -17,6 +20,7 @@ import java.util.List;
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @JsonIgnoreProperties({"password", "roles", "positions", "shifts", "shiftSalary", "salary", "bonus"})
+@Transform(UserDTO.class)
 public class User extends BaseEntity {
 
 	@Id
@@ -46,6 +50,7 @@ public class User extends BaseEntity {
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "users_roles", joinColumns = {@JoinColumn(name = "user_id")},
 			inverseJoinColumns = {@JoinColumn(name = "role_id")})
+	@NotTransform
 	private List<Role> roles;
 
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -56,6 +61,7 @@ public class User extends BaseEntity {
 	@ManyToMany
 	@JoinTable(name = "users_shifts", joinColumns = {@JoinColumn(name = "user_id")},
 			inverseJoinColumns = {@JoinColumn(name = "shift_id")})
+	@NotTransform
 	private List<Shift> shifts;
 
 	@Min(value = 0, message = "Поле \"shiftSalary\" должно быть цифрой большей 0!")
