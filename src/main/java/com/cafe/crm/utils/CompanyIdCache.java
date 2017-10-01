@@ -2,7 +2,6 @@ package com.cafe.crm.utils;
 
 
 import com.cafe.crm.models.company.Company;
-import com.cafe.crm.models.user.User;
 import com.cafe.crm.services.interfaces.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -21,12 +20,11 @@ public class CompanyIdCache {
 
 	public Long getCompanyId() {
 		String username = getUsername();
-		User currentUser = userService.findByUsername(username);
-		if (currentUser == null) {
-			return null;
-		} else {
-			return currentUser.getCompany().getId();
+		Company company = userService.findByUsername(username).getCompany();
+		if (company == null) {
+			throw new RuntimeException("У юзера нет компании!");
 		}
+		return company.getId();
 	}
 
 	private String getUsername() {

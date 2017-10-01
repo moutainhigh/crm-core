@@ -9,6 +9,10 @@ public interface RoleService {
 
 	void save(Role role);
 
+	Role find(String name);
+
+	Role find(Long id);
+
 	List<Role> findAll();
 
 	List<Role> findByIdIn(Long[] ids);

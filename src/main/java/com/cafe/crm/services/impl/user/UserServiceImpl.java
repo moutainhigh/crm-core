@@ -1,9 +1,7 @@
 package com.cafe.crm.services.impl.user;
 
 
-import com.cafe.crm.dto.registration.UserRegistrationForm;
 import com.cafe.crm.exceptions.user.UserDataException;
-import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.user.Position;
 import com.cafe.crm.models.user.Role;
 import com.cafe.crm.models.user.User;
@@ -16,16 +14,16 @@ import com.cafe.crm.utils.CompanyIdCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import org.springframework.cache.annotation.Cacheable;
-
-import java.util.*;
-
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -51,7 +49,6 @@ public class UserServiceImpl implements UserService {
 		this.roleService = roleService;
 		this.passwordEncoder = passwordEncoder;
 		this.companyService = companyService;
-//		this.sessionRegistry = sessionRegistry;
 	}
 
 	@Autowired
@@ -89,24 +86,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void registerUser(UserRegistrationForm user) {
-		User userToDB = new User();
-		userToDB.setEmail(user.getEmail());
-		userToDB.setPhone(user.getPhone());
-		checkForUniqueEmailAndPhone(userToDB);
-		Company company = new Company();
-		company.setName(user.getCompanyName());
-		companyService.save(company);
-
-		userToDB.setFirstName(user.getFirstName());
-		userToDB.setLastName(user.getLastName());
-		userToDB.setPassword(user.getPassword());
-		userToDB.setCompany(company);
-
-		setPositionsToUser(userToDB, "");
-		setRolesToUser(userToDB, "1,4");
-		setPasswordToUser(userToDB, "false");
-		userRepository.saveAndFlush(userToDB);
+	public void saveNewUser(User user) {
+		checkForUniqueEmailAndPhone(user);
+		companyService.save(user.getCompany());
+		userRepository.saveAndFlush(user);
+		cacheManager.getCache("user").clear();
 	}
 
 	@Override
@@ -156,12 +140,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 
-	private <T> boolean listsEqual(List<T> list1, List<T> list2){
-		if (list1.size() != list2.size()){
+	private <T> boolean listsEqual(List<T> list1, List<T> list2) {
+		if (list1.size() != list2.size()) {
 			return false;
 		}
-		for (int i = 0; i < list1.size(); i++){
-			if (!list1.get(i).equals(list2.get(i))){
+		for (int i = 0; i < list1.size(); i++) {
+			if (!list1.get(i).equals(list2.get(i))) {
 				return false;
 			}
 		}
@@ -270,15 +254,13 @@ public class UserServiceImpl implements UserService {
 
 	private void checkForUniqueEmailAndPhone(User user) {
 		List<User> usersInDatabase;
-		if (companyIdCache.getCompanyId() == null) {
-			usersInDatabase = findByEmailOrPhone(user.getEmail(), user.getPhone());
-		} else {
-			usersInDatabase = findByEmailOrPhoneAndCompanyId(user.getEmail(), user.getPhone(), companyIdCache.getCompanyId());
-		}
+		usersInDatabase = findByEmailOrPhone(user.getEmail(), user.getPhone());
 
 		for (User userInDb : usersInDatabase) {
-			if (!userInDb.getId().equals(user.getId())) {
-				throw new UserDataException("Пользователь с таким e-mail или телефоном существует!");
+			if (userInDb.getEmail().equalsIgnoreCase(user.getEmail())) {
+				throw new UserDataException("Пользователь с таким e-mail существует!");
+			} else if (userInDb.getPhone().equalsIgnoreCase(user.getPhone())) {
+				throw new UserDataException("Пользователь с таким телефоном существует!");
 			}
 		}
 	}

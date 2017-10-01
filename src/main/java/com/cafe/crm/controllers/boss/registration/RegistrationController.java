@@ -2,10 +2,7 @@ package com.cafe.crm.controllers.boss.registration;
 
 import com.cafe.crm.dto.registration.UserRegistrationForm;
 import com.cafe.crm.exceptions.user.UserDataException;
-import com.cafe.crm.models.company.Company;
-import com.cafe.crm.models.user.User;
-import com.cafe.crm.services.interfaces.company.CompanyService;
-import com.cafe.crm.services.interfaces.user.UserService;
+import com.cafe.crm.services.impl.user.UserRegistrationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,10 +14,10 @@ import javax.validation.Valid;
 @RequestMapping("/registration")
 public class RegistrationController {
 
-	private final UserService userService;
+	private final UserRegistrationServiceImpl userService;
 
 	@Autowired
-	public RegistrationController(UserService userService) {
+	public RegistrationController(UserRegistrationServiceImpl userService) {
 		this.userService = userService;
 	}
 
