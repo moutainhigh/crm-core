@@ -1,5 +1,6 @@
 package com.cafe.crm.services.impl.shift;
 
+import com.cafe.crm.dto.ClientDTO;
 import com.cafe.crm.dto.PositionDTO;
 import com.cafe.crm.dto.ShiftView;
 import com.cafe.crm.dto.UserDTO;
@@ -24,6 +25,8 @@ import com.cafe.crm.services.interfaces.position.PositionService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.utils.CompanyIdCache;
+import com.cafe.crm.utils.CompanyIdCache;
+import com.cafe.crm.utils.converters.client.ClientConverter;
 import com.cafe.crm.utils.converters.user.UserConverter;
 import com.cafe.crm.utils.DozerUtil;
 import com.cafe.crm.utils.TimeManager;
@@ -166,7 +169,7 @@ public class ShiftServiceImpl implements ShiftService {
 		}
 		for (User user : usersOnShift) {
 			int amountOfPositionsPercent = user.getPositions().stream().filter(Position::isPositionUsePercentOfSales).mapToInt(Position::getPercentageOfSales).sum();
-			user.setShiftSalary((int) (user.getShiftSalary() + (allPrice * amountOfPositionsPercent) / 100));
+			user.setSalary((int) (user.getShiftSalary() + (allPrice * amountOfPositionsPercent) / 100));
 			userService.save(user);
 		}
 		List<NoteRecord> noteRecords = saveAndGetNoteRecords(mapOfNoteNameAndValue, shift);
@@ -205,7 +208,7 @@ public class ShiftServiceImpl implements ShiftService {
 	@Override
 	public ShiftView createShiftView(Shift shift) {
 		List<UserDTO> usersOnShift = UserConverter.convertListUsersToDTO(shift.getUsers());
-		Set<Client> clients = new HashSet<>();
+		Set<ClientDTO> clientDTOS = new HashSet<>();
 		List<Calculate> activeCalculate = new ArrayList<>();
 		Set<Calculate> allCalculate = shift.getCalculates();
 		List<Note> enabledNotes = noteService.findAllByEnableIsTrue();
@@ -219,24 +222,20 @@ public class ShiftServiceImpl implements ShiftService {
 		Set<LayerProduct> layerProducts = new HashSet<>();
 		for (Calculate calculate : allCalculate) {
 			if (!calculate.isState()) {
-				clients.addAll(calculate.getClient());
+				if (calculate.isRoundState()) {
+					clientDTOS.addAll(ClientConverter.convertListClientsToDTOWithRound(calculate.getClient()));
+				} else {
+					clientDTOS.addAll(ClientConverter.convertListClientsToDTOWithoutRound(calculate.getClient()));
+				}
 			} else {
 				activeCalculate.add(calculate);
 			}
 		}
 
-		for (Client client : clients) {
-			layerProducts.addAll(client.getLayerProducts());
-			card += client.getPayWithCard();
-			allPrice += client.getPriceTime();
-		}
-
 		Map<Long, Integer> staffPercentBonusesMap = calcStaffPercentBonusesAndGetMap(layerProducts, usersOnShift);
 
-		for (LayerProduct layerProduct : layerProducts) {
-			if (layerProduct.isDirtyProfit()) {
-				allPrice += layerProduct.getCost();
-			}
+		for (ClientDTO clientDTO : clientDTOS) {
+			allPrice += clientDTO.getAllDirtyPrice();
 		}
 
 		for (Debt debt : shift.getRepaidDebts()) {
@@ -255,8 +254,6 @@ public class ShiftServiceImpl implements ShiftService {
 			otherCosts += (cost.getPrice() * cost.getQuantity());
 		}
 
-		allPrice -= card;
-
 		for (UserDTO user : usersOnShift) {
 			int amountOfPositionsPercent = user.getPositions().stream().filter(PositionDTO::isPositionUsePercentOfSales).mapToInt(PositionDTO::getPercentageOfSales).sum();
 			user.setShiftSalary((int) (user.getShiftSalary() + (allPrice * amountOfPositionsPercent) / 100));
@@ -265,7 +262,7 @@ public class ShiftServiceImpl implements ShiftService {
 
 		totalCashBox = (cashBox + bankCashBox + allPrice) - (usersTotalShiftSalary + otherCosts);
 
-		return new ShiftView(usersOnShift, clients, activeCalculate, allCalculate,
+		return new ShiftView(usersOnShift, clientDTOS, activeCalculate, allCalculate,
 				cashBox, totalCashBox, usersTotalShiftSalary, card, allPrice, shiftDate, otherCosts, bankCashBox, enabledNotes, staffPercentBonusesMap);
 	}
 

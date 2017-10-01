@@ -87,6 +87,8 @@
         <label for="tab-nav-3">Сотрудники</label>
         <input type="radio" name="tabs" id="tab-nav-4"/>
         <label for="tab-nav-4">Прочие расходы</label>
+        <input type="radio" name="tabs" id="tab-nav-5"/>
+        <label for="tab-nav-5">Долги</label>
 
         <div class="tabs">
             <div class="table">
@@ -97,23 +99,26 @@
                             <th> Общий чек</th>
                             <th> Оплата наличными</th>
                             <th th:if="${cardEnable}"> Оплата по клубной карте</th>
-                            <th> Стоимость меню</th>
+                            <th> Стоимость прочего меню</th>
+                            <th> Стоимость грязного меню</th>
                             <th> Стоимость времени</th>
                         </tr>
                         <tr style="text-align: center; background: #DAEEFF">
                             <td id="commonCheckSum">Всего грязными:<br/></td>
                             <td id="cashPaymentSum">Всего наличными:<br/></td>
                             <td id="clubCardPaymentSum" th:if="${cardEnable}">Всего картами:<br/></td>
-                            <td id="menuCostSum">Всего по меню:<br/></td>
+                            <td id="menuOtherSum">Прочее меню:<br/></td>
+                            <td id="menuDirtySum">Грязное меню:<br/></td>
                             <td id="timeCostSum">Всего по времени:<br/></td>
                         </tr>
                         </thead>
                         <tbody id="clients">
                         <tr th:each="client : ${totalStat.clients}">
-                            <td class="commonCheck" th:text="${client.allPrice}"></td>
+                            <td class="commonCheck" th:text="${client.allDirtyPrice}"></td>
                             <td class="cashPayment" th:text="${client.cache}"></td>
                             <td class="clubCardPayment" th:text="${client.payWithCard}" th:if="${cardEnable}"></td>
-                            <td class="menuCost" th:text="${client.priceMenu}"></td>
+                            <td class="menuOtherCost" th:text="${client.otherPriceMenu}"></td>
+                            <td class="menuDirtyCost" th:text="${client.dirtyPriceMenu}"></td>
                             <td class="timeCost" th:text="${client.priceTime}"></td>
 
                             <script type="text/javascript">
@@ -128,21 +133,13 @@
                             <td th:if="${cardEnable}"></td>
                             <td></td>
                             <td></td>
+                            <td></td>
                         </tr>
                         </tfoot>
                     </table>
                 </div>
             </div>
-            <script th:unless="${cardEnable}">
-                jQuery(document).ready( function() {
-                    getSumPay();
-                });
-            </script>
-            <script th:if="${cardEnable}">
-                jQuery(document).ready( function() {
-                    getSumPayWith();
-                });
-            </script>
+
             <div class="table">
                 <div class="table-responsive">
                     <table class="table table-striped">
@@ -159,7 +156,7 @@
                         <tr th:each="shift : ${shifts}">
                             <td th:text="${shift.shiftDate}"></td>
                             <td></td>
-                            <td th:text="${shift.cashBox}"></td>
+                            <td th:text="${shift.cashBox} + ${shift.bankCashBox}"></td>
                             <td></td>
                             <td th:text="${shift.profit}"></td>
                         </tr>
@@ -256,6 +253,49 @@
                     </table>
                 </div>
             </div>
+
+            <div class="table">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th> Всего</th>
+                            <th> Дата</th>
+                            <th> Прайс</th>
+                            <th> Должник</th>
+                            <th> Состояние</th>
+                        </tr>
+                        </thead>
+                        <tbody id="givenPrice">
+                        <tr th:each="givenDebt : ${totalStat.givenDebts}">
+                            <td th:text="${givenDebt.date}"></td>
+                            <td class="specificGivenPrice" th:text="${givenDebt.debtAmount}"></td>
+                            <td th:text="${givenDebt.debtor}"></td>
+                            <td>Не возвращено</td>
+                        </tr>
+                        </tbody>
+                        <tbody id="repaidPrice">
+                        <tr th:each="repaidDebt : ${totalStat.repaidDebt}">
+                            <td th:text="${repaidDebt.date}"></td>
+                            <td class="specificRepaidPrice" th:text="${repaidDebt.debtAmount}"></td>
+                            <td th:text="${repaidDebt.debtor}"></td>
+                            <td>Возвращено</td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+
         </div>
     </div>
 </div>
@@ -265,6 +305,7 @@
 <div th:replace="media/advertisingDispatch :: advertising"></div>
 <script th:src="@{/js/mail.js}"></script>
 <script th:src="@{/js/clients/clients.js}"></script>
+<script th:src="@{/js/totalStatistics.js}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.6/prefixfree.min.js"></script>
 </body>
 </html>
