@@ -42,6 +42,9 @@ logging:
 time:
  server: ntp.xs4all.nl,ntp04.oal.ul.pt,ntp02.oal.ul.pt,time-a.nist.gov
 
+defaultUser:
+  roles: BOSS,MANAGER
+
 advertising:
   mail:
     sender: smtp.gmail.com

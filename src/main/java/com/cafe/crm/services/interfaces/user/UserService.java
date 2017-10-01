@@ -14,7 +14,9 @@ public interface UserService {
 
 	void save(User user, String positionsIds, String rolesIds, String isDefaultPassword);
 
-	void registerUser(UserRegistrationForm user);
+	void saveNewUser(User user);
+
+	//void registerUser(UserRegistrationForm user);
 
 	List<User> findAll();
 
