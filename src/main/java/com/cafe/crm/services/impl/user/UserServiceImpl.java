@@ -1,7 +1,9 @@
 package com.cafe.crm.services.impl.user;
 
 
+import com.cafe.crm.dto.registration.UserRegistrationForm;
 import com.cafe.crm.exceptions.user.UserDataException;
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.user.Position;
 import com.cafe.crm.models.user.Role;
 import com.cafe.crm.models.user.User;
@@ -84,6 +86,27 @@ public class UserServiceImpl implements UserService {
 		setCompanyId(user);
 		userRepository.saveAndFlush(user);
 		cacheManager.getCache("user").clear();
+	}
+
+	@Override
+	public void registerUser(UserRegistrationForm user) {
+		User userToDB = new User();
+		userToDB.setEmail(user.getEmail());
+		userToDB.setPhone(user.getPhone());
+		checkForUniqueEmailAndPhone(userToDB);
+		Company company = new Company();
+		company.setName(user.getCompanyName());
+		companyService.save(company);
+
+		userToDB.setFirstName(user.getFirstName());
+		userToDB.setLastName(user.getLastName());
+		userToDB.setPassword(user.getPassword());
+		userToDB.setCompany(company);
+
+		setPositionsToUser(userToDB, "");
+		setRolesToUser(userToDB, "1,4");
+		setPasswordToUser(userToDB, "false");
+		userRepository.saveAndFlush(userToDB);
 	}
 
 	@Override
@@ -188,8 +211,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public List<User> findByEmailOrPhoneAndCompanyId(String email, String phone, Long companyId) {
+		return userRepository.findByEmailOrPhoneAndCompanyId(email, phone, companyId);
+	}
+
+	@Override
 	public List<User> findByEmailOrPhone(String email, String phone) {
-		return userRepository.findByEmailOrPhoneAndCompanyId(email, phone, companyIdCache.getCompanyId());
+		return userRepository.findByEmailOrPhone(email, phone);
 	}
 
 	@Override
@@ -241,7 +269,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private void checkForUniqueEmailAndPhone(User user) {
-		List<User> usersInDatabase = findByEmailOrPhone(user.getEmail(), user.getPhone());
+		List<User> usersInDatabase;
+		if (companyIdCache.getCompanyId() == null) {
+			usersInDatabase = findByEmailOrPhone(user.getEmail(), user.getPhone());
+		} else {
+			usersInDatabase = findByEmailOrPhoneAndCompanyId(user.getEmail(), user.getPhone(), companyIdCache.getCompanyId());
+		}
+
 		for (User userInDb : usersInDatabase) {
 			if (!userInDb.getId().equals(user.getId())) {
 				throw new UserDataException("Пользователь с таким e-mail или телефоном существует!");
