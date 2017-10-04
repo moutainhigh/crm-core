@@ -14,16 +14,16 @@ import com.cafe.crm.utils.CompanyIdCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import org.springframework.cache.annotation.Cacheable;
-
-import java.util.*;
-
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -49,7 +49,6 @@ public class UserServiceImpl implements UserService {
 		this.roleService = roleService;
 		this.passwordEncoder = passwordEncoder;
 		this.companyService = companyService;
-//		this.sessionRegistry = sessionRegistry;
 	}
 
 	@Autowired
@@ -82,6 +81,14 @@ public class UserServiceImpl implements UserService {
 		setRolesToUser(user, rolesIds);
 		setPasswordToUser(user, isDefaultPassword);
 		setCompanyId(user);
+		userRepository.saveAndFlush(user);
+		cacheManager.getCache("user").clear();
+	}
+
+	@Override
+	public void saveNewUser(User user) {
+		checkForUniqueEmailAndPhone(user);
+		companyService.save(user.getCompany());
 		userRepository.saveAndFlush(user);
 		cacheManager.getCache("user").clear();
 	}
@@ -133,12 +140,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 
-	private <T> boolean listsEqual(List<T> list1, List<T> list2){
-		if (list1.size() != list2.size()){
+	private <T> boolean listsEqual(List<T> list1, List<T> list2) {
+		if (list1.size() != list2.size()) {
 			return false;
 		}
-		for (int i = 0; i < list1.size(); i++){
-			if (!list1.get(i).equals(list2.get(i))){
+		for (int i = 0; i < list1.size(); i++) {
+			if (!list1.get(i).equals(list2.get(i))) {
 				return false;
 			}
 		}
@@ -188,8 +195,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public List<User> findByEmailOrPhoneAndCompanyId(String email, String phone, Long companyId) {
+		return userRepository.findByEmailOrPhoneAndCompanyId(email, phone, companyId);
+	}
+
+	@Override
 	public List<User> findByEmailOrPhone(String email, String phone) {
-		return userRepository.findByEmailOrPhoneAndCompanyId(email, phone, companyIdCache.getCompanyId());
+		return userRepository.findByEmailOrPhone(email, phone);
 	}
 
 	@Override
@@ -241,10 +253,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private void checkForUniqueEmailAndPhone(User user) {
-		List<User> usersInDatabase = findByEmailOrPhone(user.getEmail(), user.getPhone());
+		List<User> usersInDatabase;
+		usersInDatabase = findByEmailOrPhone(user.getEmail(), user.getPhone());
+
 		for (User userInDb : usersInDatabase) {
-			if (!userInDb.getId().equals(user.getId())) {
-				throw new UserDataException("Пользователь с таким e-mail или телефоном существует!");
+			if (userInDb.getEmail().equalsIgnoreCase(user.getEmail())) {
+				throw new UserDataException("Пользователь с таким e-mail существует!");
+			} else if (userInDb.getPhone().equalsIgnoreCase(user.getPhone())) {
+				throw new UserDataException("Пользователь с таким телефоном существует!");
 			}
 		}
 	}

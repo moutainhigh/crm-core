@@ -33,4 +33,13 @@ public class RoleServiceImpl implements RoleService {
 		return roleRepository.findByIdIn(ids);
 	}
 
+	@Override
+	public Role find(String name) {
+		return roleRepository.findByName(name);
+	}
+
+	@Override
+	public Role find(Long id) {
+		return roleRepository.findOne(id);
+	}
 }
