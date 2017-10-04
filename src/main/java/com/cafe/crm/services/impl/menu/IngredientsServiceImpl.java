@@ -1,5 +1,6 @@
 package com.cafe.crm.services.impl.menu;
 
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.menu.Ingredients;
 import com.cafe.crm.dto.WrapperOfProduct;
 import com.cafe.crm.repositories.menu.IngredientsRepository;
@@ -18,21 +19,19 @@ public class IngredientsServiceImpl implements IngredientsService {
 
 	private final IngredientsRepository ingredientsRepository;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public IngredientsServiceImpl(IngredientsRepository ingredientsRepository, CompanyService companyService) {
+	public IngredientsServiceImpl(IngredientsRepository ingredientsRepository, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.ingredientsRepository = ingredientsRepository;
 		this.companyService = companyService;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 
-	private void setCompanyId(Ingredients ingredients){
-		ingredients.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+	private void setCompany(Ingredients ingredients){
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		ingredients.setCompany(company);
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class IngredientsServiceImpl implements IngredientsService {
 
 	@Override
 	public void save(Ingredients ingredients) {
-		setCompanyId(ingredients);
+		setCompany(ingredients);
 		ingredientsRepository.saveAndFlush(ingredients);
 	}
 

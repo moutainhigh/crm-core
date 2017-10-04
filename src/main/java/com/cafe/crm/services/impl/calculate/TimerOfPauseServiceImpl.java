@@ -1,6 +1,7 @@
 package com.cafe.crm.services.impl.calculate;
 
 import com.cafe.crm.models.client.TimerOfPause;
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.repositories.calculate.TimerOfPauseRepository;
 import com.cafe.crm.services.interfaces.calculate.TimerOfPauseService;
 import com.cafe.crm.services.interfaces.company.CompanyService;
@@ -13,21 +14,19 @@ public class TimerOfPauseServiceImpl implements TimerOfPauseService {
 
 	private final TimerOfPauseRepository timerOfPauseRepository;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public TimerOfPauseServiceImpl(TimerOfPauseRepository timerOfPauseRepository, CompanyService companyService) {
+	public TimerOfPauseServiceImpl(TimerOfPauseRepository timerOfPauseRepository, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.companyService = companyService;
 		this.timerOfPauseRepository = timerOfPauseRepository;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 
-	private void setCompanyId(TimerOfPause timerOfPause) {
-		timerOfPause.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+	private void setCompany(TimerOfPause timerOfPause) {
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		timerOfPause.setCompany(company);
 	}
 
 	@Override
@@ -37,7 +36,7 @@ public class TimerOfPauseServiceImpl implements TimerOfPauseService {
 
 	@Override
 	public void save(TimerOfPause timer) {
-		setCompanyId(timer);
+		setCompany(timer);
 		timerOfPauseRepository.saveAndFlush(timer);
 	}
 

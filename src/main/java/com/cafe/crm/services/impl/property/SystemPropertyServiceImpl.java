@@ -1,6 +1,7 @@
 package com.cafe.crm.services.impl.property;
 
 
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.property.AllSystemProperty;
 import com.cafe.crm.repositories.property.SystemPropertyRepository;
 import com.cafe.crm.services.interfaces.company.CompanyService;
@@ -30,13 +31,15 @@ public class SystemPropertyServiceImpl implements SystemPropertyService {
 		this.companyIdCache = companyIdCache;
 	}
 
-	private void setCompanyId(AllSystemProperty allSystemProperty) {
-		allSystemProperty.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+	private void setCompany(AllSystemProperty allSystemProperty) {
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		allSystemProperty.setCompany(company);
 	}
 
 	@Override
 	public void save(AllSystemProperty property) {
-//		setCompanyId(property);
+		setCompany(property);
 		repository.save(property);
 	}
 

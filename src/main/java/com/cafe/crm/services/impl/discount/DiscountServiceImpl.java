@@ -1,6 +1,7 @@
 package com.cafe.crm.services.impl.discount;
 
 
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.discount.Discount;
 import com.cafe.crm.repositories.discount.DiscountRepository;
 import com.cafe.crm.services.interfaces.company.CompanyService;
@@ -16,21 +17,19 @@ public class DiscountServiceImpl implements DiscountService {
 
 	private final DiscountRepository discountRepository;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public DiscountServiceImpl(DiscountRepository discountRepository, CompanyService companyService) {
+	public DiscountServiceImpl(DiscountRepository discountRepository, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.discountRepository = discountRepository;
 		this.companyService = companyService;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 
 	private void setCompanyId(Discount discount) {
-		discount.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		discount.setCompany(company);
 	}
 
 	@Override

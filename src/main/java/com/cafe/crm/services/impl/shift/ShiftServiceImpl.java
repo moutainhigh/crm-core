@@ -7,6 +7,7 @@ import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.models.client.LayerProduct;
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.models.note.Note;
@@ -20,7 +21,6 @@ import com.cafe.crm.services.interfaces.cost.CostService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
 import com.cafe.crm.services.interfaces.note.NoteRecordService;
 import com.cafe.crm.services.interfaces.note.NoteService;
-import com.cafe.crm.services.interfaces.position.PositionService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.utils.CompanyIdCache;
@@ -45,12 +45,12 @@ public class ShiftServiceImpl implements ShiftService {
     private final NoteRecordService noteRecordService;
     private CostService costService;
     private final ProductService productService;
-    private CompanyIdCache companyIdCache;
     private final CompanyService companyService;
     private final Transformer transformer;
+	private final CompanyIdCache companyIdCache;
 
     @Autowired
-    public ShiftServiceImpl(TimeManager timeManager, ShiftRepository shiftRepository, UserService userService, NoteService noteService, NoteRecordService noteRecordService, ProductService productService, PositionService positionService, CompanyService companyService, Transformer transformer) {
+    public ShiftServiceImpl(TimeManager timeManager, ShiftRepository shiftRepository, UserService userService, NoteService noteService, NoteRecordService noteRecordService, ProductService productService,CompanyIdCache companyIdCache, CompanyService companyService, Transformer transformer) {
         this.timeManager = timeManager;
         this.shiftRepository = shiftRepository;
         this.userService = userService;
@@ -59,11 +59,7 @@ public class ShiftServiceImpl implements ShiftService {
         this.productService = productService;
         this.companyService = companyService;
         this.transformer = transformer;
-    }
-
-    @Autowired
-    public void setCompanyIdCache(CompanyIdCache companyIdCache) {
-        this.companyIdCache = companyIdCache;
+		this.companyIdCache = companyIdCache;
     }
 
     @Autowired
@@ -71,15 +67,17 @@ public class ShiftServiceImpl implements ShiftService {
         this.costService = costService;
     }
 
-    private void setCompanyId(Shift shift) {
-        shift.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
-    }
+	private void setCompany(Shift shift) {
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		shift.setCompany(company);
+	}
 
-    @Override
-    public void saveAndFlush(Shift shift) {
-        setCompanyId(shift);
-        shiftRepository.saveAndFlush(shift);
-    }
+	@Override
+	public void saveAndFlush(Shift shift) {
+		setCompany(shift);
+		shiftRepository.saveAndFlush(shift);
+	}
 
     @Override
     public Shift createNewShift(Double cashBox, Double bankCashBox, long... usersIdsOnShift) {
@@ -91,7 +89,7 @@ public class ShiftServiceImpl implements ShiftService {
         }
         shift.setCashBox(cashBox);
         shift.setBankCashBox(bankCashBox);
-        setCompanyId(shift);
+        setCompany(shift);
         shiftRepository.saveAndFlush(shift);
         return shift;
     }
