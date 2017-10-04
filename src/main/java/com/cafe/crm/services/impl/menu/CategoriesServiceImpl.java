@@ -1,5 +1,6 @@
 package com.cafe.crm.services.impl.menu;
 
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.menu.Category;
 import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.repositories.menu.CategoryRepository;
@@ -18,16 +19,12 @@ public class CategoriesServiceImpl implements CategoriesService {
 
 	private final CategoryRepository categoryRepository;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public CategoriesServiceImpl(CategoryRepository categoryRepository, CompanyService companyService) {
+	public CategoriesServiceImpl(CategoryRepository categoryRepository, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.categoryRepository = categoryRepository;
 		this.companyService = companyService;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 
@@ -41,13 +38,15 @@ public class CategoriesServiceImpl implements CategoriesService {
 		return categoryRepository.findOne(id);
 	}
 
-	private void setCompanyId(Category category){
-		category.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+	private void setCompany(Category category){
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		category.setCompany(company);
 	}
 
 	@Override
 	public void saveAndFlush(Category category) {
-		setCompanyId(category);
+		setCompany(category);
 		categoryRepository.saveAndFlush(category);
 	}
 

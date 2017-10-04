@@ -2,6 +2,7 @@ package com.cafe.crm.services.impl.advertising;
 
 
 import com.cafe.crm.models.advertising.AdvertisingSettings;
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.repositories.advertising.AdvertisingSettingsRepository;
 import com.cafe.crm.services.interfaces.advertising.AdvertisingSettingsService;
 import com.cafe.crm.services.interfaces.company.CompanyService;
@@ -16,26 +17,24 @@ public class AdvertisingSettingsServiceImpl implements AdvertisingSettingsServic
 
 	private final AdvertisingSettingsRepository repository;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public AdvertisingSettingsServiceImpl(AdvertisingSettingsRepository repository, CompanyService companyService) {
+	public AdvertisingSettingsServiceImpl(AdvertisingSettingsRepository repository, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.repository = repository;
 		this.companyService = companyService;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 
-	private void setCompanyId(AdvertisingSettings advertisingSettings) {
-		advertisingSettings.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+	private void setCompany(AdvertisingSettings advertisingSettings) {
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		advertisingSettings.setCompany(company);
 	}
 
 	@Override
 	public void save(AdvertisingSettings settings) {
-		setCompanyId(settings);
+		setCompany(settings);
 		repository.save(settings);
 	}
 

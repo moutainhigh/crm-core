@@ -1,6 +1,7 @@
 package com.cafe.crm.services.impl.card;
 
 import com.cafe.crm.models.card.Card;
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.repositories.card.CardRepository;
 import com.cafe.crm.services.interfaces.card.CardService;
 import com.cafe.crm.services.interfaces.company.CompanyService;
@@ -15,32 +16,30 @@ public class CardServiceImpl implements CardService {
 
 	private final CardRepository cardRepository;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public CardServiceImpl(CardRepository cardRepository, CompanyService companyService) {
+	public CardServiceImpl(CardRepository cardRepository, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.cardRepository = cardRepository;
 		this.companyService = companyService;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 
-	private void setCompanyId(Card card){
-		card.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+	private void setCompany(Card card){
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		card.setCompany(company);
 	}
 
 	public void saveAll(List<Card> cards) {
 		for (Card card: cards){
-			setCompanyId(card);
+			setCompany(card);
 		}
 		cardRepository.save(cards);
 	}
 
 	public void save(Card card) {
-		setCompanyId(card);
+		setCompany(card);
 		cardRepository.saveAndFlush(card);
 	}
 

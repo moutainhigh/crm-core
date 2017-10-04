@@ -2,6 +2,7 @@ package com.cafe.crm.services.impl.checklist;
 
 import com.cafe.crm.exceptions.checklist.ChecklistDataException;
 import com.cafe.crm.models.checklist.Checklist;
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.repositories.checklist.ChecklistRepository;
 import com.cafe.crm.services.interfaces.checklist.ChecklistService;
 import com.cafe.crm.services.interfaces.company.CompanyService;
@@ -16,21 +17,19 @@ public class ChecklistServiceIml implements ChecklistService{
 
 	private final ChecklistRepository checklistRepository;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public ChecklistServiceIml(ChecklistRepository checklistRepository, CompanyService companyService) {
+	public ChecklistServiceIml(ChecklistRepository checklistRepository, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.checklistRepository = checklistRepository;
 		this.companyService = companyService;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 
-	private void setCompanyId(Checklist checklist) {
-		checklist.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+	private void setCompany(Checklist checklist) {
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		checklist.setCompany(company);
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class ChecklistServiceIml implements ChecklistService{
 	public void saveChecklistOnCloseShift(String text) {
 		Checklist checklist = new Checklist();
 		checklist.setOnCloseShiftText(text);
-		setCompanyId(checklist);
+		setCompany(checklist);
 		checklistRepository.save(checklist);
 	}
 
@@ -50,7 +49,7 @@ public class ChecklistServiceIml implements ChecklistService{
 	public void saveChecklistOnOpenShift(String text) {
 		Checklist checklist = new Checklist();
 		checklist.setOnOpenShiftText(text);
-		setCompanyId(checklist);
+		setCompany(checklist);
 		checklistRepository.save(checklist);
 	}
 
@@ -58,7 +57,7 @@ public class ChecklistServiceIml implements ChecklistService{
 	public void update(Checklist checklist) {
 		Checklist checklistFromDB = checklistRepository.findOne(checklist.getId());
 		if (checklistFromDB != null) {
-			setCompanyId(checklist);
+			setCompany(checklist);
 			checklistRepository.save(checklist);
 		} else {
 			throw new ChecklistDataException("Не найден указанный параметр");

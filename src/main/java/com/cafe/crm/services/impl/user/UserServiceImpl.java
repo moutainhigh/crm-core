@@ -2,6 +2,7 @@ package com.cafe.crm.services.impl.user;
 
 
 import com.cafe.crm.exceptions.user.UserDataException;
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.user.Position;
 import com.cafe.crm.models.user.Role;
 import com.cafe.crm.models.user.User;
@@ -25,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.collections.CollectionUtils.isEqualCollection;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
@@ -36,6 +38,7 @@ public class UserServiceImpl implements UserService {
 	private PositionService positionService;
 	private final CompanyService companyService;
 	private CompanyIdCache companyIdCache;
+	private final CacheManager cacheManager;
 
 	@Autowired
 	private SessionRegistry sessionRegistry;
@@ -44,16 +47,12 @@ public class UserServiceImpl implements UserService {
 	private String defaultPassword;
 
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder, CompanyService companyService) {
+	public UserServiceImpl(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder, CompanyService companyService, CacheManager cacheManager) {
 		this.userRepository = userRepository;
 		this.roleService = roleService;
 		this.passwordEncoder = passwordEncoder;
 		this.companyService = companyService;
-	}
-
-	@Autowired
-	public void setPositionService(PositionService positionService) {
-		this.positionService = positionService;
+		this.cacheManager = cacheManager;
 	}
 
 	@Autowired
@@ -61,18 +60,22 @@ public class UserServiceImpl implements UserService {
 		this.companyIdCache = companyIdCache;
 	}
 
+	@Autowired
+	public void setPositionService(PositionService positionService) {
+		this.positionService = positionService;
+	}
+
+	private void setCompany(User user) {
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		user.setCompany(company);
+	}
+
 	@Override
 	public void save(User user) {
-		user.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+		setCompany(user);
 		userRepository.saveAndFlush(user);
 	}
-
-	private void setCompanyId(User user) {
-		user.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
-	}
-
-	@Autowired
-	CacheManager cacheManager;
 
 	@Override
 	public void save(User user, String positionsIds, String rolesIds, String isDefaultPassword) {
@@ -80,7 +83,7 @@ public class UserServiceImpl implements UserService {
 		setPositionsToUser(user, positionsIds);
 		setRolesToUser(user, rolesIds);
 		setPasswordToUser(user, isDefaultPassword);
-		setCompanyId(user);
+		setCompany(user);
 		userRepository.saveAndFlush(user);
 		cacheManager.getCache("user").clear();
 	}
@@ -139,43 +142,41 @@ public class UserServiceImpl implements UserService {
 		return usersByPositions;
 	}
 
-
-	private <T> boolean listsEqual(List<T> list1, List<T> list2) {
-		if (list1.size() != list2.size()) {
-			return false;
-		}
-		for (int i = 0; i < list1.size(); i++) {
-			if (!list1.get(i).equals(list2.get(i))) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	private void updateSessionRegistryAndCache(User updatedUser) {
-//		get user from database or cache
 		User storedUser = findById(updatedUser.getId());
 
 		cacheManager.getCache("user").evict(storedUser.getEmail());
 		cacheManager.getCache("user").put(updatedUser.getEmail(), updatedUser);
 
-//		if security related fields of user will be updated invalidate his\her session
-		boolean positionsEqual = listsEqual(storedUser.getPositions(), updatedUser.getPositions());
-		boolean rolesEqual = listsEqual(storedUser.getRoles(), updatedUser.getRoles());
-		if (!positionsEqual || !rolesEqual || !storedUser.getPassword().equals(updatedUser.getPassword())
-				|| !storedUser.getPhone().equals(updatedUser.getPhone())
-				|| !storedUser.getEmail().equals(updatedUser.getEmail())) {
-
+		String userEmailFromSession;
+		if (criticalUserDataUpdated(updatedUser, storedUser)) {
 			for (Object principal : sessionRegistry.getAllPrincipals()) {
-				String usernameFromSession;
-				if (principal instanceof UserDetails) {
-					usernameFromSession = ((UserDetails) principal).getUsername();
-					if (storedUser.getEmail().equals(usernameFromSession)) {
-						sessionRegistry.getAllSessions(principal, false).forEach(SessionInformation::expireNow);
-					}
+				userEmailFromSession = ((UserDetails) principal).getUsername();
+				if (storedUser.getEmail().equals(userEmailFromSession)) {
+					sessionRegistry.getAllSessions(principal, false).forEach(SessionInformation::expireNow);
 				}
 			}
 		}
+	}
+
+	private boolean criticalUserDataUpdated(User updatedUser, User storedUser) {
+
+		List<Position> storedUserPositions = storedUser.getPositions();
+		List<Position> updatedUserPositions = updatedUser.getPositions();
+		List<Role> storedUserRoles = storedUser.getRoles();
+		List<Role> updatedUserRoles = updatedUser.getRoles();
+
+		boolean positionsEqual = listsEqual(storedUserPositions, updatedUserPositions);
+		boolean rolesEqual = listsEqual(storedUserRoles, updatedUserRoles);
+		boolean passwordsEqual = storedUser.getPassword().equals(updatedUser.getPassword());
+		boolean phonesEqual = storedUser.getPhone().equals(updatedUser.getPhone());
+		boolean emailsEqual = storedUser.getEmail().equals(updatedUser.getEmail());
+
+		return (!positionsEqual || !rolesEqual || !passwordsEqual || !phonesEqual || !emailsEqual);
+	}
+
+	private <T> boolean listsEqual(List<T> list1, List<T> list2) {
+		return list1!=null && list2!=null && isEqualCollection(list1, list2);
 	}
 
 	@Override
@@ -189,7 +190,7 @@ public class UserServiceImpl implements UserService {
 		setPositionsToUser(user, positionsIds);
 		setRolesToUser(user, rolesIds);
 		setDataFromDatabaseToUser(user);
-		setCompanyId(user);
+		setCompany(user);
 		updateSessionRegistryAndCache(user);
 		userRepository.saveAndFlush(user);
 	}
