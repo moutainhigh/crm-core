@@ -22,60 +22,50 @@ jQuery(document).ready( function() {
 
 
     if($("#clubCardPaymentSum").length) {
-        var totalSumWithCard = [0, 0, 0, 0, 0, 0];
+        var totalSumWithCard = [0, 0, 0, 0, 0];
         Array.from(document.getElementById("clients").rows).forEach(function(item) {
-            if(item.querySelector('.commonCheck')) {
-                totalSumWithCard[0] += +item.querySelector('.commonCheck').innerHTML;
-            }
             if(item.querySelector('.cashPayment')) {
-                totalSumWithCard[1] += +item.querySelector('.cashPayment').innerHTML;
+                totalSumWithCard[0] += +item.querySelector('.cashPayment').innerHTML;
             }
             if(item.querySelector('.clubCardPayment')) {
-                totalSumWithCard[2] += +item.querySelector('.clubCardPayment').innerHTML;
+                totalSumWithCard[1] += +item.querySelector('.clubCardPayment').innerHTML;
             }
             if(item.querySelector('.menuOtherCost')) {
-                totalSumWithCard[3] += +item.querySelector('.menuOtherCost').innerHTML;
+                totalSumWithCard[2] += +item.querySelector('.menuOtherCost').innerHTML;
             }
             if(item.querySelector('.menuDirtyCost')) {
-                totalSumWithCard[4] += +item.querySelector('.menuDirtyCost').innerHTML;
+                totalSumWithCard[3] += +item.querySelector('.menuDirtyCost').innerHTML;
             }
             if(item.querySelector('.timeCost')) {
-                totalSumWithCard[5] += +item.querySelector('.timeCost').innerHTML;
+                totalSumWithCard[4] += +item.querySelector('.timeCost').innerHTML;
             }
         });
-        var totalDirtyPriceWithOutCard = totalSumWithCard[0] + totalRepaidDebt - totalGivenDebt;
-        document.getElementById("commonCheckSum").innerHTML += " " + totalDirtyPriceWithOutCard;
-        document.getElementById("cashPaymentSum").innerHTML += " " + totalSumWithCard[1];
-        document.getElementById("clubCardPaymentSum").innerHTML += " " + totalSumWithCard[2];
-        document.getElementById("menuOtherSum").innerHTML += " " + totalSumWithCard[3];
-        document.getElementById("menuDirtySum").innerHTML += " " + totalSumWithCard[4];
-        document.getElementById("timeCostSum").innerHTML += " " + totalSumWithCard[5];
+        document.getElementById("cashPaymentSum").innerHTML += " " + totalSumWithCard[0];
+        document.getElementById("clubCardPaymentSum").innerHTML += " " + totalSumWithCard[1];
+        document.getElementById("menuOtherSum").innerHTML += " " + totalSumWithCard[2];
+        document.getElementById("menuDirtySum").innerHTML += " " + totalSumWithCard[3];
+        document.getElementById("timeCostSum").innerHTML += " " + totalSumWithCard[4];
     } else {
-        var totalSum = [0, 0, 0, 0, 0];
+        var totalSum = [0, 0, 0, 0];
         Array.from(document.getElementById("clients").rows).forEach(
             function(item) {
-                if(item.querySelector('.commonCheck')) {
-                    totalSum[0] += +item.querySelector('.commonCheck').innerHTML;
-                }
                 if(item.querySelector('.cashPayment')) {
-                    totalSum[1] += +item.querySelector('.cashPayment').innerHTML;
+                    totalSum[0] += +item.querySelector('.cashPayment').innerHTML;
                 }
                 if(item.querySelector('.menuOtherCost')) {
-                    totalSum[2] += +item.querySelector('.menuOtherCost').innerHTML;
+                    totalSum[1] += +item.querySelector('.menuOtherCost').innerHTML;
                 }
                 if(item.querySelector('.menuDirtyCost')) {
-                    totalSum[3] += +item.querySelector('.menuDirtyCost').innerHTML;
+                    totalSum[2] += +item.querySelector('.menuDirtyCost').innerHTML;
                 }
                 if(item.querySelector('.timeCost')) {
-                    totalSum[4] += +item.querySelector('.timeCost').innerHTML;
+                    totalSum[3] += +item.querySelector('.timeCost').innerHTML;
                 }
             });
-        var totalDirtyPrice = totalSum[0] + totalRepaidDebt - totalGivenDebt;
-        document.getElementById("commonCheckSum").innerHTML += " " + totalDirtyPrice;
-        document.getElementById("cashPaymentSum").innerHTML += " " + totalSum[1];
-        document.getElementById("menuOtherSum").innerHTML += " " + totalSum[2];
-        document.getElementById("menuDirtySum").innerHTML += " " + totalSum[3];
-        document.getElementById("timeCostSum").innerHTML += " " + totalSum[4];
+        document.getElementById("cashPaymentSum").innerHTML += " " + totalSum[0];
+        document.getElementById("menuOtherSum").innerHTML += " " + totalSum[1];
+        document.getElementById("menuDirtySum").innerHTML += " " + totalSum[2];
+        document.getElementById("timeCostSum").innerHTML += " " + totalSum[3];
     }
 
 });

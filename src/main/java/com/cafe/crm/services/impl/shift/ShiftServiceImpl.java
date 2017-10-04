@@ -1,6 +1,5 @@
 package com.cafe.crm.services.impl.shift;
 
-import com.cafe.crm.dto.ClientDTO;
 import com.cafe.crm.dto.PositionDTO;
 import com.cafe.crm.dto.ShiftView;
 import com.cafe.crm.dto.UserDTO;
@@ -24,12 +23,9 @@ import com.cafe.crm.services.interfaces.note.NoteService;
 import com.cafe.crm.services.interfaces.position.PositionService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.services.interfaces.user.UserService;
+import com.cafe.crm.utils.*;
 import com.cafe.crm.utils.CompanyIdCache;
-import com.cafe.crm.utils.CompanyIdCache;
-import com.cafe.crm.utils.converters.client.ClientConverter;
 import com.cafe.crm.utils.converters.user.UserConverter;
-import com.cafe.crm.utils.DozerUtil;
-import com.cafe.crm.utils.TimeManager;
 import org.dozer.DozerBeanMapper;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -208,7 +204,9 @@ public class ShiftServiceImpl implements ShiftService {
 	@Override
 	public ShiftView createShiftView(Shift shift) {
 		List<UserDTO> usersOnShift = UserConverter.convertListUsersToDTO(shift.getUsers());
-		Set<ClientDTO> clientDTOS = new HashSet<>();
+		Set<Client> clients = new HashSet<>();
+		Set<Client> roundedClients = new HashSet<>();
+		Set<Client> notRoundedClients = new HashSet<>();
 		List<Calculate> activeCalculate = new ArrayList<>();
 		Set<Calculate> allCalculate = shift.getCalculates();
 		List<Note> enabledNotes = noteService.findAllByEnableIsTrue();
@@ -219,24 +217,30 @@ public class ShiftServiceImpl implements ShiftService {
 		Double card = 0D;
 		Double allPrice = 0D;
 
-		Set<LayerProduct> layerProducts = new HashSet<>();
 		for (Calculate calculate : allCalculate) {
 			if (!calculate.isState()) {
+				clients.addAll(calculate.getClient());
 				if (calculate.isRoundState()) {
-					clientDTOS.addAll(ClientConverter.convertListClientsToDTOWithRound(calculate.getClient()));
+					roundedClients.addAll(calculate.getClient());
 				} else {
-					clientDTOS.addAll(ClientConverter.convertListClientsToDTOWithoutRound(calculate.getClient()));
+					notRoundedClients.addAll(calculate.getClient());
 				}
 			} else {
 				activeCalculate.add(calculate);
 			}
 		}
 
-		Map<Long, Integer> staffPercentBonusesMap = calcStaffPercentBonusesAndGetMap(layerProducts, usersOnShift);
+		Set<LayerProduct> layerProducts = new HashSet<>();
 
-		for (ClientDTO clientDTO : clientDTOS) {
-			allPrice += clientDTO.getAllDirtyPrice();
+		for (Client client : roundedClients) {
+			allPrice += RoundUpper.roundDouble(getAllDirtyPrice(client));
 		}
+
+		for (Client client : notRoundedClients) {
+			allPrice += getAllDirtyPrice(client);
+		}
+
+		Map<Long, Integer> staffPercentBonusesMap = calcStaffPercentBonusesAndGetMap(layerProducts, usersOnShift);
 
 		for (Debt debt : shift.getRepaidDebts()) {
 			allPrice += debt.getDebtAmount();
@@ -262,8 +266,17 @@ public class ShiftServiceImpl implements ShiftService {
 
 		totalCashBox = (cashBox + bankCashBox + allPrice) - (usersTotalShiftSalary + otherCosts);
 
-		return new ShiftView(usersOnShift, clientDTOS, activeCalculate, allCalculate,
+		return new ShiftView(usersOnShift, clients, activeCalculate, allCalculate,
 				cashBox, totalCashBox, usersTotalShiftSalary, card, allPrice, shiftDate, otherCosts, bankCashBox, enabledNotes, staffPercentBonusesMap);
+	}
+
+	private Double getAllDirtyPrice(Client client) {
+		Double dirtyPriceMenu = 0D;
+		for (LayerProduct product : client.getLayerProducts()) {
+			if (product.isDirtyProfit())
+				dirtyPriceMenu += product.getCost();
+		}
+		return client.getPriceTime() + dirtyPriceMenu - client.getPayWithCard();
 	}
 
 	@Override
