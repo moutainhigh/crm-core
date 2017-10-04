@@ -79,13 +79,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void save(User user, String positionsIds, String rolesIds, String isDefaultPassword) {
+		cacheManager.getCache("user").evict(user.getEmail());
 		checkForUniqueEmailAndPhone(user);
 		setPositionsToUser(user, positionsIds);
 		setRolesToUser(user, rolesIds);
 		setPasswordToUser(user, isDefaultPassword);
 		setCompany(user);
 		userRepository.saveAndFlush(user);
-		cacheManager.getCache("user").clear();
+		cacheManager.getCache("user").put(user.getEmail(), user);
 	}
 
 	@Override
