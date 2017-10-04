@@ -1,6 +1,7 @@
 package com.cafe.crm.services.impl.calculate;
 
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.client.LayerProduct;
 import com.cafe.crm.models.client.TimerOfPause;
 import com.cafe.crm.services.interfaces.calculate.CalculatePriceService;
 import com.cafe.crm.services.interfaces.calculate.TimerOfPauseService;

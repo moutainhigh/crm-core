@@ -132,7 +132,6 @@ public class ShiftController {
         if (!shiftView.getActiveCalculate().isEmpty()) {
             return "redirect:shift/shiftClose";
         }
-        lastShift.getRepaidDebts().clear();
         Double allPrice = shiftView.getAllPrice();
         Double payWithCard = shiftView.getCard();
         addPercentBonusesToUsers(shiftCloseDTO, shiftView);
