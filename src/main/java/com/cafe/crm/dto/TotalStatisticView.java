@@ -6,10 +6,7 @@ import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.user.User;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TotalStatisticView {
 
@@ -17,19 +14,19 @@ public class TotalStatisticView {
 	private double salariesCosts;
 	private double otherCosts;
 	private Set<User> users;
-	private List<ClientDTO> clients;
+	private Map<Client, ClientDetails> clientsOnDetails;
 	private List<Cost> listOfOtherCosts;
 	private List<Debt> givenDebts;
 	private List<Debt> repaidDebt;
 
 	public TotalStatisticView(double profit, double salariesCosts, double otherCosts, Set<User> users,
-							  List<ClientDTO> clientDTO, List<Cost> listOfOtherCosts,
+							  Map<Client, ClientDetails> clientsOnDetails, List<Cost> listOfOtherCosts,
 							  List<Debt> givenDebts, List<Debt> repaidDebt) {
 		this.profit = profit;
 		this.salariesCosts = salariesCosts;
 		this.otherCosts = otherCosts;
 		this.users = users;
-		this.clients = clientDTO;
+		this.clientsOnDetails = clientsOnDetails;
 		this.listOfOtherCosts = listOfOtherCosts;
 		this.givenDebts = givenDebts;
 		this.repaidDebt = repaidDebt;
@@ -67,12 +64,12 @@ public class TotalStatisticView {
 		this.users = users;
 	}
 
-	public List<ClientDTO> getClients() {
-		return clients;
+	public Map<Client, ClientDetails> getClientsOnDetails() {
+		return clientsOnDetails;
 	}
 
-	public void setClients(List<ClientDTO> clientDTO) {
-		this.clients = clientDTO;
+	public void setClientsOnDetails(Map<Client, ClientDetails> clientsOnDetails) {
+		this.clientsOnDetails = clientsOnDetails;
 	}
 
 	public List<Debt> getGivenDebts() {

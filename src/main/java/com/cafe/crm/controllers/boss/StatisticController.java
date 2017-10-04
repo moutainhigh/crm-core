@@ -1,19 +1,19 @@
 package com.cafe.crm.controllers.boss;
 
-import com.cafe.crm.dto.ClientDTO;
 import com.cafe.crm.dto.TotalStatisticView;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.Debt;
+import com.cafe.crm.models.client.LayerProduct;
 import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.user.User;
 import com.cafe.crm.services.interfaces.cost.CostService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
+import com.cafe.crm.dto.ClientDetails;
+import com.cafe.crm.utils.RoundUpper;
 import com.cafe.crm.utils.TimeManager;
-import com.cafe.crm.utils.converters.client.ClientConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.*;
 
 @Controller
@@ -92,12 +91,14 @@ public class StatisticController {
         double otherCosts = 0D;
         Set<User> users = new HashSet<>();
 		Set<Calculate> allCalculate = new HashSet<>();
-        List<ClientDTO> clientsDTO = new ArrayList<>();
+		Map<Client, ClientDetails> clientsOnDetails = new HashMap<>();
+		Set<Client> roundedClients = new HashSet<>();
+        Set<Client> notRoundedClients = new HashSet<>();
         List<Cost> otherCost = new ArrayList<>();
         List<Debt> givenDebts = new ArrayList<>();
         List<Debt> repaidDebt = new ArrayList<>();
         if (shifts == null) {
-            return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clientsDTO, otherCost,
+            return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clientsOnDetails, otherCost,
 					givenDebts, repaidDebt);
         }
         for (Shift shift : shifts) {
@@ -109,9 +110,9 @@ public class StatisticController {
         }
         for (Calculate calculate : allCalculate) {
         	if (calculate.isRoundState()) {
-				clientsDTO.addAll(ClientConverter.convertListClientsToDTOWithRound(calculate.getClient()));
+        		roundedClients.addAll(calculate.getClient());
 			} else {
-				clientsDTO.addAll(ClientConverter.convertListClientsToDTOWithoutRound(calculate.getClient()));
+				notRoundedClients.addAll(calculate.getClient());
 			}
 		}
         for (User user : users) {
@@ -123,17 +124,43 @@ public class StatisticController {
         for (Cost cost : otherCost) {
             otherCosts += cost.getPrice() * cost.getQuantity();
         }
-        for (ClientDTO client : clientsDTO) {
-            profit += client.getAllDirtyPrice();
-        }
+        for (Client client : roundedClients) {
+			ClientDetails details = getClientDetails(client, true);
+			clientsOnDetails.put(client, details);
+			profit += details.getAllDirtyPrice();
+		}
+		for (Client client : notRoundedClients) {
+			ClientDetails details = getClientDetails(client, false);
+			clientsOnDetails.put(client, details);
+			profit += details.getAllDirtyPrice();
+		}
         for (Debt debt : repaidDebt) {
         	profit += debt.getDebtAmount();
 		}
 		for (Debt debt : givenDebts) {
         	profit -= debt.getDebtAmount();
 		}
-        return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clientsDTO, otherCost,
+        return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clientsOnDetails, otherCost,
 				givenDebts, repaidDebt);
     }
+
+    private ClientDetails getClientDetails(Client client, boolean isRounded) {
+    	Double allDirtyPrice;
+    	Double dirtyPriceMenu = 0D;
+    	Double otherPriceMenu = 0D;
+    	for (LayerProduct product : client.getLayerProducts()) {
+    		if (product.isDirtyProfit()) {
+    			dirtyPriceMenu += product.getCost();
+			} else {
+    			otherPriceMenu += product.getCost();
+			}
+		}
+		if (isRounded) {
+    		allDirtyPrice = RoundUpper.roundDouble(client.getPriceTime() + dirtyPriceMenu - client.getPayWithCard());
+		} else {
+    		allDirtyPrice = client.getPriceTime() + dirtyPriceMenu - client.getPayWithCard();
+		}
+		return new ClientDetails(allDirtyPrice, dirtyPriceMenu, otherPriceMenu);
+	}
 
 }

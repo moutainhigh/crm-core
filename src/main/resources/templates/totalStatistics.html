@@ -44,7 +44,7 @@
                         <td th:text="${totalStat.profit}"></td>
                         <td th:text="${totalStat.otherCosts}"></td>
                         <td th:text="${totalStat.salariesCosts}"></td>
-                        <td th:text="${totalStat.clients.size()}"></td>
+                        <td th:text="${totalStat.clientsOnDetails.size()}"></td>
                     </tr>
                     </tbody>
                     <tfoot>
@@ -104,7 +104,7 @@
                             <th> Стоимость времени</th>
                         </tr>
                         <tr style="text-align: center; background: #DAEEFF">
-                            <td id="commonCheckSum">Всего грязными:<br/></td>
+                            <td th:utext="'Всего грязными:&lt;br/&gt;' + ${#numbers.formatInteger(totalStat.profit, 0)}"></td>
                             <td id="cashPaymentSum">Всего наличными:<br/></td>
                             <td id="clubCardPaymentSum" th:if="${cardEnable}">Всего картами:<br/></td>
                             <td id="menuOtherSum">Прочее меню:<br/></td>
@@ -113,13 +113,13 @@
                         </tr>
                         </thead>
                         <tbody id="clients">
-                        <tr th:each="client : ${totalStat.clients}">
-                            <td class="commonCheck" th:text="${client.allDirtyPrice}"></td>
-                            <td class="cashPayment" th:text="${client.cache}"></td>
-                            <td class="clubCardPayment" th:text="${client.payWithCard}" th:if="${cardEnable}"></td>
-                            <td class="menuOtherCost" th:text="${client.otherPriceMenu}"></td>
-                            <td class="menuDirtyCost" th:text="${client.dirtyPriceMenu}"></td>
-                            <td class="timeCost" th:text="${client.priceTime}"></td>
+                        <tr th:each="pair : ${totalStat.clientsOnDetails.entrySet()}">
+                            <td class="commonCheck" th:text="${pair.getValue().allDirtyPrice}"></td>
+                            <td class="cashPayment" th:text="${pair.getKey().cache}"></td>
+                            <td class="clubCardPayment" th:text="${pair.getKey().payWithCard}" th:if="${cardEnable}"></td>
+                            <td class="menuOtherCost" th:text="${pair.getValue().otherPriceMenu}"></td>
+                            <td class="menuDirtyCost" th:text="${pair.getValue().dirtyPriceMenu}"></td>
+                            <td class="timeCost" th:text="${pair.getKey().priceTime}"></td>
 
                             <script type="text/javascript">
 

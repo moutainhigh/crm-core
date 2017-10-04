@@ -1,5 +1,6 @@
 package com.cafe.crm.services.impl.shift;
 
+import com.cafe.crm.dto.ClientDTO;
 import com.cafe.crm.dto.PositionDTO;
 import com.cafe.crm.dto.ShiftView;
 import com.cafe.crm.dto.UserDTO;
