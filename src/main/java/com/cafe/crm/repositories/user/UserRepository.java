@@ -24,6 +24,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	List<User> findByEmailOrPhoneAndCompanyId(String email, String phone, Long companyId);
 
+	List<User> findByEmailOrPhone(String email, String phone);
+
 	List<User> findByIdInAndCompanyId(long[] ids, Long companyId);
 
 	@Query("SELECT u FROM User u where u.email = :username OR u.phone = :username")

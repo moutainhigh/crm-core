@@ -1,6 +1,8 @@
 package com.cafe.crm.services.interfaces.user;
 
 
+import com.cafe.crm.dto.registration.UserRegistrationForm;
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.user.Position;
 import com.cafe.crm.models.user.User;
 
@@ -11,6 +13,10 @@ public interface UserService {
 	void save(User user);
 
 	void save(User user, String positionsIds, String rolesIds, String isDefaultPassword);
+
+	void saveNewUser(User user);
+
+	//void registerUser(UserRegistrationForm user);
 
 	List<User> findAll();
 
@@ -29,6 +35,8 @@ public interface UserService {
 	Map<Position, List<User>> findAndSortUserByPosition();
 
 	void update(User user, String oldPassword, String newPassword, String repeatedPassword, String positionsIds, String rolesIds);
+
+	List<User> findByEmailOrPhoneAndCompanyId(String email, String phone, Long companyId);
 
 	List<User> findByEmailOrPhone(String email, String phone);
 
