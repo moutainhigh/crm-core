@@ -47,7 +47,8 @@ public class StatisticController {
         Shift lastShift = shiftService.getLast();
         Set<Shift> allShiftsBetween = shiftService.findByDates(dateFrom, dateTo);
         if (lastShift != null) {
-            modelAndView.addObject("cashBox", lastShift.getCashBox() + lastShift.getBankCashBox());
+			double totalCashBox = lastShift.getCashBox() + lastShift.getBankCashBox();
+            modelAndView.addObject("cashBox", totalCashBox);
             modelAndView.addObject("shifts", allShiftsBetween);
             dateFrom = lastShift.getShiftDate();
         } else {
@@ -73,7 +74,8 @@ public class StatisticController {
                 lastShift = shift;
         }
         if (lastShift != null) {
-            modelAndView.addObject("cashBox", lastShift.getCashBox() + lastShift.getBankCashBox());
+			double totalCashBox = lastShift.getCashBox() + lastShift.getBankCashBox();
+            modelAndView.addObject("cashBox", totalCashBox);
             modelAndView.addObject("shifts", allShiftsBetween);
         } else {
             modelAndView.addObject("cashBox", 0D);
@@ -124,21 +126,21 @@ public class StatisticController {
         for (Cost cost : otherCost) {
             otherCosts += cost.getPrice() * cost.getQuantity();
         }
-        for (Client client : roundedClients) {
-			ClientDetails details = getClientDetails(client, true);
-			clientsOnDetails.put(client, details);
+        for (Client roundClient : roundedClients) {
+			ClientDetails details = getClientDetails(roundClient, true);
+			clientsOnDetails.put(roundClient, details);
 			profit += details.getAllDirtyPrice();
 		}
-		for (Client client : notRoundedClients) {
-			ClientDetails details = getClientDetails(client, false);
-			clientsOnDetails.put(client, details);
+		for (Client notRoundClient : notRoundedClients) {
+			ClientDetails details = getClientDetails(notRoundClient, false);
+			clientsOnDetails.put(notRoundClient, details);
 			profit += details.getAllDirtyPrice();
 		}
-        for (Debt debt : repaidDebt) {
-        	profit += debt.getDebtAmount();
+        for (Debt repDebt : repaidDebt) {
+        	profit += repDebt.getDebtAmount();
 		}
-		for (Debt debt : givenDebts) {
-        	profit -= debt.getDebtAmount();
+		for (Debt givDebt : givenDebts) {
+        	profit -= givDebt.getDebtAmount();
 		}
         return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clientsOnDetails, otherCost,
 				givenDebts, repaidDebt);
@@ -150,17 +152,19 @@ public class StatisticController {
     	Double otherPriceMenu = 0D;
     	for (LayerProduct product : client.getLayerProducts()) {
     		if (product.isDirtyProfit()) {
-    			dirtyPriceMenu += product.getCost();
+    			dirtyPriceMenu += product.getCost() / product.getClients().size();
 			} else {
-    			otherPriceMenu += product.getCost();
+    			otherPriceMenu += product.getCost() / product.getClients().size();
 			}
 		}
+		allDirtyPrice = client.getPriceTime() + Math.round(dirtyPriceMenu) - client.getPayWithCard();
 		if (isRounded) {
-    		allDirtyPrice = RoundUpper.roundDouble(client.getPriceTime() + dirtyPriceMenu - client.getPayWithCard());
-		} else {
-    		allDirtyPrice = client.getPriceTime() + dirtyPriceMenu - client.getPayWithCard();
+			allDirtyPrice = RoundUpper.roundDouble(allDirtyPrice);
+			dirtyPriceMenu = RoundUpper.roundDouble(dirtyPriceMenu);
+			otherPriceMenu = RoundUpper.roundDouble(otherPriceMenu);
 		}
-		return new ClientDetails(allDirtyPrice, dirtyPriceMenu, otherPriceMenu);
+
+		return new ClientDetails(allDirtyPrice, Math.round(otherPriceMenu), Math.round(dirtyPriceMenu));
 	}
 
 }

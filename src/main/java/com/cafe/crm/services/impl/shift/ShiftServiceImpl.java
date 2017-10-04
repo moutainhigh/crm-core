@@ -24,6 +24,7 @@ import com.cafe.crm.services.interfaces.position.PositionService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.utils.CompanyIdCache;
+import com.cafe.crm.utils.RoundUpper;
 import com.cafe.crm.utils.TimeManager;
 import com.yc.easytransformer.Transformer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -203,7 +204,7 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Override
 	public ShiftView createShiftView(Shift shift) {
-		List<UserDTO> usersOnShift = UserConverter.convertListUsersToDTO(shift.getUsers());
+		List<UserDTO> usersOnShift = transformer.transform(shift.getUsers(), UserDTO.class);
 		Set<Client> clients = new HashSet<>();
 		Set<Client> roundedClients = new HashSet<>();
 		Set<Client> notRoundedClients = new HashSet<>();
@@ -233,10 +234,12 @@ public class ShiftServiceImpl implements ShiftService {
 		Set<LayerProduct> layerProducts = new HashSet<>();
 
 		for (Client client : roundedClients) {
+			layerProducts.addAll(client.getLayerProducts());
 			allPrice += RoundUpper.roundDouble(getAllDirtyPrice(client));
 		}
 
 		for (Client client : notRoundedClients) {
+			layerProducts.addAll(client.getLayerProducts());
 			allPrice += getAllDirtyPrice(client);
 		}
 
@@ -274,9 +277,9 @@ public class ShiftServiceImpl implements ShiftService {
 		Double dirtyPriceMenu = 0D;
 		for (LayerProduct product : client.getLayerProducts()) {
 			if (product.isDirtyProfit())
-				dirtyPriceMenu += product.getCost();
+				dirtyPriceMenu += product.getCost() / product.getClients().size();
 		}
-		return client.getPriceTime() + dirtyPriceMenu - client.getPayWithCard();
+		return client.getPriceTime() + Math.round(dirtyPriceMenu) - client.getPayWithCard();
 	}
 
 	@Override
