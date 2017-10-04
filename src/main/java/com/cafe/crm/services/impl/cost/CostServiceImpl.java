@@ -1,5 +1,6 @@
 package com.cafe.crm.services.impl.cost;
 
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.cost.CostCategory;
 import com.cafe.crm.models.shift.Shift;
@@ -25,22 +26,20 @@ public class CostServiceImpl implements CostService {
 	private final CostCategoryService costCategoryService;
 	private ShiftService shiftService;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public CostServiceImpl(CostRepository goodsRepository, CostCategoryService goodsCategoryService, CompanyService companyService) {
+	public CostServiceImpl(CostRepository goodsRepository, CostCategoryService goodsCategoryService, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.costRepository = goodsRepository;
 		this.costCategoryService = goodsCategoryService;
 		this.companyService = companyService;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 
 	private void setCompanyId(Cost cost) {
-		cost.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		cost.setCompany(company);
 	}
 
 	@Autowired

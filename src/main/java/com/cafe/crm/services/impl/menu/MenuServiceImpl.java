@@ -13,16 +13,10 @@ import org.springframework.stereotype.Service;
 public class MenuServiceImpl implements MenuService {
 
 	private final MenuRepository menuRepository;
-	private CompanyIdCache companyIdCache;
 
 	@Autowired
 	public MenuServiceImpl(MenuRepository menuRepository) {
 		this.menuRepository = menuRepository;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
-		this.companyIdCache = companyIdCache;
 	}
 
 	@Override

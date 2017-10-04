@@ -1,5 +1,6 @@
 package com.cafe.crm.services.impl.note;
 
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.note.Note;
 import com.cafe.crm.repositories.note.NoteRepository;
 import com.cafe.crm.services.interfaces.company.CompanyService;
@@ -15,21 +16,19 @@ public class NoteServiceImpl implements NoteService {
 
 	private final NoteRepository noteRepository;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public NoteServiceImpl(NoteRepository noteRepository, CompanyService companyService) {
+	public NoteServiceImpl(NoteRepository noteRepository, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.companyService = companyService;
 		this.noteRepository = noteRepository;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 
 	private void setCompanyId(Note note) {
-		note.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		note.setCompany(company);
 	}
 
 	@Override

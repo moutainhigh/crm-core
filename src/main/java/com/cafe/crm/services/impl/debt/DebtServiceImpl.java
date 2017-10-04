@@ -3,6 +3,7 @@ package com.cafe.crm.services.impl.debt;
 
 import com.cafe.crm.exceptions.debt.DebtDataException;
 import com.cafe.crm.models.client.Debt;
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.repositories.debt.DebtRepository;
 import com.cafe.crm.services.interfaces.company.CompanyService;
@@ -21,28 +22,26 @@ public class DebtServiceImpl implements DebtService {
 	private final DebtRepository repository;
 	private final ShiftService shiftService;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public DebtServiceImpl(DebtRepository repository, ShiftService shiftService, CompanyService companyService) {
+	public DebtServiceImpl(DebtRepository repository, ShiftService shiftService, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.repository = repository;
 		this.shiftService = shiftService;
 		this.companyService = companyService;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 
-	private void setCompanyId(Debt debt) {
-		debt.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+	private void setCompany(Debt debt) {
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		debt.setCompany(company);
 	}
 
 	@Override
 	public void save(Debt debt) {
 		if (debt.getDebtAmount() > 0) {
-			setCompanyId(debt);
+			setCompany(debt);
 			repository.save(debt);
 		} else {
 			throw new DebtDataException("Введена недопустимая сумма долга");
