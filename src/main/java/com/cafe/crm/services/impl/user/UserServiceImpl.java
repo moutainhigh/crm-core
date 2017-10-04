@@ -14,6 +14,7 @@ import com.cafe.crm.utils.CompanyIdCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -133,12 +134,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 
-	private <T> boolean listsEqual(List<T> list1, List<T> list2){
-		if (list1.size() != list2.size()){
+	private <T> boolean listsEqual(List<T> list1, List<T> list2) {
+		if (list1.size() != list2.size()) {
 			return false;
 		}
-		for (int i = 0; i < list1.size(); i++){
-			if (!list1.get(i).equals(list2.get(i))){
+		for (int i = 0; i < list1.size(); i++) {
+			if (!list1.get(i).equals(list2.get(i))) {
 				return false;
 			}
 		}
@@ -173,18 +174,26 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void update(User user, String oldPassword, String newPassword, String repeatedPassword, String
-			positionsIds, String rolesIds) {
-		checkForNotNew(user);
-		checkForUniqueEmailAndPhone(user);
-		if (isValidPasswordsData(user, oldPassword, newPassword, repeatedPassword)) {
-			user.setPassword(passwordEncoder.encode(newPassword));
+			positionsIds, String rolesIds, String bossPassword, boolean authRequired) {
+
+		String bossName = SecurityContextHolder.getContext().getAuthentication().getName();
+		User bossUser = findByUsername(bossName);
+		String bossDbPassword = bossUser.getPassword();
+		if (!authRequired || (passwordEncoder.matches(bossPassword, bossDbPassword))){
+			checkForNotNew(user);
+			checkForUniqueEmailAndPhone(user);
+			if (isValidPasswordsData(user, oldPassword, newPassword, repeatedPassword)) {
+				user.setPassword(passwordEncoder.encode(newPassword));
+			}
+			setPositionsToUser(user, positionsIds);
+			setRolesToUser(user, rolesIds);
+			setDataFromDatabaseToUser(user);
+			setCompanyId(user);
+			updateSessionRegistryAndCache(user);
+			userRepository.saveAndFlush(user);
+		} else {
+			throw new UserDataException("Неверный пароль для подтверждения изменений");
 		}
-		setPositionsToUser(user, positionsIds);
-		setRolesToUser(user, rolesIds);
-		setDataFromDatabaseToUser(user);
-		setCompanyId(user);
-		updateSessionRegistryAndCache(user);
-		userRepository.saveAndFlush(user);
 	}
 
 	@Override

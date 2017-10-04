@@ -70,12 +70,16 @@ public class UserAccountingController {
 									  @RequestParam(name = "newPassword") String newPassword,
 									  @RequestParam(name = "repeatedPassword") String repeatedPassword,
 									  @RequestParam(name = "positionsIds") String positionsIds,
-									  @RequestParam(name = "rolesIds") String rolesIds) {
+									  @RequestParam(name = "rolesIds") String rolesIds,
+									  @RequestParam(name = "bossPassword") String bossPassword,
+									  @RequestParam(name = "bossPasswordRequired") boolean bossPasswordRequired) {
 		if (bindingResult.hasErrors()) {
 			String fieldError = bindingResult.getFieldError().getDefaultMessage();
 			throw new UserDataException("Не удалось изменить данные пользователя!\n" + fieldError);
 		}
-		userService.update(user, oldPassword, newPassword, repeatedPassword, positionsIds, rolesIds);
+		userService.update(user, oldPassword, newPassword, repeatedPassword, positionsIds, rolesIds, bossPassword,
+				bossPasswordRequired);
+
 		return ResponseEntity.ok("Пользователь успешно обновлен!");
 	}
 

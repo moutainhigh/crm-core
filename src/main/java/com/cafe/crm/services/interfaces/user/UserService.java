@@ -28,7 +28,8 @@ public interface UserService {
 
 	Map<Position, List<User>> findAndSortUserByPosition();
 
-	void update(User user, String oldPassword, String newPassword, String repeatedPassword, String positionsIds, String rolesIds);
+	void update(User user, String oldPassword, String newPassword, String repeatedPassword, String positionsIds,
+				String rolesIds, String bossPassword, boolean authRequired);
 
 	List<User> findByEmailOrPhone(String email, String phone);
 
@@ -36,7 +37,7 @@ public interface UserService {
 
 	List<User> findByIdIn(long[] ids);
 
-	void changePassword(String username, String oldPassword, String newPasswword, String repeatedPassword);
+	void changePassword(String username, String oldPassword, String newPassword, String repeatedPassword);
 
 	boolean isValidPassword(String email, String oldPassword);
 
