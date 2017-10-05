@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -182,18 +183,6 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void update(User user, String oldPassword, String newPassword, String repeatedPassword, String
-			positionsIds, String rolesIds) {
-		checkForNotNew(user);
-		checkForUniqueEmailAndPhone(user);
-		if (isValidPasswordsData(user, oldPassword, newPassword, repeatedPassword)) {
-			user.setPassword(passwordEncoder.encode(newPassword));
-		}
-		setPositionsToUser(user, positionsIds);
-		setRolesToUser(user, rolesIds);
-		setDataFromDatabaseToUser(user);
-		setCompany(user);
-		updateSessionRegistryAndCache(user);
-		userRepository.saveAndFlush(user);
 			positionsIds, String rolesIds, String bossPassword, boolean authRequired) {
 
 		String bossName = SecurityContextHolder.getContext().getAuthentication().getName();
