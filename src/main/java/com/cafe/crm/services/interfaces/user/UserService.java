@@ -1,6 +1,8 @@
 package com.cafe.crm.services.interfaces.user;
 
 
+import com.cafe.crm.dto.registration.UserRegistrationForm;
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.user.Position;
 import com.cafe.crm.models.user.User;
 
@@ -34,6 +36,8 @@ public interface UserService {
 
 	void update(User user, String oldPassword, String newPassword, String repeatedPassword, String positionsIds,
 				String rolesIds, String bossPassword, boolean authRequired);
+
+	List<User> findByEmailOrPhoneAndCompanyId(String email, String phone, Long companyId);
 
 	List<User> findByEmailOrPhone(String email, String phone);
 

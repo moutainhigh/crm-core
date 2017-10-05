@@ -1,6 +1,7 @@
 package com.cafe.crm.services.impl.menu;
 
 import com.cafe.crm.dto.WrapperOfProduct;
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.models.user.Position;
 import com.cafe.crm.repositories.menu.ProductRepository;
@@ -23,35 +24,32 @@ public class ProductServiceImpl implements ProductService {
 	private final ProductRepository productRepository;
 	private final PositionService positionService;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
+	@Autowired
+	private IngredientsService ingredientsService;
 
 	@Autowired
-	public ProductServiceImpl(ProductRepository productRepository, PositionService positionService, CompanyService companyService) {
+	public ProductServiceImpl(ProductRepository productRepository, PositionService positionService, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.productRepository = productRepository;
 		this.positionService = positionService;
 		this.companyService = companyService;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
-
-	@Autowired
-	private IngredientsService ingredientsService;
 
 	@Override
 	public List<Product> findAll() {
 		return productRepository.findByCompanyId(companyIdCache.getCompanyId());
 	}
 
-	private void setCompanyId(Product product){
-		product.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+	private void setCompany(Product product){
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		product.setCompany(company);
 	}
 
 	@Override
 	public void saveAndFlush(Product product) {
-		setCompanyId(product);
+		setCompany(product);
 		productRepository.saveAndFlush(product);
 	}
 

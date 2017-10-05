@@ -243,18 +243,29 @@
         </dependency>
 
         <dependency>
-            <groupId>net.sf.dozer</groupId>
-            <artifactId>dozer</artifactId>
-            <version>5.5.1</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>23.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>easy-transformer</groupId>
+            <artifactId>easy-transformer</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>easy-transformer-master</id>
+            <url>https://raw.github.com/yanchumak/easy-transformer/master/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <build>
         <finalName>crm-core</finalName>
