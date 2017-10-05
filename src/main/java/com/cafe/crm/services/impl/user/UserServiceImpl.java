@@ -253,17 +253,22 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private void checkForUniqueEmailAndPhone(User user) {
-		List<User> usersInDatabase;
-		usersInDatabase = findByEmailOrPhone(user.getEmail(), user.getPhone());
+		List<User> usersInDatabase = findByEmailOrPhone(user.getEmail(), user.getPhone());
 
 		for (User userInDb : usersInDatabase) {
-			if (userInDb.getEmail().equalsIgnoreCase(user.getEmail())) {
-				throw new UserDataException("Пользователь с таким e-mail существует!");
-			} else if (userInDb.getPhone().equalsIgnoreCase(user.getPhone())) {
-				throw new UserDataException("Пользователь с таким телефоном существует!");
+			if (user.getId() == null) {
+				if (userInDb.getEmail().equalsIgnoreCase(user.getEmail())) {
+					throw new UserDataException("Пользователь с таким e-mail существует!");
+				} else if (userInDb.getPhone().equalsIgnoreCase(user.getPhone())) {
+					throw new UserDataException("Пользователь с таким телефоном существует!");
+				}
+			} else if (!userInDb.getId().equals(user.getId())) {
+				throw new UserDataException("Пользователь с таким e-mail или телефоном существует!");
 			}
+
 		}
 	}
+
 
 	@Override
 	@Cacheable("user")
