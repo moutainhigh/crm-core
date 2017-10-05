@@ -1,6 +1,7 @@
 package com.cafe.crm.services.impl.calculate;
 
 import com.cafe.crm.models.client.Calculate;
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.repositories.calculate.CalculateRepository;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.company.CompanyService;
@@ -15,26 +16,24 @@ public class CalculateServiceImpl implements CalculateService {
 
 	private final CalculateRepository calculateRepository;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public CalculateServiceImpl(CalculateRepository calculateRepository, CompanyService companyService) {
+	public CalculateServiceImpl(CalculateRepository calculateRepository, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.calculateRepository = calculateRepository;
 		this.companyService = companyService;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 
-	private void setCompanyId(Calculate calculate) {
-		calculate.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+	private void setCompany(Calculate calculate) {
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		calculate.setCompany(company);
 	}
 
 	@Override
 	public void save(Calculate calculate) {
-		setCompanyId(calculate);
+		setCompany(calculate);
 		calculateRepository.save(calculate);
 	}
 

@@ -2,6 +2,7 @@ package com.cafe.crm.services.impl.client;
 
 import com.cafe.crm.models.card.Card;
 import com.cafe.crm.models.client.Client;
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.repositories.client.ClientRepository;
 import com.cafe.crm.services.interfaces.client.ClientService;
 import com.cafe.crm.services.interfaces.company.CompanyService;
@@ -19,21 +20,19 @@ public class ClientServiceImpl implements ClientService {
 
 	private final ClientRepository clientRepository;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public ClientServiceImpl(ClientRepository clientRepository, CompanyService companyService) {
+	public ClientServiceImpl(ClientRepository clientRepository, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.companyService = companyService;
 		this.clientRepository = clientRepository;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 
 	private void setCompanyId(Client client) {
-		client.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		client.setCompany(company);
 	}
 
 	@Override

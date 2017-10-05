@@ -1,6 +1,7 @@
 package com.cafe.crm.services.impl.property;
 
 
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.property.Property;
 import com.cafe.crm.repositories.property.PropertyRepository;
 import com.cafe.crm.services.interfaces.company.CompanyService;
@@ -16,21 +17,19 @@ public class PropertyServiceImpl implements PropertyService {
 
 	private final PropertyRepository propertyRepository;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public PropertyServiceImpl(PropertyRepository propertyRepository, CompanyService companyService) {
+	public PropertyServiceImpl(PropertyRepository propertyRepository, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.propertyRepository = propertyRepository;
 		this.companyService = companyService;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 
 	private void setCompanyId(Property property) {
-		property.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		property.setCompany(company);
 	}
 
 	@Override

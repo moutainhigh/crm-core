@@ -1,5 +1,6 @@
 package com.cafe.crm.services.impl.template;
 
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.template.Template;
 import com.cafe.crm.repositories.template.TemplateRepository;
 import com.cafe.crm.services.interfaces.company.CompanyService;
@@ -13,21 +14,19 @@ public class TemplateServiceImpl implements TemplateService {
 
 	private final TemplateRepository templateRepository;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public TemplateServiceImpl(TemplateRepository templateRepository, CompanyService companyService) {
+	public TemplateServiceImpl(TemplateRepository templateRepository, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.companyService = companyService;
 		this.templateRepository = templateRepository;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 
-	private void setCompanyId(Template template) {
-		template.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+	private void setCompany(Template template) {
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		template.setCompany(company);
 	}
 
 	@Override
@@ -37,7 +36,6 @@ public class TemplateServiceImpl implements TemplateService {
 
 	@Override
 	public void save(Template template) {
-//		setCompanyId(template);
 		templateRepository.save(template);
 	}
 }

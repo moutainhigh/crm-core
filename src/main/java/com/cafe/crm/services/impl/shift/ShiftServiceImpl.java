@@ -7,6 +7,7 @@ import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.models.client.LayerProduct;
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.models.note.Note;
@@ -20,10 +21,10 @@ import com.cafe.crm.services.interfaces.cost.CostService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
 import com.cafe.crm.services.interfaces.note.NoteRecordService;
 import com.cafe.crm.services.interfaces.note.NoteService;
-import com.cafe.crm.services.interfaces.position.PositionService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.utils.CompanyIdCache;
+import com.cafe.crm.utils.RoundUpper;
 import com.cafe.crm.utils.TimeManager;
 import com.yc.easytransformer.Transformer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +45,12 @@ public class ShiftServiceImpl implements ShiftService {
     private final NoteRecordService noteRecordService;
     private CostService costService;
     private final ProductService productService;
-    private CompanyIdCache companyIdCache;
     private final CompanyService companyService;
     private final Transformer transformer;
+	private final CompanyIdCache companyIdCache;
 
     @Autowired
-    public ShiftServiceImpl(TimeManager timeManager, ShiftRepository shiftRepository, UserService userService, NoteService noteService, NoteRecordService noteRecordService, ProductService productService, PositionService positionService, CompanyService companyService, Transformer transformer) {
+    public ShiftServiceImpl(TimeManager timeManager, ShiftRepository shiftRepository, UserService userService, NoteService noteService, NoteRecordService noteRecordService, ProductService productService,CompanyIdCache companyIdCache, CompanyService companyService, Transformer transformer) {
         this.timeManager = timeManager;
         this.shiftRepository = shiftRepository;
         this.userService = userService;
@@ -58,11 +59,7 @@ public class ShiftServiceImpl implements ShiftService {
         this.productService = productService;
         this.companyService = companyService;
         this.transformer = transformer;
-    }
-
-    @Autowired
-    public void setCompanyIdCache(CompanyIdCache companyIdCache) {
-        this.companyIdCache = companyIdCache;
+		this.companyIdCache = companyIdCache;
     }
 
     @Autowired
@@ -70,15 +67,17 @@ public class ShiftServiceImpl implements ShiftService {
         this.costService = costService;
     }
 
-    private void setCompanyId(Shift shift) {
-        shift.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
-    }
+	private void setCompany(Shift shift) {
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		shift.setCompany(company);
+	}
 
-    @Override
-    public void saveAndFlush(Shift shift) {
-        setCompanyId(shift);
-        shiftRepository.saveAndFlush(shift);
-    }
+	@Override
+	public void saveAndFlush(Shift shift) {
+		setCompany(shift);
+		shiftRepository.saveAndFlush(shift);
+	}
 
     @Override
     public Shift createNewShift(Double cashBox, Double bankCashBox, long... usersIdsOnShift) {
@@ -90,7 +89,7 @@ public class ShiftServiceImpl implements ShiftService {
         }
         shift.setCashBox(cashBox);
         shift.setBankCashBox(bankCashBox);
-        setCompanyId(shift);
+        setCompany(shift);
         shiftRepository.saveAndFlush(shift);
         return shift;
     }
@@ -152,32 +151,32 @@ public class ShiftServiceImpl implements ShiftService {
         return shiftRepository.findByCompanyId(companyIdCache.getCompanyId());
     }
 
-    @Transactional
-    @Override
-    public Shift closeShift(Map<Long, Integer> mapOfUsersIdsAndBonuses, Double allPrice, Double cashBox, Double bankCashBox, String comment, Map<String, String> mapOfNoteNameAndValue) {
-        Shift shift = shiftRepository.getLastAndCompanyId(companyIdCache.getCompanyId());
-        List<User> usersOnShift = shift.getUsers();
-        for (Map.Entry<Long, Integer> entry : mapOfUsersIdsAndBonuses.entrySet()) {
-            User user = userService.findById(entry.getKey());
-            user.setSalary(user.getSalary() + user.getShiftSalary());
-            user.setBonus(user.getBonus() + entry.getValue());
-            userService.save(user);
-        }
-        for (User user : usersOnShift) {
-            int amountOfPositionsPercent = user.getPositions().stream().filter(Position::isPositionUsePercentOfSales).mapToInt(Position::getPercentageOfSales).sum();
-            user.setShiftSalary((int) (user.getShiftSalary() + (allPrice * amountOfPositionsPercent) / 100));
-            userService.save(user);
-        }
-        List<NoteRecord> noteRecords = saveAndGetNoteRecords(mapOfNoteNameAndValue, shift);
-        shift.setBankCashBox(bankCashBox);
-        shift.setCashBox(cashBox);
-        shift.setProfit(allPrice);
-        shift.setComment(comment);
-        shift.setNoteRecords(noteRecords);
-        shift.setOpen(false);
-        shiftRepository.saveAndFlush(shift);
-        return shift;
-    }
+	@Transactional
+	@Override
+	public Shift closeShift(Map<Long, Integer> mapOfUsersIdsAndBonuses, Double allPrice, Double cashBox, Double bankCashBox, String comment, Map<String, String> mapOfNoteNameAndValue) {
+		Shift shift = shiftRepository.getLastAndCompanyId(companyIdCache.getCompanyId());
+		List<User> usersOnShift = shift.getUsers();
+		for (Map.Entry<Long, Integer> entry : mapOfUsersIdsAndBonuses.entrySet()) {
+			User user = userService.findById(entry.getKey());
+			user.setSalary(user.getSalary() + user.getShiftSalary());
+			user.setBonus(user.getBonus() + entry.getValue());
+			userService.save(user);
+		}
+		for (User user : usersOnShift) {
+			int amountOfPositionsPercent = user.getPositions().stream().filter(Position::isPositionUsePercentOfSales).mapToInt(Position::getPercentageOfSales).sum();
+			user.setSalary((int) (user.getShiftSalary() + (allPrice * amountOfPositionsPercent) / 100));
+			userService.save(user);
+		}
+		List<NoteRecord> noteRecords = saveAndGetNoteRecords(mapOfNoteNameAndValue, shift);
+		shift.setBankCashBox(bankCashBox);
+		shift.setCashBox(cashBox);
+		shift.setProfit(allPrice);
+		shift.setComment(comment);
+		shift.setNoteRecords(noteRecords);
+		shift.setOpen(false);
+		shiftRepository.saveAndFlush(shift);
+		return shift;
+	}
 
     private List<NoteRecord> saveAndGetNoteRecords(Map<String, String> mapOfNoteNameAndValue, Shift shift) {
         List<NoteRecord> noteRecords = new ArrayList<>();
@@ -201,46 +200,52 @@ public class ShiftServiceImpl implements ShiftService {
         return shiftRepository.findByDatesAndCompanyId(start, end, companyIdCache.getCompanyId());
     }
 
-    @Override
-    public ShiftView createShiftView(Shift shift) {
-        List<UserDTO> usersOnShift = transformer.transform(shift.getUsers(), UserDTO.class);
-        Set<Client> clients = new HashSet<>();
-        List<Calculate> activeCalculate = new ArrayList<>();
-        Set<Calculate> allCalculate = shift.getCalculates();
-        List<Note> enabledNotes = noteService.findAllByEnableIsTrue();
-        Double cashBox = shift.getCashBox();
-        Double bankCashBox = shift.getBankCashBox();
-        Double totalCashBox;
-        int usersTotalShiftSalary = 0;
-        Double card = 0D;
-        Double allPrice = 0D;
+	@Override
+	public ShiftView createShiftView(Shift shift) {
+		List<UserDTO> usersOnShift = transformer.transform(shift.getUsers(), UserDTO.class);
+		Set<Client> clients = new HashSet<>();
+		Set<Client> roundedClients = new HashSet<>();
+		Set<Client> notRoundedClients = new HashSet<>();
+		List<Calculate> activeCalculate = new ArrayList<>();
+		Set<Calculate> allCalculate = shift.getCalculates();
+		List<Note> enabledNotes = noteService.findAllByEnableIsTrue();
+		Double cashBox = shift.getCashBox();
+		Double bankCashBox = shift.getBankCashBox();
+		Double totalCashBox;
+		int usersTotalShiftSalary = 0;
+		Double card = 0D;
+		Double allPrice = 0D;
 
-        Set<LayerProduct> layerProducts = new HashSet<>();
-        for (Calculate calculate : allCalculate) {
-            if (!calculate.isState()) {
-                clients.addAll(calculate.getClient());
-            } else {
-                activeCalculate.add(calculate);
-            }
-        }
+		for (Calculate calculate : allCalculate) {
+			if (!calculate.isState()) {
+				clients.addAll(calculate.getClient());
+				if (calculate.isRoundState()) {
+					roundedClients.addAll(calculate.getClient());
+				} else {
+					notRoundedClients.addAll(calculate.getClient());
+				}
+			} else {
+				activeCalculate.add(calculate);
+			}
+		}
 
-        for (Client client : clients) {
-            layerProducts.addAll(client.getLayerProducts());
-            card += client.getPayWithCard();
-            allPrice += client.getPriceTime();
-        }
+		Set<LayerProduct> layerProducts = new HashSet<>();
+
+		for (Client client : roundedClients) {
+			layerProducts.addAll(client.getLayerProducts());
+			allPrice += RoundUpper.roundDouble(getAllDirtyPrice(client));
+		}
+
+		for (Client client : notRoundedClients) {
+			layerProducts.addAll(client.getLayerProducts());
+			allPrice += getAllDirtyPrice(client);
+		}
 
         Map<Long, Integer> staffPercentBonusesMap = calcStaffPercentBonusesAndGetMap(layerProducts, usersOnShift);
 
-        for (LayerProduct layerProduct : layerProducts) {
-            if (layerProduct.isDirtyProfit()) {
-                allPrice += layerProduct.getCost();
-            }
-        }
-
-        for (Debt debt : shift.getRepaidDebts()) {
-            allPrice += debt.getDebtAmount();
-        }
+		for (Debt debt : shift.getRepaidDebts()) {
+			allPrice += debt.getDebtAmount();
+		}
 
         for (Debt debt : shift.getGivenDebts()) {
             allPrice -= debt.getDebtAmount();
@@ -254,13 +259,11 @@ public class ShiftServiceImpl implements ShiftService {
             otherCosts += (cost.getPrice() * cost.getQuantity());
         }
 
-        allPrice -= card;
-
-        for (UserDTO user : usersOnShift) {
-            int amountOfPositionsPercent = user.getPositions().stream().filter(PositionDTO::isPositionUsePercentOfSales).mapToInt(PositionDTO::getPercentageOfSales).sum();
-            user.setShiftSalary((int) (user.getShiftSalary() + (allPrice * amountOfPositionsPercent) / 100));
-            usersTotalShiftSalary += user.getShiftSalary();
-        }
+		for (UserDTO user : usersOnShift) {
+			int amountOfPositionsPercent = user.getPositions().stream().filter(PositionDTO::isPositionUsePercentOfSales).mapToInt(PositionDTO::getPercentageOfSales).sum();
+			user.setShiftSalary((int) (user.getShiftSalary() + (allPrice * amountOfPositionsPercent) / 100));
+			usersTotalShiftSalary += user.getShiftSalary();
+		}
 
         totalCashBox = (cashBox + bankCashBox + allPrice) - (usersTotalShiftSalary + otherCosts);
 
@@ -268,10 +271,19 @@ public class ShiftServiceImpl implements ShiftService {
                 cashBox, totalCashBox, usersTotalShiftSalary, card, allPrice, shiftDate, otherCosts, bankCashBox, enabledNotes, staffPercentBonusesMap);
     }
 
-    @Override
-    public Shift findByDateShift(LocalDate date) {
-        return shiftRepository.findByShiftDateAndCompanyId(date, companyIdCache.getCompanyId());
-    }
+	private Double getAllDirtyPrice(Client client) {
+		Double dirtyPriceMenu = 0D;
+		for (LayerProduct product : client.getLayerProducts()) {
+			if (product.isDirtyProfit())
+				dirtyPriceMenu += product.getCost() / product.getClients().size();
+		}
+		return client.getPriceTime() + Math.round(dirtyPriceMenu) - client.getPayWithCard();
+	}
+
+	@Override
+	public Shift findByDateShift(LocalDate date) {
+		return shiftRepository.findByShiftDateAndCompanyId(date, companyIdCache.getCompanyId());
+	}
 
     @Override
     public void transferFromBankToCashBox(Double transfer) {

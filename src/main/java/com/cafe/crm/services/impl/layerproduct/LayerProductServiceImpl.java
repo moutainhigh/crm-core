@@ -2,6 +2,7 @@ package com.cafe.crm.services.impl.layerproduct;
 
 
 import com.cafe.crm.models.client.LayerProduct;
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.repositories.layerproduct.LayerProductRepository;
 import com.cafe.crm.services.interfaces.company.CompanyService;
 import com.cafe.crm.services.interfaces.layerproduct.LayerProductService;
@@ -15,27 +16,25 @@ import java.util.List;
 public class LayerProductServiceImpl implements LayerProductService {
 
 	private final LayerProductRepository layerProductRepository;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 	private final CompanyService companyService;
 
 	@Autowired
-	public LayerProductServiceImpl(LayerProductRepository layerProductRepository, CompanyService companyService) {
+	public LayerProductServiceImpl(LayerProductRepository layerProductRepository, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.layerProductRepository = layerProductRepository;
 		this.companyService = companyService;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 
-	private void setCompanyId(LayerProduct layerProduct){
-		layerProduct.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+	private void setCompany(LayerProduct layerProduct){
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		layerProduct.setCompany(company);
 	}
 
 	@Override
 	public void save(LayerProduct layerProduct) {
-		setCompanyId(layerProduct);
+		setCompany(layerProduct);
 		layerProductRepository.saveAndFlush(layerProduct);
 	}
 

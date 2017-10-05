@@ -1,6 +1,7 @@
 package com.cafe.crm.services.impl.board;
 
 import com.cafe.crm.models.board.Board;
+import com.cafe.crm.models.company.Company;
 import com.cafe.crm.repositories.board.BoardRepository;
 import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.company.CompanyService;
@@ -15,26 +16,24 @@ public class BoardServiceImpl implements BoardService {
 
 	private final BoardRepository boardRepository;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public BoardServiceImpl(BoardRepository boardRepository, CompanyService companyService) {
+	public BoardServiceImpl(BoardRepository boardRepository, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.boardRepository = boardRepository;
 		this.companyService = companyService;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 
-	private void setCompanyId(Board board){
-		board.setCompany(companyService.findOne(companyIdCache.getCompanyId()));
+	private void setCompany(Board board){
+		Long companyId = companyIdCache.getCompanyId();
+		Company company = companyService.findOne(companyId);
+		board.setCompany(company);
 	}
 
 	@Override
 	public void save(Board board) {
-		setCompanyId(board);
+		setCompany(board);
 		boardRepository.saveAndFlush(board);
 	}
 
