@@ -12,6 +12,10 @@ public interface UserService {
 
 	void save(User user, String positionsIds, String rolesIds, String isDefaultPassword);
 
+	void saveNewUser(User user);
+
+	//void registerUser(UserRegistrationForm user);
+
 	List<User> findAll();
 
 	User findById(Long id);
