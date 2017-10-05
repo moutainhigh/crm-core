@@ -161,26 +161,6 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	private boolean criticalUserDataUpdated(User updatedUser, User storedUser) {
-
-		List<Position> storedUserPositions = storedUser.getPositions();
-		List<Position> updatedUserPositions = updatedUser.getPositions();
-		List<Role> storedUserRoles = storedUser.getRoles();
-		List<Role> updatedUserRoles = updatedUser.getRoles();
-
-		boolean positionsEqual = listsEqual(storedUserPositions, updatedUserPositions);
-		boolean rolesEqual = listsEqual(storedUserRoles, updatedUserRoles);
-		boolean passwordsEqual = storedUser.getPassword().equals(updatedUser.getPassword());
-		boolean phonesEqual = storedUser.getPhone().equals(updatedUser.getPhone());
-		boolean emailsEqual = storedUser.getEmail().equals(updatedUser.getEmail());
-
-		return (!positionsEqual || !rolesEqual || !passwordsEqual || !phonesEqual || !emailsEqual);
-	}
-
-	private <T> boolean listsEqual(List<T> list1, List<T> list2) {
-		return list1!=null && list2!=null && isEqualCollection(list1, list2);
-	}
-
 	@Override
 	public void update(User user, String oldPassword, String newPassword, String repeatedPassword, String
 			positionsIds, String rolesIds, String bossPassword, boolean authRequired) {
@@ -203,6 +183,26 @@ public class UserServiceImpl implements UserService {
 		} else {
 			throw new UserDataException("Неверный пароль для подтверждения изменений");
 		}
+	}
+
+	private boolean criticalUserDataUpdated(User updatedUser, User storedUser) {
+
+		List<Position> storedUserPositions = storedUser.getPositions();
+		List<Position> updatedUserPositions = updatedUser.getPositions();
+		List<Role> storedUserRoles = storedUser.getRoles();
+		List<Role> updatedUserRoles = updatedUser.getRoles();
+
+		boolean positionsEqual = listsEqual(storedUserPositions, updatedUserPositions);
+		boolean rolesEqual = listsEqual(storedUserRoles, updatedUserRoles);
+		boolean passwordsEqual = storedUser.getPassword().equals(updatedUser.getPassword());
+		boolean phonesEqual = storedUser.getPhone().equals(updatedUser.getPhone());
+		boolean emailsEqual = storedUser.getEmail().equals(updatedUser.getEmail());
+
+		return (!positionsEqual || !rolesEqual || !passwordsEqual || !phonesEqual || !emailsEqual);
+	}
+
+	private <T> boolean listsEqual(List<T> list1, List<T> list2) {
+		return list1!=null && list2!=null && isEqualCollection(list1, list2);
 	}
 
 	@Override
