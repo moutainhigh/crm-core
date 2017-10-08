@@ -43,7 +43,4 @@ public interface ShiftService {
 	void transferFromBankToCashBox(Double transfer);
 
 	void transferFromCashBoxToBank(Double transfer);
-
-	LocalDate getLastShiftDate();
-
 }
