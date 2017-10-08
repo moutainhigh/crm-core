@@ -32,6 +32,8 @@ public interface ShiftService {
 
 	Shift closeShift(Map<Long, Integer> mapOfUsersIdsAndBonuses, Double allPrice, Double shortage, Double bankCashBox, String comment, Map<String, String> mapOfNoteNameAndValue);
 
+ 	LocalDate getLastShiftDate();
+
 	Set<Shift> findByDates(LocalDate start, LocalDate end);
 
 	ShiftView createShiftView(Shift shift);

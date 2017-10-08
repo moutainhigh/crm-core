@@ -7,6 +7,7 @@ import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.note.NoteRecord;
+import com.cafe.crm.models.user.Receipt;
 import com.cafe.crm.models.user.User;
 
 import javax.persistence.*;
@@ -58,6 +59,10 @@ public class Shift extends BaseEntity {
 	@OneToMany(mappedBy = "shift")
 	private List<Cost> costs;
 
+	@OneToMany(mappedBy = "shift")
+	private List<Receipt> receipts;
+
+
 	// TODO: 26.07.2017 Подумать над размером
 	private String comment;
 
@@ -107,6 +112,14 @@ public class Shift extends BaseEntity {
 
 	public double getProfit() {
 		return profit;
+	}
+
+	public List<Receipt> getReceipts() {
+		return receipts;
+	}
+
+	public void setReceipts(List<Receipt> receipts) {
+		this.receipts = receipts;
 	}
 
 	public void setProfit(double profit) {
