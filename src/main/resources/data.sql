@@ -13,7 +13,8 @@ insert into roles
 values
   (1, 'BOSS'),
   (2, 'MANAGER'),
-  (3, 'WORKER');
+  (3, 'WORKER'),
+  (4, 'SUPERVISOR');
 
 insert into users_positions
 (user_id, position_id)
@@ -29,7 +30,8 @@ values
   (1, 1),
   (2, 2),
   (3, 3),
-  (4, 1);
+  (4, 1),
+  (5, 4);
 
 INSERT INTO companies
 (id, name)
@@ -43,7 +45,8 @@ VALUES
   (2, 'Anna', 'Jons', 'manager@mail.ru', '89233456789', '$2a$10$OHs.TsEaLmklqTwStaTHLeW3Y/k8fJO5kXklV0nO3ad2b5QbmeVua', 1500, 0, 0, TRUE, TRUE, 1),
   (1, 'Герман', 'Севостьянов', 'boss@mail.ru', '89123456789', '$2a$10$Rqc3K45Z8GYbklMvy3640uj/XY4supJ2XmWmS4t1zjBlXiVh3h4aC', 2000, 0, 0, TRUE, TRUE, 1),
   (3, 'Ахмад', 'Чай', 'worker@mail.ru', '89111111111', '$2a$10$ffBOimLAaDY5o6jU62oecuKgSgcYAY3FpAS3okZHQw0tHRxV39Oa.', 0, 0, 0, TRUE, TRUE, 1),
-  (4, 'Намрег', 'Инверг', 'boss2@mail.ru', '89123456780', '$2a$10$ufhLqzo3wbuWKIuQjPnyrOYplalLZsJ8X2NXufOycc/IT2qZKB4m6', 2000, 0, 0, TRUE, TRUE, 2);
+  (4, 'Намрег', 'Инверг', 'boss2@mail.ru', '89123456780', '$2a$10$ufhLqzo3wbuWKIuQjPnyrOYplalLZsJ8X2NXufOycc/IT2qZKB4m6', 2000, 0, 0, TRUE, TRUE, 2),
+  (5, 'super', 'super', 'super@mail.ru', '80000000000', '$2a$10$Rqc3K45Z8GYbklMvy3640uj/XY4supJ2XmWmS4t1zjBlXiVh3h4aC', 0, 0, 0, TRUE, TRUE, 2);
 
 
 insert into ingredients

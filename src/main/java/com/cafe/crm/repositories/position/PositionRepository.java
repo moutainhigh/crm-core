@@ -10,10 +10,12 @@ public interface PositionRepository extends JpaRepository<Position, Long> {
 
 	Position findByNameAndCompanyId(String name, Long companyId);
 
-	List<Position> findByIdInAndCompanyId(Long[] ids, Long companyId);
+//	List<Position> findByIdInAndCompanyId(Long[] ids, Long companyId);
 
 	List<Position> findByIsPositionUsePercentOfSalesIsTrueAndCompanyId(Long companyId);
 
 	List<Position> findByCompanyId(Long companyId);
+
+	List<Position> findByIdIn(Long[] ids);
 
 }

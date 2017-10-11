@@ -6,8 +6,7 @@
 </head>
 <body>
 <div th:fragment="editUser" th:remove="tag">
-    <button class="btn btn-primary btn-info" th:href="'#allUserEdit'+${user.id}" data-toggle="modal"
-    th:onclick="'grabInitialEditUserFormData(\'' + ${user.id} + '\');'">Редактировать
+    <button class="btn btn-primary btn-info" th:href="'#allUserEdit'+${user.id}" data-toggle="modal">Редактировать
     </button>
     <!-- Modal -->
     <div class="modal fade" th:id="'allUserEdit'+${user.id}">
@@ -17,7 +16,7 @@
                     <button type="button" class="close" data-dismiss="modal"
                             aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <h2 class="form-signin-heading">Форма Редактирования Сотрудника</h2>
+                    <h2 class="form-signin-heading">Форма Редактирования Пользователя</h2>
                 </div>
                 <div class="modal-body">
                     <form th:class="'form-horizontal formEditAllUsers' + ${user.id}" th:attr="data-id=${user.id}">
@@ -29,7 +28,7 @@
                         <div class="form-group">
                             <label class="control-label col-sm-2">Имя</label>
                             <div class="col-md-6">
-                                <input type="text" class="form-control"  name="firstName"
+                                <input type="text" class="form-control" name="firstName"
                                        placeholder="Имя" required="required" pattern=".{1,}"
                                        th:value="${user.firstName}" title="Поле Имя не должно быть пустым"
                                        th:class="'editAllUsersFirstName' + ${user.id}"/>
@@ -57,9 +56,9 @@
                             <label class="control-label col-sm-2">Телефон</label>
                             <div class="col-md-6">
                                 <input type="text" class="form-control" th:value="${user.phone}" name="phone"
+                                       placeholder="Примеры телефона: 8xxxxxxxxxx" required="required"
                                        pattern="^(8|\+7)?[\d]{10}$" title="Неверный формат номера телефона"
-                                       required="required" placeholder="Примеры телефона: 8xxxxxxxxxx"
-                                        th:class="'editAllUsersPhone' + ${user.id}"/>
+                                       th:class="'editAllUsersPhone' + ${user.id}"/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -74,9 +73,9 @@
                                th:value="${user.password}" name="password"/>
                         <div class="row"><h3 class="col-md-offset-3">Смена пароля</h3></div>
                         <div class="form-group">
-                            <label class="control-label col-sm-2">Старый</label>
                             <div class="col-md-6">
-                                <input type="password" th:class="'form-control editAllUsersOldPassword' + ${user.id}"
+                                <input type="hidden" th:value="${user.password}"
+                                       th:class="'form-control editAllUsersOldPassword' + ${user.id}"
                                        placeholder="Старый пароль" autofocus="" name="oldPassword"/>
                             </div>
                         </div>
@@ -90,25 +89,18 @@
                         <div class="form-group">
                             <label class="control-label col-sm-2">Повтор</label>
                             <div class="col-md-6">
-                                <input type="password" th:class="'form-control editAllUsersRepeatedPassword' + ${user.id}"
+                                <input type="password"
+                                       th:class="'form-control editAllUsersRepeatedPassword' + ${user.id}"
                                        placeholder="Подтвердите новый пароль" autofocus="" name="repeatedPassword"/>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6" style="display: none;">
                                 <div th:class="'editAllUsers-PositionCheckbox' + ${user.id}">
                                     <h3 align="center">Активные должности</h3>
                                     <div class="checkbox" th:each="position : ${user.getPositions()}"
                                          style="margin-left: 25%">
                                         <input type="checkbox" th:value="${position.id}" th:checked="checked"/>
-                                        <div th:text="${position.name}" class="checkbox-text"></div>
-                                    </div>
-
-
-                                    <h3 align="center">Неактивные должности</h3>
-                                    <div class="checkbox" th:each="position : ${allPositions}"
-                                         th:unless="${user.getPositions().contains(position)}" style="margin-left: 25%">
-                                        <input type="checkbox" th:value="${position.id}"/>
                                         <div th:text="${position.name}" class="checkbox-text"></div>
                                     </div>
                                 </div>
@@ -120,7 +112,6 @@
                                         <input type="checkbox" th:value="${role.id}" th:checked="checked"/>
                                         <div th:text="${role.name}" class="checkbox-text"></div>
                                     </div>
-
 
                                     <h3 align="center">Неактивные роли</h3>
                                     <div class="checkbox" th:each="role : ${allRoles}"

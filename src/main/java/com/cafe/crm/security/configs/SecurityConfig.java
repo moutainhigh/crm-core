@@ -46,11 +46,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
 	}
 
-//	@Bean
-//	public CustomLogoutHandler getLogoutHandler() {
-//		return new CustomLogoutHandler();
-//	}
-
 	@Bean
 	public CustomAuthenticationSuccessHandler getHandler() {
 		return new CustomAuthenticationSuccessHandler();
@@ -71,6 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers("/manager/**").hasAnyAuthority("MANAGER", "BOSS")
 				.antMatchers("/boss/**", "/worker/**", "/advertising/**").hasAuthority("BOSS")
+				.antMatchers("/supervisor/**").hasAuthority("SUPERVISOR")
 				.and()
 				.formLogin()
 				.loginPage("/login")

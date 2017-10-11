@@ -81,7 +81,7 @@ public class PositionServiceImpl implements PositionService {
 
 	@Override
 	public List<Position> findByIdIn(Long[] ids) {
-		return positionRepository.findByIdInAndCompanyId(ids, companyIdCache.getCompanyId());
+		return positionRepository.findByIdIn(ids);
 	}
 
 	@Override

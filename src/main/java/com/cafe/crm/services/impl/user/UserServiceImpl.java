@@ -1,6 +1,7 @@
 package com.cafe.crm.services.impl.user;
 
 
+import com.cafe.crm.dto.ExtraUserData;
 import com.cafe.crm.exceptions.user.UserDataException;
 import com.cafe.crm.models.company.Company;
 import com.cafe.crm.models.user.Position;
@@ -34,7 +35,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
-	private final RoleService roleService;
+	private RoleService roleService;
 	private final PasswordEncoder passwordEncoder;
 	private PositionService positionService;
 	private final CompanyService companyService;
@@ -48,9 +49,8 @@ public class UserServiceImpl implements UserService {
 	private String defaultPassword;
 
 	@Autowired
-	public UserServiceImpl(UserRepository userRepository, RoleService roleService, PasswordEncoder passwordEncoder, CompanyService companyService, CacheManager cacheManager) {
+	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, CompanyService companyService, CacheManager cacheManager) {
 		this.userRepository = userRepository;
-		this.roleService = roleService;
 		this.passwordEncoder = passwordEncoder;
 		this.companyService = companyService;
 		this.cacheManager = cacheManager;
@@ -64,6 +64,11 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	public void setPositionService(PositionService positionService) {
 		this.positionService = positionService;
+	}
+
+	@Autowired
+	public void setRoleService(RoleService roleService) {
+		this.roleService = roleService;
 	}
 
 	private void setCompany(User user) {
@@ -124,8 +129,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public List<User> findByRoleIdAndOrderByLastName(Long roleId) {
+		return userRepository.findByRolesIdAndEnabledIsTrue(roleId);
+	}
+
+	@Override
 	public List<User> findByPositionIdWithAnyEnabledStatus(Long positionId) {
 		return userRepository.findByPositionsIdAndCompanyId(positionId, companyIdCache.getCompanyId());
+	}
+
+	@Override
+	public List<User> findByRoleIdWithAnyEnabledStatus(Long roleId) {
+		return userRepository.findByRolesIdAndEnabledIsTrue(roleId);
 	}
 
 	@Override
@@ -144,6 +159,50 @@ public class UserServiceImpl implements UserService {
 		return usersByPositions;
 	}
 
+	@Override
+	public Map<Role, List<User>> findAndSortUserByRoleWithSupervisor() {
+		List<Role> allRoles = roleService.findAllWithSupervisor();
+		Map<Role, List<User>> usersByRoles = new HashMap<>();
+		for (Role role : allRoles) {
+			List<User> users = findByRoleIdAndOrderByLastName(role.getId());
+			usersByRoles.put(role, users);
+		}
+		return usersByRoles;
+	}
+
+	@Override
+	public void update(User user, ExtraUserData extraUserData) {
+		if (!isAuthenticationPassed(extraUserData.getBossPassword(), extraUserData.isBossPasswordRequired())){
+			throw new UserDataException("Неверный пароль для подтверждения изменений");
+		}
+		checkForNotNew(user);
+		checkForUniqueEmailAndPhone(user);
+		if (isValidPasswordsData(user, extraUserData.getOldPassword(), extraUserData.getNewPassword(),
+				extraUserData.getRepeatedPassword())) {
+			user.setPassword(passwordEncoder.encode(extraUserData.getNewPassword()));
+		}
+		setCompanyById(user, extraUserData.getCompanyId());
+		setPositionsToUser(user, extraUserData.getPositionsIds());
+		setRolesToUser(user, extraUserData.getRolesIds());
+		setDataFromDatabaseToUser(user);
+		updateSessionRegistryAndCache(user);
+		userRepository.saveAndFlush(user);
+	}
+
+	private boolean isAuthenticationPassed(String bossPassword, boolean authRequired) {
+		String bossName = SecurityContextHolder.getContext().getAuthentication().getName();
+		User bossUser = findByUsername(bossName);
+		String bossDbPassword = bossUser.getPassword();
+		return  (!authRequired || (passwordEncoder.matches(bossPassword, bossDbPassword)));
+	}
+
+	private void setCompanyById(User user, String companyId) {
+		Long longCompanyId = Long.parseLong(companyId);
+		Company company = companyService.findOne(longCompanyId);
+		user.setCompany(company);
+
+	}
+
 	private void updateSessionRegistryAndCache(User updatedUser) {
 		User storedUser = findById(updatedUser.getId());
 
@@ -158,30 +217,6 @@ public class UserServiceImpl implements UserService {
 					sessionRegistry.getAllSessions(principal, false).forEach(SessionInformation::expireNow);
 				}
 			}
-		}
-	}
-
-	@Override
-	public void update(User user, String oldPassword, String newPassword, String repeatedPassword, String
-			positionsIds, String rolesIds, String bossPassword, boolean authRequired) {
-
-		String bossName = SecurityContextHolder.getContext().getAuthentication().getName();
-		User bossUser = findByUsername(bossName);
-		String bossDbPassword = bossUser.getPassword();
-		if (!authRequired || (passwordEncoder.matches(bossPassword, bossDbPassword))) {
-			checkForNotNew(user);
-			checkForUniqueEmailAndPhone(user);
-			if (isValidPasswordsData(user, oldPassword, newPassword, repeatedPassword)) {
-				user.setPassword(passwordEncoder.encode(newPassword));
-			}
-			setPositionsToUser(user, positionsIds);
-			setRolesToUser(user, rolesIds);
-			setDataFromDatabaseToUser(user);
-			setCompany(user);
-			updateSessionRegistryAndCache(user);
-			userRepository.saveAndFlush(user);
-		} else {
-			throw new UserDataException("Неверный пароль для подтверждения изменений");
 		}
 	}
 
@@ -202,7 +237,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private <T> boolean listsEqual(List<T> list1, List<T> list2) {
-		return list1!=null && list2!=null && isEqualCollection(list1, list2);
+		return list1 != null && list2 != null && isEqualCollection(list1, list2);
 	}
 
 	@Override
@@ -252,7 +287,7 @@ public class UserServiceImpl implements UserService {
 			if (passwordEncoder.matches(oldPassword, userInDataBase.getPassword())) {
 				return true;
 			} else {
-				throw new UserDataException("Старый пароль не верный!");
+				throw new UserDataException("Старый пароль неверный!");
 			}
 		}
 	}
@@ -280,6 +315,10 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	@Override
+	public List<User> findAllFromAllCompanies() {
+		return userRepository.findByEnabledIsTrue();
+	}
 
 	@Override
 	@Cacheable("user")
@@ -295,7 +334,8 @@ public class UserServiceImpl implements UserService {
 			throw new UserDataException("Новый пароль и повтор не совпадают!");
 		}
 		User userInDatabase = userRepository.findOne(user.getId());
-		if (!passwordEncoder.matches(oldPassword, userInDatabase.getPassword())) {
+		if (!passwordEncoder.matches(oldPassword, userInDatabase.getPassword())
+				&& !(oldPassword.equals(userInDatabase.getPassword()))) {
 			throw new UserDataException("Старый пароль не верный!");
 		}
 		return true;

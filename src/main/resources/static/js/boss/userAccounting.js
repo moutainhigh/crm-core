@@ -8,6 +8,7 @@ function arraysEqual(initialData, updatedData) {
 }
 
 function grabUpdatedUserFormData(id) {
+    var userId = $('.formEditAllUsers' + id).attr("data-id");
     var email = $('.editAllUsersEmail' + id).val();
     var phone = $('.editAllUsersPhone' + id).val();
     var oldPassword = $('.editAllUsersOldPassword' + id).val();
@@ -17,6 +18,7 @@ function grabUpdatedUserFormData(id) {
     var lastName = $('.editAllUsersLastName' + id).val();
     var baseSalary = $('.editAllUsersBaseSalary' + id).val();
     var userPassword = $('.editAllUsersPassword' + id).val();
+    var companyId = $('.formEditAllUsersCompanyId' + id).val();
 
     if (!isValidPasswordsData(oldPassword, newPassword, repeatedPassword)) {
         return false;
@@ -43,7 +45,8 @@ function grabUpdatedUserFormData(id) {
     resultEditUserFormMap['newPassword'] = newPassword;
     resultEditUserFormMap['repeatedPassword'] = repeatedPassword;
     resultEditUserFormMap['password'] = userPassword;
-    resultEditUserFormMap['id'] = id;
+    resultEditUserFormMap['id'] = userId;
+    resultEditUserFormMap['companyId'] = companyId;
     return resultEditUserFormMap;
 }
 
@@ -76,9 +79,9 @@ function criticalUserDataUpdated(initialData, updatedData){
 
 function editUserFormData(id) {
     event.preventDefault();
+    $('.errorMessage').html('').hide();
     var resultEditUserFormMap = grabUpdatedUserFormData(id);
     if (criticalUserDataUpdated(initialEditUserFormMap, resultEditUserFormMap)) {
-        $('.errorMessage').html('').hide();
         $('#passwordPrompt' + id).modal('show');
     } else {
         resultEditUserFormMap['bossPasswordRequired'] = false;
@@ -120,40 +123,6 @@ function getBossPassword(id) {
     resultEditUserFormMap['bossPassword'] = $('.bossPassword' + id).val();
     sendEditUserFormData(resultEditUserFormMap);
 }
-
-
-$(document).ready(function () {
-    $('.formEditUserByPosition').on('submit', function (event) {
-        event.preventDefault();
-        $('.errorMessage').html('').hide();
-        var id = $(this).data('id');
-        if (!isValidPasswordsData($('.editUsersByPositionOldPassword' + id).val(), $('.editUsersByPositionNewPassword' + id).val(), $('.editUsersByPositionRepeatedPassword' + id).val())) {
-            return false;
-        }
-        var positionCheckboxId = '.editUsersByPosition-PositionCheckbox' + id;
-        var positionsIds = $(positionCheckboxId + ' input:checkbox:checked').map(function () {
-            return $(this).val();
-        }).get();
-        var rolesCheckboxId = '.editUsersByPosition-RoleCheckbox' + id;
-        var rolesIds = $(rolesCheckboxId + ' input:checkbox:checked').map(function () {
-            return $(this).val();
-        }).get();
-        var data = $(this).serializeArray();
-        data.push({name: 'positionsIds', value: positionsIds}, {name: 'rolesIds', value: rolesIds});
-        $.ajax({
-            type: 'post',
-            url: '/boss/user/edit',
-            data: data,
-            success: function (data) {
-                location.reload();
-            },
-            error: function (error) {
-                var errorMessage = '<h4 style="color:red;" align="center">' + error.responseText + '</h4>';
-                $('.errorMessage').html(errorMessage).show();
-            }
-        })
-    });
-});
 
 function isValidPasswordsData(oldPassword, newPassword, repeatedPassword) {
     if (isBlank(oldPassword) && isBlank(newPassword) && isBlank(repeatedPassword)) {
