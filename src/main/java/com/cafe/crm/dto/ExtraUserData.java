@@ -13,6 +13,9 @@ public class ExtraUserData {
 	private boolean bossPasswordRequired;
 	private String bossPassword;
 
+	public ExtraUserData() {
+	}
+
 	public String getBossPassword() {
 		return bossPassword;
 	}
@@ -27,9 +30,6 @@ public class ExtraUserData {
 
 	public void setBossPasswordRequired(boolean bossPasswordRequired) {
 		this.bossPasswordRequired = bossPasswordRequired;
-	}
-
-	public ExtraUserData() {
 	}
 
 	public String getOldPassword() {
