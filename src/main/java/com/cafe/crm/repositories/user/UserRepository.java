@@ -18,6 +18,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	List<User> findByPositionsIdAndEnabledIsTrueAndCompanyId(Long positionId, Long companyId);
 
+	List<User> findByRolesIdAndEnabledIsTrue(Long roleId);
+
 	List<User> findByPositionsIdAndCompanyId(Long positionId, Long companyId);
 
 	List<User> findByRolesNameAndCompanyId(String roleName, Long companyId);
@@ -30,4 +32,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query("SELECT u FROM User u where u.email = :username OR u.phone = :username")
 	User findByUsername(@Param("username") String username);
+
+	List<User> findByEnabledIsTrue();
 }

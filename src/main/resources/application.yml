@@ -1,8 +1,7 @@
 # Database settings
 spring:
   datasource:
-    driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/world?serverTimezone=Europe/Moscow
+    url: jdbc:mysql://localhost:3306/world?serverTimezone=Europe/Moscow&verifyServerCertificate=false&useSSL=true
     username: root
     password: root
   jpa:

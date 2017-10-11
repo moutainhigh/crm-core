@@ -45,6 +45,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 			return "/boss/menu";
 		} else if (authorities.contains(new SimpleGrantedAuthority("MANAGER"))) {
 			return "/manager/shift/";
+		} else if (authorities.contains(new SimpleGrantedAuthority("SUPERVISOR"))) {
+			return "/supervisor";
 		} else {
 			return "/home";
 		}

@@ -1,5 +1,6 @@
 package com.cafe.crm.controllers.boss;
 
+import com.cafe.crm.dto.ExtraUserData;
 import com.cafe.crm.exceptions.user.PositionDataException;
 import com.cafe.crm.exceptions.user.UserDataException;
 import com.cafe.crm.models.user.Position;
@@ -66,20 +67,12 @@ public class UserAccountingController {
 	@RequestMapping(value = {"/boss/user/edit"}, method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> editUser(@ModelAttribute @Valid User user, BindingResult bindingResult,
-									  @RequestParam(name = "oldPassword") String oldPassword,
-									  @RequestParam(name = "newPassword") String newPassword,
-									  @RequestParam(name = "repeatedPassword") String repeatedPassword,
-									  @RequestParam(name = "positionsIds") String positionsIds,
-									  @RequestParam(name = "rolesIds") String rolesIds,
-									  @RequestParam(name = "bossPassword") String bossPassword,
-									  @RequestParam(name = "bossPasswordRequired") boolean bossPasswordRequired) {
+									  ExtraUserData extraUserData) {
 		if (bindingResult.hasErrors()) {
 			String fieldError = bindingResult.getFieldError().getDefaultMessage();
 			throw new UserDataException("Не удалось изменить данные пользователя!\n" + fieldError);
 		}
-		userService.update(user, oldPassword, newPassword, repeatedPassword, positionsIds, rolesIds, bossPassword,
-				bossPasswordRequired);
-
+		userService.update(user, extraUserData);
 		return ResponseEntity.ok("Пользователь успешно обновлен!");
 	}
 

@@ -15,8 +15,8 @@
         <a style="font-size: 20px;" class="navbar-brand">Cafe-CRM</a>
     </div>
     <div style="font-size: 17px;margin-top: 5px;" class="collapse navbar-collapse">
-        <ul class="nav navbar-nav ">
-            <li sec:authorize="hasAuthority('BOSS')">
+        <ul class="nav navbar-nav " sec:authorize="hasAuthority('BOSS')">
+            <li>
                 <a class="glyphicon glyphicon-refresh" th:href="@{/manager}"
                    style="padding-left: 10px;    padding-top: 8px;"></a>
             </li>

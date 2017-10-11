@@ -16,4 +16,12 @@ public interface RoleService {
 	List<Role> findAll();
 
 	List<Role> findByIdIn(Long[] ids);
+
+	List<Role> findAllWithSupervisor();
+
+	void update(Role role);
+
+	Role findByName(String name);
+
+	void delete(Long id);
 }
