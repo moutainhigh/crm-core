@@ -91,3 +91,9 @@ vk:
 
 card:
  enable: false  # Включить, отключить рекламу (true false)
+
+reCaptcha:
+  apiUrl: https://www.google.com/recaptcha/api/siteverify
+  secretKey: 6LcmCzMUAAAAAAnMaxexPbqr8oNzYzke-gcPTYFz
+
+
