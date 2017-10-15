@@ -33,10 +33,10 @@ public class Shift extends BaseEntity {
 	@Column(name = "checkValue")
 	private Integer checkValue;// after change on set<>
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	private Set<Calculate> calculates;
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	private Set<Client> clients;
 
 	@Column(name = "cash_box")
