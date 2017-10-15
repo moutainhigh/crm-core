@@ -63,7 +63,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="list : ${listSMTPSettings}">
+                        <tr th:each="list : ${listOfMailSettings}">
                             <td th:text="${list.id}"></td>
                             <td th:text="${list.nameSettings}"></td>
                             <td th:text="${list.email}"></td>
@@ -97,7 +97,7 @@
                     <tbody>
                     <tr>
                         <td>Текущий провайдер рассылки</td>
-                        <td th:switch="${advertSettings.host}">
+                        <td th:switch="${mailSettings.host}">
                             <p th:case="smtp.gmail.com" style="margin: 0">GMAIL</p>
                             <p th:case="smtp.mail.ru" style="margin: 0">MAIL</p>
                             <p th:case="smtp.yandex.ru" style="margin: 0">YANDEX</p>
@@ -106,7 +106,7 @@
                     </tr>
                     <tr>
                         <td>EMAIL</td>
-                        <td th:text="${advertSettings.username}"></td>
+                        <td th:text="${mailSettings.username}"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -158,6 +158,6 @@
 </div>
 <script th:src="@{/js/mail.js}"></script>
 <script type="text/javascript" th:src="@{/js/setting/page/nav-setting.js}"></script>
-<script th:src="@{/js/mail.js}"></script>
+<script th:src="@{/js/boss/menu.js}"></script>
 </body>
 </html>

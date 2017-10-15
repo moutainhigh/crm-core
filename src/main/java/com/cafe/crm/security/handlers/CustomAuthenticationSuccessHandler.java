@@ -1,5 +1,6 @@
 package com.cafe.crm.security.handlers;
 
+import com.cafe.crm.utils.SecurityUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,7 +31,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	}
 
 	protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
-		String targetUrl = determineTargetUrl(authentication);
+		String targetUrl = SecurityUtils.getStartPath(authentication);
 
 		if (response.isCommitted()) {
 			return;

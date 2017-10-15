@@ -19,17 +19,13 @@ public class PositionServiceImpl implements PositionService {
 	private final PositionRepository positionRepository;
 	private final UserService userService;
 	private final CompanyService companyService;
-	private CompanyIdCache companyIdCache;
+	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public PositionServiceImpl(PositionRepository positionRepository, UserService userService, CompanyService companyService) {
+	public PositionServiceImpl(PositionRepository positionRepository, UserService userService, CompanyService companyService, CompanyIdCache companyIdCache) {
 		this.positionRepository = positionRepository;
 		this.userService = userService;
 		this.companyService = companyService;
-	}
-
-	@Autowired
-	public void setCompanyIdCache(CompanyIdCache companyIdCache) {
 		this.companyIdCache = companyIdCache;
 	}
 

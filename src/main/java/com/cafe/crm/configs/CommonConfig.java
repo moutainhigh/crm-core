@@ -1,6 +1,7 @@
 package com.cafe.crm.configs;
 
 import com.cafe.crm.configs.filters.CardFilter;
+import com.cafe.crm.configs.filters.CompanyConfigurationFilter;
 import com.cafe.crm.configs.filters.ShiftOpenFilter;
 import com.cafe.crm.configs.property.AdvertisingProperties;
 import com.cloudinary.Cloudinary;
@@ -111,5 +112,12 @@ public class CommonConfig {
 		GuavaCache userCache = new GuavaCache("user", CacheBuilder.newBuilder().expireAfterAccess(60, TimeUnit.MINUTES).build());
 		cacheManager.setCaches(Collections.singletonList(userCache));
 		return cacheManager;
+	}
+
+	@Bean
+	public FilterRegistrationBean companyConfigurationFilterRegistrationBean(@Autowired CompanyConfigurationFilter companySettingFilter) {
+		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(companySettingFilter);
+		filterRegistrationBean.setOrder(Integer.MAX_VALUE - 2);
+		return filterRegistrationBean;
 	}
 }

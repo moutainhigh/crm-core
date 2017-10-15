@@ -1,6 +1,7 @@
 package com.cafe.crm.services.impl.property;
 
 
+import com.cafe.crm.configs.property.PriceNameProperties;
 import com.cafe.crm.models.property.Property;
 import com.cafe.crm.repositories.property.PropertyRepository;
 import com.cafe.crm.services.interfaces.company.CompanyService;
@@ -17,11 +18,13 @@ public class PropertyServiceImpl implements PropertyService {
 	private final PropertyRepository propertyRepository;
 	private final CompanyService companyService;
 	private CompanyIdCache companyIdCache;
+	private final PriceNameProperties priceNameProperties;
 
 	@Autowired
-	public PropertyServiceImpl(PropertyRepository propertyRepository, CompanyService companyService) {
+	public PropertyServiceImpl(PropertyRepository propertyRepository, CompanyService companyService, PriceNameProperties priceNameProperties) {
 		this.propertyRepository = propertyRepository;
 		this.companyService = companyService;
+		this.priceNameProperties = priceNameProperties;
 	}
 
 	@Autowired
@@ -45,8 +48,8 @@ public class PropertyServiceImpl implements PropertyService {
 	}
 
 	@Override
-	public Property getByName(String name) {
-		return propertyRepository.getByNameAndCompanyId(name, companyIdCache.getCompanyId());
+	public Property findByName(String name) {
+		return propertyRepository.findByNameAndCompanyId(name, companyIdCache.getCompanyId());
 	}
 
 	@Override
@@ -60,6 +63,11 @@ public class PropertyServiceImpl implements PropertyService {
 			setCompanyId(property);
 		}
 			propertyRepository.save(properties);
+	}
+
+	@Override
+	public List<Property> findByNameIn(String... name) {
+		return propertyRepository.findByNameIn(name);
 	}
 
 }

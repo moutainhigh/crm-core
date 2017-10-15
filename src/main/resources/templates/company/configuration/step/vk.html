@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="vk">
+    <div class="row" align="center">
+        <h2>Установка ВК настроек </h2><a th:href="@{/company/configuration/instruction/vk}" target="_blank">Инструкция</a>
+        <div class="errorMessage"></div>
+        <br/>
+    </div>
+    <div class="row">
+        <div class="form-group" align="center">
+            <label class="col-md-5 col-md-offset-2"><h4>Access token</h4></label>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="accessToken" placeholder="Токен доступа" id="inputAccessToken" required="required"/>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group" align="center">
+            <label class="col-md-5 col-md-offset-2"><h4>Application ID</h4></label>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="applicationId" placeholder="Идентификатор устройства" id="inputApplicationId" required="required"/>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group" align="center">
+            <label class="col-md-5 col-md-offset-2"><h4>Chat ID</h4></label>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="chatId" placeholder="Идентификатор чата" id="inputChatId" required="required"/>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group" align="center">
+            <label class="col-md-5 col-md-offset-2"><h4>Message name</h4></label>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="messageName" placeholder="Название сообщения" id="inputMessageName" required="required"/>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group" align="center">
+            <label class="col-md-5 col-md-offset-2"><h4>API Version</h4></label>
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="apiVersion" placeholder="Версия API" id="inputApiVersion" required="required" value="5.68"/>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/company/configuration/step/vk.js}"></script>
+</div>
+</body>
+</html>

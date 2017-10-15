@@ -1,9 +1,10 @@
 package com.cafe.crm.controllers.boss.settings;
 
-import com.cafe.crm.configs.property.AdvertisingCustomSettings;
-import com.cafe.crm.models.advertising.AdvertisingSettings;
-import com.cafe.crm.services.interfaces.advertising.AdvertisingSettingsService;
+import com.cafe.crm.configs.property.MailCustomSettings;
+import com.cafe.crm.models.mail.MailSettings;
+import com.cafe.crm.services.interfaces.mail.MailSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -15,39 +16,42 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/boss/settings/advert-setting")
-public class AdvertisingSettingsController {
+@RequestMapping("/boss/settings/mail-setting")
+public class MailSettingsController {
 
-	private final AdvertisingSettingsService advertisingSettingsService;
-	private final AdvertisingCustomSettings customSettings;
+	private final MailSettingsService mailSettingsService;
+	private final MailCustomSettings customSettings;
+
+	@Value("${mail.default-smtp}")
+	private String defaultSmtp;
 
 	@Autowired
-	public AdvertisingSettingsController(AdvertisingSettingsService advertisingSettingsService, AdvertisingCustomSettings customSettings) {
-		this.advertisingSettingsService = advertisingSettingsService;
+	public MailSettingsController(MailSettingsService mailSettingsService, MailCustomSettings customSettings) {
+		this.mailSettingsService = mailSettingsService;
 		this.customSettings = customSettings;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView bardSettingPage() {
-		ModelAndView modelAndView = new ModelAndView("settingPages/smtpSettingsPage");
-		modelAndView.addObject("advertSettings", customSettings.getCustomSettings());
-		modelAndView.addObject("listSMTPSettings", advertisingSettingsService.getAll());
+	public ModelAndView showMailSettingsPage() {
+		ModelAndView modelAndView = new ModelAndView("settingPages/mailSettingsPage");
+		modelAndView.addObject("mailSettings", customSettings.getCustomSettings());
+		modelAndView.addObject("listOfMailSettings", mailSettingsService.getAll());
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> setAdvertisingCustomSettings(
+	public ResponseEntity<?> addMailSettings(
 			@RequestParam(name = "settingsName") String settingsName,
 			@RequestParam(name = "password") String password,
 			@RequestParam(name = "email") String email) {
 
-		AdvertisingSettings settingsInDB = advertisingSettingsService.findByEmail(email);
+		MailSettings settingsInDB = mailSettingsService.findByEmail(email);
 
 		if (settingsInDB == null) {
-			AdvertisingSettings newSettings = new AdvertisingSettings(settingsName, email, password, "smtp.gmail.com");
+			MailSettings newSettings = new MailSettings(settingsName, email, password, defaultSmtp);
 
-			advertisingSettingsService.save(newSettings);
+			mailSettingsService.save(newSettings);
 			JavaMailSenderImpl senderImpl = customSettings.getCustomSettings();
 			senderImpl.setUsername(email);
 			senderImpl.setPassword(password);
@@ -57,10 +61,10 @@ public class AdvertisingSettingsController {
 		}
 	}
 
-	@RequestMapping(value = "/existing-settings", method = RequestMethod.POST)
+	@RequestMapping(value = "/change-settings", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> setExistingSettings(@RequestParam(name = "settingsId") Long id) {
-		AdvertisingSettings settings = advertisingSettingsService.get(id);
+	public ResponseEntity<?> changeMailSettings(@RequestParam(name = "settingsId") Long id) {
+		MailSettings settings = mailSettingsService.get(id);
 		JavaMailSenderImpl senderImpl = customSettings.getCustomSettings();
 
 		if (settings.getEmail().equalsIgnoreCase(senderImpl.getUsername())) {
@@ -75,7 +79,7 @@ public class AdvertisingSettingsController {
 	@RequestMapping(value = "/del-settings", method = RequestMethod.POST)
 	public String delExistingSettings(@RequestParam(name = "settingsId") Long id) {
 
-		advertisingSettingsService.delete(id);
+		mailSettingsService.delete(id);
 
 		return "redirect:";
 	}

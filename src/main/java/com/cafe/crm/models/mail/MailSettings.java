@@ -1,4 +1,4 @@
-package com.cafe.crm.models.advertising;
+package com.cafe.crm.models.mail;
 
 import com.cafe.crm.models.BaseEntity;
 
@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "advertising_settings")
-public class AdvertisingSettings extends BaseEntity {
+@Table(name = "mail_settings")
+public class MailSettings extends BaseEntity {
 
 	@Id
 	@GeneratedValue
@@ -21,10 +21,10 @@ public class AdvertisingSettings extends BaseEntity {
 
 	private String smtpProvider;
 
-	public AdvertisingSettings() {
+	public MailSettings() {
 	}
 
-	public AdvertisingSettings(String nameSettings, String email, String password, String smtpProvider) {
+	public MailSettings(String nameSettings, String email, String password, String smtpProvider) {
 		this.nameSettings = nameSettings;
 		this.email = email;
 		this.password = password;
@@ -71,7 +71,7 @@ public class AdvertisingSettings extends BaseEntity {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		AdvertisingSettings settings = (AdvertisingSettings) o;
+		MailSettings settings = (MailSettings) o;
 		return Objects.equals(id, settings.id) &&
 				Objects.equals(nameSettings, settings.nameSettings) &&
 				Objects.equals(email, settings.email);

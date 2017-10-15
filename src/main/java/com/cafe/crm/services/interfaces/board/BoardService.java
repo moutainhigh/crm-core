@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface BoardService {
 
-	void save(Board board);
+	Board save(Board board);
 
 	void delete(Board board);
 
@@ -18,4 +18,5 @@ public interface BoardService {
 
 	List<Board> getAllOpen();
 
+	boolean isExist();
 }

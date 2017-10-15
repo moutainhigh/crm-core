@@ -88,3 +88,15 @@ vk:
 
 card:
  enable: false  # Включить, отключить рекламу (true false)
+
+property:
+  name:
+    masterKey: masterKey
+    price:
+      firstHour: Цена за первый час
+      nextHours: Цена за последующие часы
+      refBonus: Реферальный бонус
+    vk: vk
+
+mail:
+  default-smtp: smtp.gmail.com

@@ -1,6 +1,7 @@
 package com.cafe.crm.models.board;
 
 import com.cafe.crm.models.BaseEntity;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,8 +17,7 @@ public class Board extends BaseEntity {
 	@GeneratedValue
 	private Long id;
 
-	@NotNull
-	@Size(min = 1, max = 30)
+	@NotBlank(message = "Название не должно быть пустым!")
 	private String name;
 
 	@NotNull
