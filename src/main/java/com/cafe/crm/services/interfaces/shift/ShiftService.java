@@ -36,11 +36,5 @@ public interface ShiftService {
 
 	Set<Shift> findByDates(LocalDate start, LocalDate end);
 
-	ShiftView createShiftView(Shift shift);
-
 	Shift findByDateShift(LocalDate date);
-
-	void transferFromBankToCashBox(Double transfer);
-
-	void transferFromCashBoxToBank(Double transfer);
 }
