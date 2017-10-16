@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class NextHoursPriceStep implements ConfigurationStep {
 
 	private static final String NAME = "nextHoursPrice";
+	private static final int PRIORITY = 81;
 
 	private final PropertyService propertyService;
 	private final PriceNameProperties priceNameProperties;
@@ -30,5 +31,10 @@ public class NextHoursPriceStep implements ConfigurationStep {
 	@Override
 	public String getStepName() {
 		return NAME;
+	}
+
+	@Override
+	public int getPriority() {
+		return PRIORITY;
 	}
 }

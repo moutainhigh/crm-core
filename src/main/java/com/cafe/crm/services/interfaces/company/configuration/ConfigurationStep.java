@@ -7,4 +7,8 @@ public interface ConfigurationStep {
 
 	String getStepName();
 
+	default int getPriority() {
+		return 100;
+	}
+
 }

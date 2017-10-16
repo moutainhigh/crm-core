@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 public class FirstHourPriceStep implements ConfigurationStep {
 
 	private static final String NAME = "firstHourPrice";
+	private static final int PRIORITY = 80;
 
 	private final PropertyService propertyService;
 	private final PriceNameProperties priceNameProperties;
@@ -30,5 +31,10 @@ public class FirstHourPriceStep implements ConfigurationStep {
 	@Override
 	public String getStepName() {
 		return NAME;
+	}
+
+	@Override
+	public int getPriority() {
+		return PRIORITY;
 	}
 }

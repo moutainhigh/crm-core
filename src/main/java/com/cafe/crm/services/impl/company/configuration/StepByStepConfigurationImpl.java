@@ -7,6 +7,7 @@ import com.cafe.crm.services.interfaces.company.configuration.StepByStepConfigur
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,6 +18,7 @@ public class StepByStepConfigurationImpl implements StepByStepConfiguration {
 
 	@Autowired
 	public StepByStepConfigurationImpl(List<ConfigurationStep> steps) {
+		steps.sort(new ConfigurationStepComparator());
 		this.steps = steps;
 	}
 
@@ -41,6 +43,13 @@ public class StepByStepConfigurationImpl implements StepByStepConfiguration {
 			}
 		}
 		return null;
+	}
+
+	private static class ConfigurationStepComparator implements Comparator<ConfigurationStep> {
+		@Override
+		public int compare(ConfigurationStep step1, ConfigurationStep step2) {
+			return step1.getPriority() - step2.getPriority();
+		}
 	}
 
 }

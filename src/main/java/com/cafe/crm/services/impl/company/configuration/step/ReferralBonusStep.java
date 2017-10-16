@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class ReferralBonusStep implements ConfigurationStep {
 
 	private static final String NAME = "referralBonus";
+	private static final int PRIORITY = 82;
 
 	private final PropertyService propertyService;
 	private final PriceNameProperties priceNameProperties;
@@ -30,5 +31,10 @@ public class ReferralBonusStep implements ConfigurationStep {
 	@Override
 	public String getStepName() {
 		return NAME;
+	}
+
+	@Override
+	public int getPriority() {
+		return PRIORITY;
 	}
 }
