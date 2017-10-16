@@ -55,8 +55,9 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			int count = 0;
 			for (Shift shift : allShiftsBetween) {
 				count++;
-				if (allShiftsBetween.size() == count)
+				if (allShiftsBetween.size() == count) {
 					lastShift = shift;
+				}
 			}
 			return lastShift.getCashBox() + lastShift.getBankCashBox();
 		} else {
