@@ -17,4 +17,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 	List<Board> findByCompanyId(Long companyId);
 
+	Long countByCompanyIdAndIsOpenTrue(Long companyId);
+
 }

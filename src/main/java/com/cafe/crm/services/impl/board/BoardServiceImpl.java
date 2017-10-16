@@ -32,9 +32,9 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public void save(Board board) {
+	public Board save(Board board) {
 		setCompany(board);
-		boardRepository.saveAndFlush(board);
+		return boardRepository.saveAndFlush(board);
 	}
 
 	@Override
@@ -60,5 +60,11 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<Board> getAllOpen() {
 		return boardRepository.getAllOpen(companyIdCache.getCompanyId());
+	}
+
+	@Override
+	public boolean isExist() {
+		Long count = boardRepository.countByCompanyIdAndIsOpenTrue(companyIdCache.getCompanyId());
+		return count > 0L;
 	}
 }

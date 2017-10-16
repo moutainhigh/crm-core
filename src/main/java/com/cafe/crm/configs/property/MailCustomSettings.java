@@ -7,12 +7,12 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AdvertisingCustomSettings {
+public class MailCustomSettings {
 
 	private final JavaMailSender javaMailSender;
 
 	@Autowired
-	public AdvertisingCustomSettings(JavaMailSender javaMailSender) {
+	public MailCustomSettings(JavaMailSender javaMailSender) {
 		this.javaMailSender = javaMailSender;
 	}
 

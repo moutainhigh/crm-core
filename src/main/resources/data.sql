@@ -132,12 +132,12 @@ values
 insert into board
 (id, is_open, name, company_id)
 values
-  (1, TRUE, 'Белый диван', 1),
-  (2, TRUE, 'Xbox бочки', 1),
-  (3, TRUE, 'Бар', 1),
-  (4, TRUE, 'Пожарка', 1),
-  (5, TRUE, 'Постер', 1),
-  (6, TRUE, 'Белый Xbox', 1),
+--   (1, TRUE, 'Белый диван', 1),
+--   (2, TRUE, 'Xbox бочки', 1),
+--   (3, TRUE, 'Бар', 1),
+--   (4, TRUE, 'Пожарка', 1),
+--   (5, TRUE, 'Постер', 1),
+--   (6, TRUE, 'Белый Xbox', 1),
   (7, TRUE, 'Черный диван', 2),
   (8, TRUE, 'Xbox точки', 2),
   (9, TRUE, 'НеБар', 2);
@@ -182,20 +182,21 @@ values
   (4, false, 'Заметка 2', 2);
 
 insert into property
-(id, enable, name, unit, value, company_id)
+(id, name, value, company_id)
 values
-  (1, false, 'price.firstHour', 'р', 300, 1),
-  (2, false, 'price.nextHours', 'р', 200, 1),
-  (3, true, 'price.refBonus', 'р', 150, 1),
-  (4, false, 'price.firstHour', 'р', 300, 2),
-  (5, false, 'price.nextHours', 'р', 200, 2),
-  (6, true, 'price.refBonus', 'р', 150, 2);
-
-insert into trash_property
-(id, name, property, company_id)
-values
-  (1, 'vk', '{"applicationId":"","applicationSecret":"","messageName":"daily-report","chatId":"","accessToken":"","apiVersion":"5.68"}', 1),
-  (2, 'vk', '{"applicationId":"","applicationSecret":"","messageName":"daily-report","chatId":"","accessToken":"","apiVersion":"5.68"}', 2);
+--   (1, 'price.firstHour', 300, 1),
+--   (2, 'price.nextHours', 200, 1),
+--   (3, 'price.refBonus', 150, 1),
+  (4, 'price.firstHour', '300', 2),
+  (5, 'price.nextHours', '200', 2),
+  (6, 'price.refBonus', '150', 2),
+  (7, 'vk', '{"applicationId":"","messageName":"daily-report","chatId":"","accessToken":"","apiVersion":"5.68"}', 2);
+--
+-- insert into trash_property
+-- (id, name, property, company_id)
+-- values
+-- --   (1, 'vk', '{"applicationId":"","messageName":"daily-report","chatId":"","accessToken":"","apiVersion":"5.68"}', 1),
+--   (2, 'vk', '{"applicationId":"","messageName":"daily-report","chatId":"","accessToken":"","apiVersion":"5.68"}', 2);
 
 insert into template
 (id, content, name, company_id)

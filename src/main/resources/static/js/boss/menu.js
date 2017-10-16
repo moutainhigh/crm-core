@@ -380,7 +380,7 @@ function newSMTPSettings() {
     }
     $.ajax({
         type: "POST",
-        url: "/boss/settings/advert-setting/new",
+        url: "/boss/settings/mail-setting/add",
         data: formData,
         success: function (result) {
             $("#successModal").modal('show')
@@ -397,7 +397,7 @@ function applySMTPSettings(id) {
     }
     $.ajax({
         type: "POST",
-        url: "/boss/settings/advert-setting/existing-settings",
+        url: "/boss/settings/mail-setting/change-settings",
         data: formData,
         success: function (result) {
             var successMessage = '<h4 style="color:green;" align="center">' + result + '</h4>';
@@ -414,7 +414,7 @@ function applySMTPSettings(id) {
 }
 
 function removeSettings(id) {
-    var url = '/boss/settings/advert-setting/del-settings';
+    var url = '/boss/settings/mail-setting/del-settings';
 
     var request = $.post(url, {settingsId: id},
         window.setTimeout(function () {

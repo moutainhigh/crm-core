@@ -1,8 +1,10 @@
 package com.cafe.crm.services.impl.calculate;
 
+import com.cafe.crm.configs.property.PriceNameProperties;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.LayerProduct;
 import com.cafe.crm.models.client.TimerOfPause;
+import com.cafe.crm.models.property.Property;
 import com.cafe.crm.services.interfaces.calculate.CalculatePriceService;
 import com.cafe.crm.services.interfaces.calculate.TimerOfPauseService;
 import com.cafe.crm.services.interfaces.property.PropertyService;
@@ -20,12 +22,17 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 	private final TimeManager timeManager;
 	private final PropertyService propertyService;
 	private final TimerOfPauseService timerOfPauseService;
+	private final PriceNameProperties priceNameProperties;
 
 	@Autowired
-	public CalculatePriceServiceImpl(TimerOfPauseService timerOfPauseService, PropertyService propertyService, TimeManager timeManager) {
+	public CalculatePriceServiceImpl(TimerOfPauseService timerOfPauseService,
+									 PropertyService propertyService,
+									 TimeManager timeManager,
+									 PriceNameProperties priceNameProperties) {
 		this.timerOfPauseService = timerOfPauseService;
 		this.propertyService = propertyService;
 		this.timeManager = timeManager;
+		this.priceNameProperties = priceNameProperties;
 	}
 
 	@Override
@@ -39,8 +46,10 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 		double priceTime;
 		long passedHours = (long) timePassed.getHour();
 		long passedMinutes = (long) timePassed.getMinute();
-		double firstHour = propertyService.getByName("price.firstHour").getValue(); //  ставка за первый час
-		double secondHour = propertyService.getByName("price.nextHours").getValue(); // ставка за второй час
+		Property priceFirstHourProperty = propertyService.findByName(priceNameProperties.getFirstHour());
+		Property priceNextHoursProperty = propertyService.findByName(priceNameProperties.getNextHours());
+		double firstHour = Double.parseDouble(priceFirstHourProperty.getValue());
+		double secondHour = Double.parseDouble(priceNextHoursProperty.getValue());
 		if (passedHours == 0) {
 			priceTime = firstHour;
 		} else {
@@ -58,8 +67,10 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 		double priceTime;
 		long passedHours = (long) timePassed.getHour();
 		long passedMinutes = (long) timePassed.getMinute();
-		double firstHour = propertyService.getByName("price.firstHour").getValue(); //  ставка за первый час
-		double secondHour = propertyService.getByName("price.nextHours").getValue(); // ставка за второй час
+		Property priceFirstHourProperty = propertyService.findByName(priceNameProperties.getFirstHour());
+		Property priceNextHoursProperty = propertyService.findByName(priceNameProperties.getNextHours());
+		double firstHour = Double.parseDouble(priceFirstHourProperty.getValue());
+		double secondHour = Double.parseDouble(priceNextHoursProperty.getValue());
 		if (passedHours == 0) {
 			priceTime = firstHour;
 		} else {

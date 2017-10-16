@@ -35,7 +35,6 @@ import java.util.*;
  * Перед выполнением запросов к API необходимо получить ключ доступа access_token.<br/>
  * Необходимо перенаправить браузер пользователя по адресу https://oauth.vk.com/authorize.<br/>
  * Пример запроса:<br/>
- * https://oauth.vk.com/authorize?client_id=6172460&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=messages,offline&response_type=token&v=5.68&state=123456
  * (@link https://oauth.vk.com/authorize?client_id=1&display=page&redirect_uri=https://oauth.vk.com/blank.html&scope=messages,offline&response_type=token&v=5.68&state=123456}
  * Где, client_id - идентификатор вашего приложения,
  * 		display - тип отображения страницы авторизации,
