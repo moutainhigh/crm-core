@@ -52,10 +52,15 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 	public double getTotalCashBox(Set<Shift> allShiftsBetween) {
 		if (!allShiftsBetween.isEmpty()) {
 			Shift lastShift = new Shift();
-			int count = 0;
+
+			long maxId = 0;
 			for (Shift shift : allShiftsBetween) {
-				count++;
-				if (allShiftsBetween.size() == count) {
+				long shiftId = shift.getId();
+				if (maxId == 0) {
+					maxId = shiftId;
+				}
+				if (shiftId >= maxId) {
+					maxId = shiftId;
 					lastShift = shift;
 				}
 			}
