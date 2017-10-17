@@ -58,7 +58,7 @@
                             <div class="col-md-6">
                                 <input type="text" class="form-control" th:value="${user.phone}" name="phone"
                                        placeholder="Примеры телефона: 8xxxxxxxxxx" required="required"
-                                       pattern="^(8|\+7)?[\d]{10}$" title="Неверный формат номера телефона"
+                                       pattern="^(8){1}[\\d]+$" title="Неверный формат номера телефона"
                                        th:class="'editAllUsersPhone' + ${user.id} + ${usersByPosition.key.id}"/>
                             </div>
                         </div>
