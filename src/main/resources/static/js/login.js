@@ -38,7 +38,7 @@ $(document).ready(function () {
         if ($("div").is("#reCaptcha")) {
             if (recaptchaAnswer === "") {
                 event.preventDefault();
-                $("#invalidCaptcha").text("Капча невалидна").addClass("alert-danger");
+                $("#invalidCaptcha").text("Пройдите капчу").addClass("alert-danger");
             }
         }
     });

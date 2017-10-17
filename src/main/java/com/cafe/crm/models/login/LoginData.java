@@ -1,8 +1,7 @@
-package com.cafe.crm.models.loginData;
+package com.cafe.crm.models.login;
 
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
@@ -10,6 +9,7 @@ import java.util.Date;
 @Entity
 @Table(name = "login_data")
 public class LoginData {
+
 	@Id
 	private String remoteAddress;
 

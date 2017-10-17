@@ -51,16 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public CustomAuthenticationSuccessHandler getHandler() {
-		return new CustomAuthenticationSuccessHandler();
-	}
-
-	@Bean
-	public CustomAuthenticationFailureHandler getFailureHandler() {
-		return new CustomAuthenticationFailureHandler();
-	}
-
-	@Bean
 	public ReCaptchaFilter reCaptchaFilter() throws Exception {
 		ReCaptchaFilter reCaptchaFilter = new ReCaptchaFilter();
 		reCaptchaFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/processing-url","POST"));

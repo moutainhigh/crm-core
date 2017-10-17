@@ -1,6 +1,6 @@
 package com.cafe.crm.services.interfaces.login;
 
-import com.cafe.crm.models.loginData.LoginData;
+import com.cafe.crm.models.login.LoginData;
 
 
 public interface LoginDataService {

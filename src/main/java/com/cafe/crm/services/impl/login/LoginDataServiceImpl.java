@@ -1,6 +1,6 @@
 package com.cafe.crm.services.impl.login;
 
-import com.cafe.crm.models.loginData.LoginData;
+import com.cafe.crm.models.login.LoginData;
 import com.cafe.crm.repositories.login.LoginDataRepository;
 import com.cafe.crm.services.interfaces.login.LoginDataService;
 import org.springframework.beans.factory.annotation.Autowired;

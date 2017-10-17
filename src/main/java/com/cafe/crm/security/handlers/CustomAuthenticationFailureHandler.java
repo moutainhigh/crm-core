@@ -1,6 +1,6 @@
 package com.cafe.crm.security.handlers;
 
-import com.cafe.crm.models.loginData.LoginData;
+import com.cafe.crm.models.login.LoginData;
 import com.cafe.crm.services.interfaces.login.LoginDataService;
 import com.cafe.crm.utils.ReCaptchaInvalidException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +25,7 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 										AuthenticationException exception) throws IOException, ServletException {
 		String targetUrl = determineTargetUrl(exception);
-		LoginData loginData = loginDataService.findByRemoteAddress(request.getRemoteAddr());
-		if (loginData != null && loginData.getErrorCount() > 1) {
-			redirectStrategy.sendRedirect(request, response, targetUrl + "&captcha");
-		} else {
-			redirectStrategy.sendRedirect(request, response, targetUrl);
-		}
+		redirectStrategy.sendRedirect(request, response, targetUrl);
 		loginDataService.incrementErrorCountAndSave(request.getRemoteAddr());
 	}
 
