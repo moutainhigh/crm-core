@@ -10,6 +10,7 @@ public class SecurityUtils {
 	private static final String BOSS_PATH = "/boss/menu";
 	private static final String MANAGER_PATH = "/manager/shift/";
 	private static final String DEFAULT_PATH = "/home";
+	private static final String SUPERVISOR_PATH = "/supervisor";
 
 	public static String getStartPath(Authentication authentication) {
 		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -19,6 +20,8 @@ public class SecurityUtils {
 			}
 			if (authority.getAuthority().equals("MANAGER")) {
 				return MANAGER_PATH;
+			} if (authority.getAuthority().equals("SUPERVISOR")) {
+				return SUPERVISOR_PATH;
 			}
 		}
 		return DEFAULT_PATH;
