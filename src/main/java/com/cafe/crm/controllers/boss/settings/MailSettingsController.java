@@ -81,7 +81,7 @@ public class MailSettingsController {
 
 		mailSettingsService.delete(id);
 
-		return "redirect:";
+		return "redirect:/boss/settings/mail-setting";
 	}
 
 }

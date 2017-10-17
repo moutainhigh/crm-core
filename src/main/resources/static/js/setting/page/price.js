@@ -2,6 +2,10 @@ $(document).ready(function () {
     $('.buttonPropertyRefresh').on('click', function () {
         var url = '/boss/settings/price-setting/edit';
         var id = $(this).data('id');
+        var val = $('#inputPriceProperty' + id).val();
+        if (Number(val) < 0) {
+            return;
+        }
         var data = $('#formProperty' + id).serialize();
         $.ajax({
             type: 'post',

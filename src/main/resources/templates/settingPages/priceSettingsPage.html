@@ -31,7 +31,7 @@
 
                         <td th:align="center">
                             <input style="width: 100px" type="number" required="" class="form-control form2" name="value"
-                                   th:value="${property.value}" title="только цифры" min="0"/>
+                                   th:value="${property.value}" title="только цифры" min="0" th:id="'inputPriceProperty'+${property.id}"/>
                         </td>
                         <td th:align="center" >
                             <button type="button" th:attr="data-id=${property.id}" class="btn btn-success center-block buttonPropertyRefresh">Обновить</button>

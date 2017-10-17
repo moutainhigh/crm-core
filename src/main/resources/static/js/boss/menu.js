@@ -372,23 +372,35 @@ function isLogLevel(log) {
         || log == 'DEBUG' || log == 'WARN'
 }
 
-function newSMTPSettings() {
-    var formData = {
-        settingsName: $("#settingsName").val(),
-        password: $("#settingsPassword").val(),
-        email: $("#settingsEmail").val()
-    }
-    $.ajax({
-        type: "POST",
-        url: "/boss/settings/mail-setting/add",
-        data: formData,
-        success: function (result) {
-            $("#successModal").modal('show')
-        },
-        error: function (e) {
-            $("#errorModal").modal('show')
+$(document).ready(function () {
+    $('#formMailSetting').on('submit', function (e) {
+        e.preventDefault();
+        var email = $("#settingsEmail").val();
+        if (!validateGmail(email)) {
+            return;
         }
+        var formData = {
+            settingsName: $("#settingsName").val(),
+            password: $("#settingsPassword").val(),
+            email: email
+        };
+        $.ajax({
+            type: "POST",
+            url: "/boss/settings/mail-setting/add",
+            data: formData,
+            success: function (result) {
+                location.reload();
+            },
+            error: function (e) {
+                $("#errorModal").modal('show')
+            }
+        });
     });
+});
+
+function validateGmail(gmail) { //Validates the email address
+    var emailRegex = /^[\w.+\-]+@gmail\.com$/;
+    return emailRegex.test(gmail);
 }
 
 function applySMTPSettings(id) {
