@@ -19,5 +19,6 @@ $(document).ready(function () {
 
         });
     });
+    $('input[type="text"]').get(0).focus();
 });
 

@@ -1,7 +1,10 @@
 $(document).ready(function () {
+    $('input[type="text"]').get(0).focus();
     $('#buttonAddBoard').on("click", function (e) {
         var data = $('#inputBoardName').serialize();
         var rowVal = $('#inputBoardName').val();
+        $('#inputBoardName').val('');
+        $('input[type="text"]').get(0).focus();
         var url = "/company/configuration/step/board/add";
         $.ajax({
             type: 'POST',
