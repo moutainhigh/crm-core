@@ -1,7 +1,7 @@
 var initialEditUserFormMap = {};
 
 function arraysEqual(initialData, updatedData) {
-    if (initialData === null || updatedData === null){
+    if (initialData === null || updatedData === null) {
         return false;
     }
     return JSON.stringify(initialData) === JSON.stringify(updatedData);
@@ -23,6 +23,9 @@ function grabUpdatedUserFormData(id) {
     if (!isValidPasswordsData(oldPassword, newPassword, repeatedPassword)) {
         return false;
     }
+    if (!isSalaryValid(id)) {
+        return false;
+    }
 
     var positionCheckboxId = '.editAllUsers-PositionCheckbox' + id;
     var positionsIds = $(positionCheckboxId + ' input:checkbox:checked').map(function () {
@@ -33,7 +36,7 @@ function grabUpdatedUserFormData(id) {
         return $(this).val();
     }).get();
 
-    var resultEditUserFormMap =  {};
+    var resultEditUserFormMap = {};
     resultEditUserFormMap['email'] = email;
     resultEditUserFormMap['phone'] = phone;
     resultEditUserFormMap['positionsIds'] = positionsIds;
@@ -67,7 +70,7 @@ function grabInitialEditUserFormData(id) {
     initialEditUserFormMap['rolesIds'] = rolesIds;
 }
 
-function criticalUserDataUpdated(initialData, updatedData){
+function criticalUserDataUpdated(initialData, updatedData) {
     var emailsEqual = initialData['email'] === updatedData['email'];
     var phonesEqual = initialData['phone'] === updatedData['phone'];
     var rolesEqual = arraysEqual(initialData['rolesIds'], updatedData['rolesIds']);
@@ -82,6 +85,7 @@ function editUserFormData(id) {
     $('.errorMessage').html('').hide();
     var resultEditUserFormMap = grabUpdatedUserFormData(id);
     if (criticalUserDataUpdated(initialEditUserFormMap, resultEditUserFormMap)) {
+        $('#allUserEdit' + id).modal('hide');
         $('#passwordPrompt' + id).modal('show');
     } else {
         resultEditUserFormMap['bossPasswordRequired'] = false;
@@ -94,14 +98,14 @@ function convertObjToArray(data) {
     var dataToSend = [];
     var key;
     var properties = Object.keys(data);
-    for (var i = 0; i < properties.length; i++){
+    for (var i = 0; i < properties.length; i++) {
         key = properties[i];
         dataToSend.push({name: key, value: data[key]});
     }
     return dataToSend;
 }
 
-function sendEditUserFormData(data){
+function sendEditUserFormData(data) {
     var dataJson = convertObjToArray(data);
     $.ajax({
         type: 'post',
@@ -270,3 +274,13 @@ $(function () {
         }
     });
 });
+
+function isSalaryValid(id) {
+    var salary = $('.editAllUsersBaseSalary' + id).val();
+    if (salary < 0 || salary >= 2147483647) {
+        var errorMessage = '<h4 style="color:red;" align="center">Поле оклад должно быть цифрой от 0 до 2147483647</h4>';
+        $('.errorMessage').html(errorMessage).show();
+        return false;
+    }
+    return true;
+}

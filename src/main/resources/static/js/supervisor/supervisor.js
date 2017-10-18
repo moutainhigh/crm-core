@@ -43,6 +43,9 @@ function editUserFormData(id) {
     event.preventDefault();
     $('.errorMessage').html('').hide();
     var resultEditUserFormMap = grabUpdatedUserFormData(id);
+    if (!isSalaryValid(id)){
+        return false;
+    }
     sendEditUserFormData(resultEditUserFormMap);
 }
 
@@ -155,3 +158,13 @@ $(document).ready(function () {
         }
     })
 });
+
+function isSalaryValid(id) {
+    var salary = $('.editAllUsersBaseSalary' + id).val();
+    if (salary < 0 || salary >= 2147483647) {
+        var errorMessage = '<h4 style="color:red;" align="center">Поле оклад должно быть цифрой от 0 до 2147483647</h4>';
+        $('.errorMessage').html(errorMessage).show();
+        return false;
+    }
+    return true;
+}

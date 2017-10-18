@@ -27,7 +27,7 @@ public class User extends BaseEntity {
 	@GeneratedValue
 	private Long id;
 
-	@NotBlank(message = "Поле \"firsName\" не может быть пустым")
+	@NotBlank(message = "Поле \"firstName\" не может быть пустым")
 	@Column(nullable = false)
 	private String firstName;
 

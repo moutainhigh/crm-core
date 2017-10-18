@@ -6,12 +6,12 @@
 </head>
 <body>
 <div th:fragment="editUser" th:remove="tag">
-    <button class="btn btn-primary btn-info" th:href="'#usersByPositionEdit'+${user.id} + ${usersByPosition.key.id}"
+    <button class="btn btn-primary btn-info" th:href="'#allUserEdit'+${user.id} + ${usersByPosition.key.id}"
             th:onclick="'grabInitialEditUserFormData(\'' + ${user.id} + ${usersByPosition.key.id} + '\');'"
             data-toggle="modal">Редактировать
     </button>
     <!-- Modal -->
-    <div class="modal fade" roles="dialog" th:id="'usersByPositionEdit'+${user.id} + ${usersByPosition.key.id}">
+    <div class="modal fade" roles="dialog" th:id="'allUserEdit'+${user.id} + ${usersByPosition.key.id}">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
