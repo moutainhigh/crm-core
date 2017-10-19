@@ -32,11 +32,9 @@ function checkCashInputData() {
     var payWithCard = parseFloat($("#payWithCard").val());
     var bankCashBox = parseFloat($("#bankCashBox").val());
     if (isNaN(cashBox) || isNaN(bankCashBox)){
-        var errorMessage = '<h4 style="color:red;" align="center">Не заполнены поля "Наличные" или "На банковской карте"</h4>';
+        var errorMessage = '<h4 style="color:red;" align="center">Есть незаполненные поля</h4>';
         $('.errorMessage').html(errorMessage).show();
-        return false;
     }
-    var budget = cashBox + bankCashBox;
     if ($("#cashBox").val() == ''){
         $("#cashBox").css('border', 'red 3px solid');
     } else {
@@ -47,6 +45,7 @@ function checkCashInputData() {
     } else {
         $("#bankCashBox").css('border', '');
     }
+    var budget = cashBox + bankCashBox;
     if (budget < totalCashBox) {
         $("#cashBox").css('border', 'red 3px solid');
         $("#bankCashBox").css('border', 'red 3px solid');
