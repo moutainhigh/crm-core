@@ -13,6 +13,7 @@ import com.cafe.crm.services.interfaces.position.PositionService;
 import com.cafe.crm.services.interfaces.role.RoleService;
 import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.utils.CompanyIdCache;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.apache.commons.collections.CollectionUtils.isEqualCollection;
+import static org.apache.commons.collections.CollectionUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
@@ -172,7 +174,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void update(User user, ExtraUserData extraUserData) {
-		if (!isAuthenticationPassed(extraUserData.getBossPassword(), extraUserData.isBossPasswordRequired())){
+		if (!isAuthenticationPassed(extraUserData.getBossPassword(), extraUserData.isBossPasswordRequired())) {
 			throw new UserDataException("Неверный пароль для подтверждения изменений");
 		}
 		checkForNotNew(user);
@@ -193,7 +195,7 @@ public class UserServiceImpl implements UserService {
 		String bossName = SecurityContextHolder.getContext().getAuthentication().getName();
 		User bossUser = findByUsername(bossName);
 		String bossDbPassword = bossUser.getPassword();
-		return  (!authRequired || (passwordEncoder.matches(bossPassword, bossDbPassword)));
+		return (!authRequired || (passwordEncoder.matches(bossPassword, bossDbPassword)));
 	}
 
 	private void setCompanyById(User user, String companyId) {
@@ -237,7 +239,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private <T> boolean listsEqual(List<T> list1, List<T> list2) {
-		return list1 != null && list2 != null && isEqualCollection(list1, list2);
+		return (isEmpty(list1) && isEmpty(list2)) || list1 != null && list2 != null && isEqualCollection(list1, list2);
 	}
 
 	@Override
