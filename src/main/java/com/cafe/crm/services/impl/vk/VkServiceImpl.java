@@ -230,6 +230,9 @@ public class VkServiceImpl implements VkService {
 	}
 
 	private String getNotes(List<NoteRecord> noteRecords) {
+		if ((noteRecords == null) || (noteRecords.size() == 0)) {
+			return "Отсутсвует!";
+		}
 		StringBuilder sb = new StringBuilder();
 		for (NoteRecord noteRecord : noteRecords) {
 			sb.append(noteRecord.getName()).append(" : ").append(noteRecord.getValue()).append(System.getProperty("line.separator"));

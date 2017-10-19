@@ -16,14 +16,15 @@
                 Необходимо перенаправить браузер пользователя по адресу https://oauth.vk.com/authorize.
                 <br/>
                 Пример запроса:
-                <pre>https://oauth.vk.com/authorize?client_id=1&amp;display=page&amp;redirect_uri=https://oauth.vk.com/blank.html&amp;
-                scope=messages,offline&amp;response_type=token&amp;v=5.68&amp;state=123456
+                <pre>https://oauth.vk.com/authorize?client_id=1&amp;display=page&amp;redirect_uri=https://oauth.vk.com/blank.html&amp;scope=offline,messages&amp;response_type=token&amp;v=5.68&amp;state=123456
                 </pre>
                 Где:
                 <ul>
                     <li>client_id (Application ID) - идентификатор вашего приложения, можно посмотреть в настройках вашего приложения в VK.</li>
                     <li>display - тип отображения страницы авторизации</li>
-                    <li>redirect_uri - адрес, на который будет переадресован пользователь после прохождения авторизации, по умолчанию: https://oauth.vk.com/blank.html, scope - битовая маска настроек доступа приложения(для не ограниченного по времени токена указать offline)</li>
+                    <li>redirect_uri - адрес, на который будет переадресован пользователь после прохождения авторизации, по умолчанию: https://oauth.vk.com/blank.html</li>
+                    <li>
+                        scope - битовая маска настроек доступа приложения(для не ограниченного по времени токена указать offline)</li>
                     <li>response_type - тип ответа, который необходимо получить</li>
                     <li>v - версия API</li>
                     <li>state - произвольная строка, которая будет возвращена вместе с результатом авторизации. Для возможности отправлять сообщения в scope должен быть параметр messages</li>
