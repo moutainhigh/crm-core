@@ -6,7 +6,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.persistence.*;
 
 @Entity
-public class Template extends BaseEntity {
+public class Template {
 	@Id
 	@GeneratedValue
 	private Long id;

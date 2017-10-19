@@ -13,25 +13,15 @@ import org.springframework.stereotype.Service;
 public class TemplateServiceImpl implements TemplateService {
 
 	private final TemplateRepository templateRepository;
-	private final CompanyService companyService;
-	private final CompanyIdCache companyIdCache;
 
 	@Autowired
-	public TemplateServiceImpl(TemplateRepository templateRepository, CompanyService companyService, CompanyIdCache companyIdCache) {
-		this.companyService = companyService;
+	public TemplateServiceImpl(TemplateRepository templateRepository) {
 		this.templateRepository = templateRepository;
-		this.companyIdCache = companyIdCache;
-	}
-
-	private void setCompany(Template template) {
-		Long companyId = companyIdCache.getCompanyId();
-		Company company = companyService.findOne(companyId);
-		template.setCompany(company);
 	}
 
 	@Override
 	public Template findByName(String name) {
-		return templateRepository.findByNameAndCompanyId(name, companyIdCache.getCompanyId());
+		return templateRepository.findByName(name);
 	}
 
 	@Override

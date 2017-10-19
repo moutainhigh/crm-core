@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TemplateRepository extends JpaRepository<Template, Long> {
 
-	Template findByNameAndCompanyId(String name, Long companyId);
+	Template findByName(String name);
 
 }
