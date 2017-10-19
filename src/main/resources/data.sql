@@ -36,7 +36,7 @@ values
 INSERT INTO companies
 (id, name)
 VALUES
-  (1000, 'SuperAdminCompany');
+  (1, 'SuperAdminCompany');
 --   (1, 'companyA'),
 --   (2, 'companyB');
 
@@ -47,7 +47,7 @@ VALUES
 --   (1, 'Герман', 'Севостьянов', 'boss@mail.ru', '89123456789', '$2a$10$Rqc3K45Z8GYbklMvy3640uj/XY4supJ2XmWmS4t1zjBlXiVh3h4aC', 2000, 0, 0, TRUE, TRUE, 1),
 --   (3, 'Ахмад', 'Чай', 'worker@mail.ru', '89111111111', '$2a$10$ffBOimLAaDY5o6jU62oecuKgSgcYAY3FpAS3okZHQw0tHRxV39Oa.', 0, 0, 0, TRUE, TRUE, 1),
 --   (4, 'Намрег', 'Инверг', 'boss2@mail.ru', '89123456780', '$2a$10$ufhLqzo3wbuWKIuQjPnyrOYplalLZsJ8X2NXufOycc/IT2qZKB4m6', 2000, 0, 0, TRUE, TRUE, 2),
-  (5, 'super', 'super', 'super@mail.ru', '80000000000', '$2a$10$Rqc3K45Z8GYbklMvy3640uj/XY4supJ2XmWmS4t1zjBlXiVh3h4aC', 0, 0, 0, TRUE, TRUE, 1000);
+  (5, 'super', 'super', 'super@mail.ru', '80000000000', '$2a$10$Rqc3K45Z8GYbklMvy3640uj/XY4supJ2XmWmS4t1zjBlXiVh3h4aC', 0, 0, 0, TRUE, TRUE, 1);
 
 --
 -- insert into ingredients
@@ -214,7 +214,7 @@ values
 <a th:href="''http://'' + ${siteAddress} + ''/advertising/toggle?number='' + ${number} + ''&amp;token='' + ${token}">Если
     больше не хотите получать рекламу, нажмите на это сообщение</a>
 </body>
-</html>', 'disable-advertising', 1),
+</html>', 'disable-advertising', 2),
 
   (2, '<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/html">
@@ -228,7 +228,7 @@ values
 <a th:href="''http://'' + ${siteAddress} + ''/advertising/toggle?number='' + ${number} + ''&amp;token='' + ${token}">Если
     больше не хотите получать рекламу, нажмите на это сообщение</a>
 </body>
-</html>', 'text-advertising', 1),
+</html>', 'text-advertising', 2),
 
   (3, '<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/html">
@@ -301,7 +301,7 @@ values
 
 </table>
 </body>
-</html>', 'image-advertising', 1),
+</html>', 'image-advertising', 2),
 
   (4, '<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/html">
@@ -313,7 +313,7 @@ values
 <h2 th:text="''Здравствуйте, с баланса вашей карты было списано : '' + ${deductionAmount} + '' руб.''"></h2>
 <h2 th:text="''Текущий баланс карты : '' + ${newBalance} + '' руб.''"></h2>
 </body>
-</html>', 'balance-info-deduction', 1),
+</html>', 'balance-info-deduction', 2),
 
   (5, '<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/html">
@@ -325,7 +325,7 @@ values
 <h2 th:text="''Здравствуйте, на баланс вашей карты было начислено : '' + ${refillAmount} + '' руб.''"></h2>
 <h2 th:text="''Текущий баланс карты : '' + ${newBalance} + '' руб.''"></h2>
 </body>
-</html>', 'balance-info-refill', 1),
+</html>', 'balance-info-refill', 2),
 
   (6, '<!DOCTYPE html>
 <html lang="en">
@@ -338,7 +338,7 @@ values
     <h1>Токен доступа недействителен!</h1>
 </div>
 </body>
-</html>', 'invalid-token', 1),
+</html>', 'invalid-token', 2),
 
   (7, '<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" xmlns="http://www.w3.org/1999/html">
@@ -366,7 +366,7 @@ values
 <h2>Касса : <span th:text="${cashBox + '' '' + ''рублей''}"></span></h2>
 <h2>Недосдача: <span th:text="${shortage + '' '' + ''рублей''}"></span></h2>
 </body>
-</html>', 'closeShiftEmailShortage', 1),
+</html>', 'closeShiftEmailShortage', 2),
 
   (8, '{0}
 {1} {2}
@@ -390,4 +390,4 @@ values
 {12}
 
 Заметки
-{13}', 'daily-report', 1);
+{13}', 'daily-report', 2);
