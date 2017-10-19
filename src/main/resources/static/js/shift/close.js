@@ -37,6 +37,16 @@ function checkCashInputData() {
         return false;
     }
     var budget = cashBox + bankCashBox;
+    if ($("#cashBox").val() == ''){
+        $("#cashBox").css('border', 'red 3px solid');
+    } else {
+        $("#cashBox").css('border', '');
+    }
+    if ($("#bankCashBox").val() == ''){
+        $("#bankCashBox").css('border', 'red 3px solid');
+    } else {
+        $("#bankCashBox").css('border', '');
+    }
     if (budget < totalCashBox) {
         $("#cashBox").css('border', 'red 3px solid');
         $("#bankCashBox").css('border', 'red 3px solid');
