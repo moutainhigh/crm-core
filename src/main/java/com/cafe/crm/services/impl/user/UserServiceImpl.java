@@ -13,7 +13,6 @@ import com.cafe.crm.services.interfaces.position.PositionService;
 import com.cafe.crm.services.interfaces.role.RoleService;
 import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.utils.CompanyIdCache;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -275,6 +274,15 @@ public class UserServiceImpl implements UserService {
 		if (isValidPasswordsData(user, oldPassword, newPassword, repeatedPassword)) {
 			user.setPassword(passwordEncoder.encode(newPassword));
 			userRepository.saveAndFlush(user);
+		}
+
+		cacheManager.getCache("user").put(username, user);
+		String userEmailFromSession;
+		for (Object principal : sessionRegistry.getAllPrincipals()) {
+			userEmailFromSession = ((UserDetails) principal).getUsername();
+			if (username.equals(userEmailFromSession)) {
+				sessionRegistry.getAllSessions(principal, false).forEach(SessionInformation::expireNow);
+			}
 		}
 	}
 
