@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -53,10 +54,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public ReCaptchaFilter reCaptchaFilter() throws Exception {
 		ReCaptchaFilter reCaptchaFilter = new ReCaptchaFilter();
-		reCaptchaFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/processing-url","POST"));
+		reCaptchaFilter.setFilterProcessesUrl("/processing-url");
 		reCaptchaFilter.setAuthenticationManager(authenticationManager());
 		reCaptchaFilter.setAuthenticationSuccessHandler(customAuthenticationSuccessHandler);
 		reCaptchaFilter.setAuthenticationFailureHandler(customAuthenticationFailureHandler);
+		reCaptchaFilter.setSessionAuthenticationStrategy(new RegisterSessionAuthenticationStrategy(sessionRegistry()));
 		return reCaptchaFilter;
 	}
 
