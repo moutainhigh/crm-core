@@ -93,7 +93,7 @@ public class ShiftServiceImpl implements ShiftService {
     @Transactional(readOnly = true)
     @Override
     public Shift findOne(Long id) {
-        return shiftRepository.findOne(id);
+        return shiftRepository.findById(id);
     }
 
     @Transactional(readOnly = true)
