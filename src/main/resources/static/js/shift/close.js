@@ -51,7 +51,10 @@ function checkCashInputData() {
         $("#bankCashBox").css('border', 'red 3px solid');
         $('#errorBlock').html('Сверка бюджета не прошла!');
         $("#closeShiftButtonShortage").css('visibility', 'visible');
-        // $("#budget").css('visibility', 'hidden');
+
+        var shortfallAmount = (totalCashBox - budget);
+        var shortfallMessage = '<h4 style="color:red;" align="center">В кассе не хватает '+shortfallAmount+' рублей</h4>';
+        $('.shortfallAmount').html(shortfallMessage).show();
     } else if (budget >= totalCashBox) {
         $('#budget').attr('type', 'submit');
     }
