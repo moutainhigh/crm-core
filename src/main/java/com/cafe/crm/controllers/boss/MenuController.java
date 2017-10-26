@@ -106,12 +106,13 @@ public class MenuController {
         Map<Ingredients, Integer> recipe;
         double recipeCost;
 //		check if product has ingredients for recipe
-        if (!wrapper.getNames().isEmpty()) {
+        if (!wrapper.getNames().isEmpty() && !wrapper.getSelfCost().isNaN() && !wrapper.getCost().isNaN()) {
             recipe = ingredientsService.createRecipe(wrapper);
             recipeCost = ingredientsService.getRecipeCost(recipe);
         } else {
             recipe = null;
             recipeCost = 0;
+            wrapper.setSelfCost(0D);
         }
 
         Map<Position, Integer> staffPercent = productService.createStaffPercent(wrapper);
