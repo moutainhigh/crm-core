@@ -17,10 +17,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,21 +102,24 @@ public class MenuController {
 
     @RequestMapping(value = "/addProduct", method = RequestMethod.POST)
     @ResponseBody
-    public WrapperOfProduct createProd(@RequestBody final WrapperOfProduct wrapper) {
+    public WrapperOfProduct createProd(@RequestBody@Valid final WrapperOfProduct wrapper, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            String fieldError = bindingResult.getFieldError().getDefaultMessage();
+            throw new IngredientsServiceException(fieldError);
+        }
 
         Category category = categoriesService.getOne(wrapper.getId());
         Map<Ingredients, Integer> recipe;
         double recipeCost;
 //		check if product has ingredients for recipe
-        if (!wrapper.getNames().isEmpty() && !wrapper.getSelfCost().isNaN() && !wrapper.getCost().isNaN()) {
+        if (!wrapper.getNames().isEmpty()) {
             recipe = ingredientsService.createRecipe(wrapper);
             recipeCost = ingredientsService.getRecipeCost(recipe);
         } else {
             recipe = null;
             recipeCost = 0;
-            wrapper.setSelfCost(0D);
         }
-
         Map<Position, Integer> staffPercent = productService.createStaffPercent(wrapper);
         if (category != null) {
             Product product = new Product();

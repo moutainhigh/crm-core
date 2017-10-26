@@ -1,5 +1,7 @@
 package com.cafe.crm.dto;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,7 +18,8 @@ public class WrapperOfProduct implements Serializable {  // wrapper for menuCont
 	private Double cost;
 	private List<Long> staffPercentPosition;
 	private List<Integer> staffPercentPercent;
-
+	@NotNull(message = "selfCost field have to be greater or equal to zero")
+	@Min(value = 0, message = "selfCost field have to be greater or equal to zero")
 	private Double selfCost;
 
 	public WrapperOfProduct() {
