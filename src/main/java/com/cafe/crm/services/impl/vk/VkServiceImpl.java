@@ -139,7 +139,7 @@ public class VkServiceImpl implements VkService {
 	}
 
 	private String getComment(String comment) {
-		return StringUtils.isEmpty(comment) ? "\nКомментарий :\nОтсутсвует!" : "\nКомментарий :\n" + comment;
+		return StringUtils.isEmpty(comment) ? "" : "\nКомментарий :\n" + comment + "\n";
 	}
 
 	private double formatCostsAndGetSalariesCost(Shift shift, StringBuilder salaries) {
@@ -231,12 +231,12 @@ public class VkServiceImpl implements VkService {
 
 	private String getNotes(List<NoteRecord> noteRecords) {
 		if ((noteRecords == null) || (noteRecords.size() == 0)) {
-			return "Отсутсвует!";
+			return "";
 		}
 		StringBuilder sb = new StringBuilder();
 		for (NoteRecord noteRecord : noteRecords) {
 			sb.append(noteRecord.getName()).append(" : ").append(noteRecord.getValue()).append(System.getProperty("line.separator"));
 		}
-		return sb.toString();
+		return "Заметки :\n" + sb.toString();
 	}
 }
