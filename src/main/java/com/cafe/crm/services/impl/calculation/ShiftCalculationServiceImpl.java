@@ -69,6 +69,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			return 0D;
 		}
 	}
+
 	@Override
 	public TotalStatisticView createTotalStatisticView(LocalDate from, LocalDate to) {
 		Set<Shift> shifts = shiftService.findByDates(from, to);
@@ -168,6 +169,29 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		}
 
 		return new ClientDetails(allDirtyPrice, Math.round(otherPriceMenu), Math.round(dirtyPriceMenu));
+	}
+
+	@Override
+	public DetailStatisticView createDetailStatisticView(Shift shift) {
+		LocalDate shiftDate = shift.getShiftDate();
+		Double cashBox = shift.getCashBox() + shift.getBankCashBox();
+		Double allPrice = getAllPrice(shift);
+		int clientsNumber = shift.getClients().size();
+		List<UserDTO> usersOnShift = transformer.transform(shift.getUsers(), UserDTO.class);
+		Set<Calculate> allCalculate = shift.getCalculates();
+		List<Cost> otherCost = costService.findByDateAndVisibleTrue(shift.getShiftDate());
+		Double allSalaryCost = 0D;
+		Double allOtherCost = 0D;
+
+		for (User user : shift.getUsers()) {
+			allSalaryCost += user.getShiftSalary() + user.getBonus();
+		}
+		for (Cost otherGood : otherCost) {
+			allOtherCost = allOtherCost + otherGood.getPrice() * otherGood.getQuantity();
+		}
+
+		return new DetailStatisticView(shiftDate, cashBox, allPrice, clientsNumber,
+				usersOnShift, allCalculate, allSalaryCost, allOtherCost, otherCost);
 	}
 
 	@Override
