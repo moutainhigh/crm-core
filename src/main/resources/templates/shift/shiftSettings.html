@@ -123,7 +123,10 @@
                                 <tr>
                                     <td>
                                         <div th:if="${client.description==''}">
-                                            <p th:text="Описание+' '+отсутствует"></p>
+                                            <p th:each="calculate:${calculates}"
+                                               th:if= "${#lists.contains(calculate.getClient(), client)}"
+                                               th:text="${calculate.getDescription()}">
+                                            </p>
                                         </div>
                                         <div th:if="${client.description!=''}">
                                             <p th:text="${client.description}"></p>
