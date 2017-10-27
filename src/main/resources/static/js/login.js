@@ -1,3 +1,11 @@
+$( document ).ready(function() {
+    if (localStorage.getItem('registration') === 'ok'){
+        localStorage.setItem('registration','none');
+        var registrationSuccessMessage = '<h4 style="color:black;" align="center">Регистрация завершена. Вы можете войти</h4>';
+        $('.registrationSuccessMessage').html(registrationSuccessMessage).show();
+    }
+});
+
 
 var recaptchaAnswer = "";
 var onloadCallback = function() {
