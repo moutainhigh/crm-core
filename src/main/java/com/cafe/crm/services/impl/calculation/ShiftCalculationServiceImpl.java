@@ -10,9 +10,11 @@ import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.models.note.Note;
 import com.cafe.crm.models.shift.Shift;
+import com.cafe.crm.models.shift.UserSalaryDetail;
 import com.cafe.crm.models.user.Position;
 import com.cafe.crm.models.user.Receipt;
 import com.cafe.crm.models.user.User;
+import com.cafe.crm.services.impl.salary.UserSalaryDetailServiceImpl;
 import com.cafe.crm.services.interfaces.calculation.ShiftCalculationService;
 import com.cafe.crm.services.interfaces.cost.CostService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
@@ -37,6 +39,8 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 	private final ProductService productService;
 	@Autowired
 	private ReceiptService receiptService;
+	@Autowired
+	private UserSalaryDetailServiceImpl userSalaryDetailService;
 
 	@Autowired
 	public ShiftCalculationServiceImpl(CostService costService, ShiftService shiftService, Transformer transformer,
@@ -68,6 +72,25 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		} else {
 			return 0D;
 		}
+	}
+
+	@Override
+	public UserSalaryDetail getUserSalaryDetail(User user, Shift shift) {
+		int shiftSalary = user.getShiftSalary();
+		int bonus = user.getBonus();
+		int totalSalary = shiftSalary + bonus;
+
+		return new UserSalaryDetail(user.getId(), shiftSalary, bonus, totalSalary, shift);
+	}
+
+	@Override
+	public List<UserSalaryDetail> getUserSalaryDetail(List<User> users, Shift shift) {
+		List<UserSalaryDetail> userSalaryDetails = new ArrayList<>();
+		for (User user : users) {
+			userSalaryDetails.add(getUserSalaryDetail(user, shift));
+		}
+
+		return userSalaryDetails;
 	}
 
 	@Override
@@ -171,6 +194,15 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		return new ClientDetails(allDirtyPrice, Math.round(otherPriceMenu), Math.round(dirtyPriceMenu));
 	}
 
+	private Map<Long, UserSalaryDetail> transferSalaryDetailsToMap(List<UserSalaryDetail> details) {
+		Map<Long, UserSalaryDetail> userSalaryDetail = new HashMap<>();
+		for (UserSalaryDetail detail : details) {
+			userSalaryDetail.put(detail.getUserId(), detail);
+		}
+
+		return userSalaryDetail;
+	}
+
 	@Override
 	public DetailStatisticView createDetailStatisticView(Shift shift) {
 		LocalDate shiftDate = shift.getShiftDate();
@@ -178,20 +210,22 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		Double allPrice = getAllPrice(shift);
 		int clientsNumber = shift.getClients().size();
 		List<UserDTO> usersOnShift = transformer.transform(shift.getUsers(), UserDTO.class);
+		List<UserSalaryDetail> salaryDetails = shift.getUserSalaryDetail();
+		Map<Long, UserSalaryDetail> userSalaryDetail = transferSalaryDetailsToMap(salaryDetails);
 		Set<Calculate> allCalculate = shift.getCalculates();
 		List<Cost> otherCost = costService.findByDateAndVisibleTrue(shift.getShiftDate());
 		Double allSalaryCost = 0D;
 		Double allOtherCost = 0D;
 
-		for (User user : shift.getUsers()) {
-			allSalaryCost += user.getShiftSalary() + user.getBonus();
+		for (UserSalaryDetail detail : salaryDetails) {
+			allSalaryCost += detail.getTotalSalary();
 		}
 		for (Cost otherGood : otherCost) {
 			allOtherCost = allOtherCost + otherGood.getPrice() * otherGood.getQuantity();
 		}
 
 		return new DetailStatisticView(shiftDate, cashBox, allPrice, clientsNumber,
-				usersOnShift, allCalculate, allSalaryCost, allOtherCost, otherCost);
+				usersOnShift, userSalaryDetail, allCalculate, allSalaryCost, allOtherCost, otherCost);
 	}
 
 	@Override

@@ -3,9 +3,11 @@ package com.cafe.crm.dto;
 
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.cost.Cost;
+import com.cafe.crm.models.shift.UserSalaryDetail;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class DetailStatisticView {
@@ -20,6 +22,8 @@ public class DetailStatisticView {
 
 	private List<UserDTO> usersOnShift;
 
+	private Map<Long, UserSalaryDetail> userSalaryDetail;
+
 	private Set<Calculate> allCalculate;
 
 	private Double allSalaryCost;
@@ -29,13 +33,14 @@ public class DetailStatisticView {
 	private List<Cost> otherCost;
 
 	public DetailStatisticView(LocalDate shiftDate, Double cashBox, Double allPrice, int clientsNumber,
-							   List<UserDTO> usersOnShift, Set<Calculate> allCalculate, Double allSalaryCost,
-							   Double allOtherCost, List<Cost> otherCost) {
+							   List<UserDTO> usersOnShift, Map<Long, UserSalaryDetail> userSalaryDetail,
+							   Set<Calculate> allCalculate, Double allSalaryCost, Double allOtherCost, List<Cost> otherCost) {
 		this.shiftDate = shiftDate;
 		this.cashBox = cashBox;
 		this.allPrice = allPrice;
 		this.clientsNumber = clientsNumber;
 		this.usersOnShift = usersOnShift;
+		this.userSalaryDetail = userSalaryDetail;
 		this.allCalculate = allCalculate;
 		this.allSalaryCost = allSalaryCost;
 		this.allOtherCost = allOtherCost;
@@ -80,6 +85,14 @@ public class DetailStatisticView {
 
 	public void setUsersOnShift(List<UserDTO> usersOnShift) {
 		this.usersOnShift = usersOnShift;
+	}
+
+	public Map<Long, UserSalaryDetail> getUserSalaryDetail() {
+		return userSalaryDetail;
+	}
+
+	public void setUserSalaryDetail(Map<Long, UserSalaryDetail> userSalaryDetail) {
+		this.userSalaryDetail = userSalaryDetail;
 	}
 
 	public Set<Calculate> getAllCalculate() {

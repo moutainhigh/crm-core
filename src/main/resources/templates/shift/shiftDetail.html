@@ -151,7 +151,8 @@
                 <tr th:each="user : ${detailStatisticView.usersOnShift}">
                     <td th:text="${detailStatisticView.shiftDate}"></td>
                     <td th:text="${user.firstName + ' ' + user.lastName}"></td>
-                    <td th:text="${user.shiftSalary + user.bonus}"></td>
+                    <!--<td th:text="${user.shiftSalary + user.bonus}"></td>-->
+                    <td th:text="${detailStatisticView.userSalaryDetail.get(user.id).totalSalary}"></td>
                 </tr>
                 </tbody>
                 <tfoot>
@@ -233,9 +234,9 @@
                     <td th:text="${user.positions}"></td>
                     <td th:text="${user.email}"></td>
                     <td th:text="${user.phone}"></td>
-                    <td th:text="${user.shiftSalary}"></td>
-                    <td th:text="${user.salary + user.bonus}"></td>
-                    <td th:text="${user.bonus}"></td>
+                    <td th:text="${detailStatisticView.userSalaryDetail.get(user.id).shiftSalary}"></td>
+                    <td th:text="${detailStatisticView.userSalaryDetail.get(user.id).totalSalary}"></td>
+                    <td th:text="${detailStatisticView.userSalaryDetail.get(user.id).bonus}"></td>
                 </tr>
                 </tbody>
                 <tfoot>

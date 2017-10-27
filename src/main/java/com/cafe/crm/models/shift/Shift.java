@@ -12,9 +12,7 @@ import com.cafe.crm.models.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 @Entity
@@ -49,6 +47,9 @@ public class Shift extends BaseEntity {
 
 	@ManyToMany(mappedBy = "shifts", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	private List<User> users;
+
+	@OneToMany(mappedBy = "shift")
+	private List<UserSalaryDetail> userSalaryDetail;
 
 	@OneToMany(fetch = FetchType.LAZY)
 	private List<Debt> repaidDebts = new ArrayList<>();
@@ -92,6 +93,14 @@ public class Shift extends BaseEntity {
 
 	public void setUsers(List<User> users) {
 		this.users = users;
+	}
+
+	public List<UserSalaryDetail> getUserSalaryDetail() {
+		return userSalaryDetail;
+	}
+
+	public void setUserSalaryDetail(List<UserSalaryDetail> userSalaryDetail) {
+		this.userSalaryDetail = userSalaryDetail;
 	}
 
 	public String getUsersNames() {

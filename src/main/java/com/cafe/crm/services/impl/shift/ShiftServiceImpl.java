@@ -13,10 +13,14 @@ import com.cafe.crm.models.menu.Product;
 import com.cafe.crm.models.note.Note;
 import com.cafe.crm.models.note.NoteRecord;
 import com.cafe.crm.models.shift.Shift;
+import com.cafe.crm.models.shift.UserSalaryDetail;
 import com.cafe.crm.models.user.Position;
 import com.cafe.crm.models.user.Receipt;
 import com.cafe.crm.models.user.User;
 import com.cafe.crm.repositories.shift.ShiftRepository;
+import com.cafe.crm.services.impl.calculation.ShiftCalculationServiceImpl;
+import com.cafe.crm.services.impl.salary.UserSalaryDetailServiceImpl;
+import com.cafe.crm.services.interfaces.calculation.ShiftCalculationService;
 import com.cafe.crm.services.interfaces.company.CompanyService;
 import com.cafe.crm.services.interfaces.cost.CostService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
@@ -44,6 +48,8 @@ public class ShiftServiceImpl implements ShiftService {
 	private final UserService userService;
 	private final TimeManager timeManager;
 	private final NoteRecordService noteRecordService;
+	private UserSalaryDetailServiceImpl userSalaryDetailService;
+	private ShiftCalculationService shiftCalculationService;
 
     private final CompanyService companyService;
     private final CompanyIdCache companyIdCache;
@@ -61,6 +67,16 @@ public class ShiftServiceImpl implements ShiftService {
 		this.noteRecordService = noteRecordService;
         this.companyService = companyService;
         this.companyIdCache = companyIdCache;
+	}
+
+	@Autowired
+	public void setUserSalaryDetailService(UserSalaryDetailServiceImpl userSalaryDetailService) {
+		this.userSalaryDetailService = userSalaryDetailService;
+	}
+
+	@Autowired
+	public void setShiftCalculationService(ShiftCalculationService shiftCalculationService) {
+		this.shiftCalculationService = shiftCalculationService;
 	}
 
 	private void setCompany(Shift shift) {
@@ -123,6 +139,7 @@ public class ShiftServiceImpl implements ShiftService {
         User user = userService.findById(userId);
         shift.getUsers().remove(user);
         user.getShifts().remove(shift);
+        userSalaryDetailService.deleteByUserIdAndShiftId(userId, shift.getId());
         shiftRepository.saveAndFlush(shift);
     }
 
@@ -132,6 +149,7 @@ public class ShiftServiceImpl implements ShiftService {
         User user = userService.findById(userId);
         shift.getUsers().add(user);
         user.getShifts().add(shift);
+        userSalaryDetailService.save(shiftCalculationService.getUserSalaryDetail(user, shift));
         shiftRepository.saveAndFlush(shift);
     }
 
@@ -163,6 +181,7 @@ public class ShiftServiceImpl implements ShiftService {
 			user.setSalary((int) (user.getShiftSalary() + (allPrice * amountOfPositionsPercent) / 100));
 			userService.save(user);
 		}
+		List<UserSalaryDetail> userSalaryDetails = shiftCalculationService.getUserSalaryDetail(usersOnShift, shift);
 		List<NoteRecord> noteRecords = saveAndGetNoteRecords(mapOfNoteNameAndValue, shift);
 		shift.setBankCashBox(bankCashBox);
 		shift.setCashBox(cashBox);
@@ -171,6 +190,7 @@ public class ShiftServiceImpl implements ShiftService {
 		shift.setNoteRecords(noteRecords);
 		shift.setOpen(false);
 		shiftRepository.saveAndFlush(shift);
+		userSalaryDetailService.save(userSalaryDetails);
 		return shift;
 	}
 
