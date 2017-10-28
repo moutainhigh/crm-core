@@ -149,7 +149,7 @@ public class CostController {
 	public ResponseEntity<?> delete(@RequestParam(name = "costId") Long id) {
 		costService.delete(id);
 
-		return ResponseEntity.ok("Товар успешно удален!");
+		return ResponseEntity.ok("Расход успешно удален!");
 	}
 
 	@RequestMapping(value = "/delete/all", method = RequestMethod.POST)
