@@ -1,5 +1,6 @@
 package com.cafe.crm.controllers.boss;
 
+import com.cafe.crm.dto.DetailStatisticView;
 import com.cafe.crm.dto.ShiftView;
 import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.shift.Shift;
@@ -57,21 +58,9 @@ public class ShiftStatisticController {
 	@RequestMapping(value = "/search/shiftDetail/{id}", method = RequestMethod.GET)
 	public ModelAndView shiftDetail(@PathVariable("id") Long id) throws IOException {
 		ModelAndView mv = new ModelAndView("shift/shiftDetail");
-		Double allSalaryCost = 0D;
-		Double allOtherCost = 0D;
 		Shift shift = shiftService.findOne(id);
-		ShiftView shiftView = shiftCalculationService.createShiftView(shift);
-		for (User user : shift.getUsers()) {
-				allSalaryCost += user.getShiftSalary() + user.getBonus();
-		}
-		List<Cost> otherCost = costService.findByDateAndVisibleTrue(shift.getShiftDate());
-		for (Cost otherGood : otherCost) {
-			allOtherCost = allOtherCost + otherGood.getPrice() * otherGood.getQuantity();
-		}
-		mv.addObject("shiftView", shiftView);
-		mv.addObject("allSalaryCost", allSalaryCost);
-		mv.addObject("allOtherCost", allOtherCost);
-		mv.addObject("listOfOtherCosts", otherCost);
+		DetailStatisticView detailStatisticView = shiftCalculationService.createDetailStatisticView(shift);
+		mv.addObject("detailStatisticView", detailStatisticView);
 		return mv;
 	}
 }

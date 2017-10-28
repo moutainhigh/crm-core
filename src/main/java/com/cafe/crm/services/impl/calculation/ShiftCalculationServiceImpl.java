@@ -69,6 +69,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			return 0D;
 		}
 	}
+
 	@Override
 	public TotalStatisticView createTotalStatisticView(LocalDate from, LocalDate to) {
 		Set<Shift> shifts = shiftService.findByDates(from, to);
@@ -81,6 +82,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		List<Cost> otherCost = new ArrayList<>();
 		List<Debt> givenDebts = new ArrayList<>();
 		List<Debt> repaidDebt = new ArrayList<>();
+		List<Receipt> receiptAmount = new ArrayList<>();
 		if (shifts == null) {
 			return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clientsOnDetails, otherCost,
 					givenDebts, repaidDebt);
@@ -91,20 +93,13 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			otherCost.addAll(costService.findByShiftId(shift.getId()));
 			givenDebts.addAll(shift.getGivenDebts());
 			repaidDebt.addAll(shift.getRepaidDebts());
+			receiptAmount.addAll(receiptService.findByShiftId(shift.getId()));
 		}
 		clientsOnDetails = getClientsOnDetails(allCalculate);
 		totalShiftSalary = getTotalShiftSalary(users, shifts);
-		profit = getProfit(clientsOnDetails, givenDebts, repaidDebt);
 		for (Cost cost : otherCost) {
 			otherCosts += cost.getPrice() * cost.getQuantity();
 		}
-
-		return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clientsOnDetails, otherCost,
-				givenDebts, repaidDebt);
-	}
-
-	private double getProfit(Map<Client, ClientDetails> clientsOnDetails, List<Debt> givenDebts, List<Debt> repaidDebt) {
-		double profit = 0D;
 		for (Map.Entry<Client, ClientDetails> entry : clientsOnDetails.entrySet()) {
 			profit += entry.getValue().getAllDirtyPrice();
 		}
@@ -114,7 +109,12 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		for (Debt givDebt : givenDebts) {
 			profit -= givDebt.getDebtAmount();
 		}
-		return profit;
+		for (Receipt receipt : receiptAmount){
+			profit += receipt.getReceiptAmount();
+		}
+
+		return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clientsOnDetails, otherCost,
+				givenDebts, repaidDebt);
 	}
 
 	private double getTotalShiftSalary(Set<User> users, Set<Shift> shifts) {
@@ -169,6 +169,29 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		}
 
 		return new ClientDetails(allDirtyPrice, Math.round(otherPriceMenu), Math.round(dirtyPriceMenu));
+	}
+
+	@Override
+	public DetailStatisticView createDetailStatisticView(Shift shift) {
+		LocalDate shiftDate = shift.getShiftDate();
+		Double cashBox = shift.getCashBox() + shift.getBankCashBox();
+		Double allPrice = getAllPrice(shift);
+		int clientsNumber = shift.getClients().size();
+		List<UserDTO> usersOnShift = transformer.transform(shift.getUsers(), UserDTO.class);
+		Set<Calculate> allCalculate = shift.getCalculates();
+		List<Cost> otherCost = costService.findByDateAndVisibleTrue(shift.getShiftDate());
+		Double allSalaryCost = 0D;
+		Double allOtherCost = 0D;
+
+		for (User user : shift.getUsers()) {
+			allSalaryCost += user.getShiftSalary() + user.getBonus();
+		}
+		for (Cost otherGood : otherCost) {
+			allOtherCost = allOtherCost + otherGood.getPrice() * otherGood.getQuantity();
+		}
+
+		return new DetailStatisticView(shiftDate, cashBox, allPrice, clientsNumber,
+				usersOnShift, allCalculate, allSalaryCost, allOtherCost, otherCost);
 	}
 
 	@Override
