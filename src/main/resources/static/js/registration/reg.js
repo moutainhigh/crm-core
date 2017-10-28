@@ -3,18 +3,14 @@ $(document).ready(function () {
         e.preventDefault();
         var url = '/registration';
         var formData = $('#form-registration').serialize();
-        if($('#form-password').val() == $('#form-password-repeat').val()) {
+        if ($('#form-password').val() == $('#form-password-repeat').val()) {
             $.ajax({
                 type: 'POST',
                 url: url,
                 data: formData,
                 success: function (data) {
-                    var modal = $('#successModal');
-                    modal.find('.messageAd').text(data);
-                    modal.modal('show');
-                    modal.on('hide.bs.modal', function () {
-                        window.location.href = "/login"
-                    })
+                    window.location.href = "/login";
+                    localStorage.setItem('registration', 'ok');
                 },
                 error: function (error) {
                     var modal = $('#errorModal');
