@@ -165,17 +165,20 @@ public class VkServiceImpl implements VkService {
 	private double formatCostsAndGetOtherCosts(List<Cost> costs, StringBuilder otherCosts) {
 		DecimalFormat df = new DecimalFormat("#.##");
 		double otherCost = 0d;
+		boolean needGiveNameToOtherCosts = true;
 		for (Cost cost : costs) {
 			otherCost += cost.getPrice() * cost.getQuantity();
+			if (needGiveNameToOtherCosts) {
+				otherCosts.append("\nПрочие расходы:\n");
+			}
+			needGiveNameToOtherCosts = false;
 			otherCosts
-				.append(cost.getName())
-				.append(" - ").append(df.format(cost.getPrice() * cost.getQuantity()))
-				.append(System.getProperty("line.separator"));
+					.append(cost.getName())
+					.append(" - ").append(df.format(cost.getPrice() * cost.getQuantity()))
+					.append(System.getProperty("line.separator"));
 		}
 		if (otherCosts.length() > 0) {
 			otherCosts.deleteCharAt(otherCosts.length() - 1);
-		} else {
-			otherCosts.append("Отсутствуют!");
 		}
 		return otherCost;
 	}
@@ -237,6 +240,6 @@ public class VkServiceImpl implements VkService {
 		for (NoteRecord noteRecord : noteRecords) {
 			sb.append(noteRecord.getName()).append(" : ").append(noteRecord.getValue()).append(System.getProperty("line.separator"));
 		}
-		return "Заметки :\n" + sb.toString();
+		return "\nЗаметки :\n" + sb.toString();
 	}
 }
