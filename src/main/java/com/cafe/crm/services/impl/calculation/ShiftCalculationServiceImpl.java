@@ -110,7 +110,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			profit -= givDebt.getDebtAmount();
 		}
 		for (Receipt receipt : receiptAmount){
-			profit +=receipt.getReceiptAmount();
+			profit += receipt.getReceiptAmount();
 		}
 
 		return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clientsOnDetails, otherCost,
