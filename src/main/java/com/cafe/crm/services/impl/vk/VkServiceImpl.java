@@ -173,9 +173,9 @@ public class VkServiceImpl implements VkService {
 			}
 			needGiveNameToOtherCosts = false;
 			otherCosts
-					.append(cost.getName())
-					.append(" - ").append(df.format(cost.getPrice() * cost.getQuantity()))
-					.append(System.getProperty("line.separator"));
+				.append(cost.getName())
+				.append(" - ").append(df.format(cost.getPrice() * cost.getQuantity()))
+				.append(System.getProperty("line.separator"));
 		}
 		if (otherCosts.length() > 0) {
 			otherCosts.deleteCharAt(otherCosts.length() - 1);
