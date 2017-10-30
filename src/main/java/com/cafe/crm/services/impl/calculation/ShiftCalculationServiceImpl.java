@@ -128,7 +128,8 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		return totalShiftSalary;
 	}
 
-	private Map<Client, ClientDetails> getClientsOnDetails (Set<Calculate> allCalculate) {
+	@Override
+	public Map<Client, ClientDetails> getClientsOnDetails (Set<Calculate> allCalculate) {
 		Map<Client, ClientDetails> clientsOnDetails = new HashMap<>();
 		Set<Client> roundedClients = new HashSet<>();
 		Set<Client> notRoundedClients = new HashSet<>();
@@ -154,11 +155,15 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		Double allDirtyPrice;
 		Double dirtyPriceMenu = 0D;
 		Double otherPriceMenu = 0D;
+		List<LayerProduct> dirtyProduct = new ArrayList<>();
+		List<LayerProduct> otherProduct = new ArrayList<>();
 		for (LayerProduct product : client.getLayerProducts()) {
 			if (product.isDirtyProfit()) {
 				dirtyPriceMenu += product.getCost() / product.getClients().size();
+				dirtyProduct.add(product);
 			} else {
 				otherPriceMenu += product.getCost() / product.getClients().size();
+				otherProduct.add(product);
 			}
 		}
 		allDirtyPrice = client.getPriceTime() + Math.round(dirtyPriceMenu) - client.getPayWithCard();
@@ -168,7 +173,55 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			otherPriceMenu = RoundUpper.roundDouble(otherPriceMenu);
 		}
 
-		return new ClientDetails(allDirtyPrice, Math.round(otherPriceMenu), Math.round(dirtyPriceMenu));
+		return new ClientDetails(allDirtyPrice, Math.round(otherPriceMenu), Math.round(dirtyPriceMenu),
+				dirtyProduct, otherProduct);
+	}
+
+	@Override
+	public Map<Calculate, String> getDirtyMenu(Set<Calculate> calculates) {
+		Map<Calculate, String> dirtyMenuMap = new HashMap<>();
+		for (Calculate calculate : calculates) {
+			List<Client> clients = calculate.getClient();
+			Set<LayerProduct> products = new HashSet<>();
+			for (Client client : clients) {
+				List<LayerProduct> dirtyProduct = getClientDetails(client, calculate.isRoundState()).getDirtyProduct();
+				products.addAll(dirtyProduct);
+			}
+			String content = getContent(products);
+			dirtyMenuMap.put(calculate, content);
+		}
+		return dirtyMenuMap;
+	}
+
+	@Override
+	public Map<Calculate, String> getOtherMenu(Set<Calculate> calculates) {
+		Map<Calculate, String> otherMenuMap = new HashMap<>();
+		for (Calculate calculate : calculates) {
+			List<Client> clients = calculate.getClient();
+			Set<LayerProduct> products = new HashSet<>();
+			for (Client client : clients) {
+				List<LayerProduct> otherProduct = getClientDetails(client, calculate.isRoundState()).getOtherProduct();
+				products.addAll(otherProduct);
+			}
+			String content = getContent(products);
+			otherMenuMap.put(calculate, content);
+		}
+		return otherMenuMap;
+	}
+
+	private String getContent(Set<LayerProduct> products) {
+		StringBuilder content = new StringBuilder();
+		if (!products.isEmpty()) {
+			for (LayerProduct product : products) {
+				String name = product.getName();
+				if (!content.toString().contains(name)) {
+					long productNum = products.stream().filter(p -> p.getName().equals(name)).count();
+					content.append("<li>").append(name).append("(").append(productNum).append(")").append("</li>");
+
+				}
+			}
+		}
+		return content.toString();
 	}
 
 	@Override

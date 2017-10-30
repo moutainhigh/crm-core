@@ -51,7 +51,8 @@
                                         <th>Описание клиентов</th>
                                         <th>Чек</th>
                                         <th>Стоимость времени</th>
-                                        <th>Стоимость меню</th>
+                                        <th>Стоимость прочего меню</th>
+                                        <th>Стоимость грязного меню</th>
                                         <th>Время посадки</th>
                                     </tr>
                                 </thead>
@@ -87,8 +88,63 @@
                                     </td>
                                     <td>
                                         <div th:each="client: ${calculate.client}">
-                                            <p th:text="${client.priceMenu}"></p>
+                                            <p th:text="${clientOnDetail.get(client).otherPriceMenu}"></p>
                                         </div>
+                                        <button th:id="otherButton + ${iter.index}" class="btn btn-primary"
+                                                style="width: 141px">
+                                            Посмотреть заказ
+                                        </button>
+                                        <div class="hidden" th:id="otherBlock + ${iter.index}"
+                                             style="background: #C1EBC2; border-radius: 0 0 4px 4px; margin-top: -4px;">
+                                            <div th:if="${otherMenu.get(calculate) == ''}">
+                                                <div style="padding: 14px 0 10px 0; text-align: center">
+                                                    Пусто!
+                                                </div>
+                                            </div>
+                                            <div th:unless="${otherMenu.get(calculate) == ''}">
+                                                <ul th:utext="${otherMenu.get(calculate)}"
+                                                    style="padding: 14px 0 10px 20px; margin-bottom: 0">
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <script th:inline="javascript" type="text/javascript">
+                                            jQuery(document).ready( function() {
+                                                var iter = [[${iter.index}]];
+                                                jQuery('#otherButton' + iter).click(function(){
+                                                    getOtherProductsAndDisplay(iter);
+                                                });
+                                            });
+                                        </script>
+                                    </td>
+                                    <td>
+                                        <div th:each="client: ${calculate.client}">
+                                            <p th:text="${clientOnDetail.get(client).dirtyPriceMenu}"></p>
+                                        </div>
+                                        <button th:id="dirtyButton + ${iter.index}" class="btn btn-primary"
+                                                style="width: 141px">
+                                            Посмотреть заказ
+                                        </button>
+                                        <div class="hidden" th:id="dirtyBlock + ${iter.index}"
+                                             style="background: #C1EBC2; border-radius: 0 0 4px 4px; margin-top: -4px;">
+                                            <div th:if="${dirtyMenu.get(calculate) == ''}">
+                                                <div style="padding: 14px 0 10px 0; text-align: center">
+                                                    Пусто!
+                                                </div>
+                                            </div>
+                                            <div th:unless="${dirtyMenu.get(calculate) == ''}">
+                                                <ul th:utext="${dirtyMenu.get(calculate)}"
+                                                    style="padding: 14px 0 10px 20px; margin-bottom: 0">
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <script th:inline="javascript" type="text/javascript">
+                                            jQuery(document).ready( function() {
+                                                var iter = [[${iter.index}]];
+                                                jQuery('#dirtyButton' + iter).click(function(){
+                                                    getDirtyProductsAndDisplay(iter);
+                                                });
+                                            });
+                                        </script>
                                     </td>
                                     <td>
                                         <div th:each="client: ${calculate.client}">
@@ -288,6 +344,7 @@
 <div th:replace="shift/shiftClose :: closeShift"></div>
 <div th:replace="shift/checklistOnCloseShift :: checklistOnClose"></div>
 <script th:src="@{/js/manager/changePassword.js}"></script>
+<script th:src="@{/js/shift/setting.js}"></script>
 <script th:src="@{/js/shift/close.js}"></script>
 <script th:src="@{/js/shift/transfer.js}"></script>
 
