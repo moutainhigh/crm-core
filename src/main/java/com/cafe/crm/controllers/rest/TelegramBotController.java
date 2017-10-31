@@ -46,10 +46,8 @@ public class TelegramBotController {
 	public User checkAuthCredentials(@RequestParam(value = "username") String username,
 	                                        @RequestParam(value = "password") String password) {
 		User userInDB;
-		if (matchEmail(username)) {
-			userInDB = userService.findByEmail(username);
-		} else if (matchPhone(username)) {
-			userInDB = userService.findByPhone(username);
+		if (matchEmail(username) || matchPhone(username)) {
+			userInDB = userService.findByUsername(username);
 		} else {
 			return new User();
 		}

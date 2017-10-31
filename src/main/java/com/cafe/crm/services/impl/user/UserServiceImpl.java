@@ -287,7 +287,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public boolean isValidPassword(String email, String oldPassword) {
-		User userInDataBase = findByEmail(email);
+		User userInDataBase = findByUsername(email);
 		if (isBlank(oldPassword)) {
 			return false;
 		}
