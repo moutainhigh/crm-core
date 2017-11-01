@@ -1,11 +1,12 @@
 package com.cafe.crm.controllers.rest;
 
-import com.cafe.crm.models.board.Board;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.user.User;
 import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
 import com.cafe.crm.services.interfaces.user.UserService;
+import com.cafe.crm.utils.JsonField;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +32,8 @@ public class TelegramBotController {
 
 	@RequestMapping(value = "/manager/rest/Table", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Board> getListOpenTables() {
+	@JsonView(JsonField.Board.class)
+	public List<com.cafe.crm.models.board.Board> getListOpenTables() {
 		return boardService.getAllOpen();
 	}
 
