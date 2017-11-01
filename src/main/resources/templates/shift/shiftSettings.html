@@ -7,6 +7,7 @@
     <link rel="stylesheet" media="screen" th:href="@{/webjars/jquery-ui/1.12.1/jquery-ui.min.css}"/>
     <link th:href="@{/css/buttonTransferRight.css}" rel="stylesheet"/>
     <link th:href="@{/css/buttonTransferLeft.css}" rel="stylesheet"/>
+    <link th:href="@{/css/shiftSettings.css}" rel="stylesheet"/>
 </head>
 <body>
 <div th:replace="managernavbar :: managerNavbar"></div><!--/.navbar -->
@@ -90,21 +91,17 @@
                                         <div th:each="client: ${calculate.client}">
                                             <p th:text="${clientOnDetail.get(client).otherPriceMenu}"></p>
                                         </div>
-                                        <button th:id="otherButton + ${iter.index}" class="btn btn-primary"
-                                                style="width: 141px">
+                                        <button th:id="otherButton + ${iter.index}" class="btn btn-primary order-btn">
                                             Посмотреть заказ
                                         </button>
-                                        <div class="hidden" th:id="otherBlock + ${iter.index}"
-                                             style="background: #C1EBC2; border-radius: 0 0 4px 4px; margin-top: -4px;">
+                                        <div th:id="otherBlock + ${iter.index}" class="hidden order-block">
                                             <div th:if="${otherMenu.get(calculate) == ''}">
-                                                <div style="padding: 14px 0 10px 0; text-align: center">
+                                                <div class="empty-block">
                                                     Пусто!
                                                 </div>
                                             </div>
-                                            <div th:unless="${otherMenu.get(calculate) == ''}">
-                                                <ul th:utext="${otherMenu.get(calculate)}"
-                                                    style="padding: 14px 0 10px 20px; margin-bottom: 0">
-                                                </ul>
+                                            <div class="content-block" th:unless="${otherMenu.get(calculate) == ''}">
+                                                <ul th:utext="${otherMenu.get(calculate)}"></ul>
                                             </div>
                                         </div>
                                         <script th:inline="javascript" type="text/javascript">
@@ -120,21 +117,17 @@
                                         <div th:each="client: ${calculate.client}">
                                             <p th:text="${clientOnDetail.get(client).dirtyPriceMenu}"></p>
                                         </div>
-                                        <button th:id="dirtyButton + ${iter.index}" class="btn btn-primary"
-                                                style="width: 141px">
+                                        <button th:id="dirtyButton + ${iter.index}" class="btn btn-primary order-btn">
                                             Посмотреть заказ
                                         </button>
-                                        <div class="hidden" th:id="dirtyBlock + ${iter.index}"
-                                             style="background: #C1EBC2; border-radius: 0 0 4px 4px; margin-top: -4px;">
+                                        <div th:id="dirtyBlock + ${iter.index}" class="hidden order-block">
                                             <div th:if="${dirtyMenu.get(calculate) == ''}">
-                                                <div style="padding: 14px 0 10px 0; text-align: center">
+                                                <div class="empty-block">
                                                     Пусто!
                                                 </div>
                                             </div>
-                                            <div th:unless="${dirtyMenu.get(calculate) == ''}">
-                                                <ul th:utext="${dirtyMenu.get(calculate)}"
-                                                    style="padding: 14px 0 10px 20px; margin-bottom: 0">
-                                                </ul>
+                                            <div class="content-block" th:unless="${dirtyMenu.get(calculate) == ''}">
+                                                <ul th:utext="${dirtyMenu.get(calculate)}"></ul>
                                             </div>
                                         </div>
                                         <script th:inline="javascript" type="text/javascript">
