@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.apache.commons.collections.CollectionUtils.isEqualCollection;
 import static org.apache.commons.collections.CollectionUtils.isEmpty;
@@ -225,11 +226,11 @@ public class UserServiceImpl implements UserService {
 
 		List<Position> storedUserPositions = storedUser.getPositions();
 		List<Position> updatedUserPositions = updatedUser.getPositions();
-		List<Role> storedUserRoles = storedUser.getRoles();
-		List<Role> updatedUserRoles = updatedUser.getRoles();
+		Set<Role> storedUserRoles = storedUser.getRoles();
+		Set<Role> updatedUserRoles = updatedUser.getRoles();
 
 		boolean positionsEqual = listsEqual(storedUserPositions, updatedUserPositions);
-		boolean rolesEqual = listsEqual(storedUserRoles, updatedUserRoles);
+		boolean rolesEqual = setsEqual(storedUserRoles, updatedUserRoles);
 		boolean passwordsEqual = storedUser.getPassword().equals(updatedUser.getPassword());
 		boolean phonesEqual = storedUser.getPhone().equals(updatedUser.getPhone());
 		boolean emailsEqual = storedUser.getEmail().equals(updatedUser.getEmail());
@@ -239,6 +240,10 @@ public class UserServiceImpl implements UserService {
 
 	private <T> boolean listsEqual(List<T> list1, List<T> list2) {
 		return (isEmpty(list1) && isEmpty(list2)) || list1 != null && list2 != null && isEqualCollection(list1, list2);
+	}
+
+	private <T> boolean setsEqual(Set<T> set1, Set<T> set2) {
+		return (isEmpty(set1) && isEmpty(set2)) || set1 != null && set2 != null && isEqualCollection(set1, set2);
 	}
 
 	@Override
@@ -380,7 +385,7 @@ public class UserServiceImpl implements UserService {
 	private void setRolesToUser(User user, String rolesIds) {
 		Long[] longRolesIds = parseIds(rolesIds);
 		if (longRolesIds != null) {
-			List<Role> roles = roleService.findByIdIn(longRolesIds);
+			Set<Role> roles = roleService.findByIdIn(longRolesIds);
 			user.setRoles(roles);
 		}
 	}

@@ -14,7 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserRegistrationServiceImpl implements UserRegistrationService{
@@ -54,8 +56,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService{
 		return userToDB;
 	}
 
-	private List<Role> getRolesForNewUser() {
-		List<Role> roles = new ArrayList<>();
+	private Set<Role> getRolesForNewUser() {
+		Set<Role> roles = new HashSet<>();
 		for (String roleName : roleNames){
 			roles.add(roleService.find(roleName));
 		}
