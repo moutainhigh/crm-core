@@ -204,7 +204,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 
 		List<CalculateDTO> calculates = new ArrayList<>();
 
-		for (Calculate calculate : shift.getCalculates()) {
+		for (Calculate calculate : sortedList) {
 			CalculateDTO calcDto = transformer.transform(calculate, CalculateDTO.class);
 			calcDto.setClient(calculate.getClient());
 			calcDto.setDirtyOrder(getDirtyMenu(calculate));
