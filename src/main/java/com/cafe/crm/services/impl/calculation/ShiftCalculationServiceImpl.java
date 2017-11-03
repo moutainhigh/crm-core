@@ -19,6 +19,7 @@ import com.cafe.crm.services.interfaces.cost.CostService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
 import com.cafe.crm.services.interfaces.note.NoteService;
 import com.cafe.crm.services.interfaces.receipt.ReceiptService;
+import com.cafe.crm.services.interfaces.salary.UserSalaryDetailService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.RoundUpper;
 import com.yc.easytransformer.Transformer;
@@ -36,17 +37,19 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 	private final Transformer transformer;
 	private final NoteService noteService;
 	private final ProductService productService;
+	private final UserSalaryDetailService userSalaryDetailService;
 	@Autowired
 	private ReceiptService receiptService;
 
 	@Autowired
 	public ShiftCalculationServiceImpl(CostService costService, ShiftService shiftService, Transformer transformer,
-									   NoteService noteService, ProductService productService) {
+									   NoteService noteService, ProductService productService, UserSalaryDetailService userSalaryDetailService) {
 		this.costService = costService;
 		this.shiftService = shiftService;
 		this.transformer = transformer;
 		this.noteService = noteService;
 		this.productService = productService;
+		this.userSalaryDetailService = userSalaryDetailService;
 	}
 
 	@Override
@@ -85,7 +88,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		double profit = 0D;
 		double totalShiftSalary = 0D;
 		double otherCosts = 0D;
-		List<UserDTO> users = getUserDTOList(shifts);
+		List<UserDTO> users = getUserDTOList(shifts, from, to);
 		Set<Calculate> allCalculate = new HashSet<>();
 		Map<Client, ClientDetails> clientsOnDetails = new HashMap<>();
 		List<Cost> otherCost = new ArrayList<>();
@@ -127,16 +130,14 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 				givenDebts, repaidDebt);
 	}
 
-	private List<UserDTO> getUserDTOList(Set<Shift> shifts) {
+	private List<UserDTO> getUserDTOList(Set<Shift> shifts, LocalDate from, LocalDate to) {
 		List<UserDTO> userDTOList = new ArrayList<>();
 		Set<User> userSet = new HashSet<>();
 		for (Shift shift : shifts) {
 			userSet.addAll(shift.getUsers());
 		}
 		for (User user : userSet) {
-			List<UserSalaryDetail> details = user.getUserSalaryDetail().stream()
-					.filter( u -> shifts.contains(u.getShift()))
-					.collect(Collectors.toList());
+			List<UserSalaryDetail> details = userSalaryDetailService.findByUserIdAndShiftDateBetween(user.getId(), from, to);
 			UserSalaryDetail lastDetail = details.get(details.size() - 1);
 			int salary = 0;
 			int bonus = 0;
@@ -228,9 +229,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 	private List<UserDTO> getUserDTOList(Shift shift) {
 		List<UserDTO> userDTOList = new ArrayList<>();
 		for (User user : shift.getUsers()) {
-			UserSalaryDetail shiftUserDetails = user.getUserSalaryDetail().stream()
-					.filter( u -> u.getShift().getId().equals(shift.getId()))
-					.findFirst().orElse(null);
+			UserSalaryDetail shiftUserDetails = userSalaryDetailService.findFirstByUserIdAndShiftId(user.getId(), shift.getId());
 			UserDTO userDTO = transformer.transform(user, UserDTO.class);
 			if (shiftUserDetails != null) {
 				userDTO.setSalary(shiftUserDetails.getSalary());

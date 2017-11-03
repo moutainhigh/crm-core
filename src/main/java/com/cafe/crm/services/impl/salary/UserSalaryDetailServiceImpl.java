@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Transactional
@@ -41,6 +42,21 @@ public class UserSalaryDetailServiceImpl implements UserSalaryDetailService{
 	@Override
 	public List<UserSalaryDetail> findByShiftId(Long shiftId) {
 		return userSalaryDetailRepository.findByShiftId(shiftId);
+	}
+
+	@Override
+	public List<UserSalaryDetail> findByUserIdAndShiftIdBetween(Long userId, Long from, Long to) {
+		return userSalaryDetailRepository.findByUserIdAndShiftIdBetween(userId, from, to);
+	}
+
+	@Override
+	public List<UserSalaryDetail> findByUserIdAndShiftDateBetween(Long userId, LocalDate from, LocalDate to) {
+		return userSalaryDetailRepository.findByUserIdAndShiftShiftDateBetween(userId, from, to);
+	}
+
+	@Override
+	public UserSalaryDetail findFirstByUserIdAndShiftId(Long userId, Long shiftId) {
+		return userSalaryDetailRepository.findFirstByUserIdAndShiftId(userId, shiftId);
 	}
 
 	@Override
