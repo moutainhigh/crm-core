@@ -3,6 +3,7 @@ package com.cafe.crm.models.user;
 import com.cafe.crm.dto.UserDTO;
 import com.cafe.crm.models.BaseEntity;
 import com.cafe.crm.models.shift.Shift;
+import com.cafe.crm.models.shift.UserSalaryDetail;
 import com.cafe.crm.utils.PatternStorage;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.yc.easytransformer.annotations.NotTransform;
@@ -19,7 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@JsonIgnoreProperties({"password", "roles", "positions", "shifts", "shiftSalary", "salary", "bonus"})
+@JsonIgnoreProperties({"password", "roles", "positions", "shifts", "shiftSalary", "salary", "bonus", "UserSalaryDetail"})
 @Transform(UserDTO.class)
 public class User extends BaseEntity {
 
@@ -79,6 +80,10 @@ public class User extends BaseEntity {
 	private boolean activated = true;
 
 	private boolean enabled = true;
+
+	@OneToMany(mappedBy = "user")
+	@NotTransform
+	private List<UserSalaryDetail> userSalaryDetail;
 
 	public Long getId() {
 		return id;
@@ -190,6 +195,14 @@ public class User extends BaseEntity {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public List<UserSalaryDetail> getUserSalaryDetail() {
+		return userSalaryDetail;
+	}
+
+	public void setUserSalaryDetail(List<UserSalaryDetail> userSalaryDetail) {
+		this.userSalaryDetail = userSalaryDetail;
 	}
 
 	@Override

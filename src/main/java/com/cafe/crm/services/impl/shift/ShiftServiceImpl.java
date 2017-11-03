@@ -1,38 +1,20 @@
 package com.cafe.crm.services.impl.shift;
 
-import com.cafe.crm.dto.PositionDTO;
-import com.cafe.crm.dto.ShiftView;
-import com.cafe.crm.dto.UserDTO;
-import com.cafe.crm.models.client.Calculate;
-import com.cafe.crm.models.client.Client;
-import com.cafe.crm.models.client.Debt;
-import com.cafe.crm.models.client.LayerProduct;
 import com.cafe.crm.models.company.Company;
-import com.cafe.crm.models.cost.Cost;
-import com.cafe.crm.models.menu.Product;
-import com.cafe.crm.models.note.Note;
 import com.cafe.crm.models.note.NoteRecord;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.shift.UserSalaryDetail;
 import com.cafe.crm.models.user.Position;
-import com.cafe.crm.models.user.Receipt;
 import com.cafe.crm.models.user.User;
 import com.cafe.crm.repositories.shift.ShiftRepository;
-import com.cafe.crm.services.impl.calculation.ShiftCalculationServiceImpl;
-import com.cafe.crm.services.impl.salary.UserSalaryDetailServiceImpl;
 import com.cafe.crm.services.interfaces.calculation.ShiftCalculationService;
 import com.cafe.crm.services.interfaces.company.CompanyService;
-import com.cafe.crm.services.interfaces.cost.CostService;
-import com.cafe.crm.services.interfaces.menu.ProductService;
 import com.cafe.crm.services.interfaces.note.NoteRecordService;
-import com.cafe.crm.services.interfaces.note.NoteService;
-import com.cafe.crm.services.interfaces.receipt.ReceiptService;
+import com.cafe.crm.services.interfaces.salary.UserSalaryDetailService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.utils.CompanyIdCache;
-import com.cafe.crm.utils.RoundUpper;
 import com.cafe.crm.utils.TimeManager;
-import com.yc.easytransformer.Transformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +30,7 @@ public class ShiftServiceImpl implements ShiftService {
 	private final UserService userService;
 	private final TimeManager timeManager;
 	private final NoteRecordService noteRecordService;
-	private UserSalaryDetailServiceImpl userSalaryDetailService;
+	private UserSalaryDetailService userSalaryDetailService;
 	private ShiftCalculationService shiftCalculationService;
 
     private final CompanyService companyService;
@@ -70,7 +52,7 @@ public class ShiftServiceImpl implements ShiftService {
 	}
 
 	@Autowired
-	public void setUserSalaryDetailService(UserSalaryDetailServiceImpl userSalaryDetailService) {
+	public void setUserSalaryDetailService(UserSalaryDetailService userSalaryDetailService) {
 		this.userSalaryDetailService = userSalaryDetailService;
 	}
 
@@ -149,7 +131,6 @@ public class ShiftServiceImpl implements ShiftService {
         User user = userService.findById(userId);
         shift.getUsers().add(user);
         user.getShifts().add(shift);
-        userSalaryDetailService.save(shiftCalculationService.getUserSalaryDetail(user, shift));
         shiftRepository.saveAndFlush(shift);
     }
 
@@ -170,18 +151,30 @@ public class ShiftServiceImpl implements ShiftService {
 	public Shift closeShift(Map<Long, Integer> mapOfUsersIdsAndBonuses, Double allPrice, Double cashBox, Double bankCashBox, String comment, Map<String, String> mapOfNoteNameAndValue) {
 		Shift shift = shiftRepository.getLastAndCompanyId(companyIdCache.getCompanyId());
 		List<User> usersOnShift = shift.getUsers();
+		List<UserSalaryDetail> userSalaryDetails = new ArrayList<>();
 		for (Map.Entry<Long, Integer> entry : mapOfUsersIdsAndBonuses.entrySet()) {
 			User user = userService.findById(entry.getKey());
 			user.setSalary(user.getSalary() + user.getShiftSalary());
 			user.setBonus(user.getBonus() + entry.getValue());
 			userService.save(user);
 		}
+
 		for (User user : usersOnShift) {
+			List<UserSalaryDetail> salaryDetailList = user.getUserSalaryDetail();
+			int bonus = mapOfUsersIdsAndBonuses.get(user.getId());
 			int amountOfPositionsPercent = user.getPositions().stream().filter(Position::isPositionUsePercentOfSales).mapToInt(Position::getPercentageOfSales).sum();
-			user.setSalary((int) (user.getShiftSalary() + (allPrice * amountOfPositionsPercent) / 100));
+			int percent = (int) (allPrice * amountOfPositionsPercent) / 100;
+
+			user.setSalary(user.getSalary() + percent);
+			UserSalaryDetail salaryDetail = shiftCalculationService.getUserSalaryDetail(user, percent, bonus, shift);
+			if (salaryDetailList == null) {
+				salaryDetailList = new ArrayList<>();
+			}
+			salaryDetailList.add(salaryDetail);
+			userSalaryDetails.add(salaryDetail);
+			user.setUserSalaryDetail(salaryDetailList);
 			userService.save(user);
 		}
-		List<UserSalaryDetail> userSalaryDetails = shiftCalculationService.getUserSalaryDetail(usersOnShift, shift);
 		List<NoteRecord> noteRecords = saveAndGetNoteRecords(mapOfNoteNameAndValue, shift);
 		shift.setBankCashBox(bankCashBox);
 		shift.setCashBox(cashBox);

@@ -48,7 +48,7 @@ public class Shift extends BaseEntity {
 	@ManyToMany(mappedBy = "shifts", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	private List<User> users;
 
-	@OneToMany(mappedBy = "shift")
+	@OneToMany(mappedBy = "shift", fetch = FetchType.LAZY)
 	private List<UserSalaryDetail> userSalaryDetail;
 
 	@OneToMany(fetch = FetchType.LAZY)

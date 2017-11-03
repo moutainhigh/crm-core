@@ -10,11 +10,11 @@ import com.cafe.crm.models.user.User;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface ShiftCalculationService {
-	UserSalaryDetail getUserSalaryDetail(User user, Shift shift);
-	List<UserSalaryDetail> getUserSalaryDetail(List<User> users, Shift shift);
+	UserSalaryDetail getUserSalaryDetail(User user, int percent, int bonus, Shift shift);
 	double getTotalCashBox(Set<Shift> allShiftsBetween);
 	TotalStatisticView createTotalStatisticView(LocalDate from, LocalDate to);
 	DetailStatisticView createDetailStatisticView(Shift shift);

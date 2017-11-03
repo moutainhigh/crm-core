@@ -13,13 +13,13 @@ public class TotalStatisticView {
 	private double profit;
 	private double salariesCosts;
 	private double otherCosts;
-	private Set<User> users;
+	private List<UserDTO> users;
 	private Map<Client, ClientDetails> clientsOnDetails;
 	private List<Cost> listOfOtherCosts;
 	private List<Debt> givenDebts;
 	private List<Debt> repaidDebt;
 
-	public TotalStatisticView(double profit, double salariesCosts, double otherCosts, Set<User> users,
+	public TotalStatisticView(double profit, double salariesCosts, double otherCosts, List<UserDTO> users,
 							  Map<Client, ClientDetails> clientsOnDetails, List<Cost> listOfOtherCosts,
 							  List<Debt> givenDebts, List<Debt> repaidDebt) {
 		this.profit = profit;
@@ -56,11 +56,11 @@ public class TotalStatisticView {
 		this.otherCosts = otherCosts;
 	}
 
-	public Set<User> getUsers() {
+	public List<UserDTO> getUsers() {
 		return users;
 	}
 
-	public void setUsers(Set<User> users) {
+	public void setUsers(List<UserDTO> users) {
 		this.users = users;
 	}
 
