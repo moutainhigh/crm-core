@@ -84,7 +84,7 @@
                                                 <div th:if="${product.category.floatingPrice}">
                                                     <input type="number" style="width: 6em;" step="0.01"
                                                            class="form-control input-sm" placeholder="цена"
-                                                           th:id="'inputPriceInAll' + ${product.id}"
+                                                           th:id="'inputPriceInAll' + ${product.id} + ${calculate.id}"
                                                            required="required"/>
                                                 </div>
                                                 <div th:unless="${product.category.floatingPrice}"
@@ -152,7 +152,7 @@
                                                 <div th:if="${cat.floatingPrice}">
                                                     <input type="number" style="width: 6em;" step="0.01"
                                                            class="form-control input-sm" placeholder="цена"
-                                                           th:id="'inputPriceInCategory' + ${prod.id}"
+                                                           th:id="'inputPriceInCategory' + ${prod.id} + ${calculate.id}"
                                                            required="required"/>
                                                 </div>
                                                 <div th:unless="${cat.floatingPrice}"
