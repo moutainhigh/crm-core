@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -38,7 +39,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public List<Role> findByIdIn(Long[] ids) {
+	public Set<Role> findByIdIn(Long[] ids) {
 		return roleRepository.findByIdIn(ids);
 	}
 
@@ -88,7 +89,7 @@ public class RoleServiceImpl implements RoleService {
 		List<User> users = userService.findByRoleIdWithAnyEnabledStatus(id);
 		for (User user : users) {
 			user.getRoles().remove(role);
-			List<Role> newUserRoleList = user.getRoles();
+			Set<Role> newUserRoleList = user.getRoles();
 			user.setRoles(newUserRoleList);
 			userService.save(user);
 		}
