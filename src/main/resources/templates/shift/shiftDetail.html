@@ -69,7 +69,7 @@
                     <td th:if="${calc.description}==null" th:text="Описание+' '+ отсутствует"></td>
                     <td th:if="${calc.description}!=null" th:text="${calc.description}"></td>
                     <td th:each="board:${calc.board}" th:text="${board.name}"></td>
-                    <td th:id="timeStart+${calc.id}" th:text="${calc.client.get(0).timeStart}"></td>
+                    <td th:text="${#temporals.format(calc.client.get(0).timeStart, 'dd.MM HH:mm')}"></td>
                     <td th:id="commonPrice+${calc.id}"></td>
                     <td th:text="${calc.client.size()}"></td>
                     <td class="tr-wrapper" style="text-align: left">
@@ -129,7 +129,6 @@
                     jQuery(document).ready( function() {
                         var buttonId = '#billsButton' + [[${calc.id}]];
                         var billsOnShiftId = '#billsOnShift' + [[${calc.id}]];
-                        formatTime('timeStart'+[[${calc.id}]]);
                         insertTotalPrice('clients'+[[${calc.id}]], 'commonPrice'+[[${calc.id}]]);
                         jQuery(buttonId).click(function(){
                                 $(billsOnShiftId).slideToggle('fast');
