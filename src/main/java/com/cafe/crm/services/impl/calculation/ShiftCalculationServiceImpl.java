@@ -352,6 +352,16 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 
 	private Map<Long, Integer> calcStaffPercentBonusesAndGetMap(Set<LayerProduct> layerProducts, List<UserDTO> staff) {
 		Map<Long, Integer> staffPercentBonusesMap = new HashMap<>();
+		Map<PositionDTO, Integer> shiftPercents = new HashMap<>();
+		Integer count;
+
+		for (UserDTO user : staff) {
+			List<PositionDTO> userPositions = user.getPositions();
+			for (PositionDTO positionDTO : userPositions){
+				count = shiftPercents.get(positionDTO);
+				shiftPercents.put(positionDTO, count == null ? 1 : count + 1);
+			}
+		}
 
 		for (LayerProduct layerProduct : layerProducts) {
 
@@ -365,11 +375,13 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 				for (PositionDTO positionDTO : userPositions) {
 
 					Integer percent = staffPercent.get(transformer.transform(positionDTO, Position.class));
+					int shiftPercent = 1;
 					if (percent != null) {
-
-						int bonus = (int) (layerProduct.getCost() * percent / 100);
+						if (shiftPercents.containsKey(positionDTO)){
+							shiftPercent = shiftPercents.get(positionDTO);
+						}
+						int bonus = (int) (layerProduct.getCost() * percent / 100 / shiftPercent);
 						user.setShiftSalary(bonus + user.getShiftSalary());
-
 						Integer saveBonus = staffPercentBonusesMap.get(user.getId());
 						if (saveBonus == null) {
 							staffPercentBonusesMap.put(user.getId(), bonus);
