@@ -1,15 +1,13 @@
 package com.cafe.crm.services.interfaces.calculation;
 
 
-import com.cafe.crm.dto.ClientDetails;
-import com.cafe.crm.dto.DetailStatisticView;
-import com.cafe.crm.dto.ShiftView;
-import com.cafe.crm.dto.TotalStatisticView;
+import com.cafe.crm.dto.*;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.shift.Shift;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,6 +19,5 @@ public interface ShiftCalculationService {
 	void transferFromBankToCashBox(Double transfer);
 	void transferFromCashBoxToBank(Double transfer);
 	Map<Client, ClientDetails> getClientsOnDetails (Set<Calculate> allCalculate);
-	Map<Calculate, String> getOtherMenu(Set<Calculate> calculates);
-	Map<Calculate, String> getDirtyMenu(Set<Calculate> calculates);
+	List<CalculateDTO> getCalculates(Shift shift);
 }

@@ -1,6 +1,7 @@
 package com.cafe.crm.models.board;
 
 import com.cafe.crm.models.BaseEntity;
+import com.yc.easytransformer.annotations.Transform;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "board")
+@Transform(Board.class)
 public class Board extends BaseEntity {
 	@Id
 	@GeneratedValue

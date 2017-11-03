@@ -1,6 +1,7 @@
 package com.cafe.crm.controllers.shift;
 
 
+import com.cafe.crm.dto.CalculateDTO;
 import com.cafe.crm.dto.ShiftCloseDTO;
 import com.cafe.crm.dto.ShiftView;
 import com.cafe.crm.exceptions.transferDataException.TransferException;
@@ -103,16 +104,12 @@ public class ShiftController {
     @RequestMapping(value = "/shift/settings", method = RequestMethod.GET)
     public String showShiftSettingsPage(Model model) {
         Shift lastShift = shiftService.getLast();
-		Set<Calculate> calculates = lastShift.getCalculates();
-        Map<Calculate, String> otherMenu = shiftCalculationService.getOtherMenu(calculates);
-        Map<Calculate, String> dirtyMenu = shiftCalculationService.getDirtyMenu(calculates);
+		List<CalculateDTO> calculates = shiftCalculationService.getCalculates(lastShift);
         model.addAttribute("usersOnShift", lastShift.getUsers());
         model.addAttribute("usersNotOnShift", shiftService.getUsersNotOnShift());
         model.addAttribute("closeShiftView", shiftCalculationService.createShiftView(lastShift));
         model.addAttribute("calculates", calculates);
-        model.addAttribute("otherMenu", otherMenu);
-        model.addAttribute("dirtyMenu", dirtyMenu);
-        model.addAttribute("clientOnDetail", shiftCalculationService.getClientsOnDetails(calculates));
+        model.addAttribute("clientOnDetail", shiftCalculationService.getClientsOnDetails(lastShift.getCalculates()));
         model.addAttribute("clients", lastShift.getClients());
         model.addAttribute("closeChecklist", checklistService.getAllForCloseShift());
         return "shift/shiftSettings";

@@ -1,8 +1,11 @@
 package com.cafe.crm.models.client;
 
+import com.cafe.crm.dto.CalculateDTO;
 import com.cafe.crm.models.BaseEntity;
 import com.cafe.crm.models.board.Board;
 import com.cafe.crm.models.card.Card;
+import com.yc.easytransformer.annotations.NotTransform;
+import com.yc.easytransformer.annotations.Transform;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "calculation")
+@Transform(CalculateDTO.class)
 public class Calculate extends BaseEntity {
 	@Id
 	@GeneratedValue
@@ -33,6 +37,7 @@ public class Calculate extends BaseEntity {
 	private Board board;
 
 	@ManyToMany
+	@NotTransform
 	private List<Card> cards;
 
 	public Calculate() {

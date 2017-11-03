@@ -95,13 +95,17 @@
                                             Посмотреть заказ
                                         </button>
                                         <div th:id="otherBlock + ${iter.index}" class="hidden order-block">
-                                            <div th:if="${otherMenu.get(calculate) == ''}">
+                                            <div th:if="${calculate.otherOrder.isEmpty()}">
                                                 <div class="empty-block">
                                                     Пусто!
                                                 </div>
                                             </div>
-                                            <div class="content-block" th:unless="${otherMenu.get(calculate) == ''}">
-                                                <ul th:utext="${otherMenu.get(calculate)}"></ul>
+                                            <div class="content-block" th:unless="${calculate.otherOrder.isEmpty()}">
+                                                <ul>
+                                                    <li th:each="item: ${calculate.otherOrder}">
+                                                        <p th:text="${item}"></p>
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </div>
                                         <script th:inline="javascript" type="text/javascript">
@@ -121,13 +125,17 @@
                                             Посмотреть заказ
                                         </button>
                                         <div th:id="dirtyBlock + ${iter.index}" class="hidden order-block">
-                                            <div th:if="${dirtyMenu.get(calculate) == ''}">
+                                            <div th:if="${calculate.dirtyOrder.isEmpty()}">
                                                 <div class="empty-block">
                                                     Пусто!
                                                 </div>
                                             </div>
-                                            <div class="content-block" th:unless="${dirtyMenu.get(calculate) == ''}">
-                                                <ul th:utext="${dirtyMenu.get(calculate)}"></ul>
+                                            <div class="content-block" th:unless="${calculate.dirtyOrder.isEmpty()}">
+                                                <ul>
+                                                    <li th:each="item: ${calculate.dirtyOrder}">
+                                                        <p th:text="${item}"></p>
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </div>
                                         <script th:inline="javascript" type="text/javascript">

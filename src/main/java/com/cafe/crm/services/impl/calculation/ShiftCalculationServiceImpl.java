@@ -23,7 +23,6 @@ import com.cafe.crm.utils.RoundUpper;
 import com.yc.easytransformer.Transformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -177,51 +176,61 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 				dirtyProduct, otherProduct);
 	}
 
-	@Override
-	public Map<Calculate, String> getDirtyMenu(Set<Calculate> calculates) {
-		Map<Calculate, String> dirtyMenuMap = new HashMap<>();
-		for (Calculate calculate : calculates) {
-			List<Client> clients = calculate.getClient();
-			Set<LayerProduct> products = new HashSet<>();
-			for (Client client : clients) {
-				List<LayerProduct> dirtyProduct = getClientDetails(client, calculate.isRoundState()).getDirtyProduct();
-				products.addAll(dirtyProduct);
-			}
-			String content = getContent(products);
-			dirtyMenuMap.put(calculate, content);
+	private List<String> getDirtyMenu(Calculate calculate) {
+		List<Client> clients = calculate.getClient();
+		Set<LayerProduct> products = new HashSet<>();
+		for (Client client : clients) {
+			List<LayerProduct> dirtyProduct = getClientDetails(client, calculate.isRoundState()).getDirtyProduct();
+			products.addAll(dirtyProduct);
 		}
-		return dirtyMenuMap;
+		return getContent(products);
+	}
+
+	private List<String> getOtherMenu(Calculate calculate) {
+		List<Client> clients = calculate.getClient();
+		Set<LayerProduct> products = new HashSet<>();
+		for (Client client : clients) {
+			List<LayerProduct> otherProduct = getClientDetails(client, calculate.isRoundState()).getOtherProduct();
+			products.addAll(otherProduct);
+		}
+
+		return getContent(products);
 	}
 
 	@Override
-	public Map<Calculate, String> getOtherMenu(Set<Calculate> calculates) {
-		Map<Calculate, String> otherMenuMap = new HashMap<>();
-		for (Calculate calculate : calculates) {
-			List<Client> clients = calculate.getClient();
-			Set<LayerProduct> products = new HashSet<>();
-			for (Client client : clients) {
-				List<LayerProduct> otherProduct = getClientDetails(client, calculate.isRoundState()).getOtherProduct();
-				products.addAll(otherProduct);
-			}
-			String content = getContent(products);
-			otherMenuMap.put(calculate, content);
+	public List<CalculateDTO> getCalculates(Shift shift) {
+		List<Calculate> sortedList = new ArrayList<>(shift.getCalculates());
+		sortedList.sort(Comparator.comparing(Calculate::getId));
+
+		List<CalculateDTO> calculates = new ArrayList<>();
+
+		for (Calculate calculate : shift.getCalculates()) {
+			CalculateDTO calcDto = transformer.transform(calculate, CalculateDTO.class);
+			calcDto.setClient(calculate.getClient());
+			calcDto.setDirtyOrder(getDirtyMenu(calculate));
+			calcDto.setOtherOrder(getOtherMenu(calculate));
+			calculates.add(calcDto);
 		}
-		return otherMenuMap;
+
+		return calculates;
 	}
 
-	private String getContent(Set<LayerProduct> products) {
-		StringBuilder content = new StringBuilder();
+	private List<String> getContent(Set<LayerProduct> products) {
+		List<String> contentList = new ArrayList<>();
+		List<String> checkReduplication = new ArrayList<>();
 		if (!products.isEmpty()) {
 			for (LayerProduct product : products) {
 				String name = product.getName();
-				if (!content.toString().contains(name)) {
+				if (!checkReduplication.contains(name)) {
+					checkReduplication.add(name);
+					StringBuilder content = new StringBuilder();
 					long productNum = products.stream().filter(p -> p.getName().equals(name)).count();
-					content.append("<li>").append(name).append("(").append(productNum).append(")").append("</li>");
-
+					content.append(name).append("(").append(productNum).append(")");
+					contentList.add(content.toString());
 				}
 			}
 		}
-		return content.toString();
+		return contentList;
 	}
 
 	@Override
