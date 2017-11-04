@@ -8,7 +8,9 @@ $(document).on('click', '#saveNewProductData', function () {
     var setSelfCost = $("#addSelfCost" + id).val();
 
     if (!productDataValidating(setName, setCost, setSelfCost) || !validateStaffPercent(id)) {
-        var errorMessage = '<h4 style="color:red;" align="center">Неверный формат данных!</h4>';
+        var errorMessage = '<h4 style="color:red;" align="center">Неверный формат данных!</h4>' +
+            '<h5 style="color:red;" align="center">Поле название обязательно</h5>'+
+            '<h5 style="color:red;" align="center">Себестоимость и Цена должны быть больше либо равны 0</h5>';
         $('.messageAdd' + id).html(errorMessage).show();
         return false;
     }
@@ -89,7 +91,7 @@ $(document).on('click', '#saveNewProductData', function () {
             if (e.responseText.substr(0, 13) === 'Couldn\'t find') {
                 var errorMessage = '<h4 style="color:red;" align="center">Не найден ингредиент для рецепта</h4>';
                 $('.messageAdd' + id).html(errorMessage).show();
-            } else if (e.responseText.slice(0,23) === 'Negative or zero amount') {
+            } else if (e.responseText.slice(0, 23) === 'Negative or zero amount') {
                 var errorMessage = '<h4 style="color:red;" align="center">Отрицательное или нулевое количество ингредиента в рецепте</h4>';
                 $('.messageAdd' + id).html(errorMessage).show();
             } else if (e.responseText.substr(0, 19) === 'There are no enough') {
@@ -100,6 +102,9 @@ $(document).on('click', '#saveNewProductData', function () {
                 $('.messageAdd' + id).html(errorMessage).show();
             } else if (e.responseText === 'Null input in getRecipeCost') {
                 var errorMessage = '<h4 style="color:red;" align="center">ошибка при расчете стоимости рецепта: ' + e.responseText + '</h4>';
+                $('.messageAdd' + id).html(errorMessage).show();
+            } else if (e.responseText === 'selfCost field have to be greater or equal to zero') {
+                var errorMessage = '<h4 style="color:red;" align="center">Себестоимость должна быть больше либо равна 0</h4>';
                 $('.messageAdd' + id).html(errorMessage).show();
             } else {
                 var errorMessage = '<h4 style="color:red;" align="center">Не удалось добавить продукт!</h4>';
@@ -150,11 +155,8 @@ function del2(id) {
 }
 
 function productDataValidating(name, cost, selfCost) {
-    if (name == "" || !$.isNumeric(cost) || cost < 0 || selfCost < 0) {
-        return false;
-    }
-    return true;
-};
+    return (name && cost && selfCost && cost >= 0 && selfCost >= 0);
+}
 
 $(document).on('click', '#saveEditProductData', function () {
     var id = $(this).data("id");
@@ -167,7 +169,9 @@ $(document).on('click', '#saveEditProductData', function () {
     var selfCost = $("#updSelfCost" + id).val();
 
     if (!productDataValidating(name, cost, selfCost)) {
-        var errorMessage = '<h4 style="color:red;" align="center">Неверный формат данных!</h4>';
+        var errorMessage = '<h4 style="color:red;" align="center">Неверный формат данных!' +
+            '<h5 style="color:red;" align="center">Поле название обязательно</h5>'+
+            '<h5 style="color:red;" align="center">Себестоимость и Цена должны быть больше либо равны 0</h5>';
         $('.messageEdit' + id).html(errorMessage).show();
         return false;
     }
@@ -203,7 +207,9 @@ $(document).on('click', '#saveEditProductData', function () {
             $("#p" + id).modal('hide');
         },
         error: function (e) {
-            var errorMessage = '<h4 style="color:red;" align="center">Не удалось изменить данные!</h4>';
+            var errorMessage = '<h4 style="color:red;" align="center">Не удалось изменить данные!' +
+                '<h5 style="color:red;" align="center">Поле название обязательно</h5>'+
+                '<h5 style="color:red;" align="center">Себестоимость и Цена должны быть больше либо равны 0</h5>';
             $('.messageEdit' + id).html(errorMessage).show();
         }
     });
@@ -281,7 +287,7 @@ $(document).on('click', '#saveEditProductDataAll', function () {
     var selfCost = $("#selfCost" + id).val();
 
     if (!productDataValidating(name, cost, selfCost)) {
-        var errorMessage = '<h4 style="color:red;" align="center">Неверный формат данных!</h4>';
+        var errorMessage = '<h4 style="color:red;" align="center">Неверный формат данных!11 &#013;&#010; fd</h4>';
         $('.messageEditAll' + id).html(errorMessage).show();
         return false;
     }

@@ -1,9 +1,9 @@
 package com.cafe.crm.services.interfaces.calculation;
 
 
-import com.cafe.crm.dto.DetailStatisticView;
-import com.cafe.crm.dto.ShiftView;
-import com.cafe.crm.dto.TotalStatisticView;
+import com.cafe.crm.dto.*;
+import com.cafe.crm.models.client.Calculate;
+import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.shift.UserSalaryDetail;
 import com.cafe.crm.models.user.User;
@@ -21,4 +21,6 @@ public interface ShiftCalculationService {
 	ShiftView createShiftView(Shift shift);
 	void transferFromBankToCashBox(Double transfer);
 	void transferFromCashBoxToBank(Double transfer);
+	Map<Client, ClientDetails> getClientsOnDetails (Set<Calculate> allCalculate);
+	List<CalculateDTO> getCalculates(Shift shift);
 }

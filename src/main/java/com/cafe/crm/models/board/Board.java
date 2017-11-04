@@ -1,6 +1,9 @@
 package com.cafe.crm.models.board;
 
 import com.cafe.crm.models.BaseEntity;
+import com.yc.easytransformer.annotations.Transform;
+import com.cafe.crm.utils.JsonField;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Entity;
@@ -8,19 +11,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "board")
+@Transform(Board.class)
 public class Board extends BaseEntity {
 	@Id
 	@GeneratedValue
+	@JsonView(JsonField.Board.class)
 	private Long id;
 
 	@NotBlank(message = "Название не должно быть пустым!")
+	@JsonView(JsonField.Board.class)
 	private String name;
 
 	@NotNull
+	@JsonView(JsonField.Board.class)
 	private Boolean isOpen = true;
 
 	public Board() {

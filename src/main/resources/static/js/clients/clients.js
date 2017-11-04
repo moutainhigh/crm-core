@@ -248,7 +248,7 @@ function createLayerProductAjax(prodId, calcId) {
 
 function createLayerProductWithFloatingPriceAjax(prodId, calcId, inputId) {
     $('#productId' + calcId).val(prodId);
-    var price = $(('#' + inputId) + prodId).val();
+    var price = $(('#' + inputId) + prodId + calcId).val();
     if (price == "" || price <= 0) {
         return false;
     }

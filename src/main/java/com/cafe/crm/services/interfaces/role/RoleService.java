@@ -3,6 +3,7 @@ package com.cafe.crm.services.interfaces.role;
 import com.cafe.crm.models.user.Role;
 
 import java.util.List;
+import java.util.Set;
 
 
 public interface RoleService {
@@ -15,7 +16,7 @@ public interface RoleService {
 
 	List<Role> findAll();
 
-	List<Role> findByIdIn(Long[] ids);
+	Set<Role> findByIdIn(Long[] ids);
 
 	List<Role> findAllWithSupervisor();
 

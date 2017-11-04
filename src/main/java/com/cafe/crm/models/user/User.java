@@ -15,6 +15,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -48,22 +49,22 @@ public class User extends BaseEntity {
 	@Column(nullable = false)
 	private String password;
 
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "users_roles", joinColumns = {@JoinColumn(name = "user_id")},
 			inverseJoinColumns = {@JoinColumn(name = "role_id")})
 	@NotTransform
-	private List<Role> roles;
+	private Set<Role> roles;
 
 	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "users_positions", joinColumns = {@JoinColumn(name = "user_id")},
 			inverseJoinColumns = {@JoinColumn(name = "position_id")})
 	private List<Position> positions;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "users_shifts", joinColumns = {@JoinColumn(name = "user_id")},
 			inverseJoinColumns = {@JoinColumn(name = "shift_id")})
 	@NotTransform
-	private List<Shift> shifts;
+	private Set<Shift> shifts;
 
 	@Min(value = 0, message = "Поле \"shiftSalary\" должно быть цифрой большей 0!")
 	@Max(value = Integer.MAX_VALUE, message = "Поле \"shiftSalary\" должно быть цифрой меньшей 2147483647!")
@@ -141,11 +142,11 @@ public class User extends BaseEntity {
 		this.activated = activated;
 	}
 
-	public List<Role> getRoles() {
+	public Set<Role> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<Role> roles) {
+	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
 
@@ -157,11 +158,11 @@ public class User extends BaseEntity {
 		this.positions = positions;
 	}
 
-	public List<Shift> getShifts() {
+	public Set<Shift> getShifts() {
 		return shifts;
 	}
 
-	public void setShifts(List<Shift> shifts) {
+	public void setShifts(Set<Shift> shifts) {
 		this.shifts = shifts;
 	}
 

@@ -6,13 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Set;
 
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
 	Role findByName(String name);
 
-	List<Role> findByIdIn(Long[] ids);
+	Set<Role> findByIdIn(Long[] ids);
 
 	List<Role> findAll();
 

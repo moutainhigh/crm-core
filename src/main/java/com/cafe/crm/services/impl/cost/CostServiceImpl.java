@@ -77,6 +77,11 @@ public class CostServiceImpl implements CostService {
 	}
 
 	@Override
+	public void delete(Long id) {
+		costRepository.delete(id);
+	}
+
+	@Override
 	public void offVisibleStatus(Long id) {
 		Cost cost = costRepository.getOne(id);
 		cost.setVisible(false);

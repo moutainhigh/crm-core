@@ -139,7 +139,7 @@ public class VkServiceImpl implements VkService {
 	}
 
 	private String getComment(String comment) {
-		return StringUtils.isEmpty(comment) ? "\nКомментарий :\nОтсутсвует!" : "\nКомментарий :\n" + comment;
+		return StringUtils.isEmpty(comment) ? "" : "\nКомментарий :\n" + comment + "\n";
 	}
 
 	private double formatCostsAndGetSalariesCost(Shift shift, StringBuilder salaries) {
@@ -165,8 +165,13 @@ public class VkServiceImpl implements VkService {
 	private double formatCostsAndGetOtherCosts(List<Cost> costs, StringBuilder otherCosts) {
 		DecimalFormat df = new DecimalFormat("#.##");
 		double otherCost = 0d;
+		boolean needGiveNameToOtherCosts = true;
 		for (Cost cost : costs) {
 			otherCost += cost.getPrice() * cost.getQuantity();
+			if (needGiveNameToOtherCosts) {
+				otherCosts.append("\nПрочие расходы:\n");
+			}
+			needGiveNameToOtherCosts = false;
 			otherCosts
 				.append(cost.getName())
 				.append(" - ").append(df.format(cost.getPrice() * cost.getQuantity()))
@@ -174,8 +179,6 @@ public class VkServiceImpl implements VkService {
 		}
 		if (otherCosts.length() > 0) {
 			otherCosts.deleteCharAt(otherCosts.length() - 1);
-		} else {
-			otherCosts.append("Отсутствуют!");
 		}
 		return otherCost;
 	}
@@ -231,12 +234,12 @@ public class VkServiceImpl implements VkService {
 
 	private String getNotes(List<NoteRecord> noteRecords) {
 		if ((noteRecords == null) || (noteRecords.size() == 0)) {
-			return "Отсутсвует!";
+			return "";
 		}
 		StringBuilder sb = new StringBuilder();
 		for (NoteRecord noteRecord : noteRecords) {
 			sb.append(noteRecord.getName()).append(" : ").append(noteRecord.getValue()).append(System.getProperty("line.separator"));
 		}
-		return sb.toString();
+		return "\nЗаметки :\n" + sb.toString();
 	}
 }

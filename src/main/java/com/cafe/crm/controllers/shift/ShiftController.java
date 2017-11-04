@@ -1,9 +1,11 @@
 package com.cafe.crm.controllers.shift;
 
 
+import com.cafe.crm.dto.CalculateDTO;
 import com.cafe.crm.dto.ShiftCloseDTO;
 import com.cafe.crm.dto.ShiftView;
 import com.cafe.crm.exceptions.transferDataException.TransferException;
+import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.user.User;
 import com.cafe.crm.services.interfaces.calculation.ShiftCalculationService;
@@ -26,6 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 @Controller
@@ -101,12 +104,16 @@ public class ShiftController {
     @RequestMapping(value = "/shift/settings", method = RequestMethod.GET)
     public String showShiftSettingsPage(Model model) {
         Shift lastShift = shiftService.getLast();
+		List<CalculateDTO> calculates = shiftCalculationService.getCalculates(lastShift);
         model.addAttribute("usersOnShift", lastShift.getUsers());
         model.addAttribute("usersNotOnShift", shiftService.getUsersNotOnShift());
         model.addAttribute("closeShiftView", shiftCalculationService.createShiftView(lastShift));
-        model.addAttribute("calculates", lastShift.getCalculates());
+        model.addAttribute("calculates", calculates);
+        model.addAttribute("clientOnDetail", shiftCalculationService.getClientsOnDetails(lastShift.getCalculates()));
         model.addAttribute("clients", lastShift.getClients());
         model.addAttribute("closeChecklist", checklistService.getAllForCloseShift());
+        model.addAttribute("repaidDebts", shiftService.getLast().getRepaidDebts());
+        model.addAttribute("receipts", shiftService.getLast().getReceipts());
         return "shift/shiftSettings";
     }
 

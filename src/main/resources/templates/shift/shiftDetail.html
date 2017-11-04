@@ -58,6 +58,8 @@
                 <tr>
                     <th> Описание</th>
                     <th> Описание стола</th>
+                    <th> Время посадки</th>
+                    <th> Общая стоимость счетов</th>
                     <th> Количество клиентов</th>
                     <th style="width: 90px"></th>
                 </tr>
@@ -67,6 +69,8 @@
                     <td th:if="${calc.description}==null" th:text="Описание+' '+ отсутствует"></td>
                     <td th:if="${calc.description}!=null" th:text="${calc.description}"></td>
                     <td th:each="board:${calc.board}" th:text="${board.name}"></td>
+                    <td th:text="${#temporals.format(calc.client.get(0).timeStart, 'dd.MM HH:mm')}"></td>
+                    <td th:id="commonPrice+${calc.id}"></td>
                     <td th:text="${calc.client.size()}"></td>
                     <td class="tr-wrapper" style="text-align: left">
                         <button th:id="'billsButton' + ${calc.id}" type="button" class="btn btn-info" style="margin-bottom: 1%">
@@ -75,34 +79,35 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="tr-wrapper" colspan="4">
+                    <td class="tr-wrapper" colspan="6">
                         <div th:id="'billsOnShift' + ${calc.id}" style="display: none">
                             <table class="table table-striped nested-table">
                                 <thead>
                                 <tr>
-                                    <th> Время посадки</th>
                                     <th> Проведенное время</th>
                                     <th> Стоимость времени</th>
                                     <th> Скидка</th>
                                     <th> Скидка по карте</th>
-                                    <th> Общая стоимость счета</th>
                                     <th> Оплата наличными</th>
                                     <th> Стоимость меню</th>
                                     <th th:if="${cardEnable}"> Оплата по клубной карте</th>
                                 </tr>
                                 </thead>
-                                <tbody th:each="client : ${calc.client}">
-                                <tr>
-                                    <td th:text="${client.timeStart}"></td>
+                                <tbody th:id="clients+${calc.id}">
+                                <tr th:each="client : ${calc.client}">
                                     <td th:text="${client.passedTime}"></td>
                                     <td th:text="${client.priceTime}"></td>
                                     <td th:text="${client.discount}"></td>
                                     <td th:text="${client.discountWithCard}"></td>
-                                    <td th:text="${client.allPrice}"></td>
                                     <td th:text="${client.cache}"></td>
                                     <td th:text="${client.priceMenu}"></td>
                                     <td th:if="${cardEnable}" th:text="${client.payWithCard}"></td>
 
+                                    <script th:inline="javascript" type="text/javascript">
+                                        jQuery(document).ready( function() {
+                                            setPrice([[${client.allPrice}]]);
+                                        });
+                                    </script>
                                 </tr>
                                 </tbody>
                             </table>
@@ -116,12 +121,15 @@
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
                 </tfoot>
                 <script th:inline="javascript" type="text/javascript">
                     jQuery(document).ready( function() {
                         var buttonId = '#billsButton' + [[${calc.id}]];
                         var billsOnShiftId = '#billsOnShift' + [[${calc.id}]];
+                        insertTotalPrice('clients'+[[${calc.id}]], 'commonPrice'+[[${calc.id}]]);
                         jQuery(buttonId).click(function(){
                                 $(billsOnShiftId).slideToggle('fast');
                         });
@@ -254,5 +262,6 @@
         </div>
     </div>
 </div>
+<script th:src="@{/js/shiftDetail.js}"></script>
 </body>
 </html>

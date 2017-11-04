@@ -123,7 +123,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			profit -= givDebt.getDebtAmount();
 		}
 		for (Receipt receipt : receiptAmount){
-			profit +=receipt.getReceiptAmount();
+			profit += receipt.getReceiptAmount();
 		}
 
 		return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clientsOnDetails, otherCost,
@@ -159,7 +159,8 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		return userDTOList;
 	}
 
-	private Map<Client, ClientDetails> getClientsOnDetails (Set<Calculate> allCalculate) {
+	@Override
+	public Map<Client, ClientDetails> getClientsOnDetails (Set<Calculate> allCalculate) {
 		Map<Client, ClientDetails> clientsOnDetails = new HashMap<>();
 		Set<Client> roundedClients = new HashSet<>();
 		Set<Client> notRoundedClients = new HashSet<>();
@@ -185,11 +186,15 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		Double allDirtyPrice;
 		Double dirtyPriceMenu = 0D;
 		Double otherPriceMenu = 0D;
+		List<LayerProduct> dirtyProduct = new ArrayList<>();
+		List<LayerProduct> otherProduct = new ArrayList<>();
 		for (LayerProduct product : client.getLayerProducts()) {
 			if (product.isDirtyProfit()) {
 				dirtyPriceMenu += product.getCost() / product.getClients().size();
+				dirtyProduct.add(product);
 			} else {
 				otherPriceMenu += product.getCost() / product.getClients().size();
+				otherProduct.add(product);
 			}
 		}
 		allDirtyPrice = client.getPriceTime() + Math.round(dirtyPriceMenu) - client.getPayWithCard();
@@ -199,7 +204,65 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			otherPriceMenu = RoundUpper.roundDouble(otherPriceMenu);
 		}
 
-		return new ClientDetails(allDirtyPrice, Math.round(otherPriceMenu), Math.round(dirtyPriceMenu));
+		return new ClientDetails(allDirtyPrice, Math.round(otherPriceMenu), Math.round(dirtyPriceMenu),
+				dirtyProduct, otherProduct);
+	}
+
+	private List<String> getDirtyMenu(Calculate calculate) {
+		List<Client> clients = calculate.getClient();
+		Set<LayerProduct> products = new HashSet<>();
+		for (Client client : clients) {
+			List<LayerProduct> dirtyProduct = getClientDetails(client, calculate.isRoundState()).getDirtyProduct();
+			products.addAll(dirtyProduct);
+		}
+		return getContent(products);
+	}
+
+	private List<String> getOtherMenu(Calculate calculate) {
+		List<Client> clients = calculate.getClient();
+		Set<LayerProduct> products = new HashSet<>();
+		for (Client client : clients) {
+			List<LayerProduct> otherProduct = getClientDetails(client, calculate.isRoundState()).getOtherProduct();
+			products.addAll(otherProduct);
+		}
+
+		return getContent(products);
+	}
+
+	@Override
+	public List<CalculateDTO> getCalculates(Shift shift) {
+		List<Calculate> sortedList = new ArrayList<>(shift.getCalculates());
+		sortedList.sort(Comparator.comparing(Calculate::getId));
+
+		List<CalculateDTO> calculates = new ArrayList<>();
+
+		for (Calculate calculate : sortedList) {
+			CalculateDTO calcDto = transformer.transform(calculate, CalculateDTO.class);
+			calcDto.setClient(calculate.getClient());
+			calcDto.setDirtyOrder(getDirtyMenu(calculate));
+			calcDto.setOtherOrder(getOtherMenu(calculate));
+			calculates.add(calcDto);
+		}
+
+		return calculates;
+	}
+
+	private List<String> getContent(Set<LayerProduct> products) {
+		List<String> contentList = new ArrayList<>();
+		List<String> checkReduplication = new ArrayList<>();
+		if (!products.isEmpty()) {
+			for (LayerProduct product : products) {
+				String name = product.getName();
+				if (!checkReduplication.contains(name)) {
+					checkReduplication.add(name);
+					StringBuilder content = new StringBuilder();
+					long productNum = products.stream().filter(p -> p.getName().equals(name)).count();
+					content.append(name).append("(").append(productNum).append(")");
+					contentList.add(content.toString());
+				}
+			}
+		}
+		return contentList;
 	}
 
 	@Override
@@ -338,6 +401,16 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 
 	private Map<Long, Integer> calcStaffPercentBonusesAndGetMap(Set<LayerProduct> layerProducts, List<UserDTO> staff) {
 		Map<Long, Integer> staffPercentBonusesMap = new HashMap<>();
+		Map<PositionDTO, Integer> shiftPercents = new HashMap<>();
+		Integer count;
+
+		for (UserDTO user : staff) {
+			List<PositionDTO> userPositions = user.getPositions();
+			for (PositionDTO positionDTO : userPositions){
+				count = shiftPercents.get(positionDTO);
+				shiftPercents.put(positionDTO, count == null ? 1 : count + 1);
+			}
+		}
 
 		for (LayerProduct layerProduct : layerProducts) {
 
@@ -351,11 +424,13 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 				for (PositionDTO positionDTO : userPositions) {
 
 					Integer percent = staffPercent.get(transformer.transform(positionDTO, Position.class));
+					int shiftPercent = 1;
 					if (percent != null) {
-
-						int bonus = (int) (layerProduct.getCost() * percent / 100);
+						if (shiftPercents.containsKey(positionDTO)){
+							shiftPercent = shiftPercents.get(positionDTO);
+						}
+						int bonus = (int) (layerProduct.getCost() * percent / 100 / shiftPercent);
 						user.setShiftSalary(bonus + user.getShiftSalary());
-
 						Integer saveBonus = staffPercentBonusesMap.get(user.getId());
 						if (saveBonus == null) {
 							staffPercentBonusesMap.put(user.getId(), bonus);
