@@ -1,11 +1,11 @@
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:word-break="http://www.w3.org/1999/xhtml">
 <head>
     <script th:src="@{/js/filter.js}"></script>
 
 </head>
 
 <body>
-<div class="table" style="border-radius:5px" th:fragment="userList">
+<div class="table" style="table-layout: fixed; border-radius:5px" th:fragment="userList">
     <table class="table table-striped">
         <tr>
             <th> Имя</th>
@@ -25,7 +25,7 @@
             <td th:text="${user.firstName}"></td>
             <td th:text="${user.lastName}"></td>
             <td th:text="${user.positions}"></td>
-            <td th:text="${user.email}"></td>
+            <td ><div style="word-break:break-all; width:100px" th:text="${user.email}"></div></td>
             <td th:text="${user.phone}"></td>
             <td th:text="${user.shiftSalary}"></td>
             <td th:text="${user.shifts.size()}"></td>
