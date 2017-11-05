@@ -77,7 +77,7 @@
                     </div>
 
                     <div class="col-md-6 col-md-offset-3">
-                        <h4 align="center"><a href="/manager/costs">Прочие расходы :</a></h4>
+                        <h4 align="center"><a href="/manager/cost">Прочие расходы :</a></h4>
                         <input type="text" style="margin-top: -4px" readonly="readonly" class="form-control"
                                th:value="${closeShiftView.otherCosts}"/>
                         <br/>
@@ -168,6 +168,7 @@
                     <br/>
                     <button style="visibility: hidden" id="closeShiftButtonShortage" onclick="checkInputDataWithShortage()"
                             class="btn btn-lg btn-danger btn-block" type="submit">Закрыть смену с недосдачей
+                        с уведомлением руководства
                     </button>
                 </div>
 
