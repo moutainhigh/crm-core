@@ -1,13 +1,16 @@
 package com.cafe.crm.controllers.boss;
 
 import com.cafe.crm.dto.TotalStatisticView;
+import com.cafe.crm.exceptions.NoStatData;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.services.interfaces.calculation.ShiftCalculationService;
 import com.cafe.crm.services.interfaces.cost.CostService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
 import com.cafe.crm.utils.TimeManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,5 +66,8 @@ public class StatisticController {
         return modelAndView;
     }
 
-
+	@ExceptionHandler(value = NoStatData.class)
+	public String handleUserUpdateException(NoStatData ex) {
+		return "totalStatisticsEmpty";
+	}
 }

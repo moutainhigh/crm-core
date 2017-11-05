@@ -2,6 +2,7 @@ package com.cafe.crm.services.impl.calculation;
 
 
 import com.cafe.crm.dto.*;
+import com.cafe.crm.exceptions.NoStatData;
 import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.Debt;
@@ -138,6 +139,9 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		}
 		for (User user : userSet) {
 			List<UserSalaryDetail> details = userSalaryDetailService.findByUserIdAndShiftDateBetween(user.getId(), from, to);
+			if (details.size() == 0){
+				throw new NoStatData("There is no shift data to calculate statistical data");
+			}
 			UserSalaryDetail lastDetail = details.get(details.size() - 1);
 			int salary = 0;
 			int bonus = 0;
