@@ -54,35 +54,7 @@ $(document).on('click', '#saveNewProductData', function () {
         dataType: "json",
         data: JSON.stringify(wrapper),
         success: function (result) {
-            var isFloatingPrice = false;
-            if ($("#addCost" + id)[0].hasAttribute('disabled')) {
-                setCost = 'Плавающая';
-                isFloatingPrice = true;
-            }
-
-            $(getEditHtmlOnAddProduct('p', result, isFloatingPrice)).appendTo('body');
-            $(getEditHtmlOnAddProduct('All', result, isFloatingPrice)).appendTo('body');
-            var trCount = $("#qwe" + id + " > tbody > tr").length;
-            var editButtonTemplate = '<div class="dropdown">' +
-                ' <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">' +
-                'Редактировать<span class="caret"></span></button>' +
-                '<ul class="dropdown-menu">' +
-                '<li><a id="ins" href="PRODUCT_ID" data-toggle="modal">Редактировать</a></li>' +
-                '<li> <a href="/boss/menu/get/recipe/?id=' + result.productId + '" > Изменить рецепт </a></li> <li>' +
-                '<a href="/boss/menu/get/staffPercent/?id=' + result.productId + '"> Изменить процент сотрудникам </a></li> </ul> </div>';
-            var editButtonSingle = editButtonTemplate.replace('PRODUCT_ID', '#p' + result.productId);
-            var editButtonAll = editButtonTemplate.replace('PRODUCT_ID', '#allP' + result.productId);
-            var delButton = '<a id="del"  class="btn btn-primary btn-danger" onclick="del( ' + result.productId + ' )"   >Удалить </a>';
-            var tr = '<tr id="tr' + result.productId + '"><td>' + trCount + '</td><td id="b' + result.productId + '"><p id="E' + result.productId + '">' + result.name + '</p></td><td id="c' + result.productId + '">' + result.description + '</td><td id="d' + result.productId + '">' + result.cost + '</td>><td id="e' + result.productId + '">' + result.selfCost + '</td><td>' + editButtonSingle + '</td><td>' + delButton + '</td></tr>';
-            var allTR = '<tr id="allTR' + result.productId + '"><td>' + result.productId + '</td><td id="allB' + result.productId + '">' + result.name + '</td><td id="allC' + result.productId + '">' + result.description + '</td><td id="allD' + result.productId + '">' + result.cost + '</td><td id="allE' + result.productId + '">' + result.selfCost + '</td><td>' + editButtonAll + '</td><td>' + delButton + '</td></tr>';
-            $('#qwe' + id + ' tr:last').after(tr);
-            $('#allTable' + ' tr:last').after(allTR);
-
-            $("#add" + id).modal('hide');
-            $("#addName" + id).val("");
-            $("#addDes" + id).val("");
-            $("#addCost" + id).val("0.0");
-            $("#addSelfCost" + id).val("0")
+            location.reload();
         },
         error: function (e) {
             console.log(e.responseText);
@@ -487,7 +459,7 @@ function calculateCostPrice(categoryId) {
         });
         totalCostPrice += countIngredient * priceIngredient;
     }
-    $('#addSelfCost' + categoryId).val(totalCostPrice.toFixed(3));
+    $('#addSelfCost' + categoryId).val(totalCostPrice.toFixed(1));
 }
 
 function getEditHtmlOnAddProduct(hrefPrefix, product, isFloatingPrice) {

@@ -76,7 +76,7 @@
                                 <td th:id="'c' + ${prod.id}"><p th:text="${prod.description}"></p></td>
                                 <td th:id="'d' + ${prod.id}"><p
                                         th:text="${!prod.category.floatingPrice} ? ${prod.cost} : 'Плавающая'"></p></td>
-                                <td th:id="'e' + ${prod.id}"><p th:text="${prod.selfCost}"></p></td>
+                                <td th:id="'e' + ${prod.id}"><p th:text="${#numbers.formatDecimal(prod.selfCost, 1, 'COMMA', 1, 'POINT')}"></p></td>
                                 <td class="col-lg-2">
 
                                     <div class="dropdown">
@@ -152,7 +152,7 @@
                                                            th:id="updSelfCost + ${prod.id}" name="selfCost"
                                                            title="только цифры"
                                                            min="0"
-                                                           th:value="${prod.selfCost}"/>
+                                                           th:value="${#numbers.formatDecimal(prod.selfCost, 1, 'COMMA', 1, 'POINT')}"/>
                                                 </div>
 
                                             </div>
@@ -344,7 +344,7 @@
                                                                     <option th:attr="data-price=${ing.price}"
                                                                             th:class="optionClass"
                                                                             th:value="${ing.name}"
-                                                                            th:text="${ing.name}+ '   -   ' +  ${ing.dimension} + '   -   ' + ${ing.price} + 'p'">
+                                                                            th:text="${ing.name}+ '   -   ' +  ${ing.dimension} + '   -   ' + ${#numbers.formatDecimal(ing.price, 1, 'COMMA', 2, 'POINT')} + 'p'">
                                                                     </option>
                                                                 </div>
                                                             </select>

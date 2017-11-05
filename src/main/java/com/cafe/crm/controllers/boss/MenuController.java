@@ -110,7 +110,7 @@ public class MenuController {
         }
 
         Category category = categoriesService.getOne(wrapper.getId());
-        Map<Ingredients, Integer> recipe;
+        Map<Ingredients, Double> recipe;
         double recipeCost;
 //		check if product has ingredients for recipe
         if (!wrapper.getNames().isEmpty()) {
@@ -126,7 +126,11 @@ public class MenuController {
             product.setCategory(category);
             product.setName(wrapper.getName());
             product.setCost(wrapper.getCost());
-            product.setSelfCost(wrapper.getSelfCost() + recipeCost);
+            if (recipeCost == 0) {
+                product.setSelfCost(wrapper.getSelfCost());
+            } else {
+                product.setSelfCost(recipeCost);
+            }
             product.setDescription(wrapper.getDescription());
             product.setRecipe(recipe);
             product.setStaffPercent(staffPercent);
@@ -207,7 +211,7 @@ public class MenuController {
     @ResponseBody
     public ResponseEntity<?> editRecipe(@RequestBody WrapperOfProduct wrapper) {
         Product product = productService.findOne(wrapper.getId()); // id product
-        Map<Ingredients, Integer> recipe = ingredientsService.createRecipe(wrapper);
+        Map<Ingredients, Double> recipe = ingredientsService.createRecipe(wrapper);
 
         if (product != null) {
             product.setSelfCost(ingredientsService.getRecipeCost(recipe));

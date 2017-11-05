@@ -11,7 +11,7 @@ public class WrapperOfProduct implements Serializable {  // wrapper for menuCont
 	private Long productId;
 
 	private List<String> names;
-	private List<Integer> amount;
+	private List<Double> amount;
 	private Long idCat;
 	private String name;
 	private String description;
@@ -82,11 +82,11 @@ public class WrapperOfProduct implements Serializable {  // wrapper for menuCont
 		this.names = names;
 	}
 
-	public List<Integer> getAmount() {
+	public List<Double> getAmount() {
 		return amount;
 	}
 
-	public void setAmount(List<Integer> amount) {
+	public void setAmount(List<Double> amount) {
 		this.amount = amount;
 	}
 

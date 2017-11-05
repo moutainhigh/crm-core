@@ -28,9 +28,9 @@ public class IngredientsServiceReduceIngredientAmountTest {
 
     private Ingredients ingredients1;
     private Ingredients ingredients2;
-    private Map<Ingredients, Integer> recipe;
+    private Map<Ingredients, Double> recipe;
 
-    private void initIngredientsAmounts(Integer IngAmount1, Integer IngAmount2, Integer recipeAmount1, Integer recipeAmount2) {
+    private void initIngredientsAmounts(Double IngAmount1, Double IngAmount2, Double recipeAmount1, Double recipeAmount2) {
         ingredients1 = new Ingredients("ingredients1", "big", IngAmount1, 2D);
         ingredients2 = new Ingredients("ingredients2", "big", IngAmount2, 4D);
 
@@ -41,7 +41,7 @@ public class IngredientsServiceReduceIngredientAmountTest {
 
     @Test
     public void testReduceIngredientAmount__correctInput__matchesExpected() {
-        initIngredientsAmounts(2, 4, 2, 2);
+        initIngredientsAmounts(2D, 4D, 2D, 2D);
         when(companyIdCache.getCompanyId()).thenReturn(1L);
         ingredientsService.reduceIngredientAmount(recipe);
         assertEquals(0, ingredients1.getAmount(), 0);

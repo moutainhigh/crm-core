@@ -64,14 +64,14 @@ public class IngredientsServiceImpl implements IngredientsService {
 	}
 
 	@Override
-	public Map<Ingredients, Integer> createRecipe(WrapperOfProduct wrapper) {
+	public Map<Ingredients, Double> createRecipe(WrapperOfProduct wrapper) {
 
 		if (wrapper == null) {
 			throw new NullInputsIngredientsServiceException("Null input in createRecipe");
 		}
-		Map<Ingredients, Integer> recipe = new HashMap<>();
+		Map<Ingredients, Double> recipe = new HashMap<>();
 		List<String> names = wrapper.getNames();
-		List<Integer> amount = wrapper.getAmount();
+		List<Double> amount = wrapper.getAmount();
 		String ingredientName;
 		if ((names == null) || (amount == null)) {
 			throw new NullInputsIngredientsServiceException("Null input in createRecipe");
@@ -100,13 +100,13 @@ public class IngredientsServiceImpl implements IngredientsService {
 	}
 
 	@Override
-	public Double getRecipeCost(Map<Ingredients, Integer> recipe) {
+	public Double getRecipeCost(Map<Ingredients, Double> recipe) {
 		double result = 0L;
 		if (recipe == null) {
 			throw new NullInputsIngredientsServiceException("Null input in getRecipeCost");
 		}
 
-		for (Map.Entry<Ingredients, Integer> entry : recipe.entrySet()) {
+		for (Map.Entry<Ingredients, Double> entry : recipe.entrySet()) {
 			if (entry.getKey() == null) {
 				throw new NullInputsIngredientsServiceException("Null input in getRecipeCost");
 			}
@@ -119,8 +119,8 @@ public class IngredientsServiceImpl implements IngredientsService {
 	}
 
 	@Override
-	public void reduceIngredientAmount(Map<Ingredients, Integer> recipe) {
-		for (Map.Entry<Ingredients, Integer> entry : recipe.entrySet()) {
+	public void reduceIngredientAmount(Map<Ingredients, Double> recipe) {
+		for (Map.Entry<Ingredients, Double> entry : recipe.entrySet()) {
 			entry.getKey().setAmount(entry.getKey().getAmount() - entry.getValue());
 			save(entry.getKey());
 		}

@@ -41,7 +41,7 @@ public class Product extends BaseEntity {
 	@ElementCollection
 	@MapKeyJoinColumn(name = "ingredient")
 	@Column(name = "amount")
-	private Map<Ingredients, Integer> recipe;
+	private Map<Ingredients, Double> recipe;
 
 	@ElementCollection
 	@MapKeyJoinColumn(name = "position")
@@ -59,11 +59,11 @@ public class Product extends BaseEntity {
 		this.cost = cost;
 	}
 
-	public Map<Ingredients, Integer> getRecipe() {
+	public Map<Ingredients, Double> getRecipe() {
 		return recipe;
 	}
 
-	public void setRecipe(Map<Ingredients, Integer> recipe) {
+	public void setRecipe(Map<Ingredients, Double> recipe) {
 		this.recipe = recipe;
 	}
 

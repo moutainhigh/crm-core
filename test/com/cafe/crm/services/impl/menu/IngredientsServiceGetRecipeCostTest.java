@@ -25,18 +25,18 @@ public class IngredientsServiceGetRecipeCostTest {
 
     @Test
     public void testGetRecipeCost__hasRecipes__matchesExpected() {
-        Ingredients ingredients1 = new Ingredients("ingredients1", "big", 2, 2D);
-        Ingredients ingredients2 = new Ingredients("ingredients2", "big", 4, 4D);
-        Map<Ingredients, Integer> recipe = new HashMap<>();
-        recipe.put(ingredients1, 2);
-        recipe.put(ingredients2, 2);
+        Ingredients ingredients1 = new Ingredients("ingredients1", "big", 2D, 2D);
+        Ingredients ingredients2 = new Ingredients("ingredients2", "big", 4D, 4D);
+        Map<Ingredients, Double> recipe = new HashMap<>();
+        recipe.put(ingredients1, 2D);
+        recipe.put(ingredients2, 2D);
 
         assertEquals(12D, ingredientsService.getRecipeCost(recipe), 0);
     }
 
     @Test
     public void testGetRecipeCost__emptyRecipes__matchesZero() {
-        Map<Ingredients, Integer> recipe = new HashMap<>();
+        Map<Ingredients, Double> recipe = new HashMap<>();
         assertEquals(0D, ingredientsService.getRecipeCost(recipe), 0);
     }
 
@@ -49,16 +49,16 @@ public class IngredientsServiceGetRecipeCostTest {
 
     @Test(expected = NullInputsIngredientsServiceException.class)
     public void testGetRecipeCost__nullRecipesMapContent__exception() {
-        Map<Ingredients, Integer> recipe = new HashMap<>();
-        recipe.put(null, 2);
+        Map<Ingredients, Double> recipe = new HashMap<>();
+        recipe.put(null, 2D);
         ingredientsService.getRecipeCost(recipe);
     }
 
     @Test(expected = NegativeOrZeroInputsIngredientsServiceException.class)
     public void testCreateRecipe__negativeAmountIngredient__raisesException() {
-        Map<Ingredients, Integer> map = new HashMap<>();
+        Map<Ingredients, Double> map = new HashMap<>();
         Ingredients ingredients = new Ingredients();
-        map.put(ingredients, -1);
+        map.put(ingredients, -1D);
         ingredientsService.getRecipeCost(map);
     }
 

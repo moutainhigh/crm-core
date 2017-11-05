@@ -42,16 +42,16 @@ public class IngredientsServiceCreateRecipeTest {
     private Ingredients ingredients1;
     private Ingredients ingredients2;
     private WrapperOfProduct wrapperOfProduct;
-    private Map<Ingredients, Integer> expectedMap;
+    private Map<Ingredients, Double> expectedMap;
 
-    private void initIngredientsAmounts(Integer IngAmount1, Integer IngAmount2, Integer recipeAmount1, Integer recipeAmount2) {
+    private void initIngredientsAmounts(Double IngAmount1, Double IngAmount2, Double recipeAmount1, Double recipeAmount2) {
 
         ingredients1 = new Ingredients("ingredients1", "big", IngAmount1, 2D);
         ingredients2 = new Ingredients("ingredients2", "big", IngAmount2, 4D);
 
         wrapperOfProduct = new WrapperOfProduct();
         List<String> names = new ArrayList<>();
-        List<Integer> amount = new ArrayList<>();
+        List<Double> amount = new ArrayList<>();
         names.add("ingredients1");
         names.add("ingredients2");
         amount.add(recipeAmount1);
@@ -66,19 +66,19 @@ public class IngredientsServiceCreateRecipeTest {
 
     @Test
     public void testCreateRecipe__correctInputs__matchesExpected() {
-        initIngredientsAmounts(4, 2, 2, 2);
+        initIngredientsAmounts(4D, 2D, 2D, 2D);
 
         when(ingredientsRepository.findByNameAndCompanyId("ingredients1",1L)).thenReturn(ingredients1);
         when(ingredientsRepository.findByNameAndCompanyId("ingredients2", 1L)).thenReturn(ingredients2);
         when(companyIdCache.getCompanyId()).thenReturn(1L);
 
-        Map<Ingredients, Integer> map = ingredientsService.createRecipe(wrapperOfProduct);
+        Map<Ingredients, Double> map = ingredientsService.createRecipe(wrapperOfProduct);
 
         assertEquals(expectedMap, map);
     }
     @Test(expected = NegativeOrZeroInputsIngredientsServiceException.class)
     public void testCreateRecipe__zeroRecipeAmounts__raisesException() {
-        initIngredientsAmounts(4, 2, 0, 0);
+        initIngredientsAmounts(4D, 2D, 0D, 0D);
 
         when(ingredientsRepository.findByNameAndCompanyId("ingredients1",1L)).thenReturn(ingredients1);
         when(ingredientsRepository.findByNameAndCompanyId("ingredients2", 1L)).thenReturn(ingredients2);
@@ -90,7 +90,7 @@ public class IngredientsServiceCreateRecipeTest {
 
     @Test(expected = NotEnoughIngredientsIngredientsServiceException.class)
     public void testCreateRecipe__notEnoughIngredientsInRepository__raisesException() {
-        initIngredientsAmounts(1, 1, 2, 2);
+        initIngredientsAmounts(1D, 1D, 2D, 2D);
 
         when(ingredientsRepository.findByNameAndCompanyId("ingredients1",1L)).thenReturn(ingredients1);
         when(ingredientsRepository.findByNameAndCompanyId("ingredients2", 1L)).thenReturn(ingredients2);
@@ -106,7 +106,7 @@ public class IngredientsServiceCreateRecipeTest {
 
     @Test(expected = NotEnoughIngredientsIngredientsServiceException.class)
     public void testCreateRecipe__negativeAmountIngredientInRepository__raisesException() {
-        initIngredientsAmounts(-1, 2, 2, 1);
+        initIngredientsAmounts(-1D, 2D, 2D, 1D);
 
         when(ingredientsRepository.findByNameAndCompanyId("ingredients1",1L)).thenReturn(ingredients1);
         when(ingredientsRepository.findByNameAndCompanyId("ingredients2", 1L)).thenReturn(ingredients2);
@@ -117,7 +117,7 @@ public class IngredientsServiceCreateRecipeTest {
 
     @Test(expected = NegativeOrZeroInputsIngredientsServiceException.class)
     public void testCreateRecipe__negativeAmountInRecipe__raisesException() {
-        initIngredientsAmounts(4, 2, -1, 1);
+        initIngredientsAmounts(4D, 2D, -1D, 1D);
 
         when(ingredientsRepository.findByNameAndCompanyId("ingredients1",1L)).thenReturn(ingredients1);
         when(ingredientsRepository.findByNameAndCompanyId("ingredients2", 1L)).thenReturn(ingredients2);
