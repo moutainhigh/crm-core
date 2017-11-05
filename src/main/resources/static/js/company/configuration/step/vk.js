@@ -43,6 +43,16 @@ $("#showVKInputButton").click(function () {
 
 $("#appRegistrationButton").click(function () {
     $("#appRegistrationBlock").toggle();
+
+    if (!document.getElementById("VKChatIDLine").hasAttribute("required")) {
+        document.getElementById("VKChatIDLine").required = true;
+        document.getElementById("VKTokenLine").required = true;
+        document.getElementById("appID").required = true;
+    } else {
+        document.getElementById("VKChatIDLine").required = false;
+        document.getElementById("VKTokenLine").required = false;
+        document.getElementById("appID").required = false;
+    }
 });
 
 $("#appIDButton").click(function () {
