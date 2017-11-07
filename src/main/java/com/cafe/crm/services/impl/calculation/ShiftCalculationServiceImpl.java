@@ -22,14 +22,12 @@ import com.cafe.crm.services.interfaces.note.NoteService;
 import com.cafe.crm.services.interfaces.receipt.ReceiptService;
 import com.cafe.crm.services.interfaces.salary.UserSalaryDetailService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
-import com.cafe.crm.utils.RoundUpper;
 import com.yc.easytransformer.Transformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ShiftCalculationServiceImpl implements ShiftCalculationService {
@@ -166,27 +164,19 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 	@Override
 	public Map<Client, ClientDetails> getClientsOnDetails (Set<Calculate> allCalculate) {
 		Map<Client, ClientDetails> clientsOnDetails = new HashMap<>();
-		Set<Client> roundedClients = new HashSet<>();
-		Set<Client> notRoundedClients = new HashSet<>();
+		List<Client> clients = new ArrayList<>();
 		for (Calculate calculate : allCalculate) {
-			if (calculate.isRoundState()) {
-				roundedClients.addAll(calculate.getClient());
-			} else {
-				notRoundedClients.addAll(calculate.getClient());
-			}
+			clients.addAll(calculate.getClient());
 		}
-		for (Client roundClient : roundedClients) {
-			ClientDetails details = getClientDetails(roundClient, true);
-			clientsOnDetails.put(roundClient, details);
+		for (Client client : clients) {
+			ClientDetails details = getClientDetails(client);
+			clientsOnDetails.put(client, details);
 		}
-		for (Client notRoundClient : notRoundedClients) {
-			ClientDetails details = getClientDetails(notRoundClient, false);
-			clientsOnDetails.put(notRoundClient, details);
-		}
+
 		return clientsOnDetails;
 	}
 
-	private ClientDetails getClientDetails(Client client, boolean isRounded) {
+	private ClientDetails getClientDetails(Client client) {
 		Double allDirtyPrice;
 		Double dirtyPriceMenu = 0D;
 		Double otherPriceMenu = 0D;
@@ -202,35 +192,38 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			}
 		}
 		allDirtyPrice = client.getPriceTime() + Math.round(dirtyPriceMenu) - client.getPayWithCard();
-		if (isRounded) {
-			allDirtyPrice = RoundUpper.roundDouble(allDirtyPrice);
-			dirtyPriceMenu = RoundUpper.roundDouble(dirtyPriceMenu);
-			otherPriceMenu = RoundUpper.roundDouble(otherPriceMenu);
-		}
-
 		return new ClientDetails(allDirtyPrice, Math.round(otherPriceMenu), Math.round(dirtyPriceMenu),
 				dirtyProduct, otherProduct);
 	}
 
 	private List<String> getDirtyMenu(Calculate calculate) {
 		List<Client> clients = calculate.getClient();
-		Set<LayerProduct> products = new HashSet<>();
+		Set<LayerProduct> dirtyMenu = new HashSet<>();
+		List<LayerProduct> products = new ArrayList<>();
 		for (Client client : clients) {
-			List<LayerProduct> dirtyProduct = getClientDetails(client, calculate.isRoundState()).getDirtyProduct();
-			products.addAll(dirtyProduct);
+			products.addAll(client.getLayerProducts());
 		}
-		return getContent(products);
+		for (LayerProduct product : products) {
+			if (product.isDirtyProfit()) {
+				dirtyMenu.add(product);
+			}
+		}
+		return getContent(dirtyMenu);
 	}
 
 	private List<String> getOtherMenu(Calculate calculate) {
 		List<Client> clients = calculate.getClient();
-		Set<LayerProduct> products = new HashSet<>();
+		Set<LayerProduct> otherMenu = new HashSet<>();
+		List<LayerProduct> products = new ArrayList<>();
 		for (Client client : clients) {
-			List<LayerProduct> otherProduct = getClientDetails(client, calculate.isRoundState()).getOtherProduct();
-			products.addAll(otherProduct);
+			products.addAll(client.getLayerProducts());
 		}
-
-		return getContent(products);
+		for (LayerProduct product : products) {
+			if (!product.isDirtyProfit()) {
+				otherMenu.add(product);
+			}
+		}
+		return getContent(otherMenu);
 	}
 
 	@Override
@@ -362,24 +355,15 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 
 	private double getAllPrice(Shift shift) {
 		Set<Calculate> allCalculate = shift.getCalculates();
-		Set<Client> roundedClients = new HashSet<>();
-		Set<Client> notRoundedClients = new HashSet<>();
+		List<Client> clients = new ArrayList<>();
 		List<Receipt> receiptAmount = receiptService.findByShiftId(shift.getId());
 		double allPrice = 0D;
 		for (Calculate calculate : allCalculate) {
 			if (!calculate.isState()) {
-				if (calculate.isRoundState()) {
-					roundedClients.addAll(calculate.getClient());
-				} else {
-					notRoundedClients.addAll(calculate.getClient());
-				}
+				clients.addAll(calculate.getClient());
 			}
 		}
-		for (Client client : roundedClients) {
-			allPrice += RoundUpper.roundDouble(getAllDirtyPrice(client));
-		}
-
-		for (Client client : notRoundedClients) {
+		for (Client client : clients) {
 			allPrice += getAllDirtyPrice(client);
 		}
 		for (Debt debt : shift.getRepaidDebts()) {

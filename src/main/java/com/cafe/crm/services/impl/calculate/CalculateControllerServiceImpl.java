@@ -164,9 +164,6 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 				}
 				calculatePriceService.addDiscountOnPriceTime(client);
 				calculatePriceService.getAllPrice(client);
-				if (calculate.isRoundState()) {
-					calculatePriceService.round(client, calculate.isRoundState());
-				}
 				clients.add(client);
 			}
 		}
@@ -187,9 +184,6 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 			}
 			calculatePriceService.addDiscountOnPriceTime(client);
 			calculatePriceService.getAllPrice(client);
-			if (calculate.isRoundState()) {
-				calculatePriceService.round(client, calculate.isRoundState());
-			}
 		}
 		clientService.saveAll(clients);
 		return clients;
