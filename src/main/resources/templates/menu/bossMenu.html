@@ -219,7 +219,7 @@
                         </div>
                     </form>
                     <div align="center" class="modal fade" th:id="'add'+${categor.id}" tabindex="-1" roles="dialog"
-                         aria-labelledby="myModalLabel">
+                         aria-labelledby="myModalLabel" name="addProductModal">
                         <div class="modal-dialog" roles="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -232,7 +232,7 @@
                                     <div th:class="'messageAdd' + ${categor.id}"></div>
                                     <div th:object="${product}" class="form-group">
                                         <label>Название</label>
-                                        <input required="" type="text" class="form-control" autocomplete="off"
+                                        <input th:value="'add'+${categor.id}" required="" type="text" class="form-control" autocomplete="off"
                                                th:id="addName+${categor.id}"
                                                name="name" placeholder="Название"/>
                                     </div>
