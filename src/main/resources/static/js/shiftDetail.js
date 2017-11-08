@@ -1,7 +1,7 @@
 
 var totalPrice = 0;
 
-function insertTotalPrice(clients, element) {
+function insertTotalPrice(element) {
     document.getElementById(element).innerHTML += totalPrice;
     totalPrice = 0;
 }

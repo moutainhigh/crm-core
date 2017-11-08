@@ -113,6 +113,7 @@ public class DebtController {
 
 	@RequestMapping(value = "/addDebt", method = RequestMethod.POST)
 	public ResponseEntity<?> saveGoods(@ModelAttribute @Valid Debt debt) {
+		debt.setShift(shiftService.getLast());
 
 		debtService.save(debt);
 

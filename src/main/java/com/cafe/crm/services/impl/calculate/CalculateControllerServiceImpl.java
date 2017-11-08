@@ -295,6 +295,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 			debt.setDate(lastShift.getShiftDate());
 			debt.setDebtor(debtorName);
 			debt.setDebtAmount(totalDebtAmount);
+			debt.setShift(lastShift);
 			lastShift.addGivenDebtToList(debt);
 			findLeastOneOpenClientAndCloseCalculation(calculateId);
 			debtService.save(debt);

@@ -274,16 +274,27 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		List<Cost> otherCost = costService.findByDateAndVisibleTrue(shift.getShiftDate());
 		Double allSalaryCost = 0D;
 		Double allOtherCost = 0D;
+		Double amountCredited = 0D;
+		Double debts = 0D;
 
+		for (Client client : shift.getClients()) {
+			amountCredited += client.getAllPrice();
+		}
 		for (UserSalaryDetail detail : salaryDetails) {
 			allSalaryCost += detail.getSalary();
 		}
 		for (Cost otherGood : otherCost) {
 			allOtherCost = allOtherCost + otherGood.getPrice() * otherGood.getQuantity();
 		}
+		for (Debt debt : shift.getGivenDebts()) {
+			if (debt.isVisible()) {
+				amountCredited -= debt.getDebtAmount();
+				debts += debt.getDebtAmount();
+			}
+		}
 
 		return new DetailStatisticView(shiftDate, cashBox, allPrice, clientsNumber,
-				usersOnShift, salaryDetails, allCalculate, allSalaryCost, allOtherCost, otherCost);
+				usersOnShift, salaryDetails, allCalculate, allSalaryCost, allOtherCost, otherCost, amountCredited, debts);
 	}
 
 	private List<UserDTO> getUserDTOList(Shift shift) {
@@ -367,10 +378,14 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			allPrice += getAllDirtyPrice(client);
 		}
 		for (Debt debt : shift.getRepaidDebts()) {
-			allPrice += debt.getDebtAmount();
+			if (!debt.getShift().getId().equals(shift.getId())) {
+				allPrice += debt.getDebtAmount();
+			}
 		}
 		for (Debt debt : shift.getGivenDebts()) {
-			allPrice -= debt.getDebtAmount();
+			if (debt.isVisible()) {
+				allPrice -= debt.getDebtAmount();
+			}
 		}
 		for (Receipt receipt : receiptAmount){
 			allPrice +=receipt.getReceiptAmount();
