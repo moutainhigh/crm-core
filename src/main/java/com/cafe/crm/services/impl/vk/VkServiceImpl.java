@@ -9,6 +9,7 @@ import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.models.template.Template;
 import com.cafe.crm.models.user.User;
 import com.cafe.crm.services.interfaces.email.EmailService;
+import com.cafe.crm.services.interfaces.salary.UserSalaryDetailService;
 import com.cafe.crm.services.interfaces.template.TemplateService;
 import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.services.interfaces.vk.VkService;
@@ -71,14 +72,16 @@ public class VkServiceImpl implements VkService {
 	private final VkProperties vkProperties;
 	private final EmailService emailService;
 	private final UserService userService;
+	private final UserSalaryDetailService userSalaryDetailService;
 
 	@Autowired
-	public VkServiceImpl(TemplateService templateService, RestTemplate restTemplate, VkProperties vkProperties, EmailService emailService, UserService userService) {
+	public VkServiceImpl(TemplateService templateService, RestTemplate restTemplate, VkProperties vkProperties, EmailService emailService, UserService userService, UserSalaryDetailService userSalaryDetailService) {
 		this.templateService = templateService;
 		this.restTemplate = restTemplate;
 		this.vkProperties = vkProperties;
 		this.emailService = emailService;
 		this.userService = userService;
+		this.userSalaryDetailService = userSalaryDetailService;
 	}
 
 	@Override
@@ -150,9 +153,9 @@ public class VkServiceImpl implements VkService {
 				.append(user.getFirstName())
 				.append(" ")
 				.append(user.getLastName())
-				.append(" - ").append(df.format(user.getShiftSalary() + user.getBonus()))
+				.append(" - ").append(df.format(userSalaryDetailService.findFirstByUserIdAndShiftId(user.getId(), shift.getId()).getSalary()))
 				.append(System.getProperty("line.separator"));
-			salaryCost += user.getShiftSalary() + user.getBonus();
+			salaryCost += userSalaryDetailService.findFirstByUserIdAndShiftId(user.getId(), shift.getId()).getSalary();
 		}
 		if (salaries.length() > 0) {
 			salaries.deleteCharAt(salaries.length() - 1);
