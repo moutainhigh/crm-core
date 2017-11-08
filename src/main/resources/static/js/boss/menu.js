@@ -78,6 +78,9 @@ $(document).on('click', '#saveNewProductData', function () {
             } else if (e.responseText === 'selfCost field have to be greater or equal to zero') {
                 var errorMessage = '<h4 style="color:red;" align="center">Себестоимость должна быть больше либо равна 0</h4>';
                 $('.messageAdd' + id).html(errorMessage).show();
+            } else if (e.responseText === 'Длина названия должна быть от 1 до 30 символов') {
+                var errorMessage = '<h4 style="color:red;" align="center">Длина названия должна быть от 1 до 30 символов</h4>';
+                $('.messageAdd' + id).html(errorMessage).show();
             } else {
                 var errorMessage = '<h4 style="color:red;" align="center">Не удалось добавить продукт!</h4>';
                 $('.messageAdd' + id).html(errorMessage).show();
