@@ -96,7 +96,7 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th> Общий чек</th>
+                            <th th:unless="${cardEnable}"> Общий чек</th>
                             <th th:if="${cardEnable}"> Оплата наличными</th>
                             <th th:if="${cardEnable}"> Оплата по клубной карте</th>
                             <th> Стоимость прочего меню</th>
@@ -104,7 +104,7 @@
                             <th> Стоимость времени</th>
                         </tr>
                         <tr style="text-align: center; background: #DAEEFF">
-                            <td id="commonCheckSum">Сумма чеков:<br/></td>
+                            <td id="commonCheckSum" th:unless="${cardEnable}">Сумма чеков:<br/></td>
                             <td id="cashPaymentSum" th:if="${cardEnable}">Всего наличными:<br/></td>
                             <td id="clubCardPaymentSum" th:if="${cardEnable}">Всего картами:<br/></td>
                             <td id="menuOtherSum">Прочее меню:<br/></td>
@@ -114,7 +114,7 @@
                         </thead>
                         <tbody id="clients">
                         <tr th:each="pair : ${totalStat.clientsOnDetails.entrySet()}">
-                            <td class="commonCheck" th:text="${pair.getValue().allDirtyPrice}"></td>
+                            <td class="commonCheck" th:text="${pair.getValue().allDirtyPrice}" th:unless="${cardEnable}"></td>
                             <td class="cashPayment" th:text="${pair.getKey().cache}" th:if="${cardEnable}"></td>
                             <td class="clubCardPayment" th:text="${pair.getKey().payWithCard}" th:if="${cardEnable}"></td>
                             <td class="menuOtherCost" th:text="${pair.getValue().otherPriceMenu}"></td>
@@ -128,7 +128,7 @@
                         </tbody>
                         <tfoot>
                         <tr>
-                            <td></td>
+                            <td th:unless="${cardEnable}"></td>
                             <td th:if="${cardEnable}"></td>
                             <td th:if="${cardEnable}"></td>
                             <td></td>
