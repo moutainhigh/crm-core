@@ -219,7 +219,7 @@
                         </div>
                     </form>
                     <div align="center" class="modal fade" th:id="'add'+${categor.id}" tabindex="-1" roles="dialog"
-                         aria-labelledby="myModalLabel">
+                         aria-labelledby="myModalLabel" name="addProductModal">
                         <div class="modal-dialog" roles="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -232,7 +232,7 @@
                                     <div th:class="'messageAdd' + ${categor.id}"></div>
                                     <div th:object="${product}" class="form-group">
                                         <label>Название</label>
-                                        <input required="" type="text" class="form-control" autocomplete="off"
+                                        <input th:value="'add'+${categor.id}" required="" type="text" class="form-control" autocomplete="off"
                                                th:id="addName+${categor.id}"
                                                name="name" placeholder="Название"/>
                                     </div>
@@ -430,7 +430,7 @@
                 </div>
             </div>
         </div>
-        <form roles="form" method="post" action="/boss/menu/addCategory" style="margin: 10px auto; width: 50%">
+        <form roles="form" method="post" action="/boss/menu/addCategory" style="margin: 10px auto; width: 50%" id="addCategoryForm">
             <div align="center" class="modal fade" th:id="'addCat'" tabindex="-1" roles="dialog"
                  aria-labelledby="myModalLabel">
                 <div class="modal-dialog" roles="document">
@@ -443,24 +443,26 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label>Название</label>
-                                <input required="" type="text" class="form-control" id="loginProd2" name="name"
+                                <input maxlength="30" required="" type="text" class="form-control" id="loginProd2" name="name"
                                        autocomplete="off"
                                 ></input>
                             </div>
                             <div class="checkbox" align="left">
                                 <label>
-                                    <input type="checkbox" value="false" name="dirtyProfit">
+                                    <input type="checkbox" value="false" name="dirtyProfit" id="addCatDirtyProfit"
+                                    checked="checked">
                                     Не добавлять в прибыль грязными</input>
                                 </label>
                             </div>
                             <div class="checkbox" align="left">
                                 <label>
-                                    <input type="checkbox" value="true" name="floatingPrice">
+                                    <input type="checkbox" value="true" name="floatingPrice" id="addCatFloatingPrice">
                                     Категория с плавающей ценной</input>
                                 </label>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-lg btn-primary btn-block" name="add">Сохранить</button>
+                        <button type="submit" class="btn btn-lg btn-primary btn-block" name="add" id="saveCat">
+                            Сохранить</button>
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
