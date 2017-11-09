@@ -93,31 +93,6 @@ public class CalculatePriceServiceImpl implements CalculatePriceService {
 	}
 
 	@Override
-	public void round(Client client, boolean stateRound) {
-		if (!stateRound) {
-			client.setAllPrice((double) Math.round(client.getAllPrice()));
-			return;
-		}
-		Long allLong = client.getAllPrice().longValue();
-		Long two = allLong % 100;
-		if (two > 50) {
-			if (two >= 75) {
-				client.setAllPrice((double) (allLong - two) + 100);
-			} else {
-				client.setAllPrice((double) (allLong - two) + 50);
-			}
-		} else if (two < 50) {
-			if (two >= 25) {
-				client.setAllPrice((double) (allLong - two) + 50);
-			} else {
-				client.setAllPrice((double) (allLong - two));
-			}
-		} else {
-			client.setAllPrice((double) allLong);
-		}
-	}
-
-	@Override
 	public void payWithCardAndCache(Client client) {
 		Double payWithCard = client.getPayWithCard();
 		Double allPrice = client.getAllPrice();
