@@ -90,9 +90,14 @@ public class DebtServiceImpl implements DebtService {
 		Shift lastShift = shiftService.getLast();
 		Debt debt = repository.findOne(id);
 		lastShift.addRepaidDebtToList(debt);
-		List<Debt> newGivenDebtList = lastShift.getGivenDebts();
-		newGivenDebtList.remove(debt);
-		lastShift.setGivenDebts(newGivenDebtList);
+		List<Shift> shiftLists = shiftService.findAll();
+		for (Shift shift: shiftLists) {
+			List<Debt> newGivenDebtList = shift.getGivenDebts();
+			if (newGivenDebtList.contains(debt)){
+				newGivenDebtList.remove(debt);
+				shift.setGivenDebts(newGivenDebtList);
+			}
+		}
 		shiftService.saveAndFlush(lastShift);
 		offVisibleStatus(debt);
 	}
