@@ -232,7 +232,7 @@
                                     <div th:class="'messageAdd' + ${categor.id}"></div>
                                     <div th:object="${product}" class="form-group">
                                         <label>Название</label>
-                                        <input th:value="'add'+${categor.id}" required="" type="text" class="form-control" autocomplete="off"
+                                        <input required="" type="text" class="form-control" autocomplete="off"
                                                th:id="addName+${categor.id}"
                                                name="name" placeholder="Название"/>
                                     </div>
@@ -449,8 +449,7 @@
                             </div>
                             <div class="checkbox" align="left">
                                 <label>
-                                    <input type="checkbox" value="false" name="dirtyProfit" id="addCatDirtyProfit"
-                                    checked="checked">
+                                    <input type="checkbox" value="false" name="dirtyProfit" id="addCatDirtyProfit">
                                     Не добавлять в прибыль грязными</input>
                                 </label>
                             </div>
