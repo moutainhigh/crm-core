@@ -214,10 +214,10 @@
     </div>
 
     <center>
-        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#debts" style="margin-bottom: 1%">Долги
+        <button th:if="${detailStatisticView.debts != 0}" type="button" class="btn btn-info" data-toggle="collapse" data-target="#debts" style="margin-bottom: 1%">Долги
         </button>
     </center>
-    <div id="debts" class="collapse">
+    <div id="debts" class="collapse" th:if="${detailStatisticView.debts != 0}">
         <div class="table">
             <table class="table table-striped">
                 <thead>
