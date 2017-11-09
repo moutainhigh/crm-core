@@ -414,20 +414,6 @@ function prog(calcId) {
         }, 10);
 }
 
-function roundState(calcId, state) {
-    if (state == 'true') {
-        $('#rek' + calcId).html('<p style="margin: 0;font-size: 20px">Не округлено</p>');
-        $('#rek' + calcId).attr('onclick', 'roundState(' + '"' + calcId + '"' + ',' + '"' + false + '"' + ')');
-    } else {
-        $('#rek' + calcId).html('<p style="margin: 0;font-size: 20px">Округлено</p>');
-        $('#rek' + calcId).attr('onclick', 'roundState(' + '"' + calcId + '"' + ',' + '"' + true + '"' + ')')
-    }
-    $('#formRoundState' + calcId).submit();
-    setTimeout(function () {
-        ajaxForCalculate(calcId)
-    }, 500);
-}
-
 function closeClientDebt(calculateId) {
     if (isBlank($('#debtorName' + calculateId).val())) {
         var errorMessage = '<h4 style="color:red;" align="center">' + 'Обязательно укажите имя должника!' + '</h4>';

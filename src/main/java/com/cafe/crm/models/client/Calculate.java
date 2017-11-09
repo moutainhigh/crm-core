@@ -26,8 +26,6 @@ public class Calculate extends BaseEntity {
 
 	private boolean state = true; // Open or Closed
 
-	private boolean roundState = true;
-
 	private boolean isPause = false;  // now is paused ?
 
 	@OneToMany
@@ -49,14 +47,6 @@ public class Calculate extends BaseEntity {
 
 	public void setPause(boolean pause) {
 		isPause = pause;
-	}
-
-	public boolean isRoundState() {
-		return roundState;
-	}
-
-	public void setRoundState(boolean roundState) {
-		this.roundState = roundState;
 	}
 
 	public List<Card> getCards() {

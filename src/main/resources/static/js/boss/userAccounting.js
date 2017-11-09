@@ -88,9 +88,8 @@ function editUserFormData(id) {
         $('#allUserEdit' + id).modal('hide');
         $('#passwordPrompt' + id).modal('show');
     } else {
-        resultEditUserFormMap['bossPasswordRequired'] = false;
-        resultEditUserFormMap['bossPassword'] = '';
-        sendEditUserFormData(resultEditUserFormMap);
+        var message = '<h4 style="color:red;" align="center">Внесите изменения для редактирования данных</h4>';
+        $('.errorMessage').html(message).show();
     }
 }
 

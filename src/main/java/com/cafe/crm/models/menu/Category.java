@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 
@@ -16,9 +17,10 @@ public class Category extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	@NotNull(message = "Укажите название")
+	@NotEmpty(message = "Укажите название")
+	@Length(min = 1, max = 30)
 	@Column(name = "name", nullable = false)
-	@NotEmpty
-	@Length(min = 1, max = 20)
 	private String name;
 
 	@OneToMany(mappedBy = "category", fetch = FetchType.EAGER, orphanRemoval = true)
@@ -100,8 +102,8 @@ public class Category extends BaseEntity {
 
 	@Override
 	public int hashCode() {
-		int result = (int) (id ^ (id >>> 32));
-		result = 31 * result + (name != null ? name.hashCode() : 0);
+		int result = getId() != null ? getId().hashCode() : 0;
+		result = 31 * result + (getName() != null ? getName().hashCode() : 0);
 		return result;
 	}
 
