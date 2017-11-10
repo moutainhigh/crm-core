@@ -10,7 +10,7 @@
     th:onclick="'grabInitialEditUserFormData(\'' + ${user.id} + '\');'">Редактировать
     </button>
     <!-- Modal -->
-    <div class="modal fade" th:id="'allUserEdit'+${user.id}">
+    <div class="modal fade" th:id="'allUserEdit'+${user.id}" th:tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

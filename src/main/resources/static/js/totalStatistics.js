@@ -22,24 +22,28 @@ jQuery(document).ready( function() {
 
 
     if($("#clubCardPaymentSum").length) {
-        var totalSumWithCard = [0, 0, 0, 0, 0];
+        var totalSumWithCard = [0, 0, 0, 0, 0, 0];
         Array.from(document.getElementById("clients").rows).forEach(function(item) {
+            if(item.querySelector('.commonCheck')) {
+                totalSum[0] += +item.querySelector('.commonCheck').innerHTML;
+            }
             if(item.querySelector('.cashPayment')) {
-                totalSumWithCard[0] += +item.querySelector('.cashPayment').innerHTML;
+                totalSumWithCard[1] += +item.querySelector('.cashPayment').innerHTML;
             }
             if(item.querySelector('.clubCardPayment')) {
-                totalSumWithCard[1] += +item.querySelector('.clubCardPayment').innerHTML;
+                totalSumWithCard[2] += +item.querySelector('.clubCardPayment').innerHTML;
             }
             if(item.querySelector('.menuOtherCost')) {
-                totalSumWithCard[2] += +item.querySelector('.menuOtherCost').innerHTML;
+                totalSumWithCard[3] += +item.querySelector('.menuOtherCost').innerHTML;
             }
             if(item.querySelector('.menuDirtyCost')) {
-                totalSumWithCard[3] += +item.querySelector('.menuDirtyCost').innerHTML;
+                totalSumWithCard[4] += +item.querySelector('.menuDirtyCost').innerHTML;
             }
             if(item.querySelector('.timeCost')) {
-                totalSumWithCard[4] += +item.querySelector('.timeCost').innerHTML;
+                totalSumWithCard[5] += +item.querySelector('.timeCost').innerHTML;
             }
         });
+        document.getElementById("commonCheckSum").innerHTML += " " + totalSum[0];
         document.getElementById("cashPaymentSum").innerHTML += " " + totalSumWithCard[0];
         document.getElementById("clubCardPaymentSum").innerHTML += " " + totalSumWithCard[1];
         document.getElementById("menuOtherSum").innerHTML += " " + totalSumWithCard[2];
@@ -49,8 +53,8 @@ jQuery(document).ready( function() {
         var totalSum = [0, 0, 0, 0];
         Array.from(document.getElementById("clients").rows).forEach(
             function(item) {
-                if(item.querySelector('.cashPayment')) {
-                    totalSum[0] += +item.querySelector('.cashPayment').innerHTML;
+                if(item.querySelector('.commonCheck')) {
+                    totalSum[0] += +item.querySelector('.commonCheck').innerHTML;
                 }
                 if(item.querySelector('.menuOtherCost')) {
                     totalSum[1] += +item.querySelector('.menuOtherCost').innerHTML;
@@ -62,7 +66,7 @@ jQuery(document).ready( function() {
                     totalSum[3] += +item.querySelector('.timeCost').innerHTML;
                 }
             });
-        document.getElementById("cashPaymentSum").innerHTML += " " + totalSum[0];
+        document.getElementById("commonCheckSum").innerHTML += " " + totalSum[0];
         document.getElementById("menuOtherSum").innerHTML += " " + totalSum[1];
         document.getElementById("menuDirtySum").innerHTML += " " + totalSum[2];
         document.getElementById("timeCostSum").innerHTML += " " + totalSum[3];
