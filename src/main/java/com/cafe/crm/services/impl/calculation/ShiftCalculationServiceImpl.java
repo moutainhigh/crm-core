@@ -177,9 +177,9 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 	}
 
 	private ClientDetails getClientDetails(Client client) {
-		Double allDirtyPrice;
-		Double dirtyPriceMenu = 0D;
-		Double otherPriceMenu = 0D;
+		double allDirtyPrice;
+		double dirtyPriceMenu = 0D;
+		double otherPriceMenu = 0D;
 		List<LayerProduct> dirtyProduct = new ArrayList<>();
 		List<LayerProduct> otherProduct = new ArrayList<>();
 		for (LayerProduct product : client.getLayerProducts()) {
@@ -265,25 +265,45 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 	@Override
 	public DetailStatisticView createDetailStatisticView(Shift shift) {
 		LocalDate shiftDate = shift.getShiftDate();
-		Double cashBox = shift.getCashBox() + shift.getBankCashBox();
-		Double allPrice = getAllPrice(shift);
+		double cashBox = shift.getCashBox() + shift.getBankCashBox();
+		double allPrice = getAllPrice(shift);
 		int clientsNumber = shift.getClients().size();
 		List<UserDTO> usersOnShift = getUserDTOList(shift);
 		List<UserSalaryDetail> salaryDetails = shift.getUserSalaryDetail();
 		Set<Calculate> allCalculate = shift.getCalculates();
 		List<Cost> otherCost = costService.findByDateAndVisibleTrue(shift.getShiftDate());
-		Double allSalaryCost = 0D;
-		Double allOtherCost = 0D;
+		List<Receipt> receiptAmount = receiptService.findByShiftId(shift.getId());
+		double allSalaryCost = 0D;
+		double allOtherCost = 0D;
+		double amountCredited = 0D;
+		double debts = 0D;
+		double receiptsSum = 0D;
 
+		for (Client client : shift.getClients()) {
+			amountCredited += client.getAllPrice();
+		}
 		for (UserSalaryDetail detail : salaryDetails) {
 			allSalaryCost += detail.getSalary();
 		}
 		for (Cost otherGood : otherCost) {
 			allOtherCost = allOtherCost + otherGood.getPrice() * otherGood.getQuantity();
 		}
+		for (Debt debt : shift.getGivenDebts()) {
+			amountCredited -= debt.getDebtAmount();
+			debts += debt.getDebtAmount();
+		}
+		for (Debt debt : shift.getRepaidDebts()) {
+			if (!debt.getShift().getId().equals(shift.getId())) {
+				receiptsSum += debt.getDebtAmount();
+			}
+		}
+		for (Receipt receipt : receiptAmount){
+			receiptsSum +=receipt.getReceiptAmount();
+		}
 
 		return new DetailStatisticView(shiftDate, cashBox, allPrice, clientsNumber,
-				usersOnShift, salaryDetails, allCalculate, allSalaryCost, allOtherCost, otherCost);
+				usersOnShift, salaryDetails, allCalculate, allSalaryCost, allOtherCost, otherCost,
+				amountCredited, debts, receiptsSum);
 	}
 
 	private List<UserDTO> getUserDTOList(Shift shift) {
@@ -367,7 +387,9 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			allPrice += getAllDirtyPrice(client);
 		}
 		for (Debt debt : shift.getRepaidDebts()) {
-			allPrice += debt.getDebtAmount();
+			if (!debt.getShift().getId().equals(shift.getId())) {
+				allPrice += debt.getDebtAmount();
+			}
 		}
 		for (Debt debt : shift.getGivenDebts()) {
 			allPrice -= debt.getDebtAmount();

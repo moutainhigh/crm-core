@@ -14,9 +14,9 @@ public class DetailStatisticView {
 
 	private LocalDate shiftDate;
 
-	private Double cashBox;
+	private double cashBox;
 
-	private Double allPrice;
+	private double allPrice;
 
 	private int clientsNumber;
 
@@ -26,15 +26,22 @@ public class DetailStatisticView {
 
 	private Set<Calculate> allCalculate;
 
-	private Double allSalaryCost;
+	private double allSalaryCost;
 
-	private Double allOtherCost;
+	private double allOtherCost;
 
 	private List<Cost> otherCost;
 
-	public DetailStatisticView(LocalDate shiftDate, Double cashBox, Double allPrice, int clientsNumber,
+	private double amountCredited;
+
+	private double debts;
+
+	double receiptsSum;
+
+	public DetailStatisticView(LocalDate shiftDate, double cashBox, double allPrice, int clientsNumber,
 							   List<UserDTO> usersOnShift, List<UserSalaryDetail> userSalaryDetail,
-							   Set<Calculate> allCalculate, Double allSalaryCost, Double allOtherCost, List<Cost> otherCost) {
+							   Set<Calculate> allCalculate, double allSalaryCost, double allOtherCost,
+							   List<Cost> otherCost, double amountCredited, double debts, double receiptsSum) {
 		this.shiftDate = shiftDate;
 		this.cashBox = cashBox;
 		this.allPrice = allPrice;
@@ -45,6 +52,9 @@ public class DetailStatisticView {
 		this.allSalaryCost = allSalaryCost;
 		this.allOtherCost = allOtherCost;
 		this.otherCost = otherCost;
+		this.amountCredited = amountCredited;
+		this.debts = debts;
+		this.receiptsSum = receiptsSum;
 	}
 
 	public LocalDate getShiftDate() {
@@ -55,19 +65,19 @@ public class DetailStatisticView {
 		this.shiftDate = shiftDate;
 	}
 
-	public Double getCashBox() {
+	public double getCashBox() {
 		return cashBox;
 	}
 
-	public void setCashBox(Double cashBox) {
+	public void setCashBox(double cashBox) {
 		this.cashBox = cashBox;
 	}
 
-	public Double getAllPrice() {
+	public double getAllPrice() {
 		return allPrice;
 	}
 
-	public void setAllPrice(Double allPrice) {
+	public void setAllPrice(double allPrice) {
 		this.allPrice = allPrice;
 	}
 
@@ -103,19 +113,19 @@ public class DetailStatisticView {
 		this.allCalculate = allCalculate;
 	}
 
-	public Double getAllSalaryCost() {
+	public double getAllSalaryCost() {
 		return allSalaryCost;
 	}
 
-	public void setAllSalaryCost(Double allSalaryCost) {
+	public void setAllSalaryCost(double allSalaryCost) {
 		this.allSalaryCost = allSalaryCost;
 	}
 
-	public Double getAllOtherCost() {
+	public double getAllOtherCost() {
 		return allOtherCost;
 	}
 
-	public void setAllOtherCost(Double allOtherCost) {
+	public void setAllOtherCost(double allOtherCost) {
 		this.allOtherCost = allOtherCost;
 	}
 
@@ -125,5 +135,29 @@ public class DetailStatisticView {
 
 	public void setOtherCost(List<Cost> otherCost) {
 		this.otherCost = otherCost;
+	}
+
+	public double getAmountCredited() {
+		return amountCredited;
+	}
+
+	public void setAmountCredited(double amountCredited) {
+		this.amountCredited = amountCredited;
+	}
+
+	public double getDebts() {
+		return debts;
+	}
+
+	public void setDebts(double debts) {
+		this.debts = debts;
+	}
+
+	public double getReceiptsSum() {
+		return receiptsSum;
+	}
+
+	public void setReceiptsSum(double receiptsSum) {
+		this.receiptsSum = receiptsSum;
 	}
 }

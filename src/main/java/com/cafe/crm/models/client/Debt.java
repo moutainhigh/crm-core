@@ -1,12 +1,10 @@
 package com.cafe.crm.models.client;
 
 import com.cafe.crm.models.BaseEntity;
+import com.cafe.crm.models.shift.Shift;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -26,6 +24,10 @@ public class Debt extends BaseEntity {
 	private LocalDate date;
 
 	private boolean visible = true;
+
+	@OneToOne
+	@JoinColumn(name = "shift_id", nullable = false)
+	private Shift shift;
 
 	public Debt() {
 	}
@@ -72,6 +74,14 @@ public class Debt extends BaseEntity {
 		this.visible = visible;
 	}
 
+	public Shift getShift() {
+		return shift;
+	}
+
+	public void setShift(Shift shift) {
+		this.shift = shift;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -80,11 +90,12 @@ public class Debt extends BaseEntity {
 		return Objects.equals(id, debt.id) &&
 				Objects.equals(debtor, debt.debtor) &&
 				Objects.equals(debtAmount, debt.debtAmount) &&
-				Objects.equals(date, debt.date);
+				Objects.equals(date, debt.date) &&
+				Objects.equals(shift, debt.shift);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, debtor, debtAmount, date);
+		return Objects.hash(id, debtor, debtAmount, date, shift);
 	}
 }
