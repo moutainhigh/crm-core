@@ -36,10 +36,12 @@ public class DetailStatisticView {
 
 	private double debts;
 
+	double receiptsSum;
+
 	public DetailStatisticView(LocalDate shiftDate, double cashBox, double allPrice, int clientsNumber,
 							   List<UserDTO> usersOnShift, List<UserSalaryDetail> userSalaryDetail,
 							   Set<Calculate> allCalculate, double allSalaryCost, double allOtherCost,
-							   List<Cost> otherCost, double amountCredited, double debts) {
+							   List<Cost> otherCost, double amountCredited, double debts, double receiptsSum) {
 		this.shiftDate = shiftDate;
 		this.cashBox = cashBox;
 		this.allPrice = allPrice;
@@ -52,6 +54,7 @@ public class DetailStatisticView {
 		this.otherCost = otherCost;
 		this.amountCredited = amountCredited;
 		this.debts = debts;
+		this.receiptsSum = receiptsSum;
 	}
 
 	public LocalDate getShiftDate() {
@@ -148,5 +151,13 @@ public class DetailStatisticView {
 
 	public void setDebts(double debts) {
 		this.debts = debts;
+	}
+
+	public double getReceiptsSum() {
+		return receiptsSum;
+	}
+
+	public void setReceiptsSum(double receiptsSum) {
+		this.receiptsSum = receiptsSum;
 	}
 }

@@ -54,7 +54,7 @@ public class Shift extends BaseEntity {
 	@OneToMany(fetch = FetchType.LAZY)
 	private List<Debt> repaidDebts = new ArrayList<>();
 
-	@OneToMany(mappedBy = "shift")
+	@OneToMany(fetch = FetchType.LAZY)
 	private List<Debt> givenDebts = new ArrayList<>();
 
 	@OneToMany(mappedBy = "shift")
