@@ -21,7 +21,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@JsonIgnoreProperties({"password", "roles", "positions", "shifts", "shiftSalary", "salary", "bonus", "UserSalaryDetail", "company", "userSalaryDetail"})
+@JsonIgnoreProperties({"password", "roles", "positions", "shifts", "shiftSalary", "salary", "bonus", "userSalaryDetail"})
 @Transform(UserDTO.class)
 public class User extends BaseEntity {
 
