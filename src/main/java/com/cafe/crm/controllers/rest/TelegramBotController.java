@@ -4,6 +4,7 @@ import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.user.User;
 import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.calculate.CalculateService;
+import com.cafe.crm.services.interfaces.client.ClientService;
 import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.utils.JsonField;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -20,11 +21,13 @@ public class TelegramBotController {
 
 	private final BoardService boardService;
 	private final UserService userService;
+	private final ClientService clientService;
 
 	@Autowired
-	public TelegramBotController(BoardService boardService, UserService userService) {
+	public TelegramBotController(BoardService boardService, UserService userService, ClientService clientService) {
 		this.boardService = boardService;
 		this.userService = userService;
+		this.clientService = clientService;
 	}
 
 	@Autowired
@@ -40,7 +43,7 @@ public class TelegramBotController {
 	@RequestMapping(value = "/manager/rest/clientsNumber", method = RequestMethod.GET)
 	@ResponseBody
 	public Integer getIdLastClient() {
-		return calculateService.getAllOpen().stream().map(Calculate::getClient).mapToInt(List::size).sum();
+		return Integer.parseInt(clientService.getLast().getId().toString());
 	}
 
 	@RequestMapping(value = "/authenticationTelegramBotUsers", method = RequestMethod.POST)

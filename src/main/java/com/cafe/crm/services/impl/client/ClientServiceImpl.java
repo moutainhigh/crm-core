@@ -84,6 +84,11 @@ public class ClientServiceImpl implements ClientService {
 		return clientRepository.findCardByClientIdIn(clientsIds);
 	}
 
+	@Override
+	public Client getLast() {
+		return clientRepository.getLastAndCompanyId(companyIdCache.getCompanyId());
+	}
+
 	@Transactional
 	@Override
 	public boolean updateClientTime(Long id, int hours, int minutes) {
