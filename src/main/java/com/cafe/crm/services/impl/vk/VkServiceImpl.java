@@ -6,6 +6,7 @@ import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.note.NoteRecord;
 import com.cafe.crm.models.shift.Shift;
+import com.cafe.crm.models.shift.UserSalaryDetail;
 import com.cafe.crm.models.template.Template;
 import com.cafe.crm.models.user.User;
 import com.cafe.crm.services.interfaces.email.EmailService;
@@ -149,13 +150,14 @@ public class VkServiceImpl implements VkService {
 		DecimalFormat df = new DecimalFormat("#.##");
 		double salaryCost = 0d;
 		for (User user : shift.getUsers()) {
+			UserSalaryDetail userOnShiftSalary = userSalaryDetailService.findFirstByUserIdAndShiftId(user.getId(), shift.getId());
 			salaries
 				.append(user.getFirstName())
 				.append(" ")
 				.append(user.getLastName())
-				.append(" - ").append(df.format(userSalaryDetailService.findFirstByUserIdAndShiftId(user.getId(), shift.getId()).getSalary()))
+				.append(" - ").append(df.format(userOnShiftSalary.getSalary()))
 				.append(System.getProperty("line.separator"));
-			salaryCost += userSalaryDetailService.findFirstByUserIdAndShiftId(user.getId(), shift.getId()).getSalary();
+			salaryCost += userOnShiftSalary.getSalary();
 		}
 		if (salaries.length() > 0) {
 			salaries.deleteCharAt(salaries.length() - 1);
