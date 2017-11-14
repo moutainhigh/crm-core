@@ -60,6 +60,7 @@ function grabInitialEditUserFormData(id) {
     var positionsIds = $(positionCheckboxId + ' input:checkbox:checked').map(function () {
         return $(this).val();
     }).get();
+    var baseSalary = $('.editAllUsersBaseSalary' + id).val();
     var rolesCheckboxId = '.editAllUsers-RoleCheckbox' + id;
     var rolesIds = $(rolesCheckboxId + ' input:checkbox:checked').map(function () {
         return $(this).val();
@@ -68,16 +69,18 @@ function grabInitialEditUserFormData(id) {
     initialEditUserFormMap['phone'] = phone;
     initialEditUserFormMap['positionsIds'] = positionsIds;
     initialEditUserFormMap['rolesIds'] = rolesIds;
+    initialEditUserFormMap['baseSalary'] = baseSalary;
 }
 
 function criticalUserDataUpdated(initialData, updatedData) {
     var emailsEqual = initialData['email'] === updatedData['email'];
     var phonesEqual = initialData['phone'] === updatedData['phone'];
+    var baseSalaryEqual = initialData['baseSalary'] === updatedData['baseSalary'];
     var rolesEqual = arraysEqual(initialData['rolesIds'], updatedData['rolesIds']);
     var positionsEqual = arraysEqual(initialData['positionsIds'], updatedData['positionsIds']);
     var userPasswordUpdated = !(isBlank(updatedData['oldPassword']) && isBlank(updatedData['newPassword'])
         && isBlank(updatedData['repeatedPassword']));
-    return (!emailsEqual || !phonesEqual || !rolesEqual || !positionsEqual || userPasswordUpdated);
+    return (!emailsEqual || !phonesEqual || !baseSalaryEqual || !rolesEqual || !positionsEqual || userPasswordUpdated);
 }
 
 function editUserFormData(id) {
