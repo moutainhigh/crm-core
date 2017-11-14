@@ -61,7 +61,7 @@ public class Client extends BaseEntity {
 	@NotTransform
 	private Double payWithCard = 0D;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JsonBackReference
 	@JoinTable(name = "client_layer_product",
 			joinColumns = {@JoinColumn(name = "client_id", referencedColumnName = "id")},

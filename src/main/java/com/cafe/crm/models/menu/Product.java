@@ -38,12 +38,12 @@ public class Product extends BaseEntity {
 	@JoinTable(name = "product_and_categories", joinColumns = {@JoinColumn(name = "product_id")}, inverseJoinColumns = {@JoinColumn(name = "category_id")})
 	private Category category;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@MapKeyJoinColumn(name = "ingredient")
 	@Column(name = "amount")
 	private Map<Ingredients, Double> recipe;
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@MapKeyJoinColumn(name = "position")
 	@Column(name = "percent")
 	private Map<Position, Integer> staffPercent;

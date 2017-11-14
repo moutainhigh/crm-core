@@ -162,7 +162,7 @@ public class VkServiceImpl implements VkService {
 		return salaryCost;
 	}
 
-	private double formatCostsAndGetOtherCosts(List<Cost> costs, StringBuilder otherCosts) {
+	private double formatCostsAndGetOtherCosts(Set<Cost> costs, StringBuilder otherCosts) {
 		DecimalFormat df = new DecimalFormat("#.##");
 		double otherCost = 0d;
 		boolean needGiveNameToOtherCosts = true;

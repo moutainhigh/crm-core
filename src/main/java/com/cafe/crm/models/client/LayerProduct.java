@@ -32,7 +32,7 @@ public class LayerProduct extends BaseEntity {
 	@NotNull
 	private Long productId;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JsonManagedReference
 	@JoinTable(name = "client_layer_product",
 			joinColumns = {@JoinColumn(name = "layer_product_id", referencedColumnName = "id")},

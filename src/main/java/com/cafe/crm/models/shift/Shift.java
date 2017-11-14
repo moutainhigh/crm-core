@@ -48,17 +48,17 @@ public class Shift extends BaseEntity {
 	@ManyToMany(mappedBy = "shifts", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	private List<User> users;
 
-	@OneToMany(mappedBy = "shift", fetch = FetchType.LAZY)
-	private List<UserSalaryDetail> userSalaryDetail;
+	@OneToMany(mappedBy = "shift", fetch = FetchType.EAGER)
+	private Set<UserSalaryDetail> userSalaryDetail;
 
-	@OneToMany(fetch = FetchType.LAZY)
-	private List<Debt> repaidDebts = new ArrayList<>();
+	@OneToMany(fetch = FetchType.EAGER)
+	private Set<Debt> repaidDebts = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.LAZY)
-	private List<Debt> givenDebts = new ArrayList<>();
+	@OneToMany(fetch = FetchType.EAGER)
+	private Set<Debt> givenDebts = new HashSet<>();
 
-	@OneToMany(mappedBy = "shift")
-	private List<Cost> costs;
+	@OneToMany(mappedBy = "shift", fetch = FetchType.EAGER)
+	private Set<Cost> costs;
 
 	@OneToMany(mappedBy = "shift")
 	private List<Receipt> receipts;
@@ -95,11 +95,11 @@ public class Shift extends BaseEntity {
 		this.users = users;
 	}
 
-	public List<UserSalaryDetail> getUserSalaryDetail() {
+	public Set<UserSalaryDetail> getUserSalaryDetail() {
 		return userSalaryDetail;
 	}
 
-	public void setUserSalaryDetail(List<UserSalaryDetail> userSalaryDetail) {
+	public void setUserSalaryDetail(Set<UserSalaryDetail> userSalaryDetail) {
 		this.userSalaryDetail = userSalaryDetail;
 	}
 
@@ -183,7 +183,7 @@ public class Shift extends BaseEntity {
 		opened = open;
 	}
 
-	public List<Debt> getRepaidDebts() {
+	public Set<Debt> getRepaidDebts() {
 		return repaidDebts;
 	}
 
@@ -195,11 +195,11 @@ public class Shift extends BaseEntity {
 		this.givenDebts.add(debt);
 	}
 
-	public List<Cost> getCosts() {
+	public Set<Cost> getCosts() {
 		return costs;
 	}
 
-	public void setCosts(List<Cost> costs) {
+	public void setCosts(Set<Cost> costs) {
 		this.costs = costs;
 	}
 
@@ -250,11 +250,11 @@ public class Shift extends BaseEntity {
 				'}';
 	}
 
-	public List<Debt> getGivenDebts() {
+	public Set<Debt> getGivenDebts() {
 		return givenDebts;
 	}
 
-	public void setGivenDebts(List<Debt> givenDebts) {
+	public void setGivenDebts(Set<Debt> givenDebts) {
 		this.givenDebts = givenDebts;
 	}
 }
