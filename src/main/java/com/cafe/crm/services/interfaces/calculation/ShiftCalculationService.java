@@ -23,4 +23,5 @@ public interface ShiftCalculationService {
 	void transferFromCashBoxToBank(Double transfer);
 	Map<Client, ClientDetails> getClientsOnDetails (Set<Calculate> allCalculate);
 	List<CalculateDTO> getCalculates(Shift shift);
+	double getAllPrice(Shift shift);
 }

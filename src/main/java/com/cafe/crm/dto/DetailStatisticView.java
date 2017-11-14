@@ -22,7 +22,7 @@ public class DetailStatisticView {
 
 	private List<UserDTO> usersOnShift;
 
-	private List<UserSalaryDetail> userSalaryDetail;
+	private Set<UserSalaryDetail> userSalaryDetail;
 
 	private Set<Calculate> allCalculate;
 
@@ -39,7 +39,7 @@ public class DetailStatisticView {
 	double receiptsSum;
 
 	public DetailStatisticView(LocalDate shiftDate, double cashBox, double allPrice, int clientsNumber,
-							   List<UserDTO> usersOnShift, List<UserSalaryDetail> userSalaryDetail,
+							   List<UserDTO> usersOnShift, Set<UserSalaryDetail> userSalaryDetail,
 							   Set<Calculate> allCalculate, double allSalaryCost, double allOtherCost,
 							   List<Cost> otherCost, double amountCredited, double debts, double receiptsSum) {
 		this.shiftDate = shiftDate;
@@ -97,11 +97,11 @@ public class DetailStatisticView {
 		this.usersOnShift = usersOnShift;
 	}
 
-	public List<UserSalaryDetail> getUserSalaryDetail() {
+	public Set<UserSalaryDetail> getUserSalaryDetail() {
 		return userSalaryDetail;
 	}
 
-	public void setUserSalaryDetail(List<UserSalaryDetail> userSalaryDetail) {
+	public void setUserSalaryDetail(Set<UserSalaryDetail> userSalaryDetail) {
 		this.userSalaryDetail = userSalaryDetail;
 	}
 
