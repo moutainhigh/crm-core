@@ -6,11 +6,15 @@ spring:
     password: root
   jpa:
     generate-ddl: true
-    hibernate:
-      ddl-auto: create-drop
     database-platform: org.hibernate.dialect.MySQL5Dialect
-    show-sql: false
+    show-sql: true
     database: default
+    properties:
+      hibernate:
+        cache:
+          region:
+            factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
+
   thymeleaf:
     cache: false
     encoding: UTF-8

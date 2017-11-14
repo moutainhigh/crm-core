@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
 		checkForUniqueEmailAndPhone(user);
 		companyService.save(user.getCompany());
 		userRepository.saveAndFlush(user);
-		cacheManager.getCache("user").clear();
+		//cacheManager.getCache("user").clear();
 	}
 
 	@Override
@@ -336,7 +336,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	@Cacheable("user")
+	//@Cacheable("user")
+	//@Cacheable(value="user")
 	public User findByUsername(String username) {
 		return userRepository.findByUsername(username);
 	}

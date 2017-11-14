@@ -9,6 +9,7 @@ import com.cloudinary.Cloudinary;
 import com.google.common.cache.CacheBuilder;
 import com.yc.easytransformer.Transformer;
 import com.yc.easytransformer.impl.EasyTransformer;
+import net.sf.ehcache.config.CacheConfiguration;
 import org.hibernate.collection.internal.PersistentBag;
 import org.joda.time.DateTime;
 import com.yc.easytransformer.Transformer;
@@ -21,11 +22,16 @@ import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
+import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.cache.guava.GuavaCache;
+import org.springframework.cache.interceptor.*;
 import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -45,6 +51,7 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableAspectJAutoProxy
+@EnableCaching
 public class CommonConfig {
 
 	@Bean
@@ -122,10 +129,33 @@ public class CommonConfig {
 
 	@Bean
 	public CacheManager cacheManager() {
-		SimpleCacheManager cacheManager = new SimpleCacheManager();
-		GuavaCache userCache = new GuavaCache("user", CacheBuilder.newBuilder().expireAfterAccess(60, TimeUnit.MINUTES).build());
-		cacheManager.setCaches(Collections.singletonList(userCache));
+		EhCacheCacheManager cacheManager = new EhCacheCacheManager();
+		cacheManager.setCacheManager(ehCacheManagerFactoryBean().getObject());
 		return cacheManager;
+	}
+
+	@Bean
+	public KeyGenerator keyGenerator() {
+		return new SimpleKeyGenerator();
+	}
+
+	@Bean
+	public CacheResolver cacheResolver()    {
+		return new SimpleCacheResolver(cacheManager());
+	}
+
+	@Bean
+	public CacheErrorHandler errorHandler() {
+		return new SimpleCacheErrorHandler();
+	}
+
+	@Bean
+	public EhCacheManagerFactoryBean ehCacheManagerFactoryBean() {
+		EhCacheManagerFactoryBean ehCacheManagerFactoryBean = new EhCacheManagerFactoryBean();
+		ehCacheManagerFactoryBean.setConfigLocation(new ClassPathResource("ehcache.xml"));
+		ehCacheManagerFactoryBean.setCacheManagerName("user");
+		ehCacheManagerFactoryBean.setShared(true);
+		return ehCacheManagerFactoryBean;
 	}
 
 	@Bean

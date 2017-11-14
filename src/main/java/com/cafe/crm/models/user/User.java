@@ -8,9 +8,13 @@ import com.cafe.crm.utils.PatternStorage;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.yc.easytransformer.annotations.NotTransform;
 import com.yc.easytransformer.annotations.Transform;
+import org.hibernate.annotations.*;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
@@ -23,6 +27,7 @@ import java.util.Set;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @JsonIgnoreProperties({"password", "roles", "positions", "shifts", "shiftSalary", "salary", "bonus", "userSalaryDetail"})
 @Transform(UserDTO.class)
+//@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "user")
 public class User extends BaseEntity {
 
 	@Id
