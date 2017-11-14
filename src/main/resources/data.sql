@@ -36,7 +36,7 @@ values
 INSERT INTO companies
 (id, name)
 VALUES
-  (1, 'SuperAdminCompany');
+  (100, 'SuperAdminCompany');
 --   (1, 'companyA'),
 --   (2, 'companyB');
 
@@ -47,7 +47,7 @@ VALUES
 --   (1, 'Герман', 'Севостьянов', 'boss@mail.ru', '89123456789', '$2a$10$Rqc3K45Z8GYbklMvy3640uj/XY4supJ2XmWmS4t1zjBlXiVh3h4aC', 2000, 0, 0, TRUE, TRUE, 1),
 --   (3, 'Ахмад', 'Чай', 'worker@mail.ru', '89111111111', '$2a$10$ffBOimLAaDY5o6jU62oecuKgSgcYAY3FpAS3okZHQw0tHRxV39Oa.', 0, 0, 0, TRUE, TRUE, 1),
 --   (4, 'Намрег', 'Инверг', 'boss2@mail.ru', '89123456780', '$2a$10$ufhLqzo3wbuWKIuQjPnyrOYplalLZsJ8X2NXufOycc/IT2qZKB4m6', 2000, 0, 0, TRUE, TRUE, 2),
-  (5, 'super', 'super', 'super@mail.ru', '80000000000', '$2a$10$Rqc3K45Z8GYbklMvy3640uj/XY4supJ2XmWmS4t1zjBlXiVh3h4aC', 0, 0, 0, TRUE, TRUE, 1);
+  (5, 'super', 'super', 'super@mail.ru', '80000000000', '$2a$10$Rqc3K45Z8GYbklMvy3640uj/XY4supJ2XmWmS4t1zjBlXiVh3h4aC', 0, 0, 0, TRUE, TRUE, 100);
 
 --
 -- insert into ingredients

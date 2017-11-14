@@ -6,9 +6,11 @@ import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.cost.Cost;
 import com.cafe.crm.models.note.NoteRecord;
 import com.cafe.crm.models.shift.Shift;
+import com.cafe.crm.models.shift.UserSalaryDetail;
 import com.cafe.crm.models.template.Template;
 import com.cafe.crm.models.user.User;
 import com.cafe.crm.services.interfaces.email.EmailService;
+import com.cafe.crm.services.interfaces.salary.UserSalaryDetailService;
 import com.cafe.crm.services.interfaces.template.TemplateService;
 import com.cafe.crm.services.interfaces.user.UserService;
 import com.cafe.crm.services.interfaces.vk.VkService;
@@ -71,14 +73,16 @@ public class VkServiceImpl implements VkService {
 	private final VkProperties vkProperties;
 	private final EmailService emailService;
 	private final UserService userService;
+	private final UserSalaryDetailService userSalaryDetailService;
 
 	@Autowired
-	public VkServiceImpl(TemplateService templateService, RestTemplate restTemplate, VkProperties vkProperties, EmailService emailService, UserService userService) {
+	public VkServiceImpl(TemplateService templateService, RestTemplate restTemplate, VkProperties vkProperties, EmailService emailService, UserService userService, UserSalaryDetailService userSalaryDetailService) {
 		this.templateService = templateService;
 		this.restTemplate = restTemplate;
 		this.vkProperties = vkProperties;
 		this.emailService = emailService;
 		this.userService = userService;
+		this.userSalaryDetailService = userSalaryDetailService;
 	}
 
 	@Override
@@ -146,13 +150,14 @@ public class VkServiceImpl implements VkService {
 		DecimalFormat df = new DecimalFormat("#.##");
 		double salaryCost = 0d;
 		for (User user : shift.getUsers()) {
+			UserSalaryDetail userOnShiftSalary = userSalaryDetailService.findFirstByUserIdAndShiftId(user.getId(), shift.getId());
 			salaries
 				.append(user.getFirstName())
 				.append(" ")
 				.append(user.getLastName())
-				.append(" - ").append(df.format(user.getShiftSalary() + user.getBonus()))
+				.append(" - ").append(df.format(userOnShiftSalary.getSalary()))
 				.append(System.getProperty("line.separator"));
-			salaryCost += user.getShiftSalary() + user.getBonus();
+			salaryCost += userOnShiftSalary.getSalary();
 		}
 		if (salaries.length() > 0) {
 			salaries.deleteCharAt(salaries.length() - 1);
