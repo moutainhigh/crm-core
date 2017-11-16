@@ -102,4 +102,5 @@ public class DebtServiceImpl implements DebtService {
 		shiftService.saveAndFlush(lastShift);
 		offVisibleStatus(debt);
 	}
+
 }
