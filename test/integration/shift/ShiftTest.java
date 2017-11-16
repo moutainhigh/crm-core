@@ -155,9 +155,7 @@ public class ShiftTest {
 				shiftCalculationService.getAllPrice(shiftService.getLast()), 0D, 1000D,
 				"shift Comment", mapOfNoteNameAndValue);
 
-
-		////////////////////////
-		//////////SECOND SHIFT
+		//SECOND SHIFT
 		long[] clientIds2 = {2L};
 
 		shiftService.createNewShift(shiftService.getLast().getCashBox(), shiftService.getLast().getBankCashBox(), employeeIds);
