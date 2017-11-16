@@ -138,7 +138,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		for (User user : userSet) {
 			List<UserSalaryDetail> details = userSalaryDetailService.findByUserIdAndShiftDateBetween(user.getId(), from, to);
 			if (details.size() == 0){
-				throw new NoStatData("There is no shift data to calculate statistical data");
+				throw new NoStatData("There is no shift resources to calculate statistical resources");
 			}
 			UserSalaryDetail lastDetail = details.get(details.size() - 1);
 			int salary = 0;
@@ -269,7 +269,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		double allPrice = getAllPrice(shift);
 		int clientsNumber = shift.getClients().size();
 		List<UserDTO> usersOnShift = getUserDTOList(shift);
-		List<UserSalaryDetail> salaryDetails = shift.getUserSalaryDetail();
+		Set<UserSalaryDetail> salaryDetails = shift.getUserSalaryDetail();
 		Set<Calculate> allCalculate = shift.getCalculates();
 		List<Cost> otherCost = costService.findByDateAndVisibleTrue(shift.getShiftDate());
 		List<Receipt> receiptAmount = receiptService.findByShiftId(shift.getId());
@@ -373,7 +373,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 				cashBox, totalCashBox, usersTotalShiftSalary, card, allPrice, shiftDate, otherCosts, bankCashBox, enabledNotes, staffPercentBonusesMap);
 	}
 
-	private double getAllPrice(Shift shift) {
+	public double getAllPrice(Shift shift) {
 		Set<Calculate> allCalculate = shift.getCalculates();
 		List<Client> clients = new ArrayList<>();
 		List<Receipt> receiptAmount = receiptService.findByShiftId(shift.getId());

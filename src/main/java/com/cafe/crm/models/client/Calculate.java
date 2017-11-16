@@ -28,7 +28,7 @@ public class Calculate extends BaseEntity {
 
 	private boolean isPause = false;  // now is paused ?
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	private List<Client> client;
 
 	@ManyToOne

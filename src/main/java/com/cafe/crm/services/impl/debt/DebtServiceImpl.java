@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class DebtServiceImpl implements DebtService {
@@ -92,7 +93,7 @@ public class DebtServiceImpl implements DebtService {
 		lastShift.addRepaidDebtToList(debt);
 		List<Shift> shiftLists = shiftService.findAll();
 		for (Shift shift: shiftLists) {
-			List<Debt> newGivenDebtList = shift.getGivenDebts();
+			Set<Debt> newGivenDebtList = shift.getGivenDebts();
 			if (newGivenDebtList.contains(debt)){
 				newGivenDebtList.remove(debt);
 				shift.setGivenDebts(newGivenDebtList);
