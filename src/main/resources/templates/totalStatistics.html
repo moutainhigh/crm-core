@@ -114,7 +114,7 @@
                         </thead>
                         <tbody id="clients">
                         <tr th:each="pair : ${totalStat.clientsOnDetails.entrySet()}">
-                            <td class="commonCheck" th:text="${pair.getValue().allDirtyPrice}" th:unless="${cardEnable}"></td>
+                            <td class="commonCheck" th:text="${pair.getValue().allDirtyPrice + pair.getValue().otherPriceMenu}" th:unless="${cardEnable}"></td>
                             <td class="cashPayment" th:text="${pair.getKey().cache}" th:if="${cardEnable}"></td>
                             <td class="clubCardPayment" th:text="${pair.getKey().payWithCard}" th:if="${cardEnable}"></td>
                             <td class="menuOtherCost" th:text="${pair.getValue().otherPriceMenu}"></td>
