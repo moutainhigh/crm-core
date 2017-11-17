@@ -10,23 +10,18 @@
 <!--/.navbar -->
 
 
-
-
-
 <div class="col-md-7 col-sm-offset-3">
-    <div class="container">
-        <center>
-            <div class="row" style="margin-top: 5%">
-                <h1 style="color: #5bc0de;">
-                    Статистика за период с: <span th:text="${from} + ' по ' + ${to}"></span></h1>
-            </div>
-        </center>
+        <div class="row" style="margin-top: 5%">
+            <h1 style="color: #5bc0de;">
+                Статистика за период с: <span th:text="${from} + ' по ' + ${to}"></span></h1>
+        </div>
         <hr/>
         <div class="row">
-            <center>
-                <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#shortStatistic">Краткая статистика
-                </button>
-            </center>
+            <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#shortStatistic">
+                Краткая статистика
+            </button>
+        </div>
+        <div>
             <div id="shortStatistic" class="collapse">
                 <table class="table table-striped" style="margin-top: 3%">
                     <thead>
@@ -59,26 +54,25 @@
                 </table>
             </div>
         </div>
+
         <hr/>
         <div class="row">
-            <center>
-                <form class="form-inline" role="form" th:method="post" action="/boss/totalStatistics/searchByDate">
-                    <label for="from" class="control-label" style="color: #5bc0de;font-size: 30px">Дата смены с : </label>
-                    <input name="from" th:value="${from}" class="form-control"
-                           th:type="date" id="from" required=""/>
+            <form class="form-inline" role="form" th:method="post" action="/boss/totalStatistics/searchByDate">
+                <label for="from" class="control-label" style="color: #5bc0de;font-size: 30px">Дата смены с : </label>
+                <input name="from" th:value="${from}" class="form-control"
+                       th:type="date" id="from" required=""/>
 
-                    <label for="to" class="control-label" style="color: #5bc0de;font-size: 30px">по : </label>
-                    <input name="to" th:value="${to}" class="form-control"
-                           th:type="date" id="to" required=""/>
+                <label for="to" class="control-label" style="color: #5bc0de;font-size: 30px">по : </label>
+                <input name="to" th:value="${to}" class="form-control"
+                       th:type="date" id="to" required=""/>
 
-                    <button class="btn btn-default" name="del" type="submit">Показать
-                    </button>
-                </form>
-            </center>
+                <button class="btn btn-default" name="del" type="submit">Показать
+                </button>
+            </form>
         </div>
-    </div>
+
     <hr/>
-    <div class="tabbed">
+    <div class="row tabbed">
         <input type="radio" name="tabs" id="tab-nav-1" checked=""/>
         <label for="tab-nav-1">Клиенты</label>
         <input type="radio" name="tabs" id="tab-nav-2"/>
@@ -114,9 +108,12 @@
                         </thead>
                         <tbody id="clients">
                         <tr th:each="pair : ${totalStat.clientsOnDetails.entrySet()}">
-                            <td class="commonCheck" th:text="${pair.getValue().allDirtyPrice + pair.getValue().otherPriceMenu}" th:unless="${cardEnable}"></td>
+                            <td class="commonCheck"
+                                th:text="${pair.getValue().allDirtyPrice + pair.getValue().otherPriceMenu}"
+                                th:unless="${cardEnable}"></td>
                             <td class="cashPayment" th:text="${pair.getKey().cache}" th:if="${cardEnable}"></td>
-                            <td class="clubCardPayment" th:text="${pair.getKey().payWithCard}" th:if="${cardEnable}"></td>
+                            <td class="clubCardPayment" th:text="${pair.getKey().payWithCard}"
+                                th:if="${cardEnable}"></td>
                             <td class="menuOtherCost" th:text="${pair.getValue().otherPriceMenu}"></td>
                             <td class="menuDirtyCost" th:text="${pair.getValue().dirtyPriceMenu}"></td>
                             <td class="timeCost" th:text="${pair.getKey().priceTime}"></td>
