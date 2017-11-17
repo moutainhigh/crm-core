@@ -3,6 +3,7 @@ package com.cafe.crm.controllers.receipt;
 import com.cafe.crm.exceptions.receipt.ReceiptDataException;
 import com.cafe.crm.models.property.Property;
 import com.cafe.crm.models.user.Receipt;
+import com.cafe.crm.services.interfaces.checklist.ChecklistService;
 import com.cafe.crm.services.interfaces.property.PropertyService;
 import com.cafe.crm.services.interfaces.receipt.ReceiptService;
 import com.cafe.crm.services.interfaces.shift.ShiftService;
@@ -31,18 +32,21 @@ public class ReceiptController {
 	private final ShiftService shiftService;
 	private final PasswordEncoder encoder;
 	private final PropertyService propertyService;
+	private final ChecklistService checklistService;
 
 	@Value("${property.name.masterKey}")
 	private String masterKeyPropertyName;
 
 
 	@Autowired
-	public ReceiptController(ReceiptService receiptService, TimeManager timeManager, ShiftService shiftService, PasswordEncoder encoder, PropertyService propertyService) {
+	public ReceiptController(ReceiptService receiptService, TimeManager timeManager, ShiftService shiftService,
+							 PasswordEncoder encoder, PropertyService propertyService, ChecklistService checklistService) {
 		this.receiptService = receiptService;
 		this.timeManager = timeManager;
 		this.shiftService = shiftService;
 		this.encoder = encoder;
 		this.propertyService = propertyService;
+		this.checklistService = checklistService;
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
@@ -59,6 +63,7 @@ public class ReceiptController {
 		modelAndView.addObject("today", today);
 		modelAndView.addObject("fromDate", lastShiftDate);
 		modelAndView.addObject("toDate", null);
+		modelAndView.addObject("closeChecklist", checklistService.getAllForCloseShift());
 		return modelAndView;
 	}
 
