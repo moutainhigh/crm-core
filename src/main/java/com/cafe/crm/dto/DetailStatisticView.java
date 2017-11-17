@@ -32,16 +32,16 @@ public class DetailStatisticView {
 
 	private List<Cost> otherCost;
 
-	private double amountCredited;
+	private double repaidDebts;
 
-	private double debts;
+	private double givenDebts;
 
-	double receiptsSum;
+	private double receiptsSum;
 
 	public DetailStatisticView(LocalDate shiftDate, double cashBox, double allPrice, int clientsNumber,
 							   List<UserDTO> usersOnShift, Set<UserSalaryDetail> userSalaryDetail,
 							   Set<Calculate> allCalculate, double allSalaryCost, double allOtherCost,
-							   List<Cost> otherCost, double amountCredited, double debts, double receiptsSum) {
+							   List<Cost> otherCost, double repaidDebts, double givenDebts, double receiptsSum) {
 		this.shiftDate = shiftDate;
 		this.cashBox = cashBox;
 		this.allPrice = allPrice;
@@ -52,8 +52,8 @@ public class DetailStatisticView {
 		this.allSalaryCost = allSalaryCost;
 		this.allOtherCost = allOtherCost;
 		this.otherCost = otherCost;
-		this.amountCredited = amountCredited;
-		this.debts = debts;
+		this.repaidDebts = repaidDebts;
+		this.givenDebts = givenDebts;
 		this.receiptsSum = receiptsSum;
 	}
 
@@ -137,20 +137,20 @@ public class DetailStatisticView {
 		this.otherCost = otherCost;
 	}
 
-	public double getAmountCredited() {
-		return amountCredited;
+	public double getRepaidDebts() {
+		return repaidDebts;
 	}
 
-	public void setAmountCredited(double amountCredited) {
-		this.amountCredited = amountCredited;
+	public void setRepaidDebts(double repaidDebts) {
+		this.repaidDebts = repaidDebts;
 	}
 
-	public double getDebts() {
-		return debts;
+	public double getGivenDebts() {
+		return givenDebts;
 	}
 
-	public void setDebts(double debts) {
-		this.debts = debts;
+	public void setGivenDebts(double givenDebts) {
+		this.givenDebts = givenDebts;
 	}
 
 	public double getReceiptsSum() {

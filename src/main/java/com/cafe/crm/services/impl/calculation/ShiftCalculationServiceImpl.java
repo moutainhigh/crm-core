@@ -15,8 +15,10 @@ import com.cafe.crm.models.shift.UserSalaryDetail;
 import com.cafe.crm.models.user.Position;
 import com.cafe.crm.models.user.Receipt;
 import com.cafe.crm.models.user.User;
+import com.cafe.crm.repositories.debt.DebtRepository;
 import com.cafe.crm.services.interfaces.calculation.ShiftCalculationService;
 import com.cafe.crm.services.interfaces.cost.CostService;
+import com.cafe.crm.services.interfaces.debt.DebtService;
 import com.cafe.crm.services.interfaces.menu.ProductService;
 import com.cafe.crm.services.interfaces.note.NoteService;
 import com.cafe.crm.services.interfaces.receipt.ReceiptService;
@@ -37,18 +39,21 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 	private final NoteService noteService;
 	private final ProductService productService;
 	private final UserSalaryDetailService userSalaryDetailService;
+	private final DebtService debtService;
 	@Autowired
 	private ReceiptService receiptService;
 
 	@Autowired
 	public ShiftCalculationServiceImpl(CostService costService, ShiftService shiftService, Transformer transformer,
-									   NoteService noteService, ProductService productService, UserSalaryDetailService userSalaryDetailService) {
+									   NoteService noteService, ProductService productService,
+									   UserSalaryDetailService userSalaryDetailService, DebtService debtService) {
 		this.costService = costService;
 		this.shiftService = shiftService;
 		this.transformer = transformer;
 		this.noteService = noteService;
 		this.productService = productService;
 		this.userSalaryDetailService = userSalaryDetailService;
+		this.debtService = debtService;
 	}
 
 	@Override
@@ -106,6 +111,8 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			receiptAmount.addAll(receiptService.findByShiftId(shift.getId()));
 		}
 		clientsOnDetails = getClientsOnDetails(allCalculate);
+		givenDebts.addAll(getGivenDebts(from, to));
+		givenDebts.removeAll(repaidDebt);
 		for (UserDTO user : users) {
 			totalShiftSalary += user.getSalary();
 		}
@@ -127,6 +134,17 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 
 		return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clientsOnDetails, otherCost,
 				givenDebts, repaidDebt);
+	}
+
+	private List<Debt> getGivenDebts(LocalDate from, LocalDate to) {
+		List<Debt> repairedDebts = new ArrayList<>();
+		List<Debt> givenDebt = debtService.findRepairedOnAnotherShiftsRange(from, to);
+		Set<Shift> shifts = shiftService.findByDates(to, to);
+		for (Shift shift: shifts) {
+			repairedDebts.addAll(shift.getRepaidDebts());
+		}
+		givenDebt.removeAll(repairedDebts);
+		return givenDebt;
 	}
 
 	private List<UserDTO> getUserDTOList(Set<Shift> shifts, LocalDate from, LocalDate to) {
@@ -273,15 +291,13 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		Set<Calculate> allCalculate = shift.getCalculates();
 		List<Cost> otherCost = costService.findByDateAndVisibleTrue(shift.getShiftDate());
 		List<Receipt> receiptAmount = receiptService.findByShiftId(shift.getId());
+		List<Debt> RepairedOnAnotherShiftsDebts = debtService.findRepairedOnAnotherShiftsDebts(shift);
 		double allSalaryCost = 0D;
 		double allOtherCost = 0D;
-		double amountCredited = 0D;
-		double debts = 0D;
+		double repaidDebts = 0D;
+		double givenDebts = 0D;
 		double receiptsSum = 0D;
 
-		for (Client client : shift.getClients()) {
-			amountCredited += client.getAllPrice();
-		}
 		for (UserSalaryDetail detail : salaryDetails) {
 			allSalaryCost += detail.getSalary();
 		}
@@ -289,13 +305,13 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			allOtherCost = allOtherCost + otherGood.getPrice() * otherGood.getQuantity();
 		}
 		for (Debt debt : shift.getGivenDebts()) {
-			amountCredited -= debt.getDebtAmount();
-			debts += debt.getDebtAmount();
+			givenDebts += debt.getDebtAmount();
+		}
+		for (Debt debt : RepairedOnAnotherShiftsDebts) {
+			givenDebts += debt.getDebtAmount();
 		}
 		for (Debt debt : shift.getRepaidDebts()) {
-			if (!debt.getShift().getId().equals(shift.getId())) {
-				receiptsSum += debt.getDebtAmount();
-			}
+			repaidDebts += debt.getDebtAmount();
 		}
 		for (Receipt receipt : receiptAmount){
 			receiptsSum +=receipt.getReceiptAmount();
@@ -303,7 +319,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 
 		return new DetailStatisticView(shiftDate, cashBox, allPrice, clientsNumber,
 				usersOnShift, salaryDetails, allCalculate, allSalaryCost, allOtherCost, otherCost,
-				amountCredited, debts, receiptsSum);
+				repaidDebts, givenDebts, receiptsSum);
 	}
 
 	private List<UserDTO> getUserDTOList(Shift shift) {
