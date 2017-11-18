@@ -24,4 +24,5 @@ public interface ShiftCalculationService {
 	Map<Client, ClientDetails> getClientsOnDetails (Set<Calculate> allCalculate);
 	List<CalculateDTO> getCalculates(Shift shift);
 	double getAllPrice(Shift shift);
+	List<Client> getClients(Shift shift);
 }

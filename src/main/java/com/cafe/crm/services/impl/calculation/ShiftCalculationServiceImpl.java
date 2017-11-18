@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ShiftCalculationServiceImpl implements ShiftCalculationService {
@@ -162,6 +163,29 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 	}
 
 	@Override
+	public List<Client> getClients(Shift shift) {
+		Set<Client> allClients = shift.getClients();
+		List<Client> stateClient = new ArrayList<>(allClients.size());
+		for (Client client : allClients) {
+			if (!client.isDeleteState()) {
+				stateClient.add(client);
+			}
+		}
+		return stateClient;
+	}
+
+	private List<Client> getClients(Calculate calculate) {
+		List<Client> allClients = calculate.getClient();
+		List<Client> stateClient = new ArrayList<>(allClients.size());
+		for (Client client : allClients) {
+			if (!client.isDeleteState()) {
+				stateClient.add(client);
+			}
+		}
+		return stateClient;
+	}
+
+	@Override
 	public Map<Client, ClientDetails> getClientsOnDetails (Set<Calculate> allCalculate) {
 		Map<Client, ClientDetails> clientsOnDetails = new HashMap<>();
 		List<Client> clients = new ArrayList<>();
@@ -169,10 +193,11 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			clients.addAll(calculate.getClient());
 		}
 		for (Client client : clients) {
-			ClientDetails details = getClientDetails(client);
-			clientsOnDetails.put(client, details);
+			if (!client.isDeleteState()) {
+				ClientDetails details = getClientDetails(client);
+				clientsOnDetails.put(client, details);
+			}
 		}
-
 		return clientsOnDetails;
 	}
 
@@ -201,7 +226,9 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		Set<LayerProduct> dirtyMenu = new HashSet<>();
 		List<LayerProduct> products = new ArrayList<>();
 		for (Client client : clients) {
-			products.addAll(client.getLayerProducts());
+			if (!client.isDeleteState()) {
+				products.addAll(client.getLayerProducts());
+			}
 		}
 		for (LayerProduct product : products) {
 			if (product.isDirtyProfit()) {
@@ -216,7 +243,9 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		Set<LayerProduct> otherMenu = new HashSet<>();
 		List<LayerProduct> products = new ArrayList<>();
 		for (Client client : clients) {
-			products.addAll(client.getLayerProducts());
+			if (!client.isDeleteState()) {
+				products.addAll(client.getLayerProducts());
+			}
 		}
 		for (LayerProduct product : products) {
 			if (!product.isDirtyProfit()) {
@@ -234,17 +263,19 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		List<CalculateDTO> calculates = new ArrayList<>();
 
 		for (Calculate calculate : sortedList) {
-			boolean isCalcDeleted = calculate.getClient().stream().allMatch(Client::isDeleteState);
-			if (!isCalcDeleted) {
+			if (!isCalcDeleted(calculate)) {
 				CalculateDTO calcDto = transformer.transform(calculate, CalculateDTO.class);
-				calcDto.setClient(calculate.getClient());
+				calcDto.setClient(getClients(calculate));
 				calcDto.setDirtyOrder(getDirtyMenu(calculate));
 				calcDto.setOtherOrder(getOtherMenu(calculate));
 				calculates.add(calcDto);
 			}
 		}
-
 		return calculates;
+	}
+
+	private boolean isCalcDeleted(Calculate calculate) {
+		return calculate.getClient().stream().allMatch(Client::isDeleteState);
 	}
 
 	private List<String> getContent(Set<LayerProduct> products) {
@@ -270,10 +301,11 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		LocalDate shiftDate = shift.getShiftDate();
 		double cashBox = shift.getCashBox() + shift.getBankCashBox();
 		double allPrice = getAllPrice(shift);
-		int clientsNumber = shift.getClients().size();
+		int clientsNumber = getClients(shift).size();
 		List<UserDTO> usersOnShift = getUserDTOList(shift);
 		Set<UserSalaryDetail> salaryDetails = shift.getUserSalaryDetail();
-		Set<Calculate> allCalculate = shift.getCalculates();
+		//Set<Calculate> allCalculate = new HashSet<>();
+		Set<CalculateDTO> allCalculate = new HashSet<>();
 		List<Cost> otherCost = costService.findByDateAndVisibleTrue(shift.getShiftDate());
 		List<Receipt> receiptAmount = receiptService.findByShiftId(shift.getId());
 		double allSalaryCost = 0D;
@@ -281,6 +313,14 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		double amountCredited = 0D;
 		double debts = 0D;
 		double receiptsSum = 0D;
+
+		for (Calculate calculate : shift.getCalculates()) {
+			if (!isCalcDeleted(calculate)) {
+				CalculateDTO calcDto = transformer.transform(calculate, CalculateDTO.class);
+				calcDto.setClient(calculate.getClient().stream().filter(u -> !u.isDeleteState()).collect(Collectors.toList()));
+				allCalculate.add(calcDto);
+			}
+		}
 
 		for (Client client : shift.getClients()) {
 			amountCredited += client.getAllPrice();
@@ -328,7 +368,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 	@Override
 	public ShiftView createShiftView(Shift shift) {
 		List<UserDTO> usersOnShift = transformer.transform(shift.getUsers(), UserDTO.class);
-		Set<Client> clients = new HashSet<>();
+		List<Client> clients = getClients(shift);
 		List<Calculate> activeCalculate = new ArrayList<>();
 		Set<Calculate> allCalculate = shift.getCalculates();
 		List<Note> enabledNotes = noteService.findAllByEnableIsTrue();
@@ -377,17 +417,13 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 	}
 
 	public double getAllPrice(Shift shift) {
-		Set<Calculate> allCalculate = shift.getCalculates();
-		List<Client> clients = new ArrayList<>();
+		List<Client> clients = getClients(shift);
 		List<Receipt> receiptAmount = receiptService.findByShiftId(shift.getId());
 		double allPrice = 0D;
-		for (Calculate calculate : allCalculate) {
-			if (!calculate.isState()) {
-				clients.addAll(calculate.getClient());
-			}
-		}
 		for (Client client : clients) {
-			allPrice += getAllDirtyPrice(client);
+			if (!client.isDeleteState()) {
+				allPrice += getAllDirtyPrice(client);
+			}
 		}
 		for (Debt debt : shift.getRepaidDebts()) {
 			if (!debt.getShift().getId().equals(shift.getId())) {
