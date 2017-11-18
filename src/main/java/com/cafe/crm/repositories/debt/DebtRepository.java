@@ -2,6 +2,7 @@ package com.cafe.crm.repositories.debt;
 
 
 import com.cafe.crm.models.client.Debt;
+import com.cafe.crm.models.shift.Shift;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -14,4 +15,8 @@ public interface DebtRepository extends JpaRepository<Debt, Long> {
 	List<Debt> findByDebtorAndDateBetweenAndCompanyId(String debtor, LocalDate from, LocalDate to, Long companyId);
 
 	List<Debt> findByCompanyId(Long companyId);
+
+	List<Debt> findByShiftAndVisibleIsFalseAndReturnedOnThisShiftIsFalseAndCompanyId(Shift shift, Long companyId);
+
+	List<Debt> findByVisibleIsFalseAndReturnedOnThisShiftIsFalseAndDateBetweenAndCompanyId(LocalDate from, LocalDate to, Long companyId);
 }

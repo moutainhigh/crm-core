@@ -180,25 +180,24 @@
     </div>
 
     <center>
-        <button th:if="${detailStatisticView.debts != 0 || detailStatisticView.receiptsSum != 0}"
-                type="button" class="btn btn-info" data-toggle="collapse" data-target="#debts" style="margin-bottom: 1%">
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#debts" style="margin-bottom: 1%">
             Долги и приходы
         </button>
     </center>
-    <div id="debts" class="collapse" th:if="${detailStatisticView.debts != 0 || detailStatisticView.receiptsSum != 0}">
+    <div id="debts" class="collapse">
         <div class="table">
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th> Уплаченная сумма</th>
-                    <th> Сумма долга</th>
+                    <th> Возврат долга</th>
+                    <th> Остаток долга</th>
                     <th> Приходы за смену</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td th:text="${#numbers.formatInteger(detailStatisticView.amountCredited,0)}"></td>
-                    <td th:text="${#numbers.formatInteger(detailStatisticView.debts,0)}"></td>
+                    <td th:text="${#numbers.formatInteger(detailStatisticView.repaidDebts,0)}"></td>
+                    <td th:text="${#numbers.formatInteger(detailStatisticView.givenDebts,0)}"></td>
                     <td th:text="${#numbers.formatInteger(detailStatisticView.receiptsSum,0)}"></td>
                 </tr>
                 </tbody>
