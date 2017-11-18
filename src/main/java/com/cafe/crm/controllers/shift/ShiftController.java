@@ -110,7 +110,7 @@ public class ShiftController {
         model.addAttribute("closeShiftView", shiftCalculationService.createShiftView(lastShift));
         model.addAttribute("calculates", calculates);
         model.addAttribute("clientOnDetail", shiftCalculationService.getClientsOnDetails(lastShift.getCalculates()));
-        model.addAttribute("clients", lastShift.getClients());
+        model.addAttribute("clients", shiftCalculationService.getClients(lastShift));
         model.addAttribute("closeChecklist", checklistService.getAllForCloseShift());
         model.addAttribute("repaidDebts", shiftService.getLast().getRepaidDebts());
         model.addAttribute("receipts", shiftService.getLast().getReceipts());
