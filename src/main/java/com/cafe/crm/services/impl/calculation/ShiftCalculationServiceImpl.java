@@ -234,11 +234,14 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		List<CalculateDTO> calculates = new ArrayList<>();
 
 		for (Calculate calculate : sortedList) {
-			CalculateDTO calcDto = transformer.transform(calculate, CalculateDTO.class);
-			calcDto.setClient(calculate.getClient());
-			calcDto.setDirtyOrder(getDirtyMenu(calculate));
-			calcDto.setOtherOrder(getOtherMenu(calculate));
-			calculates.add(calcDto);
+			boolean isCalcDeleted = calculate.getClient().stream().allMatch(Client::isDeleteState);
+			if (!isCalcDeleted) {
+				CalculateDTO calcDto = transformer.transform(calculate, CalculateDTO.class);
+				calcDto.setClient(calculate.getClient());
+				calcDto.setDirtyOrder(getDirtyMenu(calculate));
+				calcDto.setOtherOrder(getOtherMenu(calculate));
+				calculates.add(calcDto);
+			}
 		}
 
 		return calculates;
