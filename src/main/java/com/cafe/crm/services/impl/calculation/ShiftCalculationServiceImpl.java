@@ -87,6 +87,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		return new UserSalaryDetail(user, salary, shiftSalary, shiftAmount, bonus, shift);
 	}
 
+
 	@Override
 	public TotalStatisticView createTotalStatisticView(LocalDate from, LocalDate to) {
 		Set<Shift> shifts = shiftService.findByDates(from, to);
@@ -112,7 +113,6 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			receiptAmount.addAll(receiptService.findByShiftId(shift.getId()));
 		}
 		clientsOnDetails = getClientsOnDetails(allCalculate);
-		givenDebts.addAll(getGivenDebts(from, to));
 		givenDebts.removeAll(repaidDebt);
 		for (UserDTO user : users) {
 			totalShiftSalary += user.getSalary();
@@ -123,29 +123,19 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		for (Map.Entry<Client, ClientDetails> entry : clientsOnDetails.entrySet()) {
 			profit += entry.getValue().getAllDirtyPrice();
 		}
+		for (Receipt receipt : receiptAmount){
+			profit += receipt.getReceiptAmount();
+		}
 		for (Debt repDebt : repaidDebt) {
-			profit += repDebt.getDebtAmount();
+			if (repDebt.getDate().isBefore(from)) {
+				profit += repDebt.getDebtAmount();
+			}
 		}
 		for (Debt givDebt : givenDebts) {
 			profit -= givDebt.getDebtAmount();
 		}
-		for (Receipt receipt : receiptAmount){
-			profit += receipt.getReceiptAmount();
-		}
-
 		return new TotalStatisticView(profit, totalShiftSalary, otherCosts, users, clientsOnDetails, otherCost,
 				givenDebts, repaidDebt);
-	}
-
-	private List<Debt> getGivenDebts(LocalDate from, LocalDate to) {
-		List<Debt> repairedDebts = new ArrayList<>();
-		List<Debt> givenDebt = debtService.findRepairedOnAnotherShiftsRange(from, to);
-		Set<Shift> shifts = shiftService.findByDates(to, to);
-		for (Shift shift: shifts) {
-			repairedDebts.addAll(shift.getRepaidDebts());
-		}
-		givenDebt.removeAll(repairedDebts);
-		return givenDebt;
 	}
 
 	private List<UserDTO> getUserDTOList(Set<Shift> shifts, LocalDate from, LocalDate to) {
@@ -322,11 +312,9 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		int clientsNumber = getClients(shift).size();
 		List<UserDTO> usersOnShift = getUserDTOList(shift);
 		Set<UserSalaryDetail> salaryDetails = shift.getUserSalaryDetail();
-		//Set<Calculate> allCalculate = new HashSet<>();
 		Set<CalculateDTO> allCalculate = new HashSet<>();
 		List<Cost> otherCost = costService.findByDateAndVisibleTrue(shift.getShiftDate());
 		List<Receipt> receiptAmount = receiptService.findByShiftId(shift.getId());
-		List<Debt> RepairedOnAnotherShiftsDebts = debtService.findRepairedOnAnotherShiftsDebts(shift);
 		double allSalaryCost = 0D;
 		double allOtherCost = 0D;
 		double repaidDebts = 0D;
@@ -347,9 +335,6 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			allOtherCost = allOtherCost + otherGood.getPrice() * otherGood.getQuantity();
 		}
 		for (Debt debt : shift.getGivenDebts()) {
-			givenDebts += debt.getDebtAmount();
-		}
-		for (Debt debt : RepairedOnAnotherShiftsDebts) {
 			givenDebts += debt.getDebtAmount();
 		}
 		for (Debt debt : shift.getRepaidDebts()) {

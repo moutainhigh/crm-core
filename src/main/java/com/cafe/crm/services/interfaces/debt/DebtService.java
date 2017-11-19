@@ -25,9 +25,5 @@ public interface DebtService {
 
 	List<Debt> findByDebtorAndDateBetween(String debtor, LocalDate from, LocalDate to);
 
-	List<Debt> findRepairedOnAnotherShiftsDebts(Shift shift);
-
-	List<Debt> findRepairedOnAnotherShiftsRange(LocalDate from, LocalDate to);
-
 	void repayDebt(Long id);
 }

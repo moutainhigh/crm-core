@@ -25,8 +25,6 @@ public class Debt extends BaseEntity {
 
 	private boolean visible = true;
 
-	private boolean returnedOnThisShift = true;
-
 	@OneToOne
 	@JoinColumn(name = "shift_id", nullable = false)
 	private Shift shift;
@@ -82,14 +80,6 @@ public class Debt extends BaseEntity {
 
 	public void setShift(Shift shift) {
 		this.shift = shift;
-	}
-
-	public boolean isReturnedOnThisShift() {
-		return returnedOnThisShift;
-	}
-
-	public void setReturnedOnThisShift(boolean returnedOnThisShift) {
-		this.returnedOnThisShift = returnedOnThisShift;
 	}
 
 	@Override
