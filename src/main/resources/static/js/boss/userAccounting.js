@@ -107,7 +107,7 @@ function convertObjToArray(data) {
     return dataToSend;
 }
 
-function sendEditUserFormData(data) {
+function sendEditUserFormData(data, id) {
     var dataJson = convertObjToArray(data);
     $.ajax({
         type: 'post',
@@ -118,7 +118,9 @@ function sendEditUserFormData(data) {
         },
         error: function (error) {
             var errorMessage = '<h4 style="color:red;" align="center">' + error.responseText + '</h4>';
+            var modal = "#allUserEdit" + id;
             $('.errorMessage').html(errorMessage).show();
+            $(modal).modal('show');
         }
     })
 }
@@ -127,7 +129,7 @@ function getBossPassword(id) {
     var resultEditUserFormMap = grabUpdatedUserFormData(id);
     resultEditUserFormMap['bossPasswordRequired'] = true;
     resultEditUserFormMap['bossPassword'] = $('.bossPassword' + id).val();
-    sendEditUserFormData(resultEditUserFormMap);
+    sendEditUserFormData(resultEditUserFormMap, id);
 }
 
 function isValidPasswordsData(oldPassword, newPassword, repeatedPassword) {

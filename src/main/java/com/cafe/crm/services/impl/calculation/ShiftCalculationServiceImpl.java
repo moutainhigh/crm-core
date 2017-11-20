@@ -313,7 +313,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		List<UserDTO> usersOnShift = getUserDTOList(shift);
 		Set<UserSalaryDetail> salaryDetails = shift.getUserSalaryDetail();
 		Set<CalculateDTO> allCalculate = new HashSet<>();
-		List<Cost> otherCost = costService.findByDateAndVisibleTrue(shift.getShiftDate());
+		List<Cost> otherCost = costService.findByShiftId(shift.getId());
 		List<Receipt> receiptAmount = receiptService.findByShiftId(shift.getId());
 		double allSalaryCost = 0D;
 		double allOtherCost = 0D;
@@ -332,7 +332,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 			allSalaryCost += detail.getSalary();
 		}
 		for (Cost otherGood : otherCost) {
-			allOtherCost = allOtherCost + otherGood.getPrice() * otherGood.getQuantity();
+			allOtherCost += otherGood.getPrice() * otherGood.getQuantity();
 		}
 		for (Debt debt : shift.getGivenDebts()) {
 			givenDebts += debt.getDebtAmount();
@@ -370,7 +370,7 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		List<UserDTO> usersOnShift = transformer.transform(shift.getUsers(), UserDTO.class);
 		List<Client> clients = getClients(shift);
 		List<Calculate> activeCalculate = new ArrayList<>();
-		Set<Calculate> allCalculate = shift.getCalculates();
+		Set<Calculate> allCalculate = new HashSet<>();
 		List<Note> enabledNotes = noteService.findAllByEnableIsTrue();
 		Double cashBox = shift.getCashBox();
 		Double bankCashBox = shift.getBankCashBox();
@@ -379,11 +379,12 @@ public class ShiftCalculationServiceImpl implements ShiftCalculationService {
 		Double card = 0D;
 		Double allPrice = getAllPrice(shift);
 
-		for (Calculate calculate : allCalculate) {
-			if (!calculate.isState()) {
-				clients.addAll(calculate.getClient());
-			} else {
-				activeCalculate.add(calculate);
+		for (Calculate calculate : shift.getCalculates()) {
+			if (!isCalcDeleted(calculate)) {
+				allCalculate.add(calculate);
+				if (calculate.isState()) {
+					activeCalculate.add(calculate);
+				}
 			}
 		}
 
