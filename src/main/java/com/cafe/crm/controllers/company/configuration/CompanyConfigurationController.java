@@ -39,17 +39,17 @@ public class CompanyConfigurationController {
 		ConfigurationStep step = stepByStepConfiguration.getNextStep();
 		model.addAttribute("stepName", step.getStepName());
 
-		return "/company/configuration/configuration";
+		return "company/configuration/configuration";
 	}
 
 	@RequestMapping(value = "/company/configuration/attention", method = RequestMethod.GET)
 	public String showAttentionPage() {
-		return "/company/configuration/attention";
+		return "company/configuration/attention";
 	}
 
 	@RequestMapping(value = "/company/configuration/instruction/vk", method = RequestMethod.GET)
 	public String showVkInstructionPage() {
-		return "/company/configuration/instruction/vk";
+		return "company/configuration/instruction/vk";
 	}
 
 	@RequestMapping(value = "/company/configuration/instruction/image/chat-id", produces = MediaType.IMAGE_JPEG_VALUE)
