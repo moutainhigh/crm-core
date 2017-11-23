@@ -127,7 +127,7 @@ public class DebtController {
 		debtService.repayDebt(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-
+/*
 	@RequestMapping(value = "/deleteBoss", method = RequestMethod.POST)
 	public ResponseEntity<?> deleteDebtsBoss(@RequestParam(name = "debtId") Long id) {
 
@@ -162,7 +162,7 @@ public class DebtController {
 		}
 
 	}
-
+*/
 	@ExceptionHandler(value = DebtDataException.class)
 	public ResponseEntity<?> handleUserUpdateException(DebtDataException ex) {
 		return ResponseEntity.badRequest().body(ex.getMessage());
