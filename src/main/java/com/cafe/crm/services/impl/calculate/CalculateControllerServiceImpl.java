@@ -1,6 +1,7 @@
 package com.cafe.crm.services.impl.calculate;
 
 import ch.qos.logback.classic.Logger;
+import com.cafe.crm.configs.property.PriceNameProperties;
 import com.cafe.crm.exceptions.client.ClientDataException;
 import com.cafe.crm.exceptions.debt.DebtDataException;
 import com.cafe.crm.models.board.Board;
@@ -9,6 +10,7 @@ import com.cafe.crm.models.client.Calculate;
 import com.cafe.crm.models.client.Client;
 import com.cafe.crm.models.client.Debt;
 import com.cafe.crm.models.client.TimerOfPause;
+import com.cafe.crm.models.property.Property;
 import com.cafe.crm.models.shift.Shift;
 import com.cafe.crm.services.interfaces.board.BoardService;
 import com.cafe.crm.services.interfaces.calculate.CalculateControllerService;
@@ -49,9 +51,22 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	private final ShiftService shiftService;
 	private final Logger logger;
 	private final TimerOfPauseService timerOfPauseService;
+	private final PriceNameProperties priceNameProperties;
 
 	@Autowired
-	public CalculateControllerServiceImpl(DebtService debtService, CalculatePriceService calculatePriceService, EmailService emailService, TimeManager timeManager, ClientService clientService, CalculateService calculateService, @Qualifier(value = "logger") Logger logger, BoardService boardService, PropertyService propertyService, ShiftService shiftService, CardService cardService, TimerOfPauseService timerOfPauseService) {
+	public CalculateControllerServiceImpl(DebtService debtService,
+										  CalculatePriceService calculatePriceService,
+										  EmailService emailService,
+										  TimeManager timeManager,
+										  ClientService clientService,
+										  CalculateService calculateService,
+										  @Qualifier(value = "logger") Logger logger,
+										  BoardService boardService,
+										  PropertyService propertyService,
+										  ShiftService shiftService,
+										  CardService cardService,
+										  TimerOfPauseService timerOfPauseService,
+										  PriceNameProperties priceNameProperties) {
 		this.debtService = debtService;
 		this.calculatePriceService = calculatePriceService;
 		this.emailService = emailService;
@@ -64,6 +79,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 		this.shiftService = shiftService;
 		this.cardService = cardService;
 		this.timerOfPauseService = timerOfPauseService;
+		this.priceNameProperties = priceNameProperties;
 	}
 
 	@Override
@@ -148,9 +164,6 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 				}
 				calculatePriceService.addDiscountOnPriceTime(client);
 				calculatePriceService.getAllPrice(client);
-				if (calculate.isRoundState()) {
-					calculatePriceService.round(client, calculate.isRoundState());
-				}
 				clients.add(client);
 			}
 		}
@@ -171,9 +184,6 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 			}
 			calculatePriceService.addDiscountOnPriceTime(client);
 			calculatePriceService.getAllPrice(client);
-			if (calculate.isRoundState()) {
-				calculatePriceService.round(client, calculate.isRoundState());
-			}
 		}
 		clientService.saveAll(clients);
 		return clients;
@@ -247,7 +257,10 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 	private void setBalanceAndSaveInvitedCard(Card clientCard) {
 		if (clientCard.getWhoInvitedMe() != null && clientCard.getVisitDate() == null) {
 			Card invitedCard = cardService.getOne(clientCard.getWhoInvitedMe());
-			invitedCard.setBalance(invitedCard.getBalance() + propertyService.getByName("price.refBonus").getValue());
+			Property refBonusProperty = propertyService.findByName(priceNameProperties.getRefBonus());
+			Double invitedCardBalance = invitedCard.getBalance();
+			Double refBonus = Double.valueOf(refBonusProperty.getValue());
+			invitedCard.setBalance(invitedCardBalance + refBonus);
 			cardService.save(invitedCard);
 		}
 	}
@@ -282,6 +295,7 @@ public class CalculateControllerServiceImpl implements CalculateControllerServic
 			debt.setDate(lastShift.getShiftDate());
 			debt.setDebtor(debtorName);
 			debt.setDebtAmount(totalDebtAmount);
+			debt.setShift(lastShift);
 			lastShift.addGivenDebtToList(debt);
 			findLeastOneOpenClientAndCloseCalculation(calculateId);
 			debtService.save(debt);
